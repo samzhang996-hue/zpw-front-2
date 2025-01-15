@@ -1,0 +1,124 @@
+import 'dart:io';
+
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:zpw/common/constant.dart';
+import 'package:zpw/common/style.dart';
+import 'package:zpw/modules/main/main_logic.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  final logic = Get.put(MainLogic());
+  final state = Get.find<MainLogic>().state;
+
+  @override
+  void dispose() {
+    Get.delete<MainLogic>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<MainLogic>(builder: (logic) {
+      return Scaffold(
+          backgroundColor: ColorPlate.themeBgColor,
+          body: IndexedStack(
+            index: state.currentIndex.value,
+            children: state.pages,
+          ),
+          bottomNavigationBar: GetBuilder<MainLogic>(
+            builder: (logic) {
+              return BottomNavigationBar(
+                // 当前菜单下标
+                currentIndex: state.currentIndex.value,
+                // 点击事件,获取当前点击的标签下标
+                onTap: (int idx) {
+                  // if (idx == 1) return;
+                  logic.changeIndex(idx);
+                },
+                iconSize: 36.0,
+                selectedItemColor: ColorPlate.themeColor,
+                unselectedItemColor: ColorPlate.tabbarTextColorNormal,
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.white,
+                selectedFontSize: 12.sp,
+                unselectedFontSize: 12.sp,
+                items: [
+                  BottomNavigationBarItem(
+                      icon: Image.asset(
+                        'un_home.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      activeIcon: Image.asset(
+                        'home.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: "视频",
+                     ),
+                  BottomNavigationBarItem(
+                      icon: Image.asset(
+                        'un_pic.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      activeIcon: Image.asset(
+                        'pic.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: "图片",
+                      ),
+                  BottomNavigationBarItem(
+                      icon: Image.asset(
+                        'un_tx.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      activeIcon: Image.asset(
+                        'tx.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: "特效",
+                    ),
+                  BottomNavigationBarItem(
+                      icon: Image.asset(
+                        'un_wf.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      activeIcon: Image.asset(
+                        'wf.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: "玩法",
+                      ),
+                  BottomNavigationBarItem(
+                      icon: Image.asset(
+                        'un_mine.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      activeIcon: Image.asset(
+                        'mine.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: "我的",
+                      ),
+                ],
+              );
+            },
+          ));
+    });
+  }
+}
