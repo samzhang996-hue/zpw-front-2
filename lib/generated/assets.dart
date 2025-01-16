@@ -5,6 +5,14 @@ class Assets {
   static const String commEmty = 'images/comm/emty.png';
   static const String commSplash = 'images/comm/splash.png';
   static const String commUpdateBg = 'images/comm/update_bg.png';
+  static const String mineAbout = 'images/mine/about.png';
+  static const String mineArrow = 'images/mine/arrow.png';
+  static const String mineKf = 'images/mine/kf.png';
+  static const String mineLogo = 'images/mine/logo.png';
+  static const String mineMineBg = 'images/mine/mine_bg.png';
+  static const String mineSetting = 'images/mine/setting.png';
+  static const String mineVipLogo = 'images/mine/vip_logo.png';
+  static const String mineZp = 'images/mine/zp.png';
   static const String tabbarHome = 'images/tabbar/home.png';
   static const String tabbarMine = 'images/tabbar/mine.png';
   static const String tabbarPic = 'images/tabbar/pic.png';
@@ -15,5 +23,11 @@ class Assets {
   static const String tabbarUnTx = 'images/tabbar/un_tx.png';
   static const String tabbarUnWf = 'images/tabbar/un_wf.png';
   static const String tabbarWf = 'images/tabbar/wf.png';
+  static const String vipChecked = 'images/vip/checked.png';
+  static const String vipClose = 'images/vip/close.png';
+  static const String vipUnCheck = 'images/vip/un_check.png';
+  static const String vipVipBtnTip = 'images/vip/vip_btn_tip.png';
+  static const String vipWx = 'images/vip/wx.png';
+  static const String vipZfb = 'images/vip/zfb.png';
 
 }

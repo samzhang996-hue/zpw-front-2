@@ -5,6 +5,7 @@ import 'package:zpw/modules/gameplay/gameplay_view.dart';
 import 'package:zpw/modules/home/home_view.dart';
 import 'package:zpw/modules/mine/mine_view.dart';
 import 'package:zpw/modules/specially/specially_view.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 class MainState {
@@ -26,6 +27,7 @@ class MainState {
       FacePage(),
       SpeciallyPage(),
       GameplayPage(),
+
       MinePage(),
     ].obs;
     // 用户协议数据

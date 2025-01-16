@@ -75,7 +75,7 @@ class SplashLogic extends BaseGetxController {
     Map<String, dynamic> dataMap = {
       "channel": channel,
       "userDeviceInfo": {
-        "deviceId": deviceId,
+        "deviceCode": deviceId,
         "systemDevice": Platform.isAndroid ? "android" : "ios",
         "oaid": oaid,
         "idfa": udid

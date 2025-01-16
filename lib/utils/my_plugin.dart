@@ -16,3 +16,7 @@ Future<String> getOAID() async {
 Future<String> getDeviceId() async {
   return await methodChnnel.invokeMethod("getDeviceId");
 }
+Future<String> onH5(String url) async {
+  Map<String, dynamic> result = {'url': url};
+  return await methodChnnel.invokeMethod("onH5", result);
+}

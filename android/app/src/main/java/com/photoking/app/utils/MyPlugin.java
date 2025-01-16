@@ -93,7 +93,7 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 } else if (type == 2) {
                     key = TextUtils.isEmpty(projectId) ? "11" : projectId;
                 } else {
-                    key = TextUtils.isEmpty(_channel) ? "QWJL001" : _channel;
+                    key = TextUtils.isEmpty(_channel) ? "AIJL003" : _channel;
                 }
                 result.success(key == null ? "" : key);
                 break;

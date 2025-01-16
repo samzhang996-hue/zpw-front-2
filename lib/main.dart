@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/modules/main/main_state.dart';
 import 'package:zpw/modules/splash/splash_view.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/ads_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -56,7 +57,7 @@ class _MyAppState extends State<MyApp> {
               splashColor: const Color.fromRGBO(0, 0, 0, 0),
               useMaterial3: true,
             ),
-            home: SplashPage(),
+            home:  SplashPage(),
             //NotePage(),
             builder: (context, widget) {
               widget = easyLoad(context, widget);
