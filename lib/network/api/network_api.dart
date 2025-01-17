@@ -2,28 +2,39 @@
 
 class Api {
   //本地
-  static const String API_BASE_URL_DEBUG = "http://zpwservice.qwstkj.com";
-
+  static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
 
   ///正式
-  static const String API_BASE_URL_RELEASE = "http://zpwservice.qwstkj.com";
-
-  /// 获取协议集合
-  static const String config_getConFigByTypeList =
-      "/config/getConFigByTypeList";
+  static const String API_BASE_URL_RELEASE = "http://8.130.84.131:4001";
 
   /// 更新
   static const String getForcePackage = "/packge/getForcePackage";
 
   ///登录
-  static const String sso_login = "/sso/login";
+  static const String sso_login = "/authenticate";
 
   /// 获取用户信息
-  static const String sso_getUserInfo = "/sso/getUserInfo";
+  static const String sso_getUserInfo = "/getUserInfo";
+
+  /// 注销
+  static const String deleteUser = "/deleteUser";
+
+  /// 查询历史记录
+  static const String photoRecord = "/photoRecord/pageRecord";
+
+
+
+
+
+
+
+
+
+
+
 
   ///签约接口
-  static const String payOrder_addUserAgreementOrder =
-      "/center/addUserAgreementOrder";
+  static const String payOrder_addUserAgreementOrder = "/center/addUserAgreementOrder";
 
   /// 下单接口
   static const String payOrder_addOrder = "/center/createOrder";
@@ -47,8 +58,7 @@ class Api {
   static const String sso_bindUserPhone = "/sso/bindUserPhone";
 
   ///新增血糖
-  static const String bloodRecord_addBloodRecord =
-      "/bloodRecord/addBloodRecord";
+  static const String bloodRecord_addBloodRecord = "/bloodRecord/addBloodRecord";
 
   ///血糖记录
   static const String bloodRecord_pageList = "/bloodRecord/pageList";

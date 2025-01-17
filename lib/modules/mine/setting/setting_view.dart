@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
+import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:zpw/utils/handle_tool.dart';
+import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'setting_logic.dart';
 
 class SettingPage extends BaseStatefulWidget {
@@ -13,29 +15,47 @@ class SettingPage extends BaseStatefulWidget {
 }
 
 class _SettingPageState extends BaseWidgetState<SettingPage> {
-
   final logic = Get.put(SettingLogic());
   final state = Get.find<SettingLogic>().state;
 
   @override
   Widget initDefaultBuild(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          YAppBar(title: "设置"),
-          commItem("清理缓存", "22"),
-          commItem("注销账号", ""),
-          commItem("检查更新", "22"),
-        ],
-      ),
-    );
+    return GetBuilder<SettingLogic>(builder: (logic) {
+      return Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            YAppBar(title: "设置"),
+            commItem("清理缓存", "22"),
+            commItem("注销账号", ""),
+            Obx(() {
+              return commItem("检查更新", state.version.value);
+            }),
+            Container(
+              margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
+              width: double.infinity,
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AdBannerWidget(
+                  posId: AdsConfig.bannerId,
+                  width: 345,
+                  interval: 5,
+                  show: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
+
   Widget commItem(
-      String title,
-      String tag, {
-        bool hideArrow = false,
-      }) {
+    String title,
+    String tag, {
+    bool hideArrow = false,
+  }) {
     return Column(
       children: [
         const SizedBox(
@@ -46,6 +66,12 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
             switch (title) {
               case "清理缓存":
                 break;
+              case "检查更新":
+                HandleTool.instance.packagesGetForcePackage();
+                break;
+              case "注销账号":
+                logic.deleteUser();
+                break;
             }
           },
           child: Container(
@@ -54,7 +80,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 SizedBox(
+                SizedBox(
                   width: 16.w,
                 ),
                 CommText(
@@ -72,10 +98,10 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                 hideArrow
                     ? const SizedBox(width: 21)
                     : Image.asset(
-                  "arrow.png".mine,
-                  width: 21,
-                ),
-                 SizedBox(
+                        "arrow.png".mine,
+                        width: 21,
+                      ),
+                SizedBox(
                   width: 16.w,
                 )
               ],

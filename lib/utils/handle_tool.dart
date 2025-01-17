@@ -321,8 +321,8 @@ class HandleTool {
   isCheckUpdateAction(Map map) async {
     if (map["versionCode"] == null) {
       Log.i("===== 没有更新信息=======");
+      HandleTool.showAppToastText("当前已是最新版本");
       if (isShow) {
-        HandleTool.showAppToastText("当前已是最新版本");
         isShow = false;
       }
       return;

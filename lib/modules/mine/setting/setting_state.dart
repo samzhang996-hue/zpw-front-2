@@ -1,5 +1,7 @@
+import 'package:get/get.dart';
 class SettingState {
+ late RxString version;
   SettingState() {
-    ///Initialize variables
+    version="".obs;
   }
 }

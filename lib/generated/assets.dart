@@ -7,9 +7,12 @@ class Assets {
   static const String commUpdateBg = 'images/comm/update_bg.png';
   static const String mineAbout = 'images/mine/about.png';
   static const String mineArrow = 'images/mine/arrow.png';
+  static const String mineCall = 'images/mine/call.png';
+  static const String mineCustomIndicator = 'images/mine/custom_indicator.png';
   static const String mineKf = 'images/mine/kf.png';
   static const String mineLogo = 'images/mine/logo.png';
   static const String mineMineBg = 'images/mine/mine_bg.png';
+  static const String mineOnline = 'images/mine/online.png';
   static const String mineSetting = 'images/mine/setting.png';
   static const String mineVipLogo = 'images/mine/vip_logo.png';
   static const String mineZp = 'images/mine/zp.png';

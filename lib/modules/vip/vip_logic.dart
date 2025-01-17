@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/modules/vip/model/payBean.dart';
 import 'package:zpw/modules/vip/model/vipBean.dart';

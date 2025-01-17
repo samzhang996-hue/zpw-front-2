@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -174,6 +175,7 @@ class DioUtils {
       _dio?.options.baseUrl =
           kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
     // }
+      Log.d("url---$url");
     if (isShowProgress) {
       EasyLoading.show();
     }
@@ -251,7 +253,7 @@ class DioUtils {
             }
           } else {
             if (isShowProgress == true) {
-              HandleTool.showAppToastText(resData["msg"]);
+              HandleTool.showAppToastText(resData["message"]);
             }
             EasyLoading.dismiss();
             Log.i("=response==error= $url"

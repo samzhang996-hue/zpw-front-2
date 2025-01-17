@@ -1,9 +1,10 @@
-import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'setting_state.dart';
 
-class SettingLogic extends GetxController {
+class SettingLogic extends BaseGetxController {
   final SettingState state = SettingState();
 
   @override
@@ -16,7 +17,13 @@ class SettingLogic extends GetxController {
   void version() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String localVersion = packageInfo.version;
-    String localBuildnumber = packageInfo.buildNumber;
-    Log.d("msg----$localVersion-----$localBuildnumber");
+    state.version.value=localVersion;
+  }
+  deleteUser() {
+    Get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) {
+      if (isSuccess == true && results.isNotEmpty) {
+
+      }
+    });
   }
 }

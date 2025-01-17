@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/ads_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -8,15 +9,10 @@ import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
 
-import 'model/login_entity.dart';
 import 'splash_state.dart';
 
 class SplashLogic extends BaseGetxController {
   final SplashState state = SplashState();
-
-  bool requestFinlish = true;
-  int requestMax = 0;
-
   @override
   void onInit() {
     // TODO: implement onInit
@@ -41,8 +37,6 @@ class SplashLogic extends BaseGetxController {
       await SpUtils.setString("deviceId", deviceId);
       await SpUtils.setString("channel", channel);
     } else if (Platform.isIOS) {
-      // IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      // deviceId = iosInfo.identifierForVendor;
       channel = "ios";
     }
     HandleTool.instance.channel = channel;
@@ -81,43 +75,24 @@ class SplashLogic extends BaseGetxController {
         "idfa": udid
       },
     };
-    requestFinlish = false;
-    Post<LoginEntity>(Api.sso_login,
+    Log.i("requestMax====>${dataMap}");
+    Post(Api.sso_login,
         isShowProgress: isShowProgress,
         params: dataMap,
         success: (isSuccess, code, message, results) async {
-          requestFinlish = true;
-          requestMax = requestMax + 1;
-          Log.i("requestMax====>${requestMax}");
           if (isSuccess == true && results.isNotEmpty) {
-            requestMax = 100;
-            final loginEntity = results[0];
-            HandleTool.instance.isMember = loginEntity.isMember ?? false;
-            HandleTool.instance.isSignTask = loginEntity.isSignTask ?? false;
-            Log.d(
-                "login--${loginEntity.authToken}--${HandleTool.instance.isMember}");
-            SpUtils.setString("token", loginEntity.authToken ?? "");
+            Map data = results.first as Map;
+            SpUtils.setString("token",  data['token'] ?? "");
             SpUtils.setBool("isAgreed", true);
-
+            Log.d("res----${data}");
             AdsUtils.init().then((value) {
               if (value) {
                 AdsUtils.showSplashAd();
+              }else{
+                Get.offAll(const MainPage());
               }
             });
-          } else {
-            /// ------->  这里单独处理已选
-            if (code == -1111) {
-              if (requestMax > 30) {
-                ///请求最大限制
-                HandleTool.showAppToastText("请检查网络连接或者网络授权");
-              } else {
-                Future.delayed(Duration(seconds: 1), () {
-                  _onLogin(channel, deviceId, oaid, isShowProgress: false);
-                });
-              }
-            }
           }
-        },
-        onModel: (m) => LoginEntity.fromJson(m));
+        });
   }
 }

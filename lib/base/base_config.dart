@@ -1,3 +1,3 @@
 class baseConfig {
-  static const String defaultPlaceholder = "icon_default_placeholder.png";
+  static const String defaultPlaceholder = "logo.png";
 }
