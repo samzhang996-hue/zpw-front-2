@@ -19,20 +19,6 @@ class MainLogic extends BaseGetxController {
   void onInit() {
     super.onInit();
     HandleTool.instance.packagesGetForcePackage();
-    getUserInfo();
-  }
-
-  getUserInfo() {
-    get<UserInfoBean>(Api.sso_getUserInfo,
-        isShowProgress: true,
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            Log.d("userInfoBean----${results.first}");
-            UserInfoBean userInfoBean = results.first;
-            HandleTool.instance.isMember = userInfoBean.isMember ?? false;
-          }
-        },
-        onModel: (m) => UserInfoBean.fromJson(m));
   }
 
   // 刷新VIP状态，更新以及页面数据集状态

@@ -80,6 +80,7 @@ class SplashLogic extends BaseGetxController {
         SpUtils.setString("token", data['token'] ?? "");
         SpUtils.setBool("isAgreed", true);
         Log.d("res----${data}");
+        getUserInfo();
       }
     });
   }
@@ -87,7 +88,7 @@ class SplashLogic extends BaseGetxController {
   bool isFirst = false;
 
   getUserInfo() {
-    get<UserInfoBean>(Api.sso_getUserInfo,
+    Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: true,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {

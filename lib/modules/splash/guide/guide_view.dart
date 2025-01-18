@@ -9,6 +9,7 @@ import 'package:zpw/common/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/splash/guide/view/custom_photo_dialog_utils.dart';
+import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'guide_logic.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,10 +21,9 @@ class GuidePage extends BaseStatefulWidget {
 class _GuidePageState extends BaseWidgetState<GuidePage> {
   final logic = Get.put(GuideLogic());
   final state = Get.find<GuideLogic>().state;
-  final picker = ImagePicker();
 
   Future<void> pickImage() async {
-    final pickedFile = await picker.pickImage(
+    final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       imageQuality: 60,
     );
@@ -123,7 +123,8 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                     ),
                     InkWell(
                       onTap: () {
-                        pickImage();
+                          gotoPushPage(Photo_listPage());
+                        // pickImage();
                       },
                       child: Container(
                         margin: EdgeInsets.only(top: 10.h, left: 16.w, right: 16.w),
