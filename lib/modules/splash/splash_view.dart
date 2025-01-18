@@ -195,7 +195,7 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '不同意',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorPlate.sixNineColor),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color:Color(0xffB8B8B8)),
                     ),
                     onPressed: () {
                       Get.back(result: false);

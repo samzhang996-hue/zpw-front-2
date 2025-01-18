@@ -21,7 +21,7 @@ class SettingLogic extends BaseGetxController {
     state.version.value=localVersion;
   }
   deleteUser() {
-    Get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) {
+    get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
           HandleTool.showAppToastText("注销成功");
       }

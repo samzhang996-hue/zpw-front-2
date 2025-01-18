@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/modules/main/main_state.dart';
+import 'package:zpw/modules/splash/guide/guide_view.dart';
 import 'package:zpw/modules/splash/splash_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/ads_utils.dart';

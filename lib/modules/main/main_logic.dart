@@ -23,7 +23,7 @@ class MainLogic extends BaseGetxController {
   }
 
   getUserInfo() {
-    Get<UserInfoBean>(Api.sso_getUserInfo,
+    get<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: true,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {

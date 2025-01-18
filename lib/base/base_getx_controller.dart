@@ -38,7 +38,7 @@ class BaseGetxController extends GetxController {
   }
 
   /// get
-  Get<T>(String url,
+  get<T>(String url,
       {Function(bool isSuccess, int code, String message, List<T> results)?
           success,
       Function(int totalCount)? totalCount,
