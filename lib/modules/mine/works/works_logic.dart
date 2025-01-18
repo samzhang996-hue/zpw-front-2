@@ -1,5 +1,6 @@
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 import 'works_state.dart';
 
@@ -20,7 +21,10 @@ class WorksLogic extends BaseGetxController {
       "worksType": type,
     };
     Get(Api.photoRecord, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {}
+      if (isSuccess == true && results.isNotEmpty) {
+        Map data = results.first as Map;
+        Log.d("msg---$data");
+      }
     });
   }
 }

@@ -41,6 +41,14 @@ class VipLogic extends BaseGetxController {
   void stopPolling() {
     _timer?.cancel();
   }
+  selectItem(int index) {
+    state.itemIndex = index;
+    update();
+  }
+  onSelected(bool isCheck) {
+    state.isCheck.value = isCheck;
+    update();
+  }
   getVipHome() {
     Post<VipBean>(Api.vip_getVipHome,
         isShowProgress: true,

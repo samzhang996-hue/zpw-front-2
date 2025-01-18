@@ -3,17 +3,14 @@ import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/view/gradient_border_painter.dart';
+import 'package:zpw/utils/handle_tool.dart';
 import 'vip_logic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VipPage extends BaseStatefulWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
   @override
   BaseWidgetState<BaseStatefulWidget> getState() => _VipPageState();
 }
@@ -23,206 +20,285 @@ class _VipPageState extends BaseWidgetState {
   final state = Get.find<VipLogic>().state;
 
   @override
+  void dispose() {
+    Get.delete<VipPage>();
+    super.dispose();
+  }
+  @override
   Widget initDefaultBuild(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Container(
-                color: Colors.red,
-                width: double.infinity, // 或者使用父容器的宽度约束
-                height: 644.h, // 使用屏幕高度的百分比
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: 398.h, // 使用屏幕高度的百分比
+    return GetBuilder<VipLogic>(builder: (logic) {
+      String? rk8;
+      String? rk9;
+      String? rk10;
+      if (state.vipBean == null) {
+        rk9 = "";
+        rk10 = "";
+      } else {
+        if (state.vipBean.vipList?.length != 0) {
+          rk9 = state.vipBean.vipList?[state.itemIndex].remark9;
+          rk8 = state.vipBean.vipList?[state.itemIndex].remark8;
+          rk10 = state.vipBean.vipList?[state.itemIndex].remark10;
+        } else {
+          rk9 = "";
+          rk8 = "";
+          rk10 = "";
+        }
+      }
+
+      return Column(
+        children: [
+          Expanded(
+            child: Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                Container(
+                  color: Colors.red,
+                  width: double.infinity, // 或者使用父容器的宽度约束
+                  height: 644.h, // 使用屏幕高度的百分比
                 ),
-                height: 247.h, // 使用屏幕高度的百分比
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0x00000000), // 透明
-                      Color(0xff000000), // 黑色
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 398.h, // 使用屏幕高度的百分比
+                  ),
+                  height: 247.h, // 使用屏幕高度的百分比
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0x00000000), // 透明
+                        Color(0xff000000), // 黑色
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: Color(0xff070704),
-                  child: Column(
-                    children: [
-                      _listViewWidget(),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 16.w),
-                          child: CommText(
-                            text: "按周期会员自动续费,可随时关闭",
-                            fontSize: 12.sp,
-                            textColor: Color(0xff6F6F6F),
-                            fontWeight: FontWeight.w500,
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    color: Color(0xff070704),
+                    child: Column(
+                      children: [
+                        Visibility(
+                          child: _listViewWidget(),
+                          visible: !(rk9 == ""),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 16.w),
+                            child: CommText(
+                              text: rk9,
+                              fontSize: 12.sp,
+                              textColor: Color(0xff6F6F6F),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10.h, bottom: 10.h),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 47.h,
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "zfb.png".vip,
-                                    width: 26.w,
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  CommText(
-                                    text: "支付宝支付",
-                                    fontSize: 15.w,
-                                    textColor: Color(0xffFFD9D0),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  Image.asset(
-                                    "un_check.png".vip,
-                                    width: 14.w,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 47.h,
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "wx.png".vip,
-                                    width: 26.w,
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  CommText(
-                                    text: "微信支付",
-                                    fontSize: 15.w,
-                                    textColor: Color(0xffFFD9D0),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  SizedBox(
-                                    width: 8.w,
-                                  ),
-                                  Image.asset(
-                                    "un_check.png".vip,
-                                    width: 14.w,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          CustomSureVipDialogUtils.showCustomDialog(context: context, onPressed: (){
-
-                          });
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 17.h, right: 17.h, top: 17.h),
-                              height: 54.h,
-                              width: double.infinity,
-                              decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
-                              child: Center(
-                                  child: CommText(
-                                text: "立即开通并支付",
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                                textColor: Colors.white,
-                              )),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(right: 17.h),
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                    width: 183.w,
-                                    height: 27.h,
-                                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
-                                    child: CommText(
-                                      text: "立享13个月，折合7.5元/月",
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500,
-                                      textColor: Colors.white,
-                                      textAlign: TextAlign.center,
+                        Container(
+                          margin: EdgeInsets.only(top: 10.h, bottom: 10.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                height: 47.h,
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      "zfb.png".vip,
+                                      width: 26.w,
                                     ),
-                                  )),
-                            )
-                          ],
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    CommText(
+                                      text: "支付宝支付",
+                                      fontSize: 15.w,
+                                      textColor: Color(0xffFFD9D0),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    Image.asset(
+                                      "un_check.png".vip,
+                                      width: 14.w,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 47.h,
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      "wx.png".vip,
+                                      width: 26.w,
+                                    ),
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    CommText(
+                                      text: "微信支付",
+                                      fontSize: 15.w,
+                                      textColor: Color(0xffFFD9D0),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    Image.asset(
+                                      "un_check.png".vip,
+                                      width: 14.w,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 17.h, top: 10.h, bottom: 25.h),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              "un_check.png".vip,
-                              width: 14.w,
-                            ),
-                            CommText(
-                              text: "点击购买即表示您同意",
-                              fontSize: 12.sp,
-                              textColor: Color(0xff646464),
-                            ),
-                            CommText(
-                              text: "《会员协议》",
-                              fontSize: 12.sp,
-                              textColor: Colors.white,
-                            ),
-                            CommText(
-                              text: "《自动续费协议》",
-                              fontSize: 12.sp,
-                              textColor: Colors.white,
-                            ),
-                          ],
+                        InkWell(
+                          onTap: () {
+                            if(!state.isCheck.value){
+                              CustomSureVipDialogUtils.showCustomDialog(context: context, onPressed: () {
+                                logic.onSelected(true);
+                              });
+                            }
+
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 17.h, right: 17.h, top: 17.h),
+                                height: 54.h,
+                                width: double.infinity,
+                                decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
+                                child: Center(
+                                    child: CommText(
+                                  text: rk8,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                  textColor: Colors.white,
+                                )),
+                              ),
+                              Visibility(
+                                visible: !(rk10 == ""),
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 17.h),
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        width: 183.w,
+                                        height: 27.h,
+                                        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
+                                        child: CommText(
+                                          text: rk10,
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w500,
+                                          textColor: Colors.white,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ), // 使用屏幕高度的百分比
+                        Container(
+                          margin: EdgeInsets.only(left: 20.h, top: 10.h, bottom: 25.h),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                      width: 14.w,
+                                    ),
+                                    CommText(
+                                      text: "点击购买即表示您同意",
+                                      fontSize: 12.sp,
+                                      textColor: Color(0xff646464),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  if (state.isCheck.value) {
+                                    logic.onSelected(false);
+                                  } else {
+                                    logic.onSelected(true);
+                                  }
+                                },
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  String htmlStr = HandleTool.instance.hYxy;
+                                  if (htmlStr.isEmpty) {
+                                    return;
+                                  }
+                                  gotoPushPage(
+                                    MyWebViewPage(
+                                      titleStr: "会员协议",
+                                      htmlUrl: HandleTool.instance.yHxy,
+                                    ),
+                                  );
+                                },
+                                child: CommText(
+                                  text: "《会员协议》",
+                                  fontSize: 12.sp,
+                                  textColor: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ), // 使用屏幕高度的百分比
+                  ),
                 ),
-              ),
-            ],
+                InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Container(
+                      width: 80.w,
+                      height: 30.h,
+                      margin: EdgeInsets.only(top: 44.h, left: 14.w),
+                      child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Image.asset(
+                            "back.png".comm,
+                            width: 16.w,
+                          ))),
+                )
+              ],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   Widget _listViewWidget() {
+    var vipPriceVos = state.vipBean.vipList;
+    if (state.vipBean == null) {
+      return Container();
+    }
     return Container(
       margin: EdgeInsets.only(left: 5.w, right: 5.w, top: 5.h),
       height: 165.h,
       child: ListView.builder(
         padding: EdgeInsets.all(0),
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: vipPriceVos?.length ?? 0,
         itemBuilder: (BuildContext context, int index) {
+          var vp = vipPriceVos?[index];
+          bool isSelect = state.itemIndex == index;
           return InkWell(
-            onTap: () {},
+            onTap: () {
+              logic.selectItem(index);
+            },
             child: Container(
               margin: EdgeInsets.only(left: 9.w),
               child: Stack(
@@ -246,7 +322,7 @@ class _VipPageState extends BaseWidgetState {
                             height: 20.h,
                           ),
                           CommText(
-                            text: "连续包月",
+                            text: vp?.remark2,
                             fontSize: 15.sp,
                             textColor: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -266,7 +342,7 @@ class _VipPageState extends BaseWidgetState {
                                   ),
                                 ),
                                 CommText(
-                                  text: "188",
+                                  text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
                                   textColor: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -278,7 +354,7 @@ class _VipPageState extends BaseWidgetState {
                             height: 12.h,
                           ),
                           CommText(
-                            text: "原价399元",
+                            text: vp?.remark4 ?? "",
                             fontSize: 12.sp,
                             textColor: Color(0xff6F6F6F),
                             fontWeight: FontWeight.w500,
@@ -289,32 +365,35 @@ class _VipPageState extends BaseWidgetState {
                   ),
 
                   // 内层 Container，使用 Positioned 定位
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Container(
-                        height: 24.0,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(14.0),
-                            bottomRight: Radius.circular(14),
-                          ),
-                          gradient: LinearGradient(
-                            colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
-                        ),
-                        child: Container(
-                          margin: EdgeInsets.only(left: 8, right: 8),
-                          child: Center(
-                            child: CommText(
-                              text: "新人福利",
-                              fontSize: 12.sp,
-                              textColor: Colors.white,
+                  Visibility(
+                    visible: !(vp?.remark1 == "" || vp?.remark1 == null),
+                    child: Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Container(
+                          height: 24.0,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(14.0),
+                              bottomRight: Radius.circular(14),
+                            ),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.topRight,
                             ),
                           ),
-                        )),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 8, right: 8),
+                            child: Center(
+                              child: CommText(
+                                text: vp?.remark1 ?? "",
+                                fontSize: 12.sp,
+                                textColor: Colors.white,
+                              ),
+                            ),
+                          )),
+                    ),
                   )
                 ],
               ),

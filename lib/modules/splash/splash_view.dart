@@ -98,10 +98,7 @@ class UserAgreementDialog extends GetWidget {
                 padding: EdgeInsets.all(16.0),
                 child: Text(
                   '个人信息保护',
-                  style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
-                      color: ColorPlate.sixThreeColor),
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: ColorPlate.sixThreeColor),
                 ),
               ),
             ),
@@ -111,10 +108,8 @@ class UserAgreementDialog extends GetWidget {
                 text: TextSpan(
                   children: [
                     const TextSpan(
-                      text:
-                          "感谢您信任我们的产品！\n我们非常重视您的隐私和个人信息保护。\n在您使用亲，请认真阅读：《隐私政策》及《用户协议》。我们将严格按照前述政策，为您提供更好的服务。如您同意改隐私政策，请点击“同意”并开始使用我们的产品集服务。",
-                      style: TextStyle(
-                          fontSize: 14, color: ColorPlate.sixSixColor),
+                      text: "欢迎使用本产品，在使用产品服务前，请仔细阅读并理解",
+                      style: TextStyle(fontSize: 14, color: ColorPlate.sixSixColor),
                     ),
                     TextSpan(
                       text: "《隐私政策》",
@@ -125,8 +120,7 @@ class UserAgreementDialog extends GetWidget {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          String htmlStr =
-                              HandleTool.instance.ySxy;
+                          String htmlStr = HandleTool.instance.ySxy;
                           if (htmlStr.length > 0) {
                             Get.to(
                               MyWebViewPage(
@@ -138,7 +132,7 @@ class UserAgreementDialog extends GetWidget {
                         },
                     ),
                     const TextSpan(
-                      text: "、",
+                      text: "及",
                       style: TextStyle(
                         fontSize: 14,
                       ),
@@ -152,8 +146,7 @@ class UserAgreementDialog extends GetWidget {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          String htmlStr =
-                              HandleTool.instance.yHxy;
+                          String htmlStr = HandleTool.instance.yHxy;
                           if (htmlStr.length > 0) {
                             Get.to(
                               MyWebViewPage(
@@ -166,9 +159,8 @@ class UserAgreementDialog extends GetWidget {
                     ),
                     const TextSpan(
                       text:
-                          "内容，我们将严格按照政策为您提供更好的服务。如果您同意本隐私政策，请点击“同意”并开始使用我们的产品。",
-                      style: TextStyle(
-                          fontSize: 14, color: ColorPlate.sixSixColor),
+                          "为了给你提供更好的服务，我们将会向您申请一下权限和信息：\n1.为了帮您统计设备维度数据分析、保障软件服务的正常运行，我们需要申请获取设备信息，日志信息。\n2.我们可能会申请读取设写入手机存储权限，用于下载及缓存相关文件；相机与录音权限，用于拍摄功能。\n3.以上权限以及社戏爱你个头。相册、存储空间等敏感权限均不会默认或强制开启收集信息。\n4.我们尊重你的选择权，同时我们也为你提供注销、投诉渠道。",
+                      style: TextStyle(fontSize: 14, color: ColorPlate.sixSixColor),
                     ),
                   ],
                 ),
@@ -180,16 +172,13 @@ class UserAgreementDialog extends GetWidget {
                 Container(
                   margin: const EdgeInsets.all(15.0), // 设置上边距为15.0
                   decoration: BoxDecoration(
-                    color: const Color(0xff4F7FF3),
+                    color: ColorPlate.themeColor,
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   child: TextButton(
                     child: const Text(
-                      '同意',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                      '同意并继续',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     onPressed: () {
                       Get.back(result: true);
@@ -206,10 +195,7 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '不同意',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: ColorPlate.sixNineColor),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorPlate.sixNineColor),
                     ),
                     onPressed: () {
                       Get.back(result: false);

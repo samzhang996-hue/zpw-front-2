@@ -91,9 +91,9 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 if (type == 1) {
                     key = uid;
                 } else if (type == 2) {
-                    key = TextUtils.isEmpty(projectId) ? "11" : projectId;
+                    key = TextUtils.isEmpty(projectId) ? "30" : projectId;
                 } else {
-                    key = TextUtils.isEmpty(_channel) ? "android" : _channel;
+                    key = TextUtils.isEmpty(_channel) ? "AIJL300" : _channel;
                 }
                 result.success(key == null ? "" : key);
                 break;

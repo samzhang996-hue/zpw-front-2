@@ -20,6 +20,11 @@ class CallPage extends BaseStatefulWidget {
 
 class _CallPageState extends BaseWidgetState<CallPage> {
   @override
+  void dispose() {
+    Get.delete<CallPage>();
+    super.dispose();
+  }
+  @override
   Widget initDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,

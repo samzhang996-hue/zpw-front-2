@@ -111,7 +111,7 @@ class ColorPlate {
   static const Color commonHighGrayColor = Color(0xff626A7B);
 
   //999999
-  static const Color sixNineColor = Color(0xff999999);
+  static const Color sixNineColor = Color(0xff4C4C4C);
   //66666
   static const Color sixSixColor = Color(0xff666666);
   //33333

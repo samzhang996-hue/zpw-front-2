@@ -1,6 +1,7 @@
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'setting_state.dart';
 
@@ -22,7 +23,7 @@ class SettingLogic extends BaseGetxController {
   deleteUser() {
     Get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
-
+          HandleTool.showAppToastText("注销成功");
       }
     });
   }

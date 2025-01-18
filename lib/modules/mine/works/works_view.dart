@@ -24,6 +24,12 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
   }
 
   @override
+  void dispose() {
+    Get.delete<WorksPage>();
+    super.dispose();
+  }
+
+  @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<WorksLogic>(builder: (logic) {
       return Container(
@@ -58,8 +64,9 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
   }
 
   Widget _item() {
-    return Flexible(child: Container(
-      margin: EdgeInsets.only(left: 16.w,right: 16.w),
+    return Flexible(
+        child: Container(
+      margin: EdgeInsets.only(left: 16.w, right: 16.w),
       child: GridView.builder(
           padding: EdgeInsets.only(top: 17.h),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -74,10 +81,10 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
           itemBuilder: (BuildContext context, int index) {
             return Container(
                 child: Stack(
-                  children: [
-                    QdsImageCorner("url", 175.w, 265.h,8),
-                  ],
-                ));
+              children: [
+                QdsImageCorner("url", 175.w, 265.h, 8),
+              ],
+            ));
           }),
     ));
   }

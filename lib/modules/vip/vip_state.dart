@@ -6,7 +6,7 @@ class VipState {
   late RxBool isCheck;
   late PayBean payBean;
   late VipBean vipBean;
-  Vip_bState() {
+  VipState() {
     payBean = PayBean();
     vipBean = VipBean();
     isCheck=true.obs;

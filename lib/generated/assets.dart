@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String commBack = 'images/comm/back.png';
   static const String commEmty = 'images/comm/emty.png';
   static const String commSplash = 'images/comm/splash.png';
   static const String commUpdateBg = 'images/comm/update_bg.png';

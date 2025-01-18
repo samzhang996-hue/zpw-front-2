@@ -2,10 +2,11 @@
 
 class Api {
   //本地
-  static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
+  // static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
+  static const String API_BASE_URL_DEBUG = "http://photo.jlhkj168.cn";
 
   ///正式
-  static const String API_BASE_URL_RELEASE = "http://8.130.84.131:4001";
+  static const String API_BASE_URL_RELEASE = "http://photo.jlhkj168.cn";
 
   /// 更新
   static const String getForcePackage = "/packge/getForcePackage";

@@ -85,6 +85,7 @@ class SplashLogic extends BaseGetxController {
             SpUtils.setString("token",  data['token'] ?? "");
             SpUtils.setBool("isAgreed", true);
             Log.d("res----${data}");
+
             AdsUtils.init().then((value) {
               if (value) {
                 AdsUtils.showSplashAd();

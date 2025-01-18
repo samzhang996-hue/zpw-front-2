@@ -19,6 +19,11 @@ class AboutPage extends BaseStatefulWidget {
 
 class _AboutPageState extends BaseWidgetState<AboutPage> {
   @override
+  void dispose() {
+    Get.delete<AboutPage>();
+    super.dispose();
+  }
+  @override
   Widget initDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,

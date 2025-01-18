@@ -5,6 +5,7 @@ import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'setting_logic.dart';
@@ -17,6 +18,12 @@ class SettingPage extends BaseStatefulWidget {
 class _SettingPageState extends BaseWidgetState<SettingPage> {
   final logic = Get.put(SettingLogic());
   final state = Get.find<SettingLogic>().state;
+
+  @override
+  void dispose() {
+    Get.delete<SettingPage>();
+    super.dispose();
+  }
 
   @override
   Widget initDefaultBuild(BuildContext context) {
@@ -70,7 +77,12 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                 HandleTool.instance.packagesGetForcePackage();
                 break;
               case "注销账号":
-                logic.deleteUser();
+                CustomExitDialogUtils.showCustomDialog(
+                    context: context,
+                    onPressed: () {
+                      logic.deleteUser();
+                    });
+
                 break;
             }
           },
