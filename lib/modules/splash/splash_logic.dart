@@ -8,6 +8,7 @@ import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/splash/guide/guide_view.dart';
 import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/utils/ads_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
@@ -108,13 +109,13 @@ class SplashLogic extends BaseGetxController {
               isFirst = true;
             }
 
-            Get.offAll(GuidePage());
+            // Get.offAll(GuidePage());
 
-            // AdsUtils.init().then((value) {
-            //   if (value) {
-            //     AdsUtils.showSplashAd();
-            //   }
-            // });
+            AdsUtils.init().then((value) {
+              if (value) {
+                AdsUtils.showSplashAd();
+              }
+            });
           }
         },
         onModel: (m) => UserInfoBean.fromJson(m));
