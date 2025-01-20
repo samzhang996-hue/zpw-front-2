@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_update/azhon_app_update.dart';
@@ -54,10 +55,10 @@ class HandleTool {
   //   "QWHYXY": "",
   //   "PHONE": "",
   // }.obs;
-  String yHxy="";
-  String ySxy="";
-  String hYxy="";
-  String pHone="";
+  String yHxy = "";
+  String ySxy = "";
+  String hYxy = "";
+  String pHone = "";
   String gz = "";
   // /// 获取协议
   // getConfigWithKey() {
@@ -90,7 +91,7 @@ class HandleTool {
           } else if (configType == 5) {
             // 会员协议 URL
             hYxy = configValue;
-          }else if (configType == 6) {
+          } else if (configType == 6) {
             // 手机号
             pHone = configValue;
           } else if (configType == 7) {
@@ -315,6 +316,18 @@ class HandleTool {
         isShowError: isShowError,
         cancelToken: cancelToken,
         isCancleToken: isCancleToken);
+  }
+
+  Future<T?> QDSUpload<T>(
+    String url, {
+    Object? params,
+    onModel,
+  }) {
+    return DioUtils.instance.upload<T>(
+      url,
+      params: params,
+      onModel: onModel,
+    );
   }
 
   /// 检查是否更新

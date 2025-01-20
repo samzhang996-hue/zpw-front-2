@@ -23,19 +23,9 @@ class Api {
   /// 查询历史记录
   static const String photoRecord = "/photoRecord/pageRecord";
 
-
-
-
-
-
-
-
-
-
-
-
   ///签约接口
-  static const String payOrder_addUserAgreementOrder = "/center/addUserAgreementOrder";
+  static const String payOrder_addUserAgreementOrder =
+      "/center/addUserAgreementOrder";
 
   /// 下单接口
   static const String payOrder_addOrder = "/center/createOrder";
@@ -59,8 +49,34 @@ class Api {
   static const String sso_bindUserPhone = "/sso/bindUserPhone";
 
   ///新增血糖
-  static const String bloodRecord_addBloodRecord = "/bloodRecord/addBloodRecord";
+  static const String bloodRecord_addBloodRecord =
+      "/bloodRecord/addBloodRecord";
 
   ///血糖记录
   static const String bloodRecord_pageList = "/bloodRecord/pageList";
+
+  ///上传文件
+  // static const String localUploadFile = "/upload/localUploadFile";
+
+  ///上传文件
+  static const String uploadFile = "/upload/uploadFile";
+
+  ///设置默认头像
+  static const String bindDefaultImg = "/bindDefaultImg";
+
+  ///Get查询分类-合集-玩法 groupType:分类类型(GroupType 0:分类 1:合集 2:玩法)
+  ///tabType	展示tab位置(TabType 0:视频 1:图片 2:特效)
+  ///http://photo.jlhkj168.cn/doc.html#/App%20Knife4j%20doc/%E7%85%A7%E7%89%87%E7%BB%84%E5%90%88%E8%A1%A8/listPhotoGroupUsingGET
+  static const String listPhotoGroup = "/photoGroup/listPhotoGroup";
+
+  ///Get 查询玩法下分类 id
+  ///http://photo.jlhkj168.cn/doc.html#/App%20Knife4j%20doc/%E7%85%A7%E7%89%87%E7%BB%84%E5%90%88%E8%A1%A8/effectGroupListUsingGET
+  static const String effectGroupList = "/photoGroup/effectGroupList";
+
+  ///Get 查询分类下(模板合集)或合集下模板 id 分类或合集id
+  ///http://photo.jlhkj168.cn/doc.html#/App%20Knife4j%20doc/%E7%85%A7%E7%89%87%E7%BB%84%E5%90%88%E8%A1%A8/pagePhotoGroupBindUsingGET
+  static const String pagePhotoGroupBind = "/photoGroup/pagePhotoGroupBind";
+
+  ///添加处理图片
+  static const String addPhotoRecord = "/photoRecord/addPhotoRecord";
 }

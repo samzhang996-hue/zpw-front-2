@@ -16,4 +16,5 @@ extension ImageLoad on String {
   String get mine => 'images/mine/$this';
   String get comm => 'images/comm/$this';
   String get vip => 'images/vip/$this';
+  String get make => 'images/make/$this';
 }

@@ -1,15 +1,16 @@
 import 'dart:convert';
-import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/aesUtil.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
-import 'interceptors.dart';
+
 import 'api/network_api.dart';
 import 'exception/error_status.dart';
 import 'exception/exception_handle.dart';
+import 'interceptors.dart';
 import 'net_response.dart';
 
 //设置默认的Header 不配置User-Agent 开眼API 403
@@ -86,8 +87,8 @@ class DioUtils {
     // if (url == Api.appPackage_latestPackage) {
     //   _dio?.options.baseUrl = Api.API_COMM;
     // } else {
-      _dio?.options.baseUrl =
-          kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
+    _dio?.options.baseUrl =
+        kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
     // }
 
     if (isShowProgress) {
@@ -172,10 +173,10 @@ class DioUtils {
     // if (url == Api.appPackage_latestPackage) {
     //   _dio?.options.baseUrl = Api.API_COMM;
     // } else {
-      _dio?.options.baseUrl =
-          kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
+    _dio?.options.baseUrl =
+        kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
     // }
-      Log.d("url---$url");
+    Log.d("url---$url");
     if (isShowProgress) {
       EasyLoading.show();
     }
@@ -302,6 +303,54 @@ class DioUtils {
       }
       Log.i("=response==error====${e.type} $url");
     }
+  }
+
+  Future<T?> upload<T>(
+    String url, {
+    Object? params,
+    onModel,
+  }) async {
+    _dio?.options.baseUrl =
+        kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
+    EasyLoading.show();
+    _dio?.options.headers["Authorization"] =
+        await HandleTool.getDataWithKey("token");
+    _dio?.options = _options!;
+    params ??= {};
+
+    print("_dio?.options:${_dio?.options.headers}");
+
+    // return null;
+    try {
+      var response;
+      response = await _dio?.post(url, data: params);
+      EasyLoading.dismiss();
+      print("resData:$response");
+      try {
+        if (response.statusCode == 200) {
+          var resData = jsonDecode(response.data);
+          var code = resData['code'];
+          var message = resData['message'];
+          print("resData:$resData");
+          if (code == 500) {
+            HandleTool.showAppToastText(message);
+            return null;
+          }
+
+          if (code == 100) {
+            var data = resData['data'];
+            return onModel(data);
+          }
+        }
+      } catch (e) {
+        EasyLoading.dismiss();
+        Log.i("=response==error====${e.runtimeType} $url");
+      }
+    } on DioException catch (e) {
+      EasyLoading.dismiss();
+      Log.i("=response==error====${e.type} $url");
+    }
+    return null;
   }
 
   ///将返回的数据进行统一处理并解析成对应的Bean

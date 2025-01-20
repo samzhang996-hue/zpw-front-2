@@ -1,18 +1,19 @@
 import 'dart:io';
+
+import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/splash/guide/guide_view.dart';
 import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/ads_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
-import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+
 import 'splash_state.dart';
-import 'package:get/get.dart';
 
 class SplashLogic extends BaseGetxController {
   final SplashState state = SplashState();
@@ -28,7 +29,7 @@ class SplashLogic extends BaseGetxController {
 
   void printDeviceInfo() async {
     String? deviceId;
-    String channel = "android";
+    String channel = "AIJL300";
     String oaid = "";
     if (Platform.isAndroid) {
       String oaidStr = await SpUtils.getString("oaid");
@@ -45,7 +46,8 @@ class SplashLogic extends BaseGetxController {
       channel = "ios";
     }
     HandleTool.instance.channel = channel;
-    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    Log.i(
+        'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
@@ -64,17 +66,24 @@ class SplashLogic extends BaseGetxController {
     HandleTool.instance.getProtocolConfig();
   }
 
-  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = true}) async {
+  _onLogin(String channel, String deviceId, String oaid,
+      {bool isShowProgress = true}) async {
     String udid = "";
     if (Platform.isIOS) {
       udid = "ios唯一标识";
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
-      "userDeviceInfo": {"deviceCode": deviceId, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": udid},
+      "userDeviceInfo": {
+        "deviceCode": deviceId,
+        "systemDevice": Platform.isAndroid ? "android" : "ios",
+        "oaid": oaid,
+        "idfa": udid
+      },
     };
     Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
+    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
+        success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         SpUtils.setString("token", data['token'] ?? "");
@@ -92,17 +101,20 @@ class SplashLogic extends BaseGetxController {
         isShowProgress: true,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
-            Log.d("userInfoBean----${results.first}");
+            Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
             HandleTool.instance.isMember = userInfoBean.isMember ?? false;
             if (userInfoBean.headImg!.isNotEmpty) {
               isFirst = true;
             }
-            AdsUtils.init().then((value) {
-              if (value) {
-                AdsUtils.showSplashAd();
-              }
-            });
+
+            Get.offAll(GuidePage());
+
+            // AdsUtils.init().then((value) {
+            //   if (value) {
+            //     AdsUtils.showSplashAd();
+            //   }
+            // });
           }
         },
         onModel: (m) => UserInfoBean.fromJson(m));
@@ -111,7 +123,8 @@ class SplashLogic extends BaseGetxController {
   test() {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
-        if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
+        if (event.action == AdEventAction.onAdError ||
+            event.action == AdEventAction.onAdLoaded) {
           if (isFirst) {
             Get.offAll(const MainPage());
           } else {
