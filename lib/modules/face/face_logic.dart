@@ -22,7 +22,7 @@ class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
     HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
         isShowProgress: true,
         params: {
-          "groupType": 0,
+          "groupType": 1,
           "tabType": 1,
         },
         success: (isSuccess, code, message, results) {
@@ -38,7 +38,7 @@ class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
     HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
         isShowProgress: true,
         params: {
-          "groupType": 1,
+          "groupType": 0,
           "tabType": 1,
         },
         success: (isSuccess, code, message, results) {

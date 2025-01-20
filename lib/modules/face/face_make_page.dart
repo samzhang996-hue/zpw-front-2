@@ -4,8 +4,13 @@ import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/utils/handle_tool.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
+  final String title;
+
+  FaceMakePage({required this.title});
+
   @override
   BaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
 }
@@ -16,6 +21,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   late final _show = false.obs;
 
   void _make() async {
+    HandleTool.showAppToastText("1213");
+    // HandleTool.instance.SMWPost()
+    return;
     _show.value = true;
     final res = await Get.dialog(
         Material(
@@ -176,7 +184,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
           Column(
             children: [
               YAppBar(
-                title: "千种风情人生",
+                title: widget.title,
                 right: Image.asset(
                   "make_history.png".make,
                   width: 28.w,

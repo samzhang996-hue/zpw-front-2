@@ -8,6 +8,7 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/face_item.dart';
 import 'package:zpw/modules/face/face_logic.dart';
+import 'package:zpw/modules/face/gather_page.dart';
 
 class FacePage extends StatefulWidget {
   const FacePage({super.key});
@@ -172,19 +173,31 @@ class _FacePageState extends State<FacePage>
                                   itemBuilder: (c, index) {
                                     final bean =
                                         logic.listPhotoGroupBean[index];
-                                    return Container(
-                                      width: 182.w,
-                                      height: 90.w,
-                                      margin: EdgeInsets.only(
-                                          left: 16.w,
-                                          right: index == 2 ? 16.w : 0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.w),
-                                        child: QdsImage(
-                                          "${bean.imgUrlAcross}",
-                                          182.w,
-                                          90.w,
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.to(
+                                          () => GatherPage(
+                                            index: index,
+                                            listPhotoGroupBean:
+                                                logic.listPhotoGroupBean,
+                                          ),
+                                        );
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Container(
+                                        width: 182.w,
+                                        height: 90.w,
+                                        margin: EdgeInsets.only(
+                                            left: 16.w,
+                                            right: index == 2 ? 16.w : 0),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.w),
+                                          child: QdsImage(
+                                            "${bean.imgUrlAcross}",
+                                            182.w,
+                                            90.w,
+                                          ),
                                         ),
                                       ),
                                     );
