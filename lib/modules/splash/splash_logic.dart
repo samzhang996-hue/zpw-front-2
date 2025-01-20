@@ -109,8 +109,14 @@ class SplashLogic extends BaseGetxController {
               isFirst = true;
             }
 
-            // Get.offAll(GuidePage());
-
+            Get.offAll(const MainPage());
+            return;
+            if (isFirst) {
+              Get.offAll(const MainPage());
+            } else {
+              Get.offAll(GuidePage());
+            }
+            return;
             AdsUtils.init().then((value) {
               if (value) {
                 AdsUtils.showSplashAd();

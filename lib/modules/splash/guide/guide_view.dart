@@ -9,6 +9,7 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/model/upload_bean.dart';
+import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -143,15 +144,17 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                                   params: formData,
                                   onModel: (v) => UploadBean.fromJson(v));
                           if (bean == null) return;
-                          print(
-                              "bean:${bean.contentType},bean.url:${bean.url}");
 
                           HandleTool.instance.SMWPost(
                               '${Api.bindDefaultImg}?imgUrl=${bean.url}',
                               isShowProgress: true,
                               success: (isSuccess, code, message, results) {
                             if (isSuccess == true && results.isNotEmpty) {
+                              Get.back();
                               HandleTool.showAppToastText("上传成功");
+                              Get.offAll(() => const MainPage());
+                            } else {
+                              Get.back();
                             }
                           });
                         } else {

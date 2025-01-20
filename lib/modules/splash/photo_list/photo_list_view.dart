@@ -50,6 +50,20 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     _loadPhotos();
   }
 
+  String formatFileSize(int bytes) {
+    if (bytes <= 0) return '0 B';
+    const List<String> units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    int unitIndex = 0;
+    double size = bytes.toDouble();
+
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024;
+      unitIndex++;
+    }
+
+    return '${size.toStringAsFixed(2)} ${units[unitIndex]}';
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -99,6 +113,8 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                             return GestureDetector(
                                 onTap: () async {
                                   final file = await photo.file;
+                                  int fileSize = await file!.length();
+                                  print("file:${formatFileSize(fileSize)}");
                                   Get.back(result: file?.path);
                                 },
                                 child:
