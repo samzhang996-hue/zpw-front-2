@@ -9,6 +9,7 @@ import 'package:zpw/modules/vip/view/gradient_border_painter.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'vip_logic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:video_player/video_player.dart';
 
 class VipPage extends BaseStatefulWidget {
   @override
@@ -18,12 +19,32 @@ class VipPage extends BaseStatefulWidget {
 class _VipPageState extends BaseWidgetState {
   final logic = Get.put(VipLogic());
   final state = Get.find<VipLogic>().state;
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // 使用网络视频 URL 或本地视频资产
+    _controller = VideoPlayerController.asset(
+      'vip.mp4'.vip,
+    )
+      ..setLooping(true)
+      ..initialize().then((_) {
+        // 确保在视频初始化完成后设置播放状态
+        setState(() {
+          _controller.play();
+        });
+      });
+  }
 
   @override
   void dispose() {
+    _controller.dispose();
     Get.delete<VipPage>();
     super.dispose();
   }
+
   @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<VipLogic>(builder: (logic) {
@@ -38,6 +59,8 @@ class _VipPageState extends BaseWidgetState {
           rk9 = state.vipBean.vipList?[state.itemIndex].remark9;
           rk8 = state.vipBean.vipList?[state.itemIndex].remark8;
           rk10 = state.vipBean.vipList?[state.itemIndex].remark10;
+          state.isWx=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay??0;
+          state.isZfb=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay??0;
         } else {
           rk9 = "";
           rk8 = "";
@@ -52,32 +75,33 @@ class _VipPageState extends BaseWidgetState {
               alignment: Alignment.topLeft,
               children: [
                 Container(
-                  color: Colors.red,
                   width: double.infinity, // 或者使用父容器的宽度约束
-                  height: 644.h, // 使用屏幕高度的百分比
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    top: 398.h, // 使用屏幕高度的百分比
-                  ),
-                  height: 247.h, // 使用屏幕高度的百分比
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0x00000000), // 透明
-                        Color(0xff000000), // 黑色
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                  height: 644.h,
+                  child: _controller.value.isInitialized
+                      ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                      : Container(
+                    child: CircularProgressIndicator(),
+                  ), // 使用屏幕高度的百分比
                 ),
                 Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: Container(
-                    color: Color(0xff070704),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0x00000000), // 透明
+                          Color(0xff000000), // 黑色
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.2, 0.2], // 透明从0%到20%，黑色从20%到100%
+                      ),
+                    ),
                     child: Column(
                       children: [
                         Visibility(
@@ -90,18 +114,18 @@ class _VipPageState extends BaseWidgetState {
                             padding: EdgeInsets.only(left: 16.w),
                             child: CommText(
                               text: rk9,
-                              fontSize: 12.sp,
-                              textColor: Color(0xff6F6F6F),
+                              fontSize: 11.sp,
+                              textColor: Color(0xff7E7E7E),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                        Container(
+                        Visibility(visible: (state.isWx==1&&state.isZfb==1),child:  Container(
                           margin: EdgeInsets.only(top: 10.h, bottom: 10.h),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Container(
+                              Visibility(visible: state.isZfb==1,child: Container(
                                 height: 47.h,
                                 child: Row(
                                   children: [
@@ -127,8 +151,8 @@ class _VipPageState extends BaseWidgetState {
                                     ),
                                   ],
                                 ),
-                              ),
-                              Container(
+                              ),),
+                              Visibility(visible: state.isWx==1,child: Container(
                                 height: 47.h,
                                 child: Row(
                                   children: [
@@ -154,18 +178,28 @@ class _VipPageState extends BaseWidgetState {
                                     ),
                                   ],
                                 ),
-                              ),
+                              ),)
                             ],
                           ),
-                        ),
+                        ),),
                         InkWell(
                           onTap: () {
-                            if(!state.isCheck.value){
-                              CustomSureVipDialogUtils.showCustomDialog(context: context, onPressed: () {
-                                logic.onSelected(true);
-                              });
+                            var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
+                            state.goodsId = vp?.id ?? 0;
+                            state.payKeyType = vp?.defaultPayKeyType ?? 0;
+                            var zfbType = vp?.defaultZfbPayKeyType ?? 0;
+                            state.isWx=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay??0;
+                            state.isZfb=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay??0;
+                            if (!state.isCheck.value) {
+                              CustomSureVipDialogUtils.showCustomDialog(
+                                  context: context,
+                                  onPressed: () {
+                                    logic.onSelected(true);
+                                    logic.addOrder();
+                                  });
+                            } else {
+                              logic.addOrder();
                             }
-
                           },
                           child: Stack(
                             children: [
@@ -176,11 +210,11 @@ class _VipPageState extends BaseWidgetState {
                                 decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
                                 child: Center(
                                     child: CommText(
-                                  text: rk8,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.bold,
-                                  textColor: Colors.white,
-                                )),
+                                      text: rk8,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                      textColor: Colors.white,
+                                    )),
                               ),
                               Visibility(
                                 visible: !(rk10 == ""),
@@ -313,8 +347,8 @@ class _VipPageState extends BaseWidgetState {
                           borderRadius: BorderRadius.circular(12.0),
                           color: Color(0xFF141414),
                           border: Border.all(
-                            color: Color(0xFFFF85B4),
-                            width: 2.0, // 你可以根据需要调整边框宽度
+                            color: isSelect ? Color(0xFFFF2E7E) : Colors.transparent,
+                            width: isSelect ? 2.0 : 0.0, // 你可以根据需要调整边框宽度
                           )),
                       child: Column(
                         children: [
@@ -337,14 +371,14 @@ class _VipPageState extends BaseWidgetState {
                                   child: CommText(
                                     text: "¥",
                                     fontSize: 13.sp,
-                                    textColor: Colors.white,
+                                    textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 CommText(
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
-                                  textColor: Colors.white,
+                                  textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],

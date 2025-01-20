@@ -13,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 class VipLogic extends BaseGetxController {
   final VipState state = VipState();
-  int payKeyType = 0;
   Timer? _timer;
   int _elapsedSeconds = 0;
   bool _conditionMet = false;
@@ -60,7 +59,7 @@ class VipLogic extends BaseGetxController {
                 state.vipBean.vipList?.length == 0) {
               HandleTool.showAppToastText("暂无会员套餐");
             } else {
-              payKeyType =
+              state.payKeyType =
                   state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ??
                       0;
             }
@@ -70,12 +69,12 @@ class VipLogic extends BaseGetxController {
         onModel: (m) => VipBean.fromJson(m));
   }
 
-  addOrder(int goodsId) async {
-    String channel = await getChannelInfo(3);
+  addOrder() async {
+    // String channel = await getChannelInfo(3);
     Map<String, dynamic> dataMap = {
-      "channel": channel,
-      "goodsId": goodsId,
-      "payKeyType": payKeyType,
+      // "channel": channel,
+      "goodsId": state.goodsId,
+      "payKeyType": state.payKeyType,
     };
     Log.d("map----$dataMap");
     Post<PayBean>(Api.payOrder_addOrder,
