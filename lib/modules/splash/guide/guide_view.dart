@@ -1,17 +1,20 @@
-import 'dart:io';
-
+import 'package:dio/src/form_data.dart' as ffff;
+import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/modules/splash/guide/view/custom_photo_dialog_utils.dart';
+import 'package:zpw/model/upload_bean.dart';
+import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
+import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/utils/handle_tool.dart';
+
 import 'guide_logic.dart';
-import 'package:image_picker/image_picker.dart';
 
 class GuidePage extends BaseStatefulWidget {
   @override
@@ -54,10 +57,13 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
         )),
         InkWell(
           child: Container(
-            margin: EdgeInsets.only(top: 17.h, bottom: 44.h, right: 16.w, left: 16.w),
+            margin: EdgeInsets.only(
+                top: 17.h, bottom: 44.h, right: 16.w, left: 16.w),
             width: double.infinity,
             height: 52,
-            decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(26)),
+            decoration: BoxDecoration(
+                color: ColorPlate.themeColor,
+                borderRadius: BorderRadius.circular(26)),
             child: Center(
                 child: CommText(
               text: "立即制作",
@@ -70,7 +76,11 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
             Get.bottomSheet(
               Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20))),
                 child: Wrap(
                   alignment: WrapAlignment.center,
                   children: [
@@ -122,15 +132,45 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                          gotoPushPage(Photo_listPage());
+                      onTap: () async {
+                        final res =
+                            await Get.to<String>(() => Photo_listPage());
+                        if (res?.isNotEmpty == true) {
+                          final formData = ffff.FormData.fromMap({
+                            "file": await ffff.MultipartFile.fromFile(res!),
+                          });
+                          final bean = await HandleTool.instance
+                              .QDSUpload<UploadBean>(Api.uploadFile,
+                                  params: formData,
+                                  onModel: (v) => UploadBean.fromJson(v));
+                          if (bean == null) return;
+
+                          HandleTool.instance.SMWPost(
+                              '${Api.bindDefaultImg}?imgUrl=${bean.url}',
+                              isShowProgress: true,
+                              success: (isSuccess, code, message, results) {
+                            if (isSuccess == true && results.isNotEmpty) {
+                              Get.back();
+                              HandleTool.showAppToastText("上传成功");
+                              Get.offAll(() => const MainPage());
+                            } else {
+                              Get.back();
+                            }
+                          });
+                        } else {
+                          HandleTool.showAppToastText('上传失败');
+                        }
+
                         // pickImage();
                       },
                       child: Container(
-                        margin: EdgeInsets.only(top: 10.h, left: 16.w, right: 16.w),
+                        margin:
+                            EdgeInsets.only(top: 10.h, left: 16.w, right: 16.w),
                         width: double.infinity,
                         height: 52.h,
-                        decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(26)),
+                        decoration: BoxDecoration(
+                            color: ColorPlate.themeColor,
+                            borderRadius: BorderRadius.circular(26)),
                         child: Center(
                             child: CommText(
                           text: "上传照片",
