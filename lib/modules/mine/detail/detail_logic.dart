@@ -29,7 +29,7 @@ class DetailLogic extends BaseGetxController {
     Post("${Api.delete}/${state.id.value}", isShowProgress: true, success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         HandleTool.showAppToastText("删除成功");
-        Get.back();
+        Get.back(result: "123");
       }
     });
   }

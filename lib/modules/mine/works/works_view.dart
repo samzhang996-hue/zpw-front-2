@@ -122,7 +122,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
             int worksType = data["worksType"] ?? 0;
             var returnUrl = data["returnUrl"] ?? "";
             var tags = data["tags"] ?? "";
-            var oldUrl=data["oldUrl"] ?? "";
+            var oldUrl = data["oldUrl"] ?? "";
             int id = data["id"] ?? 0;
             Log.d("data111--$data");
             return InkWell(
@@ -136,16 +136,20 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                       width: double.infinity,
                       height: 30.h,
                       decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF00141414), Color(0xFF73000000)],
-                            begin: Alignment.topCenter, // 渐变的起始点
-                            end: Alignment.bottomCenter, // 渐变的结束点
-                          ),
+                        gradient: LinearGradient(
+                          colors: [Color(0xFF00141414), Color(0xFF73000000)],
+                          begin: Alignment.topCenter, // 渐变的起始点
+                          end: Alignment.bottomCenter, // 渐变的结束点
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Container(
                           margin: EdgeInsets.only(left: 10.w),
-                          child: CommText(text: tags,fontSize: 14.sp,textColor: Colors.white,)),
+                          child: CommText(
+                            text: tags,
+                            fontSize: 14.sp,
+                            textColor: Colors.white,
+                          )),
                     ),
                   ),
                   Visibility(
@@ -181,9 +185,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                                     fontSize: 15.sp,
                                     textColor: Colors.white,
                                   ))),
-                              onTap: () {
-
-                              },
+                              onTap: () {},
                             ),
                           )
                         ],
@@ -192,9 +194,13 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                   )
                 ],
               )),
-              onTap: () {
+              onTap: () async {
                 if (worksStatus == 3) {
-                  gotoPushPage(DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl,"tags":tags,"id":id});
+                  final res = await gotoPushPage(
+                    DetailPage(),
+                    arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id},
+                  );
+                  logic.photoRecord(selectedIndex);
                 }
               },
             );

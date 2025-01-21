@@ -47,8 +47,7 @@ class SplashLogic extends BaseGetxController {
       channel = "ios";
     }
     HandleTool.instance.channel = channel;
-    Log.i(
-        'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
@@ -67,24 +66,17 @@ class SplashLogic extends BaseGetxController {
     HandleTool.instance.getProtocolConfig();
   }
 
-  _onLogin(String channel, String deviceId, String oaid,
-      {bool isShowProgress = true}) async {
+  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = true}) async {
     String udid = "";
     if (Platform.isIOS) {
       udid = "ios唯一标识";
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
-      "userDeviceInfo": {
-        "deviceCode": deviceId,
-        "systemDevice": Platform.isAndroid ? "android" : "ios",
-        "oaid": oaid,
-        "idfa": udid
-      },
+      "userDeviceInfo": {"deviceCode": deviceId, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": udid},
     };
     Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
-        success: (isSuccess, code, message, results) async {
+    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         SpUtils.setString("token", data['token'] ?? "");
@@ -130,13 +122,12 @@ class SplashLogic extends BaseGetxController {
   test() {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
-        if (event.action == AdEventAction.onAdError ||
-            event.action == AdEventAction.onAdLoaded) {
-          if (isFirst) {
-            Get.offAll(const MainPage());
-          } else {
-            Get.offAll(GuidePage());
-          }
+        if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
+          // if (isFirst) {
+          Get.offAll(const MainPage());
+          // } else {
+          //   Get.offAll(GuidePage());
+          // }
         }
       }
     });

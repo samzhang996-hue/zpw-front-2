@@ -21,10 +21,35 @@ class MinePage extends BaseStatefulWidget {
   BaseWidgetState<MinePage> getState() => _MinePageState();
 }
 
-class _MinePageState extends BaseWidgetState<MinePage> {
+class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObserver{
   final logic = Get.put(MineLogic());
   final state = Get.find<MineLogic>().state;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this); // 移除监听器
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        break;
+      case AppLifecycleState.resumed:
+        logic.getUserInfo();
+        break;
+      case AppLifecycleState.hidden:
+      default:
+        break;
+    }
+  }
   @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<MineLogic>(builder: (logic) {

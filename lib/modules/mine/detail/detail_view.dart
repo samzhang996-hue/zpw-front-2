@@ -126,7 +126,9 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                     }
                   },
                 ),
-                SizedBox(width: 8.w,),
+                SizedBox(
+                  width: 8.w,
+                ),
                 InkWell(
                   onTap: () {
                     logic.delete();
