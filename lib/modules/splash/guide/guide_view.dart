@@ -152,6 +152,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                             if (isSuccess == true && results.isNotEmpty) {
                               Get.back();
                               HandleTool.showAppToastText("上传成功");
+                              HandleTool.instance.headImg = '${bean.url}';
                               Get.offAll(() => const MainPage());
                             } else {
                               Get.back();

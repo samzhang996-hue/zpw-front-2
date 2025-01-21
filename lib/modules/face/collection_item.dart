@@ -61,8 +61,9 @@ class _CollectionItemState extends State<CollectionItem> {
             final bean = _bean.value.records?[index];
             return GestureDetector(
               onTap: () {
-                Get.to(
-                    () => FaceMakePage(title: "${bean?.photoFuncResp?.tags}"));
+                Get.to(() => FaceMakePage(
+                    title: "${bean?.photoFuncResp?.tags}",
+                    funcId: bean?.photoFuncResp?.id ?? 0));
               },
               child: Container(
                 decoration: BoxDecoration(

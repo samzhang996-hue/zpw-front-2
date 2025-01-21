@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
+import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -61,13 +62,9 @@ class _FaceItemState extends State<FaceItem> {
             final bean = _bean.value.records?[index];
             return GestureDetector(
               onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return const GatherPage();
-                //     },
-                //   ),
-                // );
+                Get.to(() => FaceMakePage(
+                    title: "${bean?.photoFuncResp?.tags}",
+                    funcId: bean?.photoFuncResp?.id ?? 0));
               },
               child: Container(
                 decoration: BoxDecoration(

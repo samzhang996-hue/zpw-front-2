@@ -3,13 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
+import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
-
-  FaceMakePage({required this.title});
+  final int funcId;
+  FaceMakePage({required this.title, required this.funcId});
 
   @override
   BaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
@@ -20,11 +23,15 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   late final _show = false.obs;
 
-  void _make() async {
-    HandleTool.showAppToastText("1213");
-    // HandleTool.instance.SMWPost()
-    return;
+  void _toHistory() {
+    gotoPushPage(WorksPage());
+  }
+
+  void _showSuccess() {
     _show.value = true;
+  }
+
+  void _showError() async {
     final res = await Get.dialog(
         Material(
           type: MaterialType.transparency,
@@ -170,9 +177,32 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     _show.value = false;
   }
 
+  void _make() async {
+    _show.value = false;
+    final params = {
+      "funcId": widget.funcId,
+      "imgUrls": [HandleTool.instance.headImg],
+      // "prompt": "",
+    };
+    HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params,
+        success: (isSuccess, code, message, results) {
+      if (isSuccess == true && results.isNotEmpty) {
+        _showSuccess();
+      } else {
+        _showError();
+      }
+    });
+    return;
+  }
+
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void yCloseInputMethod() {
+    _show.value = false;
   }
 
   @override
@@ -185,10 +215,14 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             children: [
               YAppBar(
                 title: widget.title,
-                right: Image.asset(
-                  "make_history.png".make,
-                  width: 28.w,
-                  height: 28.w,
+                right: GestureDetector(
+                  onTap: _toHistory,
+                  behavior: HitTestBehavior.opaque,
+                  child: Image.asset(
+                    "make_history.png".make,
+                    width: 28.w,
+                    height: 28.w,
+                  ),
                 ),
               ),
               Expanded(
@@ -262,7 +296,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Get.back(result: false);
+                                        _show.value = false;
                                       },
                                       behavior: HitTestBehavior.opaque,
                                       child: Container(
@@ -289,7 +323,8 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                     SizedBox(width: 14.w),
                                     GestureDetector(
                                       onTap: () {
-                                        Get.back(result: true);
+                                        _show.value = false;
+                                        _toHistory();
                                       },
                                       behavior: HitTestBehavior.opaque,
                                       child: Container(
@@ -341,11 +376,26 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      Container(
-                        width: 72.w,
-                        height: 72.w,
-                        decoration: const BoxDecoration(
-                            color: Colors.grey, shape: BoxShape.circle),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 72.w,
+                            height: 72.w,
+                            decoration: const BoxDecoration(
+                              color: Colors.grey,
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
+                                begin: Alignment.centerLeft, // 渐变的起始点
+                                end: Alignment.centerRight, // 渐变的结束点
+                              ),
+                            ),
+                          ),
+                          ClipOval(
+                              child: QdsImage(
+                                  HandleTool.instance.headImg, 68.w, 68.w)),
+                        ],
                       ),
                       Positioned(
                         top: 0,

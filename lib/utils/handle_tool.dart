@@ -48,6 +48,7 @@ class HandleTool {
   String recordDate = "";
 
   String channel = "android";
+  String headImg = "";
 
   // Map<String, dynamic> configData = <String, dynamic>{
   //   "QWYHXY": "",

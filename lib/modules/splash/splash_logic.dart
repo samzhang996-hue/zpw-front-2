@@ -108,7 +108,7 @@ class SplashLogic extends BaseGetxController {
             if (userInfoBean.headImg!.isNotEmpty) {
               isFirst = true;
             }
-
+            HandleTool.instance.headImg = userInfoBean.headImg ?? '';
             // Get.offAll(const MainPage());
             // return;
             // if (isFirst) {
