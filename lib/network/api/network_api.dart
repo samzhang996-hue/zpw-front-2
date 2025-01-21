@@ -36,7 +36,7 @@ class Api {
 
   static const String getFuncDetail = "/photoFunc/getFuncDetail?id=1";
 
-  static const String delete = "photoRecord/delete";
+  static const String delete = "/photoRecord/delete";
 
 
 

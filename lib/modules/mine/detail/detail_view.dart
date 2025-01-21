@@ -80,7 +80,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           YAppBar(
-              title: "服务端没有返回名称",
+              title: state.tags.value,
               right: InkWell(
                   onTap: () {},
                   child: CommText(

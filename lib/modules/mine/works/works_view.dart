@@ -121,12 +121,33 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
             //任务结果类型(WorksTypeEnum 0:图片 1:视频 2:音频 3:文字)
             int worksType = data["worksType"] ?? 0;
             var returnUrl = data["returnUrl"] ?? "";
+            var tags = data["tags"] ?? "";
+            var oldUrl=data["oldUrl"] ?? "";
+            int id = data["id"] ?? 0;
             Log.d("data111--$data");
             return InkWell(
               child: Container(
                   child: Stack(
                 children: [
-                  QdsImageCorner(data["oldUrl"], 175.w, 265.w, 8),
+                  QdsImageCorner(oldUrl, 175.w, 265.w, 8),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF00141414), Color(0xFF73000000)],
+                            begin: Alignment.topCenter, // 渐变的起始点
+                            end: Alignment.bottomCenter, // 渐变的结束点
+                          ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Container(
+                          margin: EdgeInsets.only(left: 10.w),
+                          child: CommText(text: tags,fontSize: 14.sp,textColor: Colors.white,)),
+                    ),
+                  ),
                   Visibility(
                     visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
                     child: Container(
@@ -173,7 +194,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               )),
               onTap: () {
                 if (worksStatus == 3) {
-                  gotoPushPage(DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl});
+                  gotoPushPage(DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl,"tags":tags,"id":id});
                 }
               },
             );

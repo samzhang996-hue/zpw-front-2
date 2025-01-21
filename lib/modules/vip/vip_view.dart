@@ -76,14 +76,14 @@ class _VipPageState extends BaseWidgetState {
               children: [
                 Container(
                   width: double.infinity, // 或者使用父容器的宽度约束
-                  height: 644.h,
+                  height: 644.w,
                   child: _controller.value.isInitialized
                       ? AspectRatio(
                           aspectRatio: _controller.value.aspectRatio,
                           child: VideoPlayer(_controller),
                         )
                       : Container(
-                          child: CircularProgressIndicator(),
+                          child: Center(child: CircularProgressIndicator()),
                         ), // 使用屏幕高度的百分比
                 ),
                 Positioned(
@@ -91,7 +91,7 @@ class _VipPageState extends BaseWidgetState {
                   left: 0,
                   right: 0,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
                           Color(0x00000000), // 透明
@@ -123,14 +123,14 @@ class _VipPageState extends BaseWidgetState {
                         Visibility(
                           visible: (state.isWx == 1 && state.isZfb == 1),
                           child: Container(
-                            margin: EdgeInsets.only(top: 10.h, bottom: 10.h),
+                            margin: EdgeInsets.only(top: 10.w, bottom: 10.w),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Visibility(
                                   visible: state.isZfb == 1,
                                   child: Container(
-                                    height: 47.h,
+                                    height: 47.w,
                                     child: Row(
                                       children: [
                                         Image.asset(
@@ -160,7 +160,7 @@ class _VipPageState extends BaseWidgetState {
                                 Visibility(
                                   visible: state.isWx == 1,
                                   child: Container(
-                                    height: 47.h,
+                                    height: 47.w,
                                     child: Row(
                                       children: [
                                         Image.asset(
@@ -213,8 +213,8 @@ class _VipPageState extends BaseWidgetState {
                           child: Stack(
                             children: [
                               Container(
-                                margin: EdgeInsets.only(left: 17.h, right: 17.h, top: 17.h),
-                                height: 54.h,
+                                margin: EdgeInsets.only(left: 17.w, right: 17.w, top: 17.w),
+                                height: 54.w,
                                 width: double.infinity,
                                 decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
                                 child: Center(
@@ -228,12 +228,12 @@ class _VipPageState extends BaseWidgetState {
                               Visibility(
                                 visible: !(rk10 == ""),
                                 child: Container(
-                                  margin: EdgeInsets.only(right: 17.h),
+                                  margin: EdgeInsets.only(right: 17.w),
                                   child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Container(
                                         width: 183.w,
-                                        height: 27.h,
+                                        height: 27.w,
                                         decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
                                         child: CommText(
                                           text: rk10,
@@ -249,7 +249,7 @@ class _VipPageState extends BaseWidgetState {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 20.h, top: 10.h, bottom: 25.h),
+                          margin: EdgeInsets.only(left: 20.w, top: 10.w, bottom: 25.w),
                           child: Row(
                             children: [
                               InkWell(
@@ -306,8 +306,8 @@ class _VipPageState extends BaseWidgetState {
                   },
                   child: Container(
                       width: 80.w,
-                      height: 30.h,
-                      margin: EdgeInsets.only(top: 44.h, left: 14.w),
+                      height: 30.w,
+                      margin: EdgeInsets.only(top: 44.w, left: 14.w),
                       child: Align(
                           alignment: Alignment.topLeft,
                           child: Image.asset(
@@ -329,8 +329,8 @@ class _VipPageState extends BaseWidgetState {
       return Container();
     }
     return Container(
-      margin: EdgeInsets.only(left: 5.w, right: 5.w, top: 5.h),
-      height: 165.h,
+      margin: EdgeInsets.only(left: 5.w, right: 5.w, top: 5.w),
+      height: 165.w,
       child: ListView.builder(
         padding: EdgeInsets.all(0),
         scrollDirection: Axis.horizontal,
@@ -347,11 +347,11 @@ class _VipPageState extends BaseWidgetState {
               child: Stack(
                 children: [
                   Container(
-                    height: 146.h,
+                    height: 146.w,
                     child: Container(
                       width: 114.w,
-                      height: 136.h,
-                      margin: EdgeInsets.only(top: 10.h),
+                      height: 136.w,
+                      margin: EdgeInsets.only(top: 10.w),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
                           color: Color(0xFF141414),
@@ -362,7 +362,7 @@ class _VipPageState extends BaseWidgetState {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 20.h,
+                            height: 20.w,
                           ),
                           CommText(
                             text: vp?.remark2,
@@ -371,7 +371,7 @@ class _VipPageState extends BaseWidgetState {
                             fontWeight: FontWeight.w500,
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 12.h),
+                            margin: EdgeInsets.only(top: 12.w),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -394,7 +394,7 @@ class _VipPageState extends BaseWidgetState {
                             ),
                           ),
                           SizedBox(
-                            height: 12.h,
+                            height: 12.w,
                           ),
                           CommText(
                             text: vp?.remark4 ?? "",
