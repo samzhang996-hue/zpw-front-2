@@ -72,6 +72,24 @@ class HandleTool {
   //     // Log.i("results=====>${results}");
   //   });
   // }
+  Future<bool> compareTimesWithServer(String serverTimeString) async {
+    // 获取当前设备时间
+    DateTime currentTime = DateTime.now();
+
+    // 将服务端时间字符串解析为 DateTime 对象
+    // 注意：这里假设服务端时间已经是 UTC 时间，或者与设备时区一致
+    // 如果不是，你可能需要进行时区转换
+    DateTime serverTime = DateTime.parse(serverTimeString);
+
+    // 比较两个时间
+    bool result = currentTime.isBefore(serverTime);
+
+    print('当前时间: ${currentTime.toLocal()}'); // 转换为本地时间显示，但比较时使用 UTC 或相同时区的时间
+    print('服务端时间: $serverTime');
+    print('比较结果: $result');
+
+    return result;
+  }
 
   getProtocolConfig() {
     SMWPost(Api.center_getProtocolConfig, isShowProgress: false,

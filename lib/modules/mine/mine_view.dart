@@ -90,7 +90,7 @@ class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObser
                                     height: 4.w,
                                   ),
                                   CommText(
-                                    text: HandleTool.instance.isMember ? "到期时间:${state.userInfoBean.memberExpirationTime}" : "未开通会员",
+                                    text: HandleTool.instance.isMember ? "到期时间:${state.userInfoBean.vipExpireTime}" : "未开通会员",
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,
                                     textColor: Color(0xff818181),

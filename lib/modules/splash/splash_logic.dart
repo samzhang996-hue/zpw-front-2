@@ -92,11 +92,14 @@ class SplashLogic extends BaseGetxController {
   getUserInfo() {
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: true,
-        success: (isSuccess, code, message, results) {
+        success: (isSuccess, code, message, results) async {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
-            HandleTool.instance.isMember = userInfoBean.isMember ?? false;
+            if(userInfoBean.vipExpireTime!=null){
+              HandleTool.instance.isMember=await HandleTool.instance.compareTimesWithServer(userInfoBean.vipExpireTime);
+            }
+            Log.d("userInfoBean----${HandleTool.instance.isMember }");
             if (userInfoBean.headImg!.isNotEmpty) {
               isFirst = true;
             }

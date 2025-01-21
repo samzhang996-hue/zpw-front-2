@@ -14,7 +14,7 @@ class UserInfoBean {
   bool? isMember;
   bool? isNewUser;
   bool? isWxOauth;
-  dynamic memberExpirationTime;
+  dynamic vipExpireTime;
   String? motion;
   String? nickName;
   num? targetWeight;
@@ -36,7 +36,7 @@ class UserInfoBean {
     this.isMember,
     this.isNewUser,
     this.isWxOauth,
-    this.memberExpirationTime,
+    this.vipExpireTime,
     this.motion,
     this.nickName,
     this.targetWeight,
@@ -63,7 +63,7 @@ class UserInfoBean {
     isMember: json["isMember"],
     isNewUser: json["isNewUser"],
     isWxOauth: json["isWxOauth"],
-    memberExpirationTime: json["memberExpirationTime"],
+    vipExpireTime: json["vipExpireTime"],
     motion: json["motion"],
     nickName: json["nickName"],
     targetWeight: json["targetWeight"]?.toDouble(),
@@ -86,7 +86,7 @@ class UserInfoBean {
     "isMember": isMember,
     "isNewUser": isNewUser,
     "isWxOauth": isWxOauth,
-    "memberExpirationTime": memberExpirationTime,
+    "vipExpireTime": vipExpireTime,
     "motion": motion,
     "nickName": nickName,
     "targetWeight": targetWeight,

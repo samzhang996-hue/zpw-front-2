@@ -17,11 +17,14 @@ class MineLogic extends BaseGetxController {
   getUserInfo() {
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: true,
-        success: (isSuccess, code, message, results) {
+        success: (isSuccess, code, message, results) async {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("userInfoBean----${results.first}");
             state.userInfoBean = results.first;
-            HandleTool.instance.isMember = state.userInfoBean.isMember ?? false;
+            if(state.userInfoBean.vipExpireTime!=null){
+              HandleTool.instance.isMember=await HandleTool.instance.compareTimesWithServer(state.userInfoBean.vipExpireTime);
+            }
+            // HandleTool.instance.isMember = state.userInfoBean.isMember ?? false;
             update();
           }
         },
