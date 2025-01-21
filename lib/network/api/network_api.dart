@@ -89,4 +89,10 @@ class Api {
 
   ///添加处理图片
   static const String addPhotoRecord = "/photoRecord/addPhotoRecord";
+
+  ///生成艺术字
+  static const String addTask = "/wordDart/addTask";
+
+  ///艺术字-生肖03
+  static const String animalsEnum = "/enum/animalsEnum";
 }
