@@ -56,11 +56,11 @@ class HandleTool {
   //   "QWHYXY": "",
   //   "PHONE": "",
   // }.obs;
-  String yHxy = "";
-  String ySxy = "";
-  String hYxy = "";
-  String pHone = "";
-  String gz = "";
+  String yHxy = "http://imgser.zyykj168.com/xyhtml/ai_yhxy.html";
+  String ySxy = "http://imgser.zyykj168.com/xyhtml/ai_ysxy.html";
+  String hYxy = "http://imgser.zyykj168.com/xyhtml/ai_hyxy.html";
+  String pHone = "4000732899";
+  String gz = "http://imgser.zyykj168.com/xyhtml/SX_YK_GZSM.html";
   // /// 获取协议
   // getConfigWithKey() {
   //   QDSGet(Api.config_getConFigByTypeList,
@@ -92,34 +92,34 @@ class HandleTool {
   }
 
   getProtocolConfig() {
-    SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
-        success: (isSuccess, code, message, results) {
-      Log.d("config---$isSuccess----$results");
-      if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
-        // 遍历 results 列表,提取 configType 和 configValue
-        for (Map<String, dynamic> item in results) {
-          int configType = item['configType'];
-          String configValue = item['configValue'];
-          // 根据 configType 获取对应的 configValue
-          if (configType == 1) {
-            // 用户协议 URL
-            yHxy = configValue;
-          } else if (configType == 4) {
-            // 隐私政策 URL
-            ySxy = configValue;
-          } else if (configType == 5) {
-            // 会员协议 URL
-            hYxy = configValue;
-          } else if (configType == 6) {
-            // 手机号
-            pHone = configValue;
-          } else if (configType == 7) {
-            // 规则
-            gz = configValue;
-          }
-        }
-      }
-    });
+    // SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
+    //     success: (isSuccess, code, message, results) {
+    //   Log.d("config---$isSuccess----$results");
+    //   if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
+    //     // 遍历 results 列表,提取 configType 和 configValue
+    //     for (Map<String, dynamic> item in results) {
+    //       int configType = item['configType'];
+    //       String configValue = item['configValue'];
+    //       // 根据 configType 获取对应的 configValue
+    //       if (configType == 1) {
+    //         // 用户协议 URL
+    //         yHxy = configValue;
+    //       } else if (configType == 4) {
+    //         // 隐私政策 URL
+    //         ySxy = configValue;
+    //       } else if (configType == 5) {
+    //         // 会员协议 URL
+    //         hYxy = configValue;
+    //       } else if (configType == 6) {
+    //         // 手机号
+    //         pHone = configValue;
+    //       } else if (configType == 7) {
+    //         // 规则
+    //         gz = configValue;
+    //       }
+    //     }
+    //   }
+    // });
   }
 
   static showAppToastText(String message,
