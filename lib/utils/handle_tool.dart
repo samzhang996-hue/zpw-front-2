@@ -256,7 +256,7 @@ class HandleTool {
     if (Platform.isAndroid) {
       channel = channel.isEmpty ? await getChannelInfo(3) : channel;
     } else {
-      channel = "ios";
+      channel = "AIIOS";
     }
     String projectId = await getChannelInfo(2);
     Map<String, dynamic> map = {

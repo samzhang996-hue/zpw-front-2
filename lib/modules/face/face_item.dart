@@ -62,9 +62,13 @@ class _FaceItemState extends State<FaceItem> {
             final bean = _bean.value.records?[index];
             return GestureDetector(
               onTap: () {
-                Get.to(() => FaceMakePage(
+                Get.to(
+                  () => FaceMakePage(
                     title: "${bean?.photoFuncResp?.tags}",
-                    funcId: bean?.photoFuncResp?.id ?? 0));
+                    funcId: bean?.photoFuncResp?.id ?? 0,
+                    imageUrl: bean?.photoFuncResp?.showImgGif ?? "",
+                  ),
+                );
               },
               child: Container(
                 decoration: BoxDecoration(

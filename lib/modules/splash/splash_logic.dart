@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+import 'package:flutter_udid/flutter_udid.dart';
+// import 'package:flutter_udid/flutter_udid.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/common/ads_config.dart';
@@ -44,10 +46,15 @@ class SplashLogic extends BaseGetxController {
       await SpUtils.setString("deviceId", deviceId);
       await SpUtils.setString("channel", channel);
     } else if (Platform.isIOS) {
-      channel = "ios";
+      String deviceIdStr = await SpUtils.getString("deviceId");
+      deviceId = deviceIdStr.isEmpty ? await FlutterUdid.udid : deviceIdStr;
+      // deviceId = deviceIdStr.isEmpty ? "59245b9e42a7a51e1212" : deviceIdStr;
+      SpUtils.setString("deviceId", deviceId);
+      channel = "AIIOS";
     }
     HandleTool.instance.channel = channel;
-    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    Log.i(
+        'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
@@ -66,17 +73,24 @@ class SplashLogic extends BaseGetxController {
     HandleTool.instance.getProtocolConfig();
   }
 
-  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = true}) async {
+  _onLogin(String channel, String deviceId, String oaid,
+      {bool isShowProgress = true}) async {
     String udid = "";
     if (Platform.isIOS) {
-      udid = "ios唯一标识";
+      udid = await FlutterUdid.udid;
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
-      "userDeviceInfo": {"deviceCode": deviceId, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": udid},
+      "userDeviceInfo": {
+        "deviceCode": deviceId,
+        "systemDevice": Platform.isAndroid ? "android" : "ios",
+        "oaid": oaid,
+        "idfa": udid
+      },
     };
     Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
+    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
+        success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         SpUtils.setString("token", data['token'] ?? "");
@@ -96,15 +110,17 @@ class SplashLogic extends BaseGetxController {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
-            if(userInfoBean.vipExpireTime!=null){
-              HandleTool.instance.isMember=await HandleTool.instance.compareTimesWithServer(userInfoBean.vipExpireTime);
+            if (userInfoBean.vipExpireTime != null) {
+              HandleTool.instance.isMember = await HandleTool.instance
+                  .compareTimesWithServer(userInfoBean.vipExpireTime);
             }
-            Log.d("userInfoBean----${HandleTool.instance.isMember }");
+            Log.d("userInfoBean----${HandleTool.instance.isMember}");
             if (userInfoBean.headImg!.isNotEmpty) {
               isFirst = true;
             }
             HandleTool.instance.headImg = userInfoBean.headImg ?? '';
             // Get.offAll(const MainPage());
+            // return;
             // return;
             // if (isFirst) {
             //   Get.offAll(const MainPage());
@@ -125,12 +141,13 @@ class SplashLogic extends BaseGetxController {
   test() {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
-        if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
-          // if (isFirst) {
-          Get.offAll(const MainPage());
-          // } else {
-          //   Get.offAll(GuidePage());
-          // }
+        if (event.action == AdEventAction.onAdError ||
+            event.action == AdEventAction.onAdLoaded) {
+          if (isFirst) {
+            Get.offAll(const MainPage());
+          } else {
+            Get.offAll(GuidePage());
+          }
         }
       }
     });

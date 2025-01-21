@@ -1,9 +1,21 @@
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionUtils {
   // /// 存储权限
   static Future<bool> checkFilesAccessPermission() async {
+    if (Platform.isIOS) {
+      var status = await Permission.photos.status;
+      if (!status.isGranted) {
+        await Permission.photos.request();
+        var status2 = await Permission.photos.status;
+        return status2.isGranted;
+      }
+      return false;
+    }
+
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     bool storagePermission = await Permission.storage.isGranted;

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:screen_protector/screen_protector.dart';
+// import 'package:screen_protector/screen_protector.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/modules/face/face_item.dart';
+import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/face_logic.dart';
 import 'package:zpw/modules/face/gather_page.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 
 class FacePage extends StatefulWidget {
   const FacePage({super.key});
@@ -25,41 +26,41 @@ class _FacePageState extends State<FacePage>
   var outHeight = 20.0.w;
   late PageController? page = PageController();
   Color _backgroundColor = Colors.transparent; // 初始背景色为透明
-  void _preventScreenshotOn() async =>
-      await ScreenProtector.preventScreenshotOn();
+  // void _preventScreenshotOn() async =>
+  //     await ScreenProtector.preventScreenshotOn();
 
-  void _preventScreenshotOff() async =>
-      await ScreenProtector.preventScreenshotOff();
+  // void _preventScreenshotOff() async =>
+  //     await ScreenProtector.preventScreenshotOff();
 
-  void _addListenerPreventScreenshot() async {
-    ScreenProtector.addListener(() {
-      // Screenshot
-      debugPrint('Screenshot:');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Screenshot!'),
-      ));
-    }, (isCaptured) {
-      // Screen Record
-      debugPrint('Screen Record:');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Screen Record!'),
-      ));
-    });
-  }
+  // void _addListenerPreventScreenshot() async {
+  //   ScreenProtector.addListener(() {
+  //     // Screenshot
+  //     debugPrint('Screenshot:');
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Screenshot!'),
+  //     ));
+  //   }, (isCaptured) {
+  //     // Screen Record
+  //     debugPrint('Screen Record:');
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Screen Record!'),
+  //     ));
+  //   });
+  // }
 
-  void _removeListenerPreventScreenshot() async {
-    ScreenProtector.removeListener();
-  }
+  // void _removeListenerPreventScreenshot() async {
+  //   ScreenProtector.removeListener();
+  // }
 
-  void _checkScreenRecording() async {
-    final isRecording = await ScreenProtector.isRecording();
+  // void _checkScreenRecording() async {
+  //   final isRecording = await ScreenProtector.isRecording();
 
-    if (isRecording) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Screen Recording...'),
-      ));
-    }
-  }
+  //   if (isRecording) {
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Screen Recording...'),
+  //     ));
+  //   }
+  // }
 
   @override
   void initState() {
@@ -83,18 +84,18 @@ class _FacePageState extends State<FacePage>
       }
     });
 
-    _addListenerPreventScreenshot();
-    _preventScreenshotOn();
-    _checkScreenRecording();
+    // _addListenerPreventScreenshot();
+    // _preventScreenshotOn();
+    // _checkScreenRecording();
   }
 
   @override
   void dispose() {
     // For iOS only.
-    _removeListenerPreventScreenshot();
+    // _removeListenerPreventScreenshot();
 
-    // For iOS and Android
-    _preventScreenshotOff();
+    // // For iOS and Android
+    // _preventScreenshotOff();
     super.dispose();
   }
 
@@ -154,11 +155,17 @@ class _FacePageState extends State<FacePage>
                                     height: 34.w,
                                     fit: BoxFit.cover,
                                   ),
-                                  Image.asset(
-                                    "face_vip.png".face,
-                                    width: 65.w,
-                                    height: 26.w,
-                                    fit: BoxFit.cover,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.to(() => VipPage());
+                                    },
+                                    behavior: HitTestBehavior.opaque,
+                                    child: Image.asset(
+                                      "face_vip.png".face,
+                                      width: 65.w,
+                                      height: 26.w,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -268,7 +275,8 @@ class _FacePageState extends State<FacePage>
               body: PageView(
                 controller: page,
                 children: logic.listPhotoGroupBean2
-                    .map((e) => FaceItem(id: e.id ?? 0))
+                    // .map((e) => FaceItem(id: e.id ?? 0))
+                    .map((e) => CollectionItem(id: e.id ?? 0))
                     .toList(),
                 // [
                 //   Padding(

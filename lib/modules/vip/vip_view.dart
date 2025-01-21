@@ -1,16 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
-import 'package:zpw/modules/vip/view/gradient_border_painter.dart';
 import 'package:zpw/utils/handle_tool.dart';
+
 import 'vip_logic.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:video_player/video_player.dart';
 
 class VipPage extends BaseStatefulWidget {
   @override
@@ -60,8 +62,12 @@ class _VipPageState extends BaseWidgetState {
           rk9 = state.vipBean.vipList?[state.itemIndex].remark9;
           rk8 = state.vipBean.vipList?[state.itemIndex].remark8;
           rk10 = state.vipBean.vipList?[state.itemIndex].remark10;
-          state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-          state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+          state.isWx =
+              state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ??
+                  0;
+          state.isZfb = state
+                  .vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ??
+              0;
         } else {
           rk9 = "";
           rk8 = "";
@@ -194,16 +200,38 @@ class _VipPageState extends BaseWidgetState {
                         ),
                         InkWell(
                           onTap: () {
-                            var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
+                            var vp = state.vipBean.vipList?[state.itemIndex]
+                                .vipPriceOutput;
                             state.goodsId = vp?.id ?? 0;
                             state.payKeyType = vp?.defaultPayKeyType ?? 0;
                             var zfbType = vp?.defaultZfbPayKeyType ?? 0;
-                            state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-                            state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+
+                            logic.click = true;
+                            if (state.isCheck.value) {
+                              if (Platform.isIOS) {
+                                logic.buyEngin.buyProduct(vp?.iosProductId);
+                                return;
+                              }
+                            }
+
+                            state.isWx = state.vipBean.vipList?[state.itemIndex]
+                                    .vipPriceOutput?.isWxPay ??
+                                0;
+                            state.isZfb = state
+                                    .vipBean
+                                    .vipList?[state.itemIndex]
+                                    .vipPriceOutput
+                                    ?.isZfbPay ??
+                                0;
                             if (!state.isCheck.value) {
                               CustomSureVipDialogUtils.showCustomDialog(
                                   context: context,
                                   onPressed: () {
+                                    if (Platform.isIOS) {
+                                      logic.buyEngin
+                                          .buyProduct(vp?.iosProductId);
+                                      return;
+                                    }
                                     logic.onSelected(true);
                                     logic.addOrder();
                                   });
@@ -214,10 +242,13 @@ class _VipPageState extends BaseWidgetState {
                           child: Stack(
                             children: [
                               Container(
-                                margin: EdgeInsets.only(left: 17.w, right: 17.w, top: 17.w),
+                                margin: EdgeInsets.only(
+                                    left: 17.w, right: 17.w, top: 17.w),
                                 height: 54.w,
                                 width: double.infinity,
-                                decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
+                                decoration: BoxDecoration(
+                                    color: const Color(0xffFF2E7E),
+                                    borderRadius: BorderRadius.circular(27)),
                                 child: Center(
                                     child: CommText(
                                   text: rk8,
@@ -235,7 +266,11 @@ class _VipPageState extends BaseWidgetState {
                                       child: Container(
                                         width: 183.w,
                                         height: 27.w,
-                                        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: AssetImage(
+                                                    "vip_btn_tip.png".vip),
+                                                fit: BoxFit.cover)),
                                         child: CommText(
                                           text: rk10,
                                           fontSize: 13.sp,
@@ -250,14 +285,17 @@ class _VipPageState extends BaseWidgetState {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 20.w, top: 10.w, bottom: 25.w),
+                          margin: EdgeInsets.only(
+                              left: 20.w, top: 10.w, bottom: 25.w),
                           child: Row(
                             children: [
                               InkWell(
                                 child: Row(
                                   children: [
                                     Image.asset(
-                                      state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                      state.isCheck.value
+                                          ? "checked.png".vip
+                                          : "un_check.png".vip,
                                       width: 14.w,
                                     ),
                                     CommText(
@@ -303,23 +341,43 @@ class _VipPageState extends BaseWidgetState {
                 ),
                 InkWell(
                   onTap: () {
-                    if( state.type==1){
+                    if (state.type == 1) {
                       Get.offAll(() => const MainPage());
-                    }else{
+                    } else {
                       Get.back();
                     }
-
                   },
-                  child: Container(
-                      width: 80.w,
-                      height: 30.w,
-                      margin: EdgeInsets.only(top: 44.w, left: 14.w),
-                      child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Image.asset(
-                            "back.png".comm,
-                            width: 16.w,
-                          ))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          width: 80.w,
+                          height: 30.w,
+                          margin: EdgeInsets.only(top: 44.w, left: 16.w),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Image.asset(
+                                "back.png".comm,
+                                width: 16.w,
+                              ))),
+                      Visibility(
+                        visible: Platform.isIOS,
+                        child: GestureDetector(
+                          onTap: () {
+                            logic.click = true;
+                            logic.buyEngin.resumePurchase();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 28.w, right: 16.w),
+                            child: const Text(
+                              "恢复购买",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -362,7 +420,9 @@ class _VipPageState extends BaseWidgetState {
                           borderRadius: BorderRadius.circular(12.0),
                           color: Color(0xFF141414),
                           border: Border.all(
-                            color: isSelect ? Color(0xFFFF2E7E) : Colors.transparent,
+                            color: isSelect
+                                ? Color(0xFFFF2E7E)
+                                : Colors.transparent,
                             width: isSelect ? 2.0 : 0.0, // 你可以根据需要调整边框宽度
                           )),
                       child: Column(
@@ -386,14 +446,18 @@ class _VipPageState extends BaseWidgetState {
                                   child: CommText(
                                     text: "¥",
                                     fontSize: 13.sp,
-                                    textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
+                                    textColor: isSelect
+                                        ? Color(0xFFFF2E7E)
+                                        : Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 CommText(
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
-                                  textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
+                                  textColor: isSelect
+                                      ? Color(0xFFFF2E7E)
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],

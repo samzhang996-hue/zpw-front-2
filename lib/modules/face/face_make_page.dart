@@ -6,13 +6,19 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
   final int funcId;
-  FaceMakePage({required this.title, required this.funcId});
+  final String imageUrl;
+  FaceMakePage({
+    required this.title,
+    required this.funcId,
+    required this.imageUrl,
+  });
 
   @override
   BaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
@@ -178,6 +184,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    Get.to(() => VipPage());
     _show.value = false;
     final params = {
       "funcId": widget.funcId,
@@ -228,9 +235,15 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
               Expanded(
                 child: LayoutBuilder(builder: (context, boxConstraints) {
                   return Container(
-                    color: Colors.grey,
+                    // color: Colors.grey,
+                    color: Colors.white,
                     width: 1.sw,
                     height: boxConstraints.maxHeight,
+                    child: QdsImage(
+                      widget.imageUrl,
+                      1.sw,
+                      boxConstraints.maxHeight,
+                    ),
                   );
                 }),
               ),
@@ -270,6 +283,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                               decoration: BoxDecoration(
                                 color: const Color(0xFFD8D8D8),
                                 borderRadius: BorderRadius.circular(8.w),
+                              ),
+                              child: QdsImage(
+                                HandleTool.instance.headImg,
+                                69.w,
+                                94.w,
                               ),
                             ),
                             SizedBox(width: 8.w),
@@ -397,42 +415,42 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                   HandleTool.instance.headImg, 68.w, 68.w)),
                         ],
                       ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Image.asset(
-                          "make_close.png".make,
-                          width: 18.w,
-                          height: 18.w,
-                        ),
-                      ),
-                      Positioned(
-                        bottom: -5.w,
-                        right: 0,
-                        child: Container(
-                          width: 76.w,
-                          height: 21.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.w),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
-                              begin: Alignment.centerLeft, // 渐变的起始点
-                              end: Alignment.centerRight, // 渐变的结束点
-                            ),
-                          ),
-                          child: Center(
-                            child: CommText(
-                              text: "上传新头像",
-                              textColor: const Color(0xFFFFFFFF),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   top: 0,
+                      //   right: 0,
+                      //   child: Image.asset(
+                      //     "make_close.png".make,
+                      //     width: 18.w,
+                      //     height: 18.w,
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   bottom: -5.w,
+                      //   right: 0,
+                      //   child: Container(
+                      //     width: 76.w,
+                      //     height: 21.w,
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(12.w),
+                      //       gradient: const LinearGradient(
+                      //         colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
+                      //         begin: Alignment.centerLeft, // 渐变的起始点
+                      //         end: Alignment.centerRight, // 渐变的结束点
+                      //       ),
+                      //     ),
+                      //     child: Center(
+                      //       child: CommText(
+                      //         text: "上传新头像",
+                      //         textColor: const Color(0xFFFFFFFF),
+                      //         fontSize: 12.sp,
+                      //         fontWeight: FontWeight.w500,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
-                  SizedBox(height: 20.w),
+                  // SizedBox(height: 10.w),
                   const Spacer(),
                   GestureDetector(
                     onTap: _make,

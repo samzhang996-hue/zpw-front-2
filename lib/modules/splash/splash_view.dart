@@ -11,7 +11,7 @@ import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/sp_utils.dart';
-import 'package:video_player/video_player.dart';
+
 import 'splash_logic.dart';
 
 class SplashPage extends BaseStatefulWidget {
@@ -22,11 +22,11 @@ class SplashPage extends BaseStatefulWidget {
 class _SplashPageState extends BaseWidgetState<SplashPage> {
   final logic = Get.put(SplashLogic());
   final state = Get.find<SplashLogic>().state;
-  late VideoPlayerController _controller;
+  // late VideoPlayerController _controller;
 
   @override
   void dispose() {
-    _controller.dispose();
+    // _controller.dispose();
     Get.delete<SplashPage>();
     // TODO: implement dispose
     super.dispose();
@@ -35,16 +35,16 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(
-      'splash.mp4'.vip,
-    )
-      ..setLooping(true)
-      ..initialize().then((_) {
-        // 确保在视频初始化完成后设置播放状态
-        setState(() {
-          _controller.play();
-        });
-      });
+    // _controller = VideoPlayerController.asset(
+    //   'splash.mp4'.vip,
+    // )
+    //   ..setLooping(true)
+    //   ..initialize().then((_) {
+    //     // 确保在视频初始化完成后设置播放状态
+    //     setState(() {
+    //       _controller.play();
+    //     });
+    //   });
     SpUtils.getBool("isAgreed").then((value) {
       Log.i("splash--$value");
       if (value == null || !value) {
@@ -87,30 +87,30 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
 
   @override
   Widget initDefaultBuild(BuildContext context) {
-    // return Container(
-    //     height: double.infinity,
-    //     width: double.infinity,
-    //     child: Image.asset(
-    //       "splash.png".comm,
-    //       fit: BoxFit.fill,
-    //     ));
     return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: _controller.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            )
-          : Container(
-              child: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: Image.asset(
-                    "splash.png".comm,
-                    fit: BoxFit.fill,
-                  ))), // 使用屏幕高度的百分比
-    );
+        height: double.infinity,
+        width: double.infinity,
+        child: Image.asset(
+          "splash.png".comm,
+          fit: BoxFit.fill,
+        ));
+    // return Container(
+    //   height: double.infinity,
+    //   width: double.infinity,
+    //   child: _controller.value.isInitialized
+    //       ? AspectRatio(
+    //           aspectRatio: _controller.value.aspectRatio,
+    //           child: VideoPlayer(_controller),
+    //         )
+    //       : Container(
+    //           child: Container(
+    //               height: double.infinity,
+    //               width: double.infinity,
+    //               child: Image.asset(
+    //                 "splash.png".comm,
+    //                 fit: BoxFit.fill,
+    //               ))), // 使用屏幕高度的百分比
+    // );
   }
 }
 
@@ -136,7 +136,10 @@ class UserAgreementDialog extends GetWidget {
                 padding: EdgeInsets.all(16.0),
                 child: Text(
                   '个人信息保护',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: ColorPlate.sixThreeColor),
+                  style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: ColorPlate.sixThreeColor),
                 ),
               ),
             ),
@@ -147,7 +150,8 @@ class UserAgreementDialog extends GetWidget {
                   children: [
                     const TextSpan(
                       text: "欢迎使用本产品，在使用产品服务前，请仔细阅读并理解",
-                      style: TextStyle(fontSize: 14, color: ColorPlate.sixSixColor),
+                      style: TextStyle(
+                          fontSize: 14, color: ColorPlate.sixSixColor),
                     ),
                     TextSpan(
                       text: "《隐私政策》",
@@ -198,7 +202,8 @@ class UserAgreementDialog extends GetWidget {
                     const TextSpan(
                       text:
                           "为了给你提供更好的服务，我们将会向您申请一下权限和信息：\n1.为了帮您统计设备维度数据分析、保障软件服务的正常运行，我们需要申请获取设备信息，日志信息。\n2.我们可能会申请读取设写入手机存储权限，用于下载及缓存相关文件；相机与录音权限，用于拍摄功能。\n3.以上权限以及社戏爱你个头。相册、存储空间等敏感权限均不会默认或强制开启收集信息。\n4.我们尊重你的选择权，同时我们也为你提供注销、投诉渠道。",
-                      style: TextStyle(fontSize: 14, color: ColorPlate.sixSixColor),
+                      style: TextStyle(
+                          fontSize: 14, color: ColorPlate.sixSixColor),
                     ),
                   ],
                 ),
@@ -216,7 +221,10 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '同意并继续',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                     onPressed: () {
                       Get.back(result: true);
@@ -233,7 +241,10 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '不同意',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xffB8B8B8)),
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xffB8B8B8)),
                     ),
                     onPressed: () {
                       Get.back(result: false);

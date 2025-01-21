@@ -38,11 +38,6 @@ class Api {
 
   static const String delete = "/photoRecord/delete";
 
-
-
-
-
-
   /// 订单列表
   static const String payOrder_listOrder = "/payOrder/listOrder";
 
@@ -95,4 +90,10 @@ class Api {
 
   ///艺术字-生肖03
   static const String animalsEnum = "/enum/animalsEnum";
+
+  ///ios恢复订单
+  static const String payOrder_restoreIosPay = "/center/handleIosOrder";
+
+  ///ios内购回调
+  static const String payOrder_iosPay = "/center/handleIosOrder";
 }

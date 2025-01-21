@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/specially/model/animals_enum_bean.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -29,6 +30,9 @@ class _MakePageState extends BaseWidgetState<MakePage> {
   late final _animalsEnumBean = <AnimalsEnumBean>[].obs;
 
   late final _currentZodiac = 0.obs;
+  void _toHistory() {
+    gotoPushPage(WorksPage());
+  }
 
   void _make() {
     if (_nicknameEditingController.text.isEmpty) {
@@ -228,7 +232,18 @@ class _MakePageState extends BaseWidgetState<MakePage> {
             left: 0,
             right: 0,
             top: 0,
-            child: YAppBar(title: "生肖姓氏鼓励头像"),
+            child: YAppBar(
+              title: "生肖姓氏鼓励头像",
+              right: GestureDetector(
+                onTap: _toHistory,
+                behavior: HitTestBehavior.opaque,
+                child: Image.asset(
+                  "make_history.png".make,
+                  width: 28.w,
+                  height: 28.w,
+                ),
+              ),
+            ),
           ),
           Positioned(
             left: 0,

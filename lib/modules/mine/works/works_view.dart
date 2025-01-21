@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zpw/modules/face/face_make_page.dart';
+import 'package:zpw/modules/main/main_logic.dart';
 import 'package:zpw/utils/log_utils.dart';
+
 import '../detail/detail_view.dart';
 import 'works_logic.dart';
 
@@ -17,7 +19,8 @@ class WorksPage extends BaseStatefulWidget {
   BaseWidgetState<WorksPage> getState() => _WorksPageState();
 }
 
-class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProviderStateMixin {
+class _WorksPageState extends BaseWidgetState<WorksPage>
+    with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
   int selectedIndex = 1; // 初始选中第一个选项
@@ -82,11 +85,16 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               height: 13.w,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Get.back();
+                Get.find<MainLogic>().changeIndex(selectedIndex);
+              },
               child: Container(
                 width: 122.w,
                 height: 40.w,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(21), color: ColorPlate.themeColor),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(21),
+                    color: ColorPlate.themeColor),
                 child: Center(
                     child: CommText(
                   text: "去创作",
@@ -153,11 +161,15 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                     ),
                   ),
                   Visibility(
-                    visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
+                    visible: (worksStatus == 0 ||
+                        worksStatus == 1 ||
+                        worksStatus == 2),
                     child: Container(
                       width: 175.w,
                       height: 265.w,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Color(0xff99000000)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0xff99000000)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -176,16 +188,27 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                             visible: worksStatus == 2,
                             child: InkWell(
                               child: Container(
-                                  margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.w),
+                                  margin: EdgeInsets.only(
+                                      left: 20.w, right: 20.w, top: 10.w),
                                   height: 35.w,
-                                  decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
+                                  decoration: BoxDecoration(
+                                      color: ColorPlate.themeColor,
+                                      borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: CommText(
                                     text: "重新制作",
                                     fontSize: 15.sp,
                                     textColor: Colors.white,
                                   ))),
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(
+                                  () => FaceMakePage(
+                                    title: tags,
+                                    funcId: id,
+                                    imageUrl: oldUrl,
+                                  ),
+                                );
+                              },
                             ),
                           )
                         ],
@@ -198,7 +221,12 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                 if (worksStatus == 3) {
                   final res = await gotoPushPage(
                     DetailPage(),
-                    arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id},
+                    arguments: {
+                      "worksType": worksType,
+                      "returnUrl": returnUrl,
+                      "tags": tags,
+                      "id": id
+                    },
                   );
                   logic.photoRecord(selectedIndex);
                 }

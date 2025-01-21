@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:screen_protector/screen_protector.dart';
+// import 'package:screen_protector/screen_protector.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/modules/specially/make_page.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 
 import 'specially_logic.dart';
 
@@ -28,41 +29,41 @@ class _SpeciallyPageState extends State<SpeciallyPage>
   var outHeight = 20.0.w;
   late PageController? page = PageController();
   Color _backgroundColor = Colors.transparent; // 初始背景色为透明
-  void _preventScreenshotOn() async =>
-      await ScreenProtector.preventScreenshotOn();
+  // void _preventScreenshotOn() async =>
+  //     await ScreenProtector.preventScreenshotOn();
 
-  void _preventScreenshotOff() async =>
-      await ScreenProtector.preventScreenshotOff();
+  // void _preventScreenshotOff() async =>
+  //     await ScreenProtector.preventScreenshotOff();
 
-  void _addListenerPreventScreenshot() async {
-    ScreenProtector.addListener(() {
-      // Screenshot
-      debugPrint('Screenshot:');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Screenshot!'),
-      ));
-    }, (isCaptured) {
-      // Screen Record
-      debugPrint('Screen Record:');
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Screen Record!'),
-      ));
-    });
-  }
+  // void _addListenerPreventScreenshot() async {
+  //   ScreenProtector.addListener(() {
+  //     // Screenshot
+  //     debugPrint('Screenshot:');
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Screenshot!'),
+  //     ));
+  //   }, (isCaptured) {
+  //     // Screen Record
+  //     debugPrint('Screen Record:');
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Screen Record!'),
+  //     ));
+  //   });
+  // }
 
-  void _removeListenerPreventScreenshot() async {
-    ScreenProtector.removeListener();
-  }
+  // void _removeListenerPreventScreenshot() async {
+  //   ScreenProtector.removeListener();
+  // }
 
-  void _checkScreenRecording() async {
-    final isRecording = await ScreenProtector.isRecording();
+  // void _checkScreenRecording() async {
+  //   final isRecording = await ScreenProtector.isRecording();
 
-    if (isRecording) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Screen Recording...'),
-      ));
-    }
-  }
+  //   if (isRecording) {
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //       content: Text('Screen Recording...'),
+  //     ));
+  //   }
+  // }
 
   @override
   void initState() {
@@ -86,18 +87,18 @@ class _SpeciallyPageState extends State<SpeciallyPage>
       }
     });
 
-    _addListenerPreventScreenshot();
-    _preventScreenshotOn();
-    _checkScreenRecording();
+    // _addListenerPreventScreenshot();
+    // _preventScreenshotOn();
+    // _checkScreenRecording();
   }
 
   @override
   void dispose() {
     // For iOS only.
-    _removeListenerPreventScreenshot();
+    // _removeListenerPreventScreenshot();
 
-    // For iOS and Android
-    _preventScreenshotOff();
+    // // For iOS and Android
+    // _preventScreenshotOff();
     super.dispose();
   }
 
@@ -126,7 +127,10 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                     systemNavigationBarColor: Colors.white, // Navigation bar
                     statusBarColor: Colors.transparent, // Status bar
                   ),
-                  expandedHeight: 196.w + outHeight,
+                  // expandedHeight: 196.w + outHeight,
+                  expandedHeight: 86.w + outHeight,
+
+                  /// --- 90
                   backgroundColor: _backgroundColor,
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.pin,
@@ -144,51 +148,57 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Image.asset(
-                                  "face_photo.png".face,
+                                  "specially.png".specially,
                                   width: 58.w,
                                   height: 34.w,
                                   fit: BoxFit.cover,
                                 ),
-                                Image.asset(
-                                  "face_vip.png".face,
-                                  width: 65.w,
-                                  height: 26.w,
-                                  fit: BoxFit.cover,
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => VipPage());
+                                  },
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Image.asset(
+                                    "face_vip.png".face,
+                                    width: 65.w,
+                                    height: 26.w,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 20.w),
-                          SizedBox(
-                            height: 90.w,
-                            child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                itemCount: 3,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (c, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Get.to(() => MakePage(
-                                          index: index,
-                                          imageUrl: "03_$index.jpg"));
-                                    },
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Container(
-                                      width: 182.w,
-                                      height: 90.w,
-                                      margin: EdgeInsets.only(
-                                          left: 16.w,
-                                          right: index == 2 ? 16.w : 0),
-                                      child: Image.asset(
-                                        "03_$index.jpg".specially,
-                                        width: 182.w,
-                                        height: 90.w,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                }),
-                          ),
+                          // SizedBox(height: 20.w),
+                          // SizedBox(
+                          //   height: 90.w,
+                          //   child: ListView.builder(
+                          //       padding: EdgeInsets.zero,
+                          //       itemCount: 3,
+                          //       scrollDirection: Axis.horizontal,
+                          //       itemBuilder: (c, index) {
+                          //         return GestureDetector(
+                          //           onTap: () {
+                          //             Get.to(() => MakePage(
+                          //                 index: index,
+                          //                 imageUrl: "03_$index.jpg"));
+                          //           },
+                          //           behavior: HitTestBehavior.opaque,
+                          //           child: Container(
+                          //             width: 182.w,
+                          //             height: 90.w,
+                          //             margin: EdgeInsets.only(
+                          //                 left: 16.w,
+                          //                 right: index == 2 ? 16.w : 0),
+                          //             child: Image.asset(
+                          //               "03_$index.jpg".specially,
+                          //               width: 182.w,
+                          //               height: 90.w,
+                          //               fit: BoxFit.cover,
+                          //             ),
+                          //           ),
+                          //         );
+                          //       }),
+                          // ),
                         ],
                       ),
                     ),
@@ -199,9 +209,9 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                       width: double.maxFinite,
                       height: 60.w,
                       child: TabBar(
-                        tabAlignment: TabAlignment.center,
+                        tabAlignment: TabAlignment.start,
                         tabs: const [
-                          Tab(text: "热门推荐"),
+                          Tab(text: "头像集"),
                         ],
                         onTap: (index) {
                           // page.animateTo(index, duration: duration, curve: curve)
@@ -246,56 +256,35 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                   // color: Colors.red,
                   child: GridView.builder(
                     padding: EdgeInsets.only(top: 10.w),
+                    itemCount: 3,
                     itemBuilder: (c, index) {
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => MakePage(
+                              index: index, imageUrl: "03_$index.jpg"));
+                        },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: index.isOdd ? Colors.amber : Colors.red,
                             borderRadius: BorderRadius.circular(8.w),
                           ),
                           child: Stack(
                             children: [
-                              Image.asset(
-                                index.isEven
-                                    ? "face_item_2.png".face
-                                    : "face_item_1.png".face,
-                                width: 175.w,
-                                height: 265.w,
-                                fit: BoxFit.cover,
-                              ),
                               Center(
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 10.w),
-                                    Text(
-                                      "照片拥抱",
-                                      style: TextStyle(
-                                        color: const Color(0xFF191919),
-                                        fontSize: 22.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                child: Container(
+                                  width: 200.w,
+                                  height: 200.w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.w),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.w),
+                                    child: Image.asset(
+                                      "03_$index.jpg".specially,
+                                      width: 200.w,
+                                      height: 200.w,
+                                      fit: BoxFit.cover,
                                     ),
-                                    SizedBox(height: 3.w),
-                                    Text(
-                                      "-跨越时空的专属浪漫-",
-                                      style: TextStyle(
-                                        color: const Color(0xFF191919),
-                                        fontSize: 11.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(height: 14.w),
-                                    Container(
-                                      width: 144.w,
-                                      height: 175.w,
-                                      decoration: BoxDecoration(
-                                        color: Colors.amber,
-                                        borderRadius:
-                                            BorderRadius.circular(8.w),
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -321,9 +310,12 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Padding(
-                                      padding: EdgeInsets.only(left: 10.w),
+                                      padding: EdgeInsets.only(
+                                        left: 10.w,
+                                        top: 12.w,
+                                      ),
                                       child: Text(
-                                        "千种风情人生",
+                                        "生肖姓氏鼓励头像",
                                         style: TextStyle(
                                           color: const Color(0xFFFFFFFF),
                                           fontSize: 14.sp,
@@ -343,7 +335,8 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                       crossAxisCount: 2,
                       mainAxisSpacing: 8.w,
                       crossAxisSpacing: 8.w,
-                      childAspectRatio: 175.w / 265.w,
+                      // childAspectRatio: 175.w / 265.w,
+                      childAspectRatio: 1.w / 1.w,
                     ),
                   ),
                 ),

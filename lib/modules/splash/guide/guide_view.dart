@@ -26,9 +26,7 @@ class GuidePage extends BaseStatefulWidget {
 
 class _GuidePageState extends BaseWidgetState<GuidePage> {
   final logic = Get.put(GuideLogic());
-  final state = Get
-      .find<GuideLogic>()
-      .state;
+  final state = Get.find<GuideLogic>().state;
 
   Future<void> pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -56,12 +54,9 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
             height: 8.h,
           ),
           Expanded(
-            child: QdsImage(
-                state.showImgGif,
-                double.infinity,
-                double.infinity,
-                fit: BoxFit.cover
-            ),),
+            child: QdsImage(state.showImgGif, double.infinity, double.infinity,
+                fit: BoxFit.cover),
+          ),
           InkWell(
             child: Container(
               margin: EdgeInsets.only(
@@ -73,11 +68,11 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                   borderRadius: BorderRadius.circular(26)),
               child: Center(
                   child: CommText(
-                    text: "立即制作",
-                    textColor: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  )),
+                text: "立即制作",
+                textColor: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              )),
             ),
             onTap: () {
               Get.bottomSheet(
@@ -95,11 +90,11 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                         margin: EdgeInsets.only(top: 19.h),
                         child: Center(
                             child: CommText(
-                              text: "上传正脸照片",
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                              textColor: Colors.black,
-                            )),
+                          text: "上传正脸照片",
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          textColor: Colors.black,
+                        )),
                       ),
                       Container(
                           margin: EdgeInsets.only(top: 17.h),
@@ -141,44 +136,86 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       InkWell(
                         onTap: () async {
                           final res =
-                          await Get.to<String>(() => Photo_listPage());
+                              await Get.to<String>(() => Photo_listPage());
                           if (res?.isNotEmpty == true) {
                             final formData = ffff.FormData.fromMap({
                               "file": await ffff.MultipartFile.fromFile(res!),
                             });
                             final bean = await HandleTool.instance
                                 .QDSUpload<UploadBean>(Api.uploadFile,
-                                params: formData,
-                                onModel: (v) => UploadBean.fromJson(v));
+                                    params: formData,
+                                    onModel: (v) => UploadBean.fromJson(v));
                             if (bean == null) return;
 
                             HandleTool.instance.SMWPost(
                                 '${Api.bindDefaultImg}?imgUrl=${bean.url}',
                                 isShowProgress: true,
                                 success: (isSuccess, code, message, results) {
-                                  if (isSuccess == true && results.isNotEmpty) {
-                                    Get.back();
-                                    // HandleTool.showAppToastText("上传成功");
-                                    HandleTool.instance.headImg = '${bean.url}';
-                                    // Get.offAll(() => const MainPage());
-                                    if(!HandleTool.instance.isMember){
-                                      gotoPushPage(VipPage(),arguments: {"type":1});
-                                    }else{
-                                      Get.offAll(() => const MainPage());
-                                    }
-                                  } else {
-                                    Get.back();
-                                  }
-                                });
+                              if (isSuccess == true && results.isNotEmpty) {
+                                Get.back();
+                                // HandleTool.showAppToastText("上传成功");
+                                HandleTool.instance.headImg = '${bean.url}';
+                                // Get.offAll(() => const MainPage());
+                                if (!HandleTool.instance.isMember) {
+                                  gotoPushPage(VipPage(),
+                                      arguments: {"type": 1});
+                                } else {
+                                  Get.offAll(() => const MainPage());
+                                }
+                              } else {
+                                Get.back();
+                              }
+                            });
                           } else {
                             HandleTool.showAppToastText('上传失败');
+                            CustomFaceDialogUtils.showCustomDialog(
+                                context: context,
+                                onPressed: () async {
+                                  final res = await Get.to<String>(
+                                      () => Photo_listPage());
+                                  if (res?.isNotEmpty == true) {
+                                    final formData = ffff.FormData.fromMap({
+                                      "file": await ffff.MultipartFile.fromFile(
+                                          res!),
+                                    });
+                                    final bean = await HandleTool.instance
+                                        .QDSUpload<UploadBean>(Api.uploadFile,
+                                            params: formData,
+                                            onModel: (v) =>
+                                                UploadBean.fromJson(v));
+                                    if (bean == null) return;
+
+                                    HandleTool.instance.SMWPost(
+                                        '${Api.bindDefaultImg}?imgUrl=${bean.url}',
+                                        isShowProgress: true, success:
+                                            (isSuccess, code, message,
+                                                results) {
+                                      if (isSuccess == true &&
+                                          results.isNotEmpty) {
+                                        Get.back();
+                                        // HandleTool.showAppToastText("上传成功");
+                                        HandleTool.instance.headImg =
+                                            '${bean.url}';
+                                        // Get.offAll(() => const MainPage());
+                                        if (!HandleTool.instance.isMember) {
+                                          gotoPushPage(VipPage(),
+                                              arguments: {"type": 1});
+                                        } else {
+                                          Get.offAll(() => const MainPage());
+                                        }
+                                      } else {
+                                        Get.back();
+                                      }
+                                    });
+                                  }
+                                });
                           }
 
                           // pickImage();
                         },
                         child: Container(
-                          margin:
-                          EdgeInsets.only(top: 10.h, left: 16.w, right: 16.w),
+                          margin: EdgeInsets.only(
+                              top: 10.h, left: 16.w, right: 16.w),
                           width: double.infinity,
                           height: 52.h,
                           decoration: BoxDecoration(
@@ -186,11 +223,11 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                               borderRadius: BorderRadius.circular(26)),
                           child: Center(
                               child: CommText(
-                                text: "上传照片",
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
-                                textColor: Colors.white,
-                              )),
+                            text: "上传照片",
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            textColor: Colors.white,
+                          )),
                         ),
                       ),
                       Container(

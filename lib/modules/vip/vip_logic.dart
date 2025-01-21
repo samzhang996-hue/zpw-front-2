@@ -1,22 +1,29 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
+import 'package:tobias/tobias.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/main/model/user_info_bean.dart';
+import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/model/payBean.dart';
 import 'package:zpw/modules/vip/model/vipBean.dart';
 import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/utils/buy_engine.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
-import 'package:tobias/tobias.dart';
+
 import 'vip_state.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:get/get.dart';
+
 class VipLogic extends BaseGetxController {
   final VipState state = VipState();
   Timer? _timer;
   int _elapsedSeconds = 0;
   bool _conditionMet = false;
-
+  late BuyEngin buyEngin;
+  var click = false;
+  var _success = false;
   @override
   void onInit() {
     super.onInit();
@@ -26,7 +33,15 @@ class VipLogic extends BaseGetxController {
       update();
     }
     getVipHome();
+    buyEngin = BuyEngin();
+    buyEngin.initializeInAppPurchase();
+    buyEngin.clearPendingPurchases();
+  }
 
+  @override
+  void dispose() {
+    buyEngin.onCloseIos();
+    super.dispose();
   }
 
   void _startPolling() {
@@ -43,17 +58,63 @@ class VipLogic extends BaseGetxController {
       }
     });
   }
+
   void stopPolling() {
     _timer?.cancel();
   }
+
+  restoreIosPay(dynamic receiptData, String transactionId,
+      {bool showSuccessTips = true}) {
+    Log.i("------click : $click=========");
+    Post(Api.payOrder_restoreIosPay, isShowProgress: false, params: {
+      "receiptData": receiptData,
+      "transactionId": transactionId,
+      "isRestore": true,
+      "orderId": "",
+    }, success: (isSuccess, code, message, results) {
+      // Log.i("------${results.first} ${isSuccess}=========");
+      if (isSuccess == true && results.isNotEmpty) {
+        // HandleTool.showAppToastText("恢复成功");
+
+        if (click) {
+          getUserInfo();
+        }
+      }
+    });
+  }
+
+  iosPay(dynamic receiptData, String transactionId) {
+    Map<String, dynamic> dataMap = {
+      "transactionId": transactionId,
+      "receiptData": receiptData,
+      "orderId": "",
+      "isRestore": false
+    };
+
+    Log.i("------click : $click=========");
+
+    Post(Api.payOrder_iosPay, isShowProgress: false, params: dataMap,
+        success: (isSuccess, code, message, results) {
+      if (isSuccess == true && results.isNotEmpty) {
+        // HandleTool.showAppToastText("购买成功");
+        // getVipHome();
+        if (click) {
+          getUserInfo();
+        }
+      }
+    });
+  }
+
   selectItem(int index) {
     state.itemIndex = index;
     update();
   }
+
   onSelected(bool isCheck) {
     state.isCheck.value = isCheck;
     update();
   }
+
   getVipHome() {
     Post<VipBean>(Api.vip_getVipHome,
         isShowProgress: true,
@@ -128,26 +189,29 @@ class VipLogic extends BaseGetxController {
   }
 
   getUserInfo() {
-    // final MineLogic mineLogic = Get.find<MineLogic>();
-    // Get<UserInfoBean>(Api.sso_getUserInfo,
-    //     isShowProgress: false,
-    //     success: (isSuccess, code, message, results) {
-    //       if (isSuccess == true && results.isNotEmpty) {
-    //         Log.d("is----${results.first}");
-    //         mineLogic.state.userInfoBean = results.first;
-    //         HandleTool.instance.isMember =
-    //             mineLogic.state.userInfoBean.isMember ?? false;
-    //         if (HandleTool.instance.isMember) {
-    //           _conditionMet = true;
-    //           HandleTool.showAppToastText("您已成为会员");
-    //           String phones = mineLogic.state.userInfoBean.userPhone ?? "";
-    //           if (phones.isNotEmpty) {
-    //             return;
-    //           }
-    //         }
-    //         update();
-    //       }
-    //     },
-    //     onModel: (m) => UserInfoBean.fromJson(m));
+    final MineLogic mineLogic = Get.find<MineLogic>();
+    Post<UserInfoBean>(Api.sso_getUserInfo,
+        isShowProgress: false,
+        success: (isSuccess, code, message, results) {
+          if (isSuccess == true && results.isNotEmpty) {
+            Log.d("is----${results.first}");
+            mineLogic.state.userInfoBean = results.first;
+            HandleTool.instance.isMember =
+                mineLogic.state.userInfoBean.isMember ?? false;
+            if (HandleTool.instance.isMember) {
+              _conditionMet = true;
+              if (_success == false) {
+                HandleTool.showAppToastText("您已成为会员");
+              }
+              _success = true;
+              String phones = mineLogic.state.userInfoBean.userPhone ?? "";
+              if (phones.isNotEmpty) {
+                return;
+              }
+            }
+            update();
+          }
+        },
+        onModel: (m) => UserInfoBean.fromJson(m));
   }
 }

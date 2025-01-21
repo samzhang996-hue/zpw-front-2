@@ -62,12 +62,15 @@ class _CollectionItemState extends State<CollectionItem> {
             return GestureDetector(
               onTap: () {
                 Get.to(() => FaceMakePage(
-                    title: "${bean?.photoFuncResp?.tags}",
-                    funcId: bean?.photoFuncResp?.id ?? 0));
+                      title: "${bean?.photoFuncResp?.tags}",
+                      funcId: bean?.photoFuncResp?.id ?? 0,
+                      imageUrl: bean?.photoFuncResp?.showImgGif ?? "",
+                    ));
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: index.isOdd ? Colors.amber : Colors.red,
+                  // color: index.isOdd ? Colors.amber : Colors.red,
+                  color: const Color(0xFFF3F3F3),
                   borderRadius: BorderRadius.circular(8.w),
                 ),
                 child: Stack(
@@ -108,7 +111,7 @@ class _CollectionItemState extends State<CollectionItem> {
                             child: Padding(
                               padding: EdgeInsets.only(left: 10.w, top: 10.w),
                               child: Text(
-                                "${bean?.photoFuncResp?.tags}",
+                                "${bean?.photoFuncResp?.tags ?? bean?.photoFuncResp?.funcName}",
                                 style: TextStyle(
                                   color: const Color(0xFFFFFFFF),
                                   fontSize: 14.sp,

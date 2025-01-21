@@ -43,5 +43,16 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+    <key>NSCameraUsageDescription</key>
+    <string>我们需要访问您的相机，以便您可以拍摄照片。</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>我们需要访问您的相册，以便您可以选择照片。</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>我们需要访问您的相册，以便您可以选择照片。</string>
+    <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <true/>
+        </dict>
 </dict>
 </plist>

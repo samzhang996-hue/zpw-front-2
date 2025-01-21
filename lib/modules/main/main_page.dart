@@ -1,11 +1,10 @@
-import 'dart:io';
-
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/modules/main/main_logic.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -51,70 +50,70 @@ class _MainPageState extends State<MainPage> {
                 unselectedFontSize: 12.sp,
                 items: [
                   BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'un_home.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      activeIcon: Image.asset(
-                        'home.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      label: "视频",
-                     ),
-                  BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'un_pic.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      activeIcon: Image.asset(
-                        'pic.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      label: "图片",
-                      ),
-                  BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'un_tx.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      activeIcon: Image.asset(
-                        'tx.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      label: "特效",
+                    icon: Image.asset(
+                      'un_home.png'.tabbar,
+                      width: 36,
+                      height: 36,
                     ),
+                    activeIcon: Image.asset(
+                      'home.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    label: "视频",
+                  ),
                   BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'un_wf.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      activeIcon: Image.asset(
-                        'wf.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      label: "玩法",
-                      ),
+                    icon: Image.asset(
+                      'un_pic.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    activeIcon: Image.asset(
+                      'pic.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    label: "图片",
+                  ),
+                  // BottomNavigationBarItem(
+                  //   icon: Image.asset(
+                  //     'un_tx.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   activeIcon: Image.asset(
+                  //     'tx.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   label: "特效",
+                  // ),
+                  // BottomNavigationBarItem(
+                  //   icon: Image.asset(
+                  //     'un_wf.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   activeIcon: Image.asset(
+                  //     'wf.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   label: "玩法",
+                  // ),
                   BottomNavigationBarItem(
-                      icon: Image.asset(
-                        'un_mine.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      activeIcon: Image.asset(
-                        'mine.png'.tabbar,
-                        width: 36,
-                        height: 36,
-                      ),
-                      label: "我的",
-                      ),
+                    icon: Image.asset(
+                      'un_mine.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    activeIcon: Image.asset(
+                      'mine.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    label: "我的",
+                  ),
                 ],
               );
             },

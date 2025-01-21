@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/utils/dowload.dart';
 import 'package:zpw/utils/log_utils.dart';
+
 import 'detail_logic.dart';
-import 'package:video_player/video_player.dart';
 
 class DetailPage extends BaseStatefulWidget {
   @override
@@ -82,7 +84,15 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
           YAppBar(
               title: state.tags.value,
               right: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(
+                      () => FaceMakePage(
+                        title: state.tags.value,
+                        funcId: state.id.value,
+                        imageUrl: state.returnUrl.value,
+                      ),
+                    );
+                  },
                   child: CommText(
                     text: "再次创作",
                     textColor: ColorPlate.themeColor,
@@ -90,14 +100,17 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                   ))),
           Expanded(child: _buildContent()),
           Container(
-            margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 20.w, top: 25.w),
+            margin: EdgeInsets.only(
+                left: 16.w, right: 16.w, bottom: 20.w, top: 25.w),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
                   child: Container(
                     height: 45.w,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: ColorPlate.themeColor),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(22),
+                        color: ColorPlate.themeColor),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -135,7 +148,9 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                   },
                   child: Container(
                     height: 45.w,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Color(0xffFFF1F6)),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(22),
+                        color: Color(0xffFFF1F6)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
