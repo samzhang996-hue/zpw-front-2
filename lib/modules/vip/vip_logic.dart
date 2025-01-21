@@ -192,12 +192,15 @@ class VipLogic extends BaseGetxController {
     final MineLogic mineLogic = Get.find<MineLogic>();
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: false,
-        success: (isSuccess, code, message, results) {
+        success: (isSuccess, code, message, results) async {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("is----${results.first}");
             mineLogic.state.userInfoBean = results.first;
-            HandleTool.instance.isMember =
-                mineLogic.state.userInfoBean.isMember ?? false;
+            if (mineLogic.state.userInfoBean.vipExpireTime != null) {
+              HandleTool.instance.isMember = await HandleTool.instance
+                  .compareTimesWithServer(
+                      mineLogic.state.userInfoBean.vipExpireTime);
+            }
             if (HandleTool.instance.isMember) {
               _conditionMet = true;
               if (_success == false) {

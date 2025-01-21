@@ -87,7 +87,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             InkWell(
               onTap: () {
                 Get.back();
-                Get.find<MainLogic>().changeIndex(selectedIndex);
+                Get.find<MainLogic>().changeIndex(selectedIndex == 1 ? 0 : 1);
               },
               child: Container(
                 width: 122.w,
@@ -219,16 +219,24 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
               )),
               onTap: () async {
                 if (worksStatus == 3) {
-                  final res = await gotoPushPage(
-                    DetailPage(),
-                    arguments: {
-                      "worksType": worksType,
-                      "returnUrl": returnUrl,
-                      "tags": tags,
-                      "id": id
-                    },
-                  );
+                  final res = await Get.to(() => DetailPage(), arguments: {
+                    "worksType": worksType,
+                    "returnUrl": returnUrl,
+                    "tags": tags,
+                    "id": id
+                  });
                   logic.photoRecord(selectedIndex);
+                  return;
+                  // final res = await gotoPushPage(
+                  //   DetailPage(),
+                  //   arguments: {
+                  //     "worksType": worksType,
+                  //     "returnUrl": returnUrl,
+                  //     "tags": tags,
+                  //     "id": id
+                  //   },
+                  // );
+                  // logic.photoRecord(selectedIndex);
                 }
               },
             );

@@ -184,7 +184,10 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
-    Get.to(() => VipPage());
+    if (!HandleTool.instance.isMember) {
+      Get.to(() => VipPage());
+    }
+
     _show.value = false;
     final params = {
       "funcId": widget.funcId,
