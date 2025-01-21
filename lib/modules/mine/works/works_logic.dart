@@ -23,7 +23,8 @@ class WorksLogic extends BaseGetxController {
     get(Api.photoRecord, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
-        Log.d("msg---$data");
+        state.records =data["records"];
+        update();
       }
     });
   }

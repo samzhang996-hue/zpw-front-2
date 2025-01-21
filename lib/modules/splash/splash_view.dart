@@ -11,7 +11,7 @@ import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/sp_utils.dart';
-
+import 'package:video_player/video_player.dart';
 import 'splash_logic.dart';
 
 class SplashPage extends BaseStatefulWidget {
@@ -22,9 +22,11 @@ class SplashPage extends BaseStatefulWidget {
 class _SplashPageState extends BaseWidgetState<SplashPage> {
   final logic = Get.put(SplashLogic());
   final state = Get.find<SplashLogic>().state;
+  late VideoPlayerController _controller;
 
   @override
   void dispose() {
+    _controller.dispose();
     Get.delete<SplashPage>();
     // TODO: implement dispose
     super.dispose();
@@ -33,6 +35,16 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
   @override
   void initState() {
     super.initState();
+    _controller = VideoPlayerController.asset(
+      'splash.mp4'.vip,
+    )
+      ..setLooping(true)
+      ..initialize().then((_) {
+        // 确保在视频初始化完成后设置播放状态
+        setState(() {
+          _controller.play();
+        });
+      });
     SpUtils.getBool("isAgreed").then((value) {
       Log.i("splash--$value");
       if (value == null || !value) {
@@ -48,7 +60,16 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
                 return const UserAgreementDialog();
               },
             );
+
             Log.i("splash2--$agreed");
+            // if (mounted) {
+            //   setState(() {
+            //     // 在对话框关闭后恢复视频播放
+            //     if (_controller.value.isPlaying == false) {
+            //       _controller.play();
+            //     }
+            //   });
+            // }
             if (agreed != null && agreed) {
               // 用户同意了协议，执行相应操作
               logic.loginWithDeviceInfo();
@@ -66,13 +87,30 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
 
   @override
   Widget initDefaultBuild(BuildContext context) {
+    // return Container(
+    //     height: double.infinity,
+    //     width: double.infinity,
+    //     child: Image.asset(
+    //       "splash.png".comm,
+    //       fit: BoxFit.fill,
+    //     ));
     return Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: Image.asset(
-          "splash.png".comm,
-          fit: BoxFit.fill,
-        ));
+      height: double.infinity,
+      width: double.infinity,
+      child: _controller.value.isInitialized
+          ? AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            )
+          : Container(
+              child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Image.asset(
+                    "splash.png".comm,
+                    fit: BoxFit.fill,
+                  ))), // 使用屏幕高度的百分比
+    );
   }
 }
 
@@ -195,7 +233,7 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '不同意',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color:Color(0xffB8B8B8)),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xffB8B8B8)),
                     ),
                     onPressed: () {
                       Get.back(result: false);

@@ -1,10 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
+import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zpw/utils/log_utils.dart';
+import '../detail/detail_view.dart';
 import 'works_logic.dart';
 
 class WorksPage extends BaseStatefulWidget {
@@ -15,12 +20,13 @@ class WorksPage extends BaseStatefulWidget {
 class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
-  int selectedIndex = 0; // 初始选中第一个选项
+  int selectedIndex = 1; // 初始选中第一个选项
 
   void selectTab(int index) {
     setState(() {
       selectedIndex = index;
     });
+    logic.photoRecord(index);
   }
 
   @override
@@ -38,20 +44,20 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
           children: [
             YAppBar(title: "作品"),
             Container(
-              height: 40.h,
+              height: 40.w,
               width: 200.w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   buildTabItem(
                     text: "视频",
-                    isSelected: selectedIndex == 0,
-                    onTap: () => selectTab(0),
+                    isSelected: selectedIndex == 1,
+                    onTap: () => selectTab(1),
                   ),
                   buildTabItem(
                     text: "图片",
-                    isSelected: selectedIndex == 1,
-                    onTap: () => selectTab(1),
+                    isSelected: selectedIndex == 0,
+                    onTap: () => selectTab(0),
                   ),
                 ],
               ),
@@ -64,11 +70,41 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
   }
 
   Widget _item() {
+    if (state.records.isEmpty) {
+      return Container(
+        child: Column(
+          children: [
+            Image.asset(
+              "emty_data.png".comm,
+              width: 199.w,
+            ),
+            SizedBox(
+              height: 13.w,
+            ),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                width: 122.w,
+                height: 40.w,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(21), color: ColorPlate.themeColor),
+                child: Center(
+                    child: CommText(
+                  text: "去创作",
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  textColor: Colors.white,
+                )),
+              ),
+            )
+          ],
+        ),
+      );
+    }
     return Flexible(
         child: Container(
       margin: EdgeInsets.only(left: 16.w, right: 16.w),
       child: GridView.builder(
-          padding: EdgeInsets.only(top: 17.h),
+          padding: EdgeInsets.only(top: 17.w),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 8,
@@ -77,14 +113,70 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
           ),
           // physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: 10,
+          itemCount: state.records.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-                child: Stack(
-              children: [
-                QdsImageCorner("url", 175.w, 265.h, 8),
-              ],
-            ));
+            var data = state.records[index];
+            //任务状态(WorksStatus 0:等待 1:工作中 2:失败 3:成功)
+            int worksStatus = data["worksStatus"] ?? 0;
+            //任务结果类型(WorksTypeEnum 0:图片 1:视频 2:音频 3:文字)
+            int worksType = data["worksType"] ?? 0;
+            var returnUrl = data["returnUrl"] ?? "";
+            Log.d("data111--$data");
+            return InkWell(
+              child: Container(
+                  child: Stack(
+                children: [
+                  QdsImageCorner(data["oldUrl"], 175.w, 265.w, 8),
+                  Visibility(
+                    visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
+                    child: Container(
+                      width: 175.w,
+                      height: 265.w,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Color(0xff99000000)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Visibility(
+                            visible: (worksStatus != 2),
+                            child: const CupertinoActivityIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                          CommText(
+                            text: worksStatus == 2 ? "制作失败" : "制作中...",
+                            fontSize: 12.sp,
+                            textColor: Colors.white,
+                          ),
+                          Visibility(
+                            visible: worksStatus == 2,
+                            child: InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.w),
+                                  height: 35.w,
+                                  decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
+                                  child: Center(
+                                      child: CommText(
+                                    text: "重新制作",
+                                    fontSize: 15.sp,
+                                    textColor: Colors.white,
+                                  ))),
+                              onTap: () {
+
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              )),
+              onTap: () {
+                if (worksStatus == 3) {
+                  gotoPushPage(DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl});
+                }
+              },
+            );
           }),
     ));
   }
@@ -112,7 +204,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               Image.asset(
                 "custom_indicator.png".mine, // 注意：".mine" 不是有效的资源引用方式
                 width: 36.0, // 注意：.w 不是有效单位，应该使用具体的数值
-                height: 4.0, // 注意：.h 不是有效单位，应该使用具体的数值或根据需求调整
+                height: 4.0, // 注意：.w 不是有效单位，应该使用具体的数值或根据需求调整
               ),
           ],
         ),

@@ -35,16 +35,16 @@ class _MinePageState extends BaseWidgetState<MinePage> {
               children: [
                 Container(
                   width: double.infinity,
-                  height: 371.h,
+                  height: 371.w,
                   decoration: BoxDecoration(image: DecorationImage(image: AssetImage("mine_bg.png".mine))),
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 16.w, top: 67.h),
+                        margin: EdgeInsets.only(left: 16.w, top: 67.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            QdsImage(state.userInfoBean.headImg ?? "", 56.w, 56.h),
+                            QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w),
                             // Image.asset(
                             //   "logo.png".mine,
                             //   width: 56.w,
@@ -61,7 +61,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                   SizedBox(
-                                    height: 4.h,
+                                    height: 4.w,
                                   ),
                                   CommText(
                                     text: HandleTool.instance.isMember ? "到期时间:${state.userInfoBean.memberExpirationTime}" : "未开通会员",
@@ -82,7 +82,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                                   child: Image.asset(
                                     "setting.png".mine,
                                     width: 30.w,
-                                    height: 30.h,
+                                    height: 30.w,
                                   )),
                             )
                           ],
@@ -93,12 +93,11 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                           gotoPushPage(VipPage());
                         },
                         child: Container(
-                          margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 23.h),
+                          margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 23.w),
                           width: double.infinity,
-                          height: 70.h,
                           decoration: BoxDecoration(color: Color(0xff342D2C), borderRadius: BorderRadius.circular(10)),
                           child: Container(
-                            margin: EdgeInsets.only(left: 16.w, top: 4.h),
+                            margin: EdgeInsets.only(left: 16.w, top: 4.w),
                             child: Row(
                               children: [
                                 Container(
@@ -110,7 +109,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                                           Image.asset(
                                             "vip_logo.png".mine,
                                             width: 21.w,
-                                            height: 22.h,
+                                            height: 22.w,
                                           ),
                                           CommText(
                                             text: "VIP会员",
@@ -121,13 +120,14 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 4.h,
+                                        height: 4.w,
                                       ),
                                       CommText(
                                         text: "海量风格模板 | 持续更新备份",
                                         fontSize: 14.sp,
                                         textColor: Color(0xffFFDEC9),
-                                      )
+                                      ),
+                                      SizedBox(height: 10.w,)
                                     ],
                                   ),
                                 ),
@@ -163,7 +163,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 232.h),
+                  margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 232.w),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
@@ -180,7 +180,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
+              margin: EdgeInsets.only(left: 16, right: 16, top: 20.w),
               width: double.infinity,
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
               child: Padding(
@@ -217,7 +217,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 16.w, top: 20.h, right: 14.w),
+              margin: EdgeInsets.only(left: 16.w, top: 20.w, right: 14.w),
               child: Row(
                 children: [
                   Image.asset(
@@ -245,7 +245,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
               width: double.infinity,
               height: 0.5,
               color: Color(0xffF3F3F3),
-              margin: EdgeInsets.only(left: 15.w, top: 20.h, right: 15.w),
+              margin: EdgeInsets.only(left: 15.w, top: 20.w, right: 15.w),
             ),
           ],
         ));

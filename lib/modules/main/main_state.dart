@@ -27,7 +27,6 @@ class MainState {
       FacePage(),
       SpeciallyPage(),
       GameplayPage(),
-
       MinePage(),
     ].obs;
     // 用户协议数据

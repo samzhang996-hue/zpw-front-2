@@ -4,6 +4,7 @@ class Api {
   //本地
   // static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
   static const String API_BASE_URL_DEBUG = "http://photo.jlhkj168.cn";
+  // static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001/";
 
   ///正式
   static const String API_BASE_URL_RELEASE = "http://photo.jlhkj168.cn";
@@ -32,6 +33,15 @@ class Api {
 
   /// 获取vip页面数据
   static const String vip_getVipHome = "/center/getVipShowMsg";
+
+  static const String getFuncDetail = "/photoFunc/getFuncDetail?id=1";
+
+  static const String delete = "photoRecord/delete";
+
+
+
+
+
 
   /// 订单列表
   static const String payOrder_listOrder = "/payOrder/listOrder";

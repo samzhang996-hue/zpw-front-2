@@ -59,8 +59,8 @@ class _VipPageState extends BaseWidgetState {
           rk9 = state.vipBean.vipList?[state.itemIndex].remark9;
           rk8 = state.vipBean.vipList?[state.itemIndex].remark8;
           rk10 = state.vipBean.vipList?[state.itemIndex].remark10;
-          state.isWx=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay??0;
-          state.isZfb=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay??0;
+          state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
+          state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
         } else {
           rk9 = "";
           rk8 = "";
@@ -79,12 +79,12 @@ class _VipPageState extends BaseWidgetState {
                   height: 644.h,
                   child: _controller.value.isInitialized
                       ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        )
                       : Container(
-                    child: CircularProgressIndicator(),
-                  ), // 使用屏幕高度的百分比
+                          child: CircularProgressIndicator(),
+                        ), // 使用屏幕高度的百分比
                 ),
                 Positioned(
                   bottom: 0,
@@ -120,76 +120,85 @@ class _VipPageState extends BaseWidgetState {
                             ),
                           ),
                         ),
-                        Visibility(visible: (state.isWx==1&&state.isZfb==1),child:  Container(
-                          margin: EdgeInsets.only(top: 10.h, bottom: 10.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Visibility(visible: state.isZfb==1,child: Container(
-                                height: 47.h,
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "zfb.png".vip,
-                                      width: 26.w,
+                        Visibility(
+                          visible: (state.isWx == 1 && state.isZfb == 1),
+                          child: Container(
+                            margin: EdgeInsets.only(top: 10.h, bottom: 10.h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Visibility(
+                                  visible: state.isZfb == 1,
+                                  child: Container(
+                                    height: 47.h,
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "zfb.png".vip,
+                                          width: 26.w,
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        CommText(
+                                          text: "支付宝支付",
+                                          fontSize: 15.w,
+                                          textColor: Color(0xffFFD9D0),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        Image.asset(
+                                          "un_check.png".vip,
+                                          width: 14.w,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    CommText(
-                                      text: "支付宝支付",
-                                      fontSize: 15.w,
-                                      textColor: Color(0xffFFD9D0),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    Image.asset(
-                                      "un_check.png".vip,
-                                      width: 14.w,
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),),
-                              Visibility(visible: state.isWx==1,child: Container(
-                                height: 47.h,
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "wx.png".vip,
-                                      width: 26.w,
+                                Visibility(
+                                  visible: state.isWx == 1,
+                                  child: Container(
+                                    height: 47.h,
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "wx.png".vip,
+                                          width: 26.w,
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        CommText(
+                                          text: "微信支付",
+                                          fontSize: 15.w,
+                                          textColor: Color(0xffFFD9D0),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        Image.asset(
+                                          "un_check.png".vip,
+                                          width: 14.w,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    CommText(
-                                      text: "微信支付",
-                                      fontSize: 15.w,
-                                      textColor: Color(0xffFFD9D0),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    SizedBox(
-                                      width: 8.w,
-                                    ),
-                                    Image.asset(
-                                      "un_check.png".vip,
-                                      width: 14.w,
-                                    ),
-                                  ],
-                                ),
-                              ),)
-                            ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),),
+                        ),
                         InkWell(
                           onTap: () {
                             var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
                             state.goodsId = vp?.id ?? 0;
                             state.payKeyType = vp?.defaultPayKeyType ?? 0;
                             var zfbType = vp?.defaultZfbPayKeyType ?? 0;
-                            state.isWx=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay??0;
-                            state.isZfb=state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay??0;
+                            state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
+                            state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
                             if (!state.isCheck.value) {
                               CustomSureVipDialogUtils.showCustomDialog(
                                   context: context,
@@ -210,11 +219,11 @@ class _VipPageState extends BaseWidgetState {
                                 decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
                                 child: Center(
                                     child: CommText(
-                                      text: rk8,
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold,
-                                      textColor: Colors.white,
-                                    )),
+                                  text: rk8,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                  textColor: Colors.white,
+                                )),
                               ),
                               Visibility(
                                 visible: !(rk10 == ""),

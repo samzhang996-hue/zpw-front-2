@@ -1,5 +1,6 @@
 class WorksState {
+  late List<dynamic> records;
   WorksState() {
-    ///Initialize variables
+    records = [];
   }
 }

@@ -1,5 +1,8 @@
 class GuideState {
+  late String showImgGif;
+  late String funcName;
   GuideState() {
-    ///Initialize variables
+    showImgGif="";
+    funcName="";
   }
 }
