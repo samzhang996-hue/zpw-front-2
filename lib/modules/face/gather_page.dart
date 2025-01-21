@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
+import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/face/collection_item.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class GatherPage extends StatefulWidget {
   const GatherPage({
     super.key,
     required this.index,
     required this.listPhotoGroupBean,
+    required this.imgUrlAcross,
   });
   final int index;
   final List<ListPhotoGroupBean> listPhotoGroupBean;
+  final String imgUrlAcross;
 
   @override
   State<GatherPage> createState() => _GatherPageState();
@@ -26,7 +30,7 @@ class _GatherPageState extends State<GatherPage>
   );
   late ScrollController? _scrollViewController = ScrollController();
   var outHeight = 20.0.w;
-  late PageController? page = PageController();
+  late PageController? page = PageController(initialPage: widget.index);
 
   @override
   void initState() {
@@ -59,12 +63,10 @@ class _GatherPageState extends State<GatherPage>
                   height: double.infinity,
                   child: Stack(
                     children: [
-                      Container(
-                        width: 1.sw,
-                        height: 260.w,
-                        decoration: const BoxDecoration(
-                          color: Colors.amber,
-                        ),
+                      QdsImage(
+                        widget.imgUrlAcross,
+                        1.sw,
+                        260.w,
                       ),
                       // Positioned(
                       //   left: 0,
@@ -107,7 +109,7 @@ class _GatherPageState extends State<GatherPage>
                         .toList(),
                     onTap: (index) {
                       // page?.animateTo(index, duration: duration, curve: curve)
-                      // page.jumpToPage(index);
+                      page?.jumpToPage(index);
                     },
                     controller: _tabController,
                     indicator: const TabBarGradientIndicator(
@@ -146,6 +148,7 @@ class _GatherPageState extends State<GatherPage>
               .map((e) => CollectionItem(id: e.id ?? 0))
               .toList(),
           onPageChanged: (index) {
+            Log.e("indexindexindex:index$index");
             _tabController.animateTo(index);
 
             if (index == 1) {

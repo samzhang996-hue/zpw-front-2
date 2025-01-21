@@ -114,7 +114,7 @@ packages:
     source: hosted
     version: "1.0.2"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: cupertino_icons
       sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
@@ -320,6 +320,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.6.6"
+  gif_view:
+    dependency: "direct main"
+    description:
+      name: gif_view
+      sha256: d2441d98bcd56b3fd00e869513aeaefa56849ab62f63675e7d55f5fa4517f27e
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.0"
   html:
     dependency: transitive
     description:
@@ -332,10 +340,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      sha256: fe7ab022b76f3034adc518fb6ea04a82387620e19977665ea18d30a1cf43442f
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.13.6"
+    version: "1.3.0"
   http_parser:
     dependency: transitive
     description:
@@ -656,6 +664,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.27.7"
+  screen_protector:
+    dependency: "direct dev"
+    description:
+      name: screen_protector
+      sha256: "305fd157f6f0b210afe216e790022bfe469c3b1d1f2e0d3dcc5906cc9c49c3e9"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.4.2+1"
   shared_preferences:
     dependency: "direct dev"
     description:
@@ -781,6 +797,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.0+1"
+  tabbar_gradient_indicator_plus:
+    dependency: "direct dev"
+    description:
+      name: tabbar_gradient_indicator_plus
+      sha256: "9e4f86bd09fdfaa869ab38e3ec405248070c27b113dd78726a68748a47606fcd"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.2"
   term_glyph:
     dependency: transitive
     description:

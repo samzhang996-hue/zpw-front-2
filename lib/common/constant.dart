@@ -18,4 +18,5 @@ extension ImageLoad on String {
   String get vip => 'images/vip/$this';
   String get make => 'images/make/$this';
   String get face => 'images/face/$this';
+  String get specially => 'images/specially/$this';
 }

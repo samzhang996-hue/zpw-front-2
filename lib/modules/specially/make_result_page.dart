@@ -6,6 +6,9 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 class MakeResultPage extends BaseStatefulWidget {
+  final int index;
+
+  MakeResultPage({required this.index});
   @override
   BaseWidgetState<MakeResultPage> getState() => _MakeResultPageState();
 }

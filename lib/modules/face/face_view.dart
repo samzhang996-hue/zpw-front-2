@@ -180,6 +180,8 @@ class _FacePageState extends State<FacePage>
                                             index: index,
                                             listPhotoGroupBean:
                                                 logic.listPhotoGroupBean,
+                                            imgUrlAcross:
+                                                bean.imgUrlAcross ?? "",
                                           ),
                                         );
                                       },
