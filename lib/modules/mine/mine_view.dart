@@ -10,6 +10,7 @@ import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/setting/setting_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'mine_logic.dart';
@@ -76,6 +77,7 @@ class _MinePageState extends BaseWidgetState<MinePage> {
                             InkWell(
                               onTap: () {
                                 gotoPushPage(SettingPage());
+
                               },
                               child: Container(
                                   width: 60.w,

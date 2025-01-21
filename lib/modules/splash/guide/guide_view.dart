@@ -12,6 +12,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
+import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
