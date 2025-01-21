@@ -114,14 +114,14 @@ class SplashLogic extends BaseGetxController {
             // if (isFirst) {
             //   Get.offAll(const MainPage());
             // } else {
-              Get.offAll(GuidePage());
+            //   Get.offAll(GuidePage());
             // }
             // return;
-            // AdsUtils.init().then((value) {
-            //   if (value) {
-            //     AdsUtils.showSplashAd();
-            //   }
-            // });
+            AdsUtils.init().then((value) {
+              if (value) {
+                AdsUtils.showSplashAd();
+              }
+            });
           }
         },
         onModel: (m) => UserInfoBean.fromJson(m));

@@ -12,6 +12,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
@@ -156,9 +157,14 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                                 success: (isSuccess, code, message, results) {
                                   if (isSuccess == true && results.isNotEmpty) {
                                     Get.back();
-                                    HandleTool.showAppToastText("上传成功");
+                                    // HandleTool.showAppToastText("上传成功");
                                     HandleTool.instance.headImg = '${bean.url}';
-                                    Get.offAll(() => const MainPage());
+                                    // Get.offAll(() => const MainPage());
+                                    if(!HandleTool.instance.isMember){
+                                      gotoPushPage(VipPage(),arguments: {"type":1});
+                                    }else{
+                                      Get.offAll(() => const MainPage());
+                                    }
                                   } else {
                                     Get.back();
                                   }

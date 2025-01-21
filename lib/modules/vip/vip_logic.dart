@@ -10,7 +10,7 @@ import 'package:zpw/utils/my_plugin.dart';
 import 'package:tobias/tobias.dart';
 import 'vip_state.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:get/get.dart';
 class VipLogic extends BaseGetxController {
   final VipState state = VipState();
   Timer? _timer;
@@ -20,7 +20,13 @@ class VipLogic extends BaseGetxController {
   @override
   void onInit() {
     super.onInit();
+    var map = Get.arguments;
+    if (map != null) {
+      state.type = map["type"] ?? 0;
+      update();
+    }
     getVipHome();
+
   }
 
   void _startPolling() {

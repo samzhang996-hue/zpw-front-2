@@ -4,6 +4,7 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
+import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/view/gradient_border_painter.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -302,7 +303,12 @@ class _VipPageState extends BaseWidgetState {
                 ),
                 InkWell(
                   onTap: () {
-                    Get.back();
+                    if( state.type==1){
+                      Get.offAll(() => const MainPage());
+                    }else{
+                      Get.back();
+                    }
+
                   },
                   child: Container(
                       width: 80.w,

@@ -3,6 +3,7 @@ import 'package:zpw/modules/vip/model/payBean.dart';
 import 'package:zpw/modules/vip/model/vipBean.dart';
 class VipState {
   late int itemIndex;
+  late int type;
   late RxBool isCheck;
   late PayBean payBean;
   late VipBean vipBean;
@@ -19,6 +20,7 @@ class VipState {
     goodsId=0;
     isWx=0;
     isZfb=0;
+    type=0;
 
   }
 }
