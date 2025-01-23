@@ -115,7 +115,7 @@ class SplashLogic extends BaseGetxController {
 
             final res = await SpUtils.getString("my_ai_head");
             HandleTool.instance.headImg = res;
-            if (res.isEmpty) {
+            if (res.isNotEmpty) {
               isFirst = true;
             }
 
