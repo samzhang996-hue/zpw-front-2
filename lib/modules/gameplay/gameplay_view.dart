@@ -10,6 +10,7 @@ import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
+import 'package:zpw/utils/handle_tool.dart';
 
 class GameplayPage extends StatefulWidget {
   const GameplayPage({Key? key}) : super(key: key);
@@ -156,16 +157,19 @@ class _GameplayPageState extends State<GameplayPage>
                                     height: 34.w,
                                     fit: BoxFit.cover,
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.to(() => VipPage());
-                                    },
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Image.asset(
-                                      "face_vip.png".face,
-                                      width: 65.w,
-                                      height: 26.w,
-                                      fit: BoxFit.cover,
+                                  Visibility(
+                                    visible: !HandleTool.instance.isMember,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => VipPage());
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Image.asset(
+                                        "face_vip.png".face,
+                                        width: 65.w,
+                                        height: 26.w,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -413,7 +417,7 @@ class _GameplayPageState extends State<GameplayPage>
                 // ],
                 onPageChanged: (index) {
                   logic.tabController?.animateTo(index);
-                  print(_scrollViewController!.offset);
+
                   if (index == 1) {
                     if (_scrollViewController!.offset > 600) {
                       _scrollViewController!

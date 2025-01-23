@@ -2,10 +2,12 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
+import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -85,6 +87,182 @@ class _CollectionItemState extends State<CollectionItem> {
     );
   }
 
+  /// 模板
+  Widget _getBindType0(Records bean) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(
+          () => FaceMakePage(
+            title: bean.photoFuncResp?.tags ?? '',
+            funcId: bean.photoFuncResp?.id ?? 0,
+            imageUrl: bean.photoFuncResp?.showImgGif ?? "",
+            videoUrl: bean.photoFuncResp?.videoUrl ?? "",
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          // color: index.isOdd ? Colors.amber : Colors.red,
+          color: const Color(0xFFF3F3F3),
+          borderRadius: BorderRadius.circular(8.w),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.w),
+                child: QdsImage(
+                  "${bean.photoFuncResp?.showImgGif}",
+                  175.w,
+                  265.w,
+                ),
+              ),
+            ),
+            if (bean.photoFuncResp?.tags?.isNotEmpty == true)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  height: 55.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8.w),
+                      bottomRight: Radius.circular(8.w),
+                    ),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0x00141414),
+                        Color(0xBA000000),
+                      ],
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10.w, top: 10.w),
+                      child: Text(
+                        "${bean.photoFuncResp?.tags ?? bean.photoFuncResp?.funcName}",
+                        style: TextStyle(
+                          color: const Color(0xFFFFFFFF),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 合集
+  Widget _getBindType1(Records bean) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(
+          () => GatherSinglePage(
+            id: bean.photoGroupResp?.id ?? 0,
+            imgUrlAcross: bean.photoGroupResp?.imgUrlAcross ?? "",
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          // color: index.isOdd ? Colors.amber : Colors.red,
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(8.w),
+        ),
+        child: Stack(
+          children: [
+            Image.asset(
+              // index.isEven ? "face_item_2.png".face : "face_item_1.png".face,
+              "face_item_1.png".face,
+              width: 175.w,
+              height: 265.w,
+              fit: BoxFit.cover,
+            ),
+            Center(
+              child: Column(
+                children: [
+                  SizedBox(height: 10.w),
+                  Text(
+                    "${bean.photoGroupResp?.groupName}",
+                    style: TextStyle(
+                      color: const Color(0xFF191919),
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 3.w),
+                  Text(
+                    "-${"${bean.photoGroupResp?.remark}"}-",
+                    style: TextStyle(
+                      color: const Color(0xFF191919),
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 14.w),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.w),
+                    child: QdsImage(
+                      "${bean.photoGroupResp?.imgUrlAcross}",
+                      144.w,
+                      175.w,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            if (bean.photoGroupResp?.tips?.isNotEmpty == true)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  height: 55.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8.w),
+                      bottomRight: Radius.circular(8.w),
+                    ),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0x00141414),
+                        Color(0xBA000000),
+                      ],
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: Text(
+                        "${bean.photoGroupResp?.tips}",
+                        style: TextStyle(
+                          color: const Color(0xFFFFFFFF),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -109,6 +287,9 @@ class _CollectionItemState extends State<CollectionItem> {
               Expanded(
                 child: CustomScrollView(
                   slivers: [
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: 10.w),
+                    ),
                     SliverGrid.builder(
                       itemCount: _records.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -119,78 +300,9 @@ class _CollectionItemState extends State<CollectionItem> {
                       ),
                       itemBuilder: (c, index) {
                         final bean = _records[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(
-                              () => FaceMakePage(
-                                title: bean.photoFuncResp?.tags ?? '',
-                                funcId: bean.photoFuncResp?.id ?? 0,
-                                imageUrl: bean.photoFuncResp?.showImgGif ?? "",
-                                videoUrl: bean.photoFuncResp?.videoUrl ?? "",
-                              ),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              // color: index.isOdd ? Colors.amber : Colors.red,
-                              color: const Color(0xFFF3F3F3),
-                              borderRadius: BorderRadius.circular(8.w),
-                            ),
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.w),
-                                    child: QdsImage(
-                                      "${bean.photoFuncResp?.showImgGif}",
-                                      175.w,
-                                      265.w,
-                                    ),
-                                  ),
-                                ),
-                                if (bean.photoFuncResp?.tags?.isNotEmpty ==
-                                    true)
-                                  Positioned(
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                      height: 55.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(8.w),
-                                          bottomRight: Radius.circular(8.w),
-                                        ),
-                                        gradient: const LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Color(0x00141414),
-                                            Color(0xBA000000),
-                                          ],
-                                        ),
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10.w, top: 10.w),
-                                          child: Text(
-                                            "${bean.photoFuncResp?.tags ?? bean.photoFuncResp?.funcName}",
-                                            style: TextStyle(
-                                              color: const Color(0xFFFFFFFF),
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                              ],
-                            ),
-                          ),
-                        );
+                        return bean.bindType == 0
+                            ? _getBindType0(bean)
+                            : _getBindType1(bean);
                       },
                     ),
                     const SliverToBoxAdapter(

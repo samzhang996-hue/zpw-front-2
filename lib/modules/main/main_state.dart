@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:zpw/modules/face/face_view.dart';
 import 'package:zpw/modules/gameplay/gameplay_view.dart';
 import 'package:zpw/modules/mine/mine_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -21,7 +22,7 @@ class MainState {
     pages = [
       // HomePage(),
       GameplayPage(),
-      // FacePage(),
+      FacePage(),
       // SpeciallyPage(),
 
       MinePage(),

@@ -10,6 +10,7 @@ import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/face_logic.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
+import 'package:zpw/utils/handle_tool.dart';
 
 class FacePage extends StatefulWidget {
   const FacePage({super.key});
@@ -155,16 +156,19 @@ class _FacePageState extends State<FacePage>
                                     height: 34.w,
                                     fit: BoxFit.cover,
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.to(() => VipPage());
-                                    },
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Image.asset(
-                                      "face_vip.png".face,
-                                      width: 65.w,
-                                      height: 26.w,
-                                      fit: BoxFit.cover,
+                                  Visibility(
+                                    visible: !HandleTool.instance.isMember,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => VipPage());
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Image.asset(
+                                        "face_vip.png".face,
+                                        width: 65.w,
+                                        height: 26.w,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ],

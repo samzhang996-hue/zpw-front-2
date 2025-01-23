@@ -38,20 +38,22 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
   Widget initDefaultBuild(BuildContext context);
 
   /// 导航栏
-  Widget YAppBar(
-      {String? title,
-      Color? navBarTitleColor,
-      Color? bgColor,
-      bool canBack = true,
-      bool divider = false,
-      bool homePage = false,
-      Widget? left,
-      Widget? right,
-      Widget? widget,
-      String? statubar,
-      double? RightValue,
-      Function? leftClick,
-      String? navBar}) {
+  Widget YAppBar({
+    String? title,
+    Color? navBarTitleColor,
+    Color? bgColor,
+    bool canBack = true,
+    bool divider = false,
+    bool homePage = false,
+    Widget? left,
+    Widget? right,
+    Widget? widget,
+    String? statubar,
+    double? RightValue,
+    Function? leftClick,
+    String? navBar,
+    double rightPadding = 20,
+  }) {
     var screenSize = yScreenSize(navigatorKey.currentContext!);
     double statubarHeight = yStatubarHeight(navigatorKey.currentContext!);
     double navBarHeight = yNavBarHeight();
@@ -107,7 +109,7 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
                         right != null
                             ? Container(
                                 alignment: Alignment.center,
-                                padding: const EdgeInsets.only(right: 20),
+                                padding: EdgeInsets.only(right: rightPadding),
                                 height: navBarHeight,
                                 child: right,
                               )

@@ -1,11 +1,17 @@
+import 'package:dio/src/form_data.dart' as ffff;
+import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
+import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -33,12 +39,22 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   late final _showHeadImg = true.obs;
 
-  void _toHistory() {
-    gotoPushPage(WorksPage());
+  late VideoPlayerController? _controller;
+
+  bool get _isNotEmptyVideoUrl => widget.videoUrl.isNotEmpty;
+
+  late final _myHeadImg = HandleTool.instance.headImg.obs;
+
+  void _toHistory() async {
+    _controller?.pause();
+    await Get.to(() => WorksPage());
+    _controller?.play();
   }
 
-  void _showSuccess() {
+  void _showSuccess() async {
     _show.value = true;
+    await 3.delay();
+    _show.value = false;
   }
 
   void _showError() async {
@@ -196,7 +212,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     _show.value = false;
     final params = {
       "funcId": widget.funcId,
-      "imgUrls": [HandleTool.instance.headImg],
+      "imgUrls": [_myHeadImg.value],
       // "prompt": "",
     };
     HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params,
@@ -210,8 +226,60 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     return;
   }
 
+  void _uploadNewHeadImg() async {
+    final res = await Get.to<String>(() => Photo_listPage());
+
+    if (res?.isNotEmpty == true) {
+      final formData = ffff.FormData.fromMap({
+        "file": await ffff.MultipartFile.fromFile(res!),
+      });
+      final bean = await HandleTool.instance.QDSUpload<UploadBean>(
+          Api.uploadFile,
+          params: formData,
+          onModel: (v) => UploadBean.fromJson(v));
+      if (bean == null) return;
+
+      HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
+          isShowProgress: true, success: (isSuccess, code, message, results) {
+        if (isSuccess == true && results.isNotEmpty) {
+          HandleTool.instance.headImg = '${bean.url}';
+          _myHeadImg.value = '${bean.url}';
+        } else {
+          // HandleTool.showAppToastText('上传失败');
+          CustomFaceDialogUtils.showCustomDialog(
+            context: context,
+            onPressed: () async {
+              _uploadNewHeadImg();
+            },
+          );
+        }
+      });
+    }
+  }
+
+  void _closeHeadImg() {
+    _showHeadImg.value = false;
+    _myHeadImg.value = "";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isNotEmptyVideoUrl) {
+      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+        ..setLooping(true)
+        ..initialize().then((_) {
+          // 确保在视频初始化完成后设置播放状态
+          setState(() {
+            _controller?.play();
+          });
+        });
+    }
+  }
+
   @override
   void dispose() {
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -230,13 +298,27 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             children: [
               YAppBar(
                 title: widget.title,
+                rightPadding: 16.w,
                 right: GestureDetector(
                   onTap: _toHistory,
                   behavior: HitTestBehavior.opaque,
-                  child: Image.asset(
-                    "make_history.png".make,
-                    width: 28.w,
-                    height: 28.w,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "my_work_ic.png".make,
+                        width: 22.w,
+                        height: 22.w,
+                      ),
+                      Text(
+                        "我的作品",
+                        style: TextStyle(
+                          color: const Color(0xFF191919),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -255,9 +337,14 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                           ),
                         );
                       })
-                    : Center(
-                        child: Text(widget.videoUrl),
-                      ),
+                    : _controller != null
+                        ? _controller!.value.isInitialized
+                            ? AspectRatio(
+                                aspectRatio: _controller!.value.aspectRatio,
+                                child: VideoPlayer(_controller!),
+                              )
+                            : const Center(child: CircularProgressIndicator())
+                        : const Center(child: CircularProgressIndicator()),
               ),
             ],
           ),
@@ -266,7 +353,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                 child: Positioned(
                   left: 0,
                   right: 0,
-                  top: kToolbarHeight / 2,
+                  top: ScreenUtil().statusBarHeight,
                   child: Container(
                     height: 118.w,
                     width: 358.w,
@@ -289,18 +376,41 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                         Row(
                           children: [
                             SizedBox(width: 12.w),
-                            Container(
-                              width: 69.w,
-                              height: 94.w,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFD8D8D8),
-                                borderRadius: BorderRadius.circular(8.w),
-                              ),
-                              child: QdsImage(
-                                HandleTool.instance.headImg,
-                                69.w,
-                                94.w,
-                              ),
+                            Stack(
+                              children: [
+                                Container(
+                                  width: 69.w,
+                                  height: 94.w,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFD8D8D8),
+                                    borderRadius: BorderRadius.circular(8.w),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.w),
+                                    child: QdsImage(
+                                      HandleTool.instance.headImg,
+                                      69.w,
+                                      94.w,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 69.w,
+                                  height: 94.w,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xA3191919),
+                                    borderRadius: BorderRadius.circular(8.w),
+                                  ),
+                                  child: Center(
+                                    child: CommText(
+                                      text: "制作中",
+                                      textColor: const Color(0xFFFFFFFF),
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(width: 8.w),
                             Column(
@@ -309,74 +419,80 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                 Row(
                                   children: [
                                     CommText(
-                                      text: "作品制作完成！",
+                                      text: "作品正在制作中！",
                                       textColor: const Color(0xff191919),
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    Image.asset(
-                                      "make_result_success.png".make,
-                                      width: 26.w,
-                                      height: 26.w,
-                                    ),
+                                    // Image.asset(
+                                    //   "make_result_success.png".make,
+                                    //   width: 26.w,
+                                    //   height: 26.w,
+                                    // ),
                                   ],
                                 ),
-                                SizedBox(height: 14.w),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        _show.value = false;
-                                      },
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Container(
-                                        width: 110.w,
-                                        height: 33.w,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              width: 1.w,
-                                              color: const Color(0xFFFF2E7E)),
-                                          borderRadius:
-                                              BorderRadius.circular(26.w),
-                                        ),
-                                        child: Center(
-                                          child: CommText(
-                                            text: "稍后查看",
-                                            textColor: const Color(0xFFFF2E7E),
-                                            fontSize: 15.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 14.w),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _show.value = false;
-                                        _toHistory();
-                                      },
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Container(
-                                        width: 110.w,
-                                        height: 33.w,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFFF2E7E),
-                                          borderRadius:
-                                              BorderRadius.circular(26.w),
-                                        ),
-                                        child: Center(
-                                          child: CommText(
-                                            text: "立即查看",
-                                            textColor: const Color(0xFFFFFFFF),
-                                            fontSize: 15.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                SizedBox(height: 9.w),
+                                CommText(
+                                  text: "制作完成即可在我的作品中查看",
+                                  textColor: const Color(0xFF818181),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
                                 ),
+                                // Row(
+                                //   children: [
+                                //     GestureDetector(
+                                //       onTap: () {
+                                //         _show.value = false;
+                                //       },
+                                //       behavior: HitTestBehavior.opaque,
+                                //       child: Container(
+                                //         width: 110.w,
+                                //         height: 33.w,
+                                //         decoration: BoxDecoration(
+                                //           color: Colors.white,
+                                //           border: Border.all(
+                                //               width: 1.w,
+                                //               color: const Color(0xFFFF2E7E)),
+                                //           borderRadius:
+                                //               BorderRadius.circular(26.w),
+                                //         ),
+                                //         child: Center(
+                                //           child: CommText(
+                                //             text: "稍后查看",
+                                //             textColor: const Color(0xFFFF2E7E),
+                                //             fontSize: 15.sp,
+                                //             fontWeight: FontWeight.w500,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     SizedBox(width: 14.w),
+                                //     GestureDetector(
+                                //       onTap: () {
+                                //         _show.value = false;
+                                //         _toHistory();
+                                //       },
+                                //       behavior: HitTestBehavior.opaque,
+                                //       child: Container(
+                                //         width: 110.w,
+                                //         height: 33.w,
+                                //         decoration: BoxDecoration(
+                                //           color: const Color(0xFFFF2E7E),
+                                //           borderRadius:
+                                //               BorderRadius.circular(26.w),
+                                //         ),
+                                //         child: Center(
+                                //           child: CommText(
+                                //             text: "立即查看",
+                                //             textColor: const Color(0xFFFFFFFF),
+                                //             fontSize: 15.sp,
+                                //             fontWeight: FontWeight.w500,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             )
                           ],
@@ -393,98 +509,142 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             child: Container(
               height: 214.w,
               width: 1.sw,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.w),
-                  topRight: Radius.circular(20.w),
-                ),
-              ),
+              decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 children: [
-                  const Spacer(),
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
+                  // const Spacer(),
+                  Obx(
+                    () => SizedBox(
+                      width: 1.sw,
+                      height: 76.w,
+                      child: _showHeadImg.isFalse
+                          ? const SizedBox.shrink()
+                          : Center(
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        width: 72.w,
+                                        height: 72.w,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.grey,
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFFFF2EB8),
+                                              Color(0xFFFF2E2E)
+                                            ],
+                                            begin:
+                                                Alignment.centerLeft, // 渐变的起始点
+                                            end:
+                                                Alignment.centerRight, // 渐变的结束点
+                                          ),
+                                        ),
+                                      ),
+                                      ClipOval(
+                                        child: QdsImage(
+                                          _myHeadImg.value,
+                                          68.w,
+                                          68.w,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Obx(
+                                    () => Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: Visibility(
+                                        visible: _showHeadImg.isTrue,
+                                        child: GestureDetector(
+                                          onTap: _closeHeadImg,
+                                          behavior: HitTestBehavior.opaque,
+                                          child: Image.asset(
+                                            "make_close.png".make,
+                                            width: 18.w,
+                                            height: 18.w,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: -5.w,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: _uploadNewHeadImg,
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Container(
+                                        width: 76.w,
+                                        height: 21.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12.w),
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFFFF2EB8),
+                                              Color(0xFFFF2E2E)
+                                            ],
+                                            begin:
+                                                Alignment.centerLeft, // 渐变的起始点
+                                            end:
+                                                Alignment.centerRight, // 渐变的结束点
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: CommText(
+                                            text: "上传新头像",
+                                            textColor: const Color(0xFFFFFFFF),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ),
+                  ),
+                  SizedBox(height: 16.w),
+                  Expanded(
+                    child: Container(
+                      width: 1.sw,
+                      height: 100.w,
+                      color: Colors.white,
+                      child: Column(
                         children: [
-                          Container(
-                            width: 72.w,
-                            height: 72.w,
-                            decoration: const BoxDecoration(
-                              color: Colors.grey,
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
-                                begin: Alignment.centerLeft, // 渐变的起始点
-                                end: Alignment.centerRight, // 渐变的结束点
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: _make,
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              width: 357.w,
+                              height: 52.w,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF2E7E),
+                                borderRadius: BorderRadius.circular(26.w),
+                              ),
+                              child: Center(
+                                child: CommText(
+                                  text: "一键制作",
+                                  textColor: const Color(0xFFFFFFFF),
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
-                          ClipOval(
-                              child: QdsImage(
-                                  HandleTool.instance.headImg, 68.w, 68.w)),
+                          const Spacer(),
                         ],
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Image.asset(
-                          "make_close.png".make,
-                          width: 18.w,
-                          height: 18.w,
-                        ),
-                      ),
-                      Positioned(
-                        bottom: -5.w,
-                        right: 0,
-                        child: Container(
-                          width: 76.w,
-                          height: 21.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.w),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
-                              begin: Alignment.centerLeft, // 渐变的起始点
-                              end: Alignment.centerRight, // 渐变的结束点
-                            ),
-                          ),
-                          child: Center(
-                            child: CommText(
-                              text: "上传新头像",
-                              textColor: const Color(0xFFFFFFFF),
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // SizedBox(height: 10.w),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: _make,
-                    behavior: HitTestBehavior.opaque,
-                    child: Container(
-                      width: 357.w,
-                      height: 52.w,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFF2E7E),
-                        borderRadius: BorderRadius.circular(26.w),
-                      ),
-                      child: Center(
-                        child: CommText(
-                          text: "一键制作",
-                          textColor: const Color(0xFFFFFFFF),
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
                       ),
                     ),
                   ),
-                  const Spacer(flex: 2),
+                  // SizedBox(height: 10.w),
                 ],
               ),
             ),
