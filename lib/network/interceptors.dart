@@ -23,7 +23,7 @@ class AuthInterceptor extends Interceptor {
     options.headers["Authorization"] = token;
     options.headers["uid"] = uid;
     options.headers["projectId"] = projectId;
-    options.headers["channle"] = channel;
+    options.headers["channel"] = channel;
     super.onRequest(options, handler);
   }
 }

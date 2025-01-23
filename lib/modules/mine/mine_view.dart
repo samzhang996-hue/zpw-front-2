@@ -21,7 +21,7 @@ class MinePage extends BaseStatefulWidget {
   BaseWidgetState<MinePage> getState() => _MinePageState();
 }
 
-class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObserver{
+class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserver {
   final logic = Get.put(MineLogic());
   final state = Get.find<MineLogic>().state;
 
@@ -36,6 +36,7 @@ class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObser
     super.dispose();
     WidgetsBinding.instance.removeObserver(this); // 移除监听器
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -50,6 +51,7 @@ class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObser
         break;
     }
   }
+
   @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<MineLogic>(builder: (logic) {
@@ -90,7 +92,7 @@ class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObser
                                     height: 4.w,
                                   ),
                                   CommText(
-                                    text: HandleTool.instance.isMember ? "到期时间:${state.userInfoBean.vipExpireTime}" : "未开通会员",
+                                    text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 0 ? "永久会员" : "到期时间:${state.userInfoBean.vipExpireTime}") : "未开通会员",
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,
                                     textColor: Color(0xff818181),
@@ -102,7 +104,6 @@ class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObser
                             InkWell(
                               onTap: () {
                                 gotoPushPage(SettingPage());
-
                               },
                               child: Container(
                                   width: 60.w,
@@ -154,7 +155,9 @@ class _MinePageState extends BaseWidgetState<MinePage>  with WidgetsBindingObser
                                         fontSize: 14.sp,
                                         textColor: Color(0xffFFDEC9),
                                       ),
-                                      SizedBox(height: 10.w,)
+                                      SizedBox(
+                                        height: 10.w,
+                                      )
                                     ],
                                   ),
                                 ),

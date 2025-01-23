@@ -3,15 +3,15 @@ import 'dart:io';
 /// 广告配置信息
 class AdsConfig {
   static String adSplash =
-      'https://engine13.gdbtui9.cn/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465985&uk_a1=__IMEI__&uk_a2=__IMEI2__&uk_a3=__MUID__&uk_b1=__IDFA__&uk_b2=__IDFA2__&uk_c1=__OAID__&uk_c2=__OAID2__';
+      'https://engine.tuifish.com/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465985';
   static String adBanner =
-      'https://engine13.gdbtui9.cn/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465986&uk_a1=__IMEI__&uk_a2=__IMEI2__&uk_a3=__MUID__&uk_b1=__IDFA__&uk_b2=__IDFA2__&uk_c1=__OAID__&uk_c2=__OAID2__';
+      'https://engine.tuifish.com/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465986';
   static String adDialog =
-      'https://engine13.gdbtui9.cn/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465202&uk_a1=__IMEI__&uk_a2=__IMEI2__&uk_a3=__MUID__&uk_b1=__IDFA__&uk_b2=__IDFA2__&uk_c1=__OAID__&uk_c2=__OAID2__';
+      'https://engine.tuifish.com/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465202';
   static String adIcon =
-      'https://engine13.gdbtui9.cn/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465203&uk_a1=__IMEI__&uk_a2=__IMEI2__&uk_a3=__MUID__&uk_b1=__IDFA__&uk_b2=__IDFA2__&uk_c1=__OAID__&uk_c2=__OAID2__';
+      'https://engine.tuifish.com/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465203';
   static String adXf =
-      'https://engine13.gdbtui9.cn/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465987&uk_a1=__IMEI__&uk_a2=__IMEI2__&uk_a3=__MUID__&uk_b1=__IDFA__&uk_b2=__IDFA2__&uk_c1=__OAID__&uk_c2=__OAID2__';
+      'https://engine.tuifish.com/index/activity?appKey=2TZu97Q5mKBP4FLf27NxNTgJgWse&adslotId=465987';
 
   /// 获取 Logo 资源名称
   static String get logo {

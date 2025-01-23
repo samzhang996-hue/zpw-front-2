@@ -92,34 +92,35 @@ class HandleTool {
   }
 
   getProtocolConfig() {
-    // SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
-    //     success: (isSuccess, code, message, results) {
-    //   Log.d("config---$isSuccess----$results");
-    //   if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
-    //     // 遍历 results 列表,提取 configType 和 configValue
-    //     for (Map<String, dynamic> item in results) {
-    //       int configType = item['configType'];
-    //       String configValue = item['configValue'];
-    //       // 根据 configType 获取对应的 configValue
-    //       if (configType == 1) {
-    //         // 用户协议 URL
-    //         yHxy = configValue;
-    //       } else if (configType == 4) {
-    //         // 隐私政策 URL
-    //         ySxy = configValue;
-    //       } else if (configType == 5) {
-    //         // 会员协议 URL
-    //         hYxy = configValue;
-    //       } else if (configType == 6) {
-    //         // 手机号
-    //         pHone = configValue;
-    //       } else if (configType == 7) {
-    //         // 规则
-    //         gz = configValue;
-    //       }
-    //     }
-    //   }
-    // });
+
+    SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
+        success: (isSuccess, code, message, results) {
+      Log.d("config---$isSuccess----$results");
+      if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
+        // 遍历 results 列表,提取 configType 和 configValue
+        for (Map<String, dynamic> item in results) {
+          int configType = item['configType'];
+          String configValue = item['configValue'];
+          // 根据 configType 获取对应的 configValue
+          if (configType == 1) {
+            // 用户协议 URL
+            yHxy = configValue;
+          } else if (configType == 4) {
+            // 隐私政策 URL
+            ySxy = configValue;
+          } else if (configType == 5) {
+            // 会员协议 URL
+            hYxy = configValue;
+          } else if (configType == 6) {
+            // 手机号
+            pHone = configValue;
+          } else if (configType == 7) {
+            // 规则
+            gz = configValue;
+          }
+        }
+      }
+    });
   }
 
   static showAppToastText(String message,
@@ -180,7 +181,6 @@ class HandleTool {
       FontWeight fontWeight, double maxWidth, int maxLines) {
     value = filterText(value);
     TextPainter painter = TextPainter(
-
         ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
         locale: Localizations.localeOf(navigatorKey.currentContext!),
         maxLines: maxLines,

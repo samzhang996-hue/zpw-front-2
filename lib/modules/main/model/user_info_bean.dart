@@ -20,6 +20,7 @@ class UserInfoBean {
   num? targetWeight;
   num? initWeight;
   num? vipFlag;
+  num? permanentFlag;
   dynamic userPhone;
   num? weight;
 
@@ -40,6 +41,7 @@ class UserInfoBean {
     this.vipExpireTime,
     this.motion,
     this.vipFlag,
+    this.permanentFlag,
     this.nickName,
     this.targetWeight,
     this.initWeight,
@@ -67,6 +69,7 @@ class UserInfoBean {
     isWxOauth: json["isWxOauth"],
     vipExpireTime: json["vipExpireTime"],
     vipFlag: json["vipFlag"],
+    permanentFlag: json["permanentFlag"],
     motion: json["motion"],
     nickName: json["nickName"],
     targetWeight: json["targetWeight"]?.toDouble(),
@@ -81,6 +84,7 @@ class UserInfoBean {
     "authToken": authToken,
     "bmi": bmi,
     "vipFlag": vipFlag,
+    "permanentFlag": permanentFlag,
     "gender": gender,
     "headImg": headImg,
     "height": height,
