@@ -1,27 +1,22 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zpw/utils/sp_utils.dart';
 
 class CommHeadCircle extends StatelessWidget {
-  const CommHeadCircle({super.key});
+  final double width;
+  const CommHeadCircle({super.key, this.width = 68});
 
-  Future<File?> _loadImage() async {
-    final directory = await getTemporaryDirectory();
-    final imagePath = '${directory.path}/your_image.jpg';
-    final imageFile = File(imagePath);
-    if (imageFile.existsSync()) {
-      return imageFile; // 返回图片文件
-    } else {
-      return null; // 如果文件不存在，返回null
-    }
+  Future<String?> _loadImage() async {
+    return Future.value(SpUtils.getString("my_ai_head"));
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<File?>(
+    return FutureBuilder<String?>(
       future: _loadImage(), // 调用加载图片的Future
-      builder: (BuildContext context, AsyncSnapshot<File?> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 如果数据还在加载，显示加载指示器
           return const CircularProgressIndicator();
@@ -30,7 +25,16 @@ class CommHeadCircle extends StatelessWidget {
           return Text("Error: ${snapshot.error}");
         } else if (snapshot.hasData) {
           // 如果有数据（即图片文件），显示图片
-          return Image.file(snapshot.data!);
+          return ClipOval(
+            child: Image.file(
+              File(
+                snapshot.data ?? '',
+              ),
+              width: width.w,
+              height: width.w,
+              fit: BoxFit.cover,
+            ),
+          );
         } else {
           // 如果没有找到图片，显示提示信息
           return const SizedBox.shrink();

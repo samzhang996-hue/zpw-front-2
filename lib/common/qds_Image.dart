@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:zpw/base/base_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
-import 'package:zpw/utils/handle_tool.dart';
 
 Widget QdsImage(String url, double width, double height,
     {BoxFit fit = BoxFit.cover,
@@ -105,10 +104,17 @@ Widget QdsImageCircle(String url, double width, double height,
     {BoxFit fit = BoxFit.cover,
     String imagePlaceholder = baseConfig.defaultPlaceholder,
     bool isLocal = false}) {
+  if (isLocal) {
+    File file = File(url);
+    bool isExists = file.existsSync();
+    if (isExists) {
+      return ClipOval(
+        child: Image.file(File(url), width: width, height: height, fit: fit),
+      );
+    }
+  }
+
   return ClipOval(
-      child: isLocal
-          ? Image.file(File(HandleTool.instance.headImg),
-              width: width, height: height, fit: fit)
-          : QdsImage(url, width, height,
-              fit: fit, imagePlaceholder: imagePlaceholder));
+      child: QdsImage(url, width, height,
+          fit: fit, imagePlaceholder: imagePlaceholder));
 }

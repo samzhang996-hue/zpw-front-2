@@ -505,6 +505,7 @@ class HandleTool {
     }
     if (path.isNotEmpty == true) {
       // getApplicationCacheDirectory()
+
       final cacheDir = await getApplicationCacheDirectory();
       File old = File(path);
       final fileExtension = extension(Uri.parse(path).path);
@@ -512,6 +513,9 @@ class HandleTool {
       final filePath = '${cacheDir.path}/$myHeadImg';
       old.copySync(filePath);
       SpUtils.setString("my_ai_head", filePath);
+      Log.e("filePath:$filePath");
+      File xx = File(filePath);
+      Log.e("xx:${xx.existsSync()}");
       HandleTool.instance.headImg = filePath;
       // CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
       // return;

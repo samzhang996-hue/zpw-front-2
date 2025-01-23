@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dio/src/form_data.dart' as ffff;
+import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,11 +10,13 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
@@ -202,15 +206,35 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
+      final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+      if (res?.isNotEmpty == true) {
+        _myHeadImg.value = res!;
+        if (_myHeadImg.isNotEmpty) {
+          _showHeadImg.value = true;
+        }
+        return;
+      } else {
+        return;
+      }
+    }
+
     if (!HandleTool.instance.isMember) {
       Get.to(() => VipPage());
       return;
     }
 
+    final formData = ffff.FormData.fromMap({
+      "file": await ffff.MultipartFile.fromFile(_myHeadImg.value),
+    });
+    final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
+        params: formData, onModel: (v) => UploadBean.fromJson(v));
+    if (bean == null) return;
+    Log.e("bean:${bean.url}");
     _show.value = false;
     final params = {
       "funcId": widget.funcId,
-      "imgUrls": [_myHeadImg.value],
+      "imgUrls": [bean.url],
       // "prompt": "",
     };
     HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params,
@@ -225,19 +249,38 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _uploadNewHeadImg() async {
-    await Get.to<String>(() => Photo_listPage(isNew: false));
+    final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+
+    Log.e("res:$res");
+    if (res?.isNotEmpty == true) {
+      _myHeadImg.value = HandleTool.instance.headImg;
+      if (_myHeadImg.isNotEmpty) {
+        _showHeadImg.value = true;
+      }
+      setState(() {});
+      return;
+    }
 
     _myHeadImg.value = HandleTool.instance.headImg;
   }
 
   void _closeHeadImg() {
     _showHeadImg.value = false;
-    _myHeadImg.value = "";
+    // _myHeadImg.value = "";
+  }
+
+  void _checkImage() {
+    File file = File(_myHeadImg.value);
+    bool isExists = file.existsSync();
+    if (!isExists) {
+      _showHeadImg.value = false;
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    _checkImage();
     if (_isNotEmptyVideoUrl) {
       _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
         ..setLooping(true)
@@ -494,7 +537,18 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                       width: 1.sw,
                       height: 76.w,
                       child: _showHeadImg.isFalse
-                          ? const SizedBox.shrink()
+                          ? Center(
+                              child: GestureDetector(
+                                onTap: _uploadNewHeadImg,
+                                behavior: HitTestBehavior.opaque,
+                                child: Image.asset(
+                                  "no_head_img.png".make,
+                                  width: 76.w,
+                                  height: 76.w,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
                           : Center(
                               child: Stack(
                                 clipBehavior: Clip.none,
@@ -532,11 +586,15 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                       ],
                                     )
                                   else
-                                    Image.asset(
-                                      "no_head_img.png".make,
-                                      width: 76.w,
-                                      height: 76.w,
-                                      fit: BoxFit.cover,
+                                    GestureDetector(
+                                      onTap: _uploadNewHeadImg,
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Image.asset(
+                                        "no_head_img.png".make,
+                                        width: 76.w,
+                                        height: 76.w,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   Obx(
                                     () => Positioned(

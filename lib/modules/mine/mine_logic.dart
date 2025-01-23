@@ -9,6 +9,11 @@ import 'mine_state.dart';
 class MineLogic extends BaseGetxController {
   final MineState state = MineState();
 
+  void updateHeadImage() {
+    state.headImage = HandleTool.instance.headImg;
+    update();
+  }
+
   @override
   void onInit() {
     // TODO: implement onInit

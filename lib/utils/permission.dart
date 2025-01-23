@@ -7,15 +7,15 @@ import 'package:zpw/utils/log_utils.dart';
 class PermissionUtils {
   // /// 存储权限
   static Future<bool> checkFilesAccessPermission() async {
-    // if (Platform.isIOS) {
-    //   PermissionStatus status = await Permission.photos.request();
-    //   if (status.isGranted) {
-    //     return true;
-    //   } else if (status.isLimited) {
-    //     return false;
-    //   }
-    //   return false;
-    // }
+    if (Platform.isIOS) {
+      PermissionStatus status = await Permission.photos.request();
+      if (status.isGranted) {
+        return true;
+      } else if (status.isLimited) {
+        return false;
+      }
+      return false;
+    }
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
