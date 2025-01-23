@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
 
 // 加载缓存
@@ -10,7 +11,7 @@ Future<String> loadCache() async {
         print(file.path);
       });*/
   print('临时目录大小: ' + value.toString());
-  return  _renderSize(value);
+  return _renderSize(value);
 }
 
 // 循环计算文件的大小（递归）
@@ -29,6 +30,19 @@ Future<double> getTotalSizeOfFilesInDir(final FileSystemEntity file) async {
   }
   return 0;
 }
+
+Future<void> delDiriOS(FileSystemEntity file) async {
+  try {
+    // 获取临时目录路径
+    final tempDir = await getTemporaryDirectory();
+
+    // 列出目录中的所有文件和文件夹
+    if (tempDir.existsSync()) {
+      tempDir.deleteSync(recursive: true);
+    }
+  } catch (_) {}
+}
+
 // 递归方式删除目录
 Future<Null> delDir(FileSystemEntity file) async {
   if (file is Directory) {
@@ -39,12 +53,13 @@ Future<Null> delDir(FileSystemEntity file) async {
   }
   await file.delete();
 }
+
 // 计算大小
 _renderSize(double value) {
   if (null == value) {
     return 0;
   }
-  List<String> unitArr =[]
+  List<String> unitArr = []
     ..add('B')
     ..add('K')
     ..add('M')
@@ -55,7 +70,7 @@ _renderSize(double value) {
     value = value / 1024;
   }
   String size = value.toStringAsFixed(2);
-  if (size ==  '0.00'){
+  if (size == '0.00') {
     return '0M';
   }
   // print('size:${size == 0}\n ==SIZE${size}');

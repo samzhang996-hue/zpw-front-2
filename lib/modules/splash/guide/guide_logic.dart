@@ -15,19 +15,22 @@ class GuideLogic extends BaseGetxController {
     super.onInit();
     getFuncDetail();
   }
+
   @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
-    CustomPhotoDialogUtils.showCustomDialog(context: navigator!.context, onPressed: () {});
+    CustomPhotoDialogUtils.showCustomDialog(
+        context: navigator!.context, onPressed: () {});
   }
 
-  getFuncDetail()  {
-    get(Api.getFuncDetail, isShowProgress: true, success: (isSuccess, code, message, results) async {
+  getFuncDetail() {
+    get(Api.getFuncDetail, isShowProgress: true,
+        success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
-        state.showImgGif=data["showImgGif"];
-        state.funcName=data["funcName"];
+        state.showImgGif = data["showImgGif"];
+        state.funcName = data["tags"] ?? "";
         Log.d("fun---$data");
         update();
       }

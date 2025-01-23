@@ -215,7 +215,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                         ],
                         onTap: (index) {
                           // page.animateTo(index, duration: duration, curve: curve)
-                          // page.jumpToPage(index);
+                          page?.jumpToPage(index);
                         },
                         controller: _tabController,
                         indicator: const TabBarGradientIndicator(

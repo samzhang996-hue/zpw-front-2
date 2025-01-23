@@ -8,7 +8,7 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/face_logic.dart';
-import 'package:zpw/modules/face/gather_page.dart';
+import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 
 class FacePage extends StatefulWidget {
@@ -183,10 +183,8 @@ class _FacePageState extends State<FacePage>
                                     return GestureDetector(
                                       onTap: () {
                                         Get.to(
-                                          () => GatherPage(
-                                            index: index,
-                                            listPhotoGroupBean:
-                                                logic.listPhotoGroupBean,
+                                          () => GatherSinglePage(
+                                            id: bean.id ?? 0,
                                             imgUrlAcross:
                                                 bean.imgUrlAcross ?? "",
                                           ),
@@ -235,7 +233,7 @@ class _FacePageState extends State<FacePage>
                           // ],
                           onTap: (index) {
                             // page.animateTo(index, duration: duration, curve: curve)
-                            // page.jumpToPage(index);
+                            page?.jumpToPage(index);
                           },
                           controller: logic.tabController,
                           indicator: const TabBarGradientIndicator(

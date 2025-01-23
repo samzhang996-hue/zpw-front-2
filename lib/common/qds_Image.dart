@@ -1,7 +1,6 @@
 //图片加载
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:gif_view/gif_view.dart';
 import 'package:zpw/base/base_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
@@ -21,44 +20,46 @@ Widget QdsImage(String url, double width, double height,
             height: height)
         : Image.asset(imagePlaceholder.mine,
             width: width, height: height, fit: fit);
-  } else if (url.endsWith(".webp")) {
-    return CachedNetworkImage(
-      imageUrl: url,
-      width: width,
-      height: height,
-      fit: fit,
-      imageBuilder: (context, imageProvider) {
-        if (imageProvider is NetworkImage) {
-          return GifView.network(imageProvider.url);
-        }
-        if (imageProvider is CachedNetworkImageProvider) {
-          return GifView.network(imageProvider.url);
-        }
-        return const Center(
-          child: Text("网络错误", style: TextStyle(color: Colors.red)),
-        );
-      },
-      placeholder: (context, url) => Image.asset(
-        imagePlaceholder.mine,
-        width: width,
-        height: height,
-        fit: fit,
-      ),
-      errorWidget: (context, url, e) => imagePlaceholder.isEmpty
-          // ignore: sized_box_for_whitespace
-          ? Container(
-              color: ColorPlate.themeBgColor,
-              child: Icon(
-                Icons.error,
-                color: Colors.black,
-              ),
-              width: width,
-              height: height)
-          : Image.asset(imagePlaceholder.mine,
-              width: width, height: height, fit: fit),
-    );
-    ;
   }
+
+  // else if (url.endsWith(".webp")) {
+  //   return CachedNetworkImage(
+  //     imageUrl: url,
+  //     width: width,
+  //     height: height,
+  //     fit: fit,
+  //     imageBuilder: (context, imageProvider) {
+  //       if (imageProvider is NetworkImage) {
+  //         return GifView.network(imageProvider.url);
+  //       }
+  //       if (imageProvider is CachedNetworkImageProvider) {
+  //         return GifView.network(imageProvider.url);
+  //       }
+  //       return const Center(
+  //         child: Text("网络错误", style: TextStyle(color: Colors.red)),
+  //       );
+  //     },
+  //     placeholder: (context, url) => Image.asset(
+  //       imagePlaceholder.mine,
+  //       width: width,
+  //       height: height,
+  //       fit: fit,
+  //     ),
+  //     errorWidget: (context, url, e) => imagePlaceholder.isEmpty
+  //         // ignore: sized_box_for_whitespace
+  //         ? Container(
+  //             color: ColorPlate.themeBgColor,
+  //             child: Icon(
+  //               Icons.error,
+  //               color: Colors.black,
+  //             ),
+  //             width: width,
+  //             height: height)
+  //         : Image.asset(imagePlaceholder.mine,
+  //             width: width, height: height, fit: fit),
+  //   );
+
+  // }
 
   return CachedNetworkImage(
     imageUrl: url,

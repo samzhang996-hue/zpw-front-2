@@ -186,6 +186,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   void _make() async {
     if (!HandleTool.instance.isMember) {
       Get.to(() => VipPage());
+      return;
     }
 
     _show.value = false;

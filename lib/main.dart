@@ -1,14 +1,13 @@
 // ignore_for_file: use_key_in_widget_constructors, depend_on_referenced_packages,library_private_types_in_public_api
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:zpw/modules/main/main_state.dart';
-import 'package:zpw/modules/splash/guide/guide_view.dart';
 import 'package:zpw/modules/splash/splash_view.dart';
-import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/ads_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -30,6 +29,46 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  void _setEasyRefresh() {
+    EasyRefresh.defaultHeaderBuilder = () => ClassicHeader(
+        dragText: '',
+        armedText: '',
+        readyText: '',
+        processingText: '',
+        processedText: '',
+        noMoreText: '',
+        failedText: '',
+        messageText: '',
+        pullIconBuilder: (context, state, value) {
+          if (state.mode == IndicatorMode.processing ||
+              state.mode == IndicatorMode.ready) {
+            return SizedBox(
+              width: 20.w,
+              height: 20.w,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0.w,
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
+        succeededIcon: const SizedBox.shrink());
+
+    EasyRefresh.defaultFooterBuilder = () => const ClassicFooter(
+          dragText: '',
+          armedText: '',
+          readyText: '',
+          processingText: '',
+          processedText: '',
+          noMoreText: '',
+          failedText: '',
+          messageText: '',
+          succeededIcon: SizedBox(),
+          noMoreIcon: SizedBox(),
+          failedIcon: SizedBox(),
+        );
+  }
+
   @override
   void initState() {
     SystemChrome.setPreferredOrientations(
@@ -39,6 +78,7 @@ class _MyAppState extends State<MyApp> {
       systemNavigationBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
     ));
+    _setEasyRefresh();
     super.initState();
   }
 
@@ -53,12 +93,14 @@ class _MyAppState extends State<MyApp> {
             title: 'AI照片王',
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
+            locale: const Locale('zh', 'CN'),
+            defaultTransition: Transition.rightToLeft,
             theme: ThemeData(
               highlightColor: const Color.fromRGBO(0, 0, 0, 0),
               splashColor: const Color.fromRGBO(0, 0, 0, 0),
               useMaterial3: true,
             ),
-            home:  SplashPage(),
+            home: SplashPage(),
             //NotePage(),
             builder: (context, widget) {
               widget = easyLoad(context, widget);

@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/filecache.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+
 import 'setting_state.dart';
-import 'package:path_provider/path_provider.dart';
 
 class SettingLogic extends BaseGetxController {
   final SettingState state = SettingState();
@@ -28,7 +29,14 @@ class SettingLogic extends BaseGetxController {
   void clearCache() async {
     Directory tempDir = await getTemporaryDirectory();
     //删除缓存目录
-    await delDir(tempDir);
+    if (Platform.isAndroid) {
+      await delDir(tempDir);
+    }
+
+    if (Platform.isIOS) {
+      await delDiriOS(tempDir);
+    }
+
     await loadCache();
     _showCacheSize();
     HandleTool.showAppToastText('清除缓存成功');
@@ -38,14 +46,17 @@ class SettingLogic extends BaseGetxController {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String localVersion = packageInfo.version;
     state.version.value = localVersion;
-
   }
 
   deleteUser() {
-    get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        HandleTool.showAppToastText("注销成功");
-      }
+    get(Api.deleteUser, isShowProgress: true,
+        success: (isSuccess, code, message, results) async {
+      HandleTool.showAppToastText("注销成功");
+      await 0.5.delay();
+      exit(-1);
+      // if (isSuccess == true && results.isNotEmpty) {
+      //   HandleTool.showAppToastText("注销成功");
+      // }
     });
   }
 }

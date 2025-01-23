@@ -42,7 +42,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
       return Column(
         children: [
           SizedBox(
-            height: 44.h,
+            height: 44.w,
           ),
           CommText(
             text: state.funcName,
@@ -51,7 +51,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
             textColor: Color(0xff191919),
           ),
           SizedBox(
-            height: 8.h,
+            height: 8.w,
           ),
           Expanded(
             child: QdsImage(state.showImgGif, double.infinity, double.infinity,
@@ -60,7 +60,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
           InkWell(
             child: Container(
               margin: EdgeInsets.only(
-                  top: 17.h, bottom: 44.h, right: 16.w, left: 16.w),
+                  top: 17.w, bottom: 44.w, right: 16.w, left: 16.w),
               width: double.infinity,
               height: 52,
               decoration: BoxDecoration(
@@ -87,7 +87,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                     alignment: WrapAlignment.center,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 19.h),
+                        margin: EdgeInsets.only(top: 19.w),
                         child: Center(
                             child: CommText(
                           text: "上传正脸照片",
@@ -97,14 +97,14 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                         )),
                       ),
                       Container(
-                          margin: EdgeInsets.only(top: 17.h),
+                          margin: EdgeInsets.only(top: 17.w),
                           child: Image.asset(
                             "face.png".comm,
                             width: 244.w,
-                            height: 192.h,
+                            height: 192.w,
                           )),
                       Container(
-                        margin: EdgeInsets.only(top: 5.h),
+                        margin: EdgeInsets.only(top: 5.w),
                         width: 244.w,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,6 +137,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                         onTap: () async {
                           final res =
                               await Get.to<String>(() => Photo_listPage());
+
                           if (res?.isNotEmpty == true) {
                             final formData = ffff.FormData.fromMap({
                               "file": await ffff.MultipartFile.fromFile(res!),
@@ -163,61 +164,63 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                                   Get.offAll(() => const MainPage());
                                 }
                               } else {
-                                Get.back();
-                              }
-                            });
-                          } else {
-                            HandleTool.showAppToastText('上传失败');
-                            CustomFaceDialogUtils.showCustomDialog(
-                                context: context,
-                                onPressed: () async {
-                                  final res = await Get.to<String>(
-                                      () => Photo_listPage());
-                                  if (res?.isNotEmpty == true) {
-                                    final formData = ffff.FormData.fromMap({
-                                      "file": await ffff.MultipartFile.fromFile(
-                                          res!),
-                                    });
-                                    final bean = await HandleTool.instance
-                                        .QDSUpload<UploadBean>(Api.uploadFile,
-                                            params: formData,
-                                            onModel: (v) =>
-                                                UploadBean.fromJson(v));
-                                    if (bean == null) return;
+                                HandleTool.showAppToastText('上传失败');
+                                CustomFaceDialogUtils.showCustomDialog(
+                                    context: context,
+                                    onPressed: () async {
+                                      final res = await Get.to<String>(
+                                          () => Photo_listPage());
 
-                                    HandleTool.instance.SMWPost(
-                                        '${Api.bindDefaultImg}?imgUrl=${bean.url}',
-                                        isShowProgress: true, success:
-                                            (isSuccess, code, message,
-                                                results) {
-                                      if (isSuccess == true &&
-                                          results.isNotEmpty) {
-                                        Get.back();
-                                        // HandleTool.showAppToastText("上传成功");
-                                        HandleTool.instance.headImg =
-                                            '${bean.url}';
-                                        // Get.offAll(() => const MainPage());
-                                        if (!HandleTool.instance.isMember) {
-                                          gotoPushPage(VipPage(),
-                                              arguments: {"type": 1});
-                                        } else {
-                                          Get.offAll(() => const MainPage());
-                                        }
-                                      } else {
-                                        Get.back();
+                                      if (res?.isNotEmpty == true) {
+                                        final formData = ffff.FormData.fromMap({
+                                          "file":
+                                              await ffff.MultipartFile.fromFile(
+                                                  res!),
+                                        });
+                                        final bean = await HandleTool.instance
+                                            .QDSUpload<UploadBean>(
+                                                Api.uploadFile,
+                                                params: formData,
+                                                onModel: (v) =>
+                                                    UploadBean.fromJson(v));
+                                        if (bean == null) return;
+
+                                        HandleTool.instance.SMWPost(
+                                            '${Api.bindDefaultImg}?imgUrl=${bean.url}',
+                                            isShowProgress: true, success:
+                                                (isSuccess, code, message,
+                                                    results) {
+                                          if (isSuccess == true &&
+                                              results.isNotEmpty) {
+                                            Get.back();
+                                            // HandleTool.showAppToastText("上传成功");
+                                            HandleTool.instance.headImg =
+                                                '${bean.url}';
+                                            // Get.offAll(() => const MainPage());
+                                            if (!HandleTool.instance.isMember) {
+                                              gotoPushPage(VipPage(),
+                                                  arguments: {"type": 1});
+                                            } else {
+                                              Get.offAll(
+                                                  () => const MainPage());
+                                            }
+                                          } else {
+                                            Get.back();
+                                          }
+                                        });
                                       }
                                     });
-                                  }
-                                });
+                              }
+                            });
                           }
 
                           // pickImage();
                         },
                         child: Container(
                           margin: EdgeInsets.only(
-                              top: 10.h, left: 16.w, right: 16.w),
+                              top: 10.w, left: 16.w, right: 16.w),
                           width: double.infinity,
-                          height: 52.h,
+                          height: 52.w,
                           decoration: BoxDecoration(
                               color: ColorPlate.themeColor,
                               borderRadius: BorderRadius.circular(26)),
@@ -231,7 +234,9 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                         ),
                       ),
                       Container(
-                          margin: EdgeInsets.only(top: 8.h, bottom: 10.h),
+                          margin: EdgeInsets.only(
+                              top: 8.w,
+                              bottom: 10.w + ScreenUtil().bottomBarHeight),
                           child: CommText(
                             text: "*用户图片数据在每次使用后均会被删除，不会在服务器上保存‌",
                             fontSize: 11.sp,

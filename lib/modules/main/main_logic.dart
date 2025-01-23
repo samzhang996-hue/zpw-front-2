@@ -15,7 +15,7 @@ class MainLogic extends BaseGetxController {
   void onInit() {
     super.onInit();
     // if (Platform.isIOS) {
-    //   final buyEngin = BuyEngin(showTips: false);
+    //   final buyEngin = BuyEngin();
     //   buyEngin.initializeInAppPurchase();
     //   buyEngin.resumePurchase();
     // }
