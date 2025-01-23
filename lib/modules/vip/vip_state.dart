@@ -11,6 +11,7 @@ class VipState {
   late int goodsId;
   late int isWx;
   late int isZfb;
+  late RxInt statePay;
   VipState() {
     payBean = PayBean();
     vipBean = VipBean();
@@ -21,6 +22,7 @@ class VipState {
     isWx=0;
     isZfb=0;
     type=0;
+    statePay=0.obs;
 
   }
 }

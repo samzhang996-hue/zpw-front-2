@@ -108,6 +108,10 @@ class VipLogic extends BaseGetxController {
     state.isCheck.value = isCheck;
     update();
   }
+  onSatePay(int type) {
+    state.statePay.value = type;
+    update();
+  }
 
   getVipHome() {
     Post<VipBean>(Api.vip_getVipHome,
