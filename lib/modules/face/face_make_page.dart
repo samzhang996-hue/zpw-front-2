@@ -266,36 +266,39 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     return Container(
       color: Colors.white,
       child: Stack(
+        // alignment: Alignment.center,
         children: [
-          Column(
-            children: [
-              YAppBar(
-                title: widget.title,
-                rightPadding: 16.w,
-                right: GestureDetector(
-                  onTap: _toHistory,
-                  behavior: HitTestBehavior.opaque,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "my_work_ic.png".make,
-                        width: 22.w,
-                        height: 22.w,
-                      ),
-                      Text(
-                        "我的作品",
-                        style: TextStyle(
-                          color: const Color(0xFF191919),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
-                        ),
-                      )
-                    ],
+          YAppBar(
+            title: widget.title,
+            rightPadding: 16.w,
+            right: GestureDetector(
+              onTap: _toHistory,
+              behavior: HitTestBehavior.opaque,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "my_work_ic.png".make,
+                    width: 22.w,
+                    height: 22.w,
                   ),
-                ),
+                  Text(
+                    "我的作品",
+                    style: TextStyle(
+                      color: const Color(0xFF191919),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
+                    ),
+                  )
+                ],
               ),
-              Expanded(
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 20.w),
                 child: widget.videoUrl.isEmpty
                     ? LayoutBuilder(builder: (context, boxConstraints) {
                         return Container(

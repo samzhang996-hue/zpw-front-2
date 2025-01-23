@@ -99,7 +99,8 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                     textColor: ColorPlate.themeColor,
                     fontSize: 13.sp,
                   ))),
-          Expanded(child: _buildContent()),
+          // Expanded(child: _buildContent()),
+          _buildContent(),
           Container(
             margin: EdgeInsets.only(
                 left: 16.w, right: 16.w, bottom: 20.w, top: 25.w),

@@ -52,7 +52,15 @@ class _MinePageState extends BaseWidgetState<MinePage>
         break;
     }
   }
-
+  Widget image(){
+    return state.userInfoBean.headImg==""?
+    Image.asset(
+      "logo.png".mine,
+      width: 56.w,
+    ):   QdsImageCircle(
+        state.userInfoBean.headImg ?? "", 56.w, 56.w,
+        isLocal: true);
+  }
   @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<MineLogic>(builder: (logic) {
@@ -76,13 +84,17 @@ class _MinePageState extends BaseWidgetState<MinePage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            QdsImageCircle(
-                                state.userInfoBean.headImg ?? "", 56.w, 56.w,
-                                isLocal: true),
-                            // Image.asset(
-                            //   "logo.png".mine,
-                            //   width: 56.w,
-                            // ),
+                            image(),
+                            // if(state.userInfoBean.headImg==""){
+                            //   return
+                            // }
+                            //   QdsImageCircle(
+                            //       state.userInfoBean.headImg ?? "", 56.w, 56.w,
+                            //       isLocal: true),
+                            // // Image.asset(
+                            // //   "logo.png".mine,
+                            // //   width: 56.w,
+                            // // ),
                             Container(
                               margin: EdgeInsets.only(left: 7.w),
                               child: Column(

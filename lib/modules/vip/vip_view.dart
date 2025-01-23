@@ -364,7 +364,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                   ),
                   InkWell(
                     onTap: () {
-                      CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                      if(HandleTool.instance.isMember){
+                        Get.back();
+                      }else{
+                        CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                      }
+
                       // if (state.type == 1) {
                       //   Get.offAll(() => const MainPage());
                       // } else {
