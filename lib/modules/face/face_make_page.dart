@@ -206,6 +206,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    if (!HandleTool.instance.isMember) {
+      Get.to(() => VipPage());
+      return;
+    }
+
     if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
       if (res?.isNotEmpty == true) {
@@ -249,6 +254,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _uploadNewHeadImg() async {
+    if (!HandleTool.instance.isMember) {
+      Get.to(() => VipPage());
+      return;
+    }
+
     final res = await Get.to<String>(() => Photo_listPage(isNew: false));
 
     Log.e("res:$res");

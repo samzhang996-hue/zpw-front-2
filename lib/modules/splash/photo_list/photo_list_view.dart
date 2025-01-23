@@ -11,7 +11,6 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/main/main_page.dart';
-import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -71,7 +70,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     HandleTool.instance.checkImgAndSave(path, success: () {
       Log.e("widget.isNew:${widget.isNew}");
       if (path == null) return;
-      Get.find<MineLogic>().update();
       if (widget.isNew) {
         if (!HandleTool.instance.isMember) {
           Get.offAll(VipPage(), arguments: {"type": 1});
@@ -179,12 +177,13 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                             : Center(
                                 child: GestureDetector(
                                     onTap: () {
-                                      // if (!HandleTool.instance.isMember) {
-                                      //   gotoPushPage(VipPage(), arguments: {"type": 1});
-                                      // } else {
-                                      //   Get.offAll(() => const MainPage());
-                                      // }
-                                      Get.back();
+                                      if (!HandleTool.instance.isMember) {
+                                        gotoPushPage(VipPage(),
+                                            arguments: {"type": 1});
+                                      } else {
+                                        Get.offAll(() => const MainPage());
+                                      }
+                                      // Get.back();
                                     },
                                     child: Image.asset(
                                       "all_photos_close.png".comm,
