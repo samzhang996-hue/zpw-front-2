@@ -114,8 +114,8 @@ class SplashLogic extends BaseGetxController {
             Log.d("userInfoBean----${HandleTool.instance.isMember}");
 
             final res = await SpUtils.getString("my_ai_head");
-
-            if (res.isNotEmpty) {
+            HandleTool.instance.headImg = res;
+            if (res.isEmpty) {
               isFirst = true;
             }
 

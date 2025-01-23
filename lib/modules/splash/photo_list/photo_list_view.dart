@@ -40,7 +40,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
   Future<void> _loadPhotos() async {
     if (Platform.isIOS) {
       final res = await PermissionUtils.checkFilesAccessPermission();
-      Log.d("res---$res");
       if (!res) {
         _isFilesAccessPermission.value = false;
         return;
