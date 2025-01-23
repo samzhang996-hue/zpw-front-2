@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -6,11 +7,14 @@ import 'package:flutter_app_update/azhon_app_update.dart';
 import 'package:flutter_app_update/update_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/main.dart';
+import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/network/network_util.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -92,7 +96,6 @@ class HandleTool {
   }
 
   getProtocolConfig() {
-
     SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
         success: (isSuccess, code, message, results) {
       Log.d("config---$isSuccess----$results");
@@ -181,6 +184,7 @@ class HandleTool {
       FontWeight fontWeight, double maxWidth, int maxLines) {
     value = filterText(value);
     TextPainter painter = TextPainter(
+
         ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
         locale: Localizations.localeOf(navigatorKey.currentContext!),
         maxLines: maxLines,
@@ -482,5 +486,51 @@ class HandleTool {
     }
 
     return systemDevice;
+  }
+
+  Future<String> _imageToBase64(String imagePath) async {
+    // 读取图片文件
+    File imageFile = File(imagePath);
+    List<int> imageBytes = await imageFile.readAsBytes();
+
+    // 将图片字节转换为Base64字符串
+    String base64Image = base64Encode(imageBytes);
+
+    return base64Image;
+  }
+
+  void checkImgAndSave(String? path, {void Function()? success}) async {
+    if (path == null) {
+      return;
+    }
+    if (path.isNotEmpty == true) {
+      // getApplicationCacheDirectory()
+      final cacheDir = await getApplicationCacheDirectory();
+      File old = File(path);
+      final fileExtension = extension(Uri.parse(path).path);
+      final myHeadImg = "my_ai_www_head$fileExtension";
+      final filePath = '${cacheDir.path}/$myHeadImg';
+      old.copySync(filePath);
+      SpUtils.setString("my_ai_head", filePath);
+      HandleTool.instance.headImg = filePath;
+      // CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      // return;
+      final imgBase64 = await _imageToBase64(path);
+
+      final params = {"imgBase64": imgBase64};
+      HandleTool.instance.SMWPost(
+        Api.imgHaveFace,
+        params: params,
+        success: (isSuccess, code, message, results) {
+          if (isSuccess == true && results.isNotEmpty) {
+            success?.call();
+          } else {
+            CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+          }
+        },
+      );
+
+      return;
+    }
   }
 }

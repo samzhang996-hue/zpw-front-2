@@ -11,7 +11,7 @@ class PermissionUtils {
       if (status.isGranted) {
         return true;
       } else if (status.isLimited) {
-        return true;
+        return false;
       }
       return false;
     }

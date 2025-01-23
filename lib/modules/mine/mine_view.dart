@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/common/constant.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/setting/setting_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
-import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
+
 import 'mine_logic.dart';
-import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 
 class MinePage extends BaseStatefulWidget {
   @override
   BaseWidgetState<MinePage> getState() => _MinePageState();
 }
 
-class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserver {
+class _MinePageState extends BaseWidgetState<MinePage>
+    with WidgetsBindingObserver {
   final logic = Get.put(MineLogic());
   final state = Get.find<MineLogic>().state;
 
@@ -64,15 +65,20 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                 Container(
                   width: double.infinity,
                   height: 371.w,
-                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("mine_bg.png".mine))),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("mine_bg.png".mine))),
                   child: Column(
                     children: [
+                      // CommHeadCircle(),
                       Container(
                         margin: EdgeInsets.only(left: 16.w, top: 67.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w),
+                            QdsImageCircle(
+                                state.userInfoBean.headImg ?? "", 56.w, 56.w,
+                                isLocal: true),
                             // Image.asset(
                             //   "logo.png".mine,
                             //   width: 56.w,
@@ -92,7 +98,11 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                     height: 4.w,
                                   ),
                                   CommText(
-                                    text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 0 ? "永久会员" : "到期时间:${state.userInfoBean.vipExpireTime}") : "未开通会员",
+                                    text: HandleTool.instance.isMember
+                                        ? (state.userInfoBean.permanentFlag == 0
+                                            ? "永久会员"
+                                            : "到期时间:${state.userInfoBean.vipExpireTime}")
+                                        : "未开通会员",
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,
                                     textColor: Color(0xff818181),
@@ -121,16 +131,20 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                           gotoPushPage(VipPage());
                         },
                         child: Container(
-                          margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 23.w),
+                          margin: EdgeInsets.only(
+                              left: 15.w, right: 17.w, top: 23.w),
                           width: double.infinity,
-                          decoration: BoxDecoration(color: Color(0xff342D2C), borderRadius: BorderRadius.circular(10)),
+                          decoration: BoxDecoration(
+                              color: Color(0xff342D2C),
+                              borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             margin: EdgeInsets.only(left: 16.w, top: 4.w),
                             child: Row(
                               children: [
                                 Container(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -178,7 +192,9 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: CommText(
-                                    text: HandleTool.instance.isMember ? "已开通" : "立即开通",
+                                    text: HandleTool.instance.isMember
+                                        ? "已开通"
+                                        : "立即开通",
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.bold,
                                     textColor: Color(0xff350F03),
@@ -212,7 +228,8 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             Container(
               margin: EdgeInsets.only(left: 16, right: 16, top: 20.w),
               width: double.infinity,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AdBannerWidget(

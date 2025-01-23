@@ -28,7 +28,7 @@ class _CollectionItemState extends State<CollectionItem> {
   var _pages = 0;
 
   var _isLoading = false;
-
+  late final _showNoMoreContent = false.obs;
   void _getData() {
     final params = {
       "id": widget.id,
@@ -37,7 +37,7 @@ class _CollectionItemState extends State<CollectionItem> {
     };
 
     Log.e("params:$params");
-
+    _showNoMoreContent.value = false;
     HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
       Api.pagePhotoGroupBind,
       isShowProgress: true,
@@ -46,7 +46,10 @@ class _CollectionItemState extends State<CollectionItem> {
         if (isSuccess == true && results.isNotEmpty) {
           _records.value = results.first.records ?? [];
           _pages = results.first.pages ?? 0;
+          _showNoMoreContent.value = true;
           _loadPage = 2;
+        } else {
+          _showNoMoreContent.value = true;
         }
       },
       onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
@@ -70,7 +73,7 @@ class _CollectionItemState extends State<CollectionItem> {
     };
 
     Log.e("_loadPage.params:$params");
-
+    _showNoMoreContent.value = false;
     HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
       Api.pagePhotoGroupBind,
       isShowProgress: true,
@@ -81,6 +84,9 @@ class _CollectionItemState extends State<CollectionItem> {
           _pages = results.first.pages ?? 0;
           _loadPage += 1;
           _isLoading = false;
+          _showNoMoreContent.value = true;
+        } else {
+          _showNoMoreContent.value = true;
         }
       },
       onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
@@ -305,8 +311,13 @@ class _CollectionItemState extends State<CollectionItem> {
                             : _getBindType1(bean);
                       },
                     ),
-                    const SliverToBoxAdapter(
-                      child: NoMoreContentView(),
+                    SliverToBoxAdapter(
+                      child: Obx(
+                        () => Visibility(
+                          visible: _showNoMoreContent.isTrue,
+                          child: const NoMoreContentView(),
+                        ),
+                      ),
                     )
                   ],
                 ),

@@ -1,9 +1,12 @@
 //图片加载
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:zpw/base/base_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
+import 'package:zpw/utils/handle_tool.dart';
 
 Widget QdsImage(String url, double width, double height,
     {BoxFit fit = BoxFit.cover,
@@ -100,8 +103,12 @@ Widget QdsImageCorner(String url, double width, double height, double corner,
 //圆形图片加载
 Widget QdsImageCircle(String url, double width, double height,
     {BoxFit fit = BoxFit.cover,
-    String imagePlaceholder = baseConfig.defaultPlaceholder}) {
+    String imagePlaceholder = baseConfig.defaultPlaceholder,
+    bool isLocal = false}) {
   return ClipOval(
-      child: QdsImage(url, width, height,
-          fit: fit, imagePlaceholder: imagePlaceholder));
+      child: isLocal
+          ? Image.file(File(HandleTool.instance.headImg),
+              width: width, height: height, fit: fit)
+          : QdsImage(url, width, height,
+              fit: fit, imagePlaceholder: imagePlaceholder));
 }

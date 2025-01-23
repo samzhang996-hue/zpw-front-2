@@ -1,5 +1,5 @@
-import 'package:dio/src/form_data.dart' as ffff;
-import 'package:dio/src/multipart_file.dart' as ffff;
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,10 +8,8 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
-import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -227,34 +225,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _uploadNewHeadImg() async {
-    final res = await Get.to<String>(() => Photo_listPage());
+    await Get.to<String>(() => Photo_listPage(isNew: false));
 
-    if (res?.isNotEmpty == true) {
-      final formData = ffff.FormData.fromMap({
-        "file": await ffff.MultipartFile.fromFile(res!),
-      });
-      final bean = await HandleTool.instance.QDSUpload<UploadBean>(
-          Api.uploadFile,
-          params: formData,
-          onModel: (v) => UploadBean.fromJson(v));
-      if (bean == null) return;
-
-      HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
-          isShowProgress: true, success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          HandleTool.instance.headImg = '${bean.url}';
-          _myHeadImg.value = '${bean.url}';
-        } else {
-          // HandleTool.showAppToastText('上传失败');
-          CustomFaceDialogUtils.showCustomDialog(
-            context: context,
-            onPressed: () async {
-              _uploadNewHeadImg();
-            },
-          );
-        }
-      });
-    }
+    _myHeadImg.value = HandleTool.instance.headImg;
   }
 
   void _closeHeadImg() {
@@ -523,42 +496,53 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                               child: Stack(
                                 clipBehavior: Clip.none,
                                 children: [
-                                  Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Container(
-                                        width: 72.w,
-                                        height: 72.w,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.grey,
-                                          shape: BoxShape.circle,
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Color(0xFFFF2EB8),
-                                              Color(0xFFFF2E2E)
-                                            ],
-                                            begin:
-                                                Alignment.centerLeft, // 渐变的起始点
-                                            end:
-                                                Alignment.centerRight, // 渐变的结束点
+                                  if (_myHeadImg.isNotEmpty)
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Container(
+                                          width: 72.w,
+                                          height: 72.w,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.grey,
+                                            shape: BoxShape.circle,
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFFFF2EB8),
+                                                Color(0xFFFF2E2E)
+                                              ],
+                                              begin: Alignment
+                                                  .centerLeft, // 渐变的起始点
+                                              end: Alignment
+                                                  .centerRight, // 渐变的结束点
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      ClipOval(
-                                        child: QdsImage(
-                                          _myHeadImg.value,
-                                          68.w,
-                                          68.w,
+                                        ClipOval(
+                                          child: Image.file(
+                                            File(_myHeadImg.value),
+                                            width: 68.w,
+                                            height: 68.w,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    )
+                                  else
+                                    Image.asset(
+                                      "no_head_img.png".make,
+                                      width: 76.w,
+                                      height: 76.w,
+                                      fit: BoxFit.cover,
+                                    ),
                                   Obx(
                                     () => Positioned(
                                       top: 0,
                                       right: 0,
                                       child: Visibility(
-                                        visible: _showHeadImg.isTrue,
+                                        visible: _showHeadImg.isTrue &&
+                                            HandleTool
+                                                .instance.headImg.isNotEmpty,
                                         child: GestureDetector(
                                           onTap: _closeHeadImg,
                                           behavior: HitTestBehavior.opaque,

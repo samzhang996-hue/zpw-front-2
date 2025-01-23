@@ -96,4 +96,7 @@ class Api {
 
   ///ios内购回调
   static const String payOrder_iosPay = "/center/handleIosOrder";
+
+  ///Get检查图片是否包含人脸
+  static const String imgHaveFace = "/imgHaveFace";
 }

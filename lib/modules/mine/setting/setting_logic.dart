@@ -7,6 +7,7 @@ import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/filecache.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/sp_utils.dart';
 
 import 'setting_state.dart';
 
@@ -53,6 +54,7 @@ class SettingLogic extends BaseGetxController {
         success: (isSuccess, code, message, results) async {
       HandleTool.showAppToastText("注销成功");
       await 0.5.delay();
+      SpUtils.clear();
       exit(-1);
       // if (isSuccess == true && results.isNotEmpty) {
       //   HandleTool.showAppToastText("注销成功");
