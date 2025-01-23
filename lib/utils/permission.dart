@@ -2,19 +2,20 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class PermissionUtils {
   // /// 存储权限
   static Future<bool> checkFilesAccessPermission() async {
-    if (Platform.isIOS) {
-      PermissionStatus status = await Permission.photos.request();
-      if (status.isGranted) {
-        return true;
-      } else if (status.isLimited) {
-        return false;
-      }
-      return false;
-    }
+    // if (Platform.isIOS) {
+    //   PermissionStatus status = await Permission.photos.request();
+    //   if (status.isGranted) {
+    //     return true;
+    //   } else if (status.isLimited) {
+    //     return false;
+    //   }
+    //   return false;
+    // }
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -22,7 +23,7 @@ class PermissionUtils {
     bool manageExternal = await Permission.manageExternalStorage.isGranted;
 
     String release = androidInfo.version.release;
-
+    Log.d("relse----$release");
     if (release.isNotEmpty) {
       List<String> releaseList = release.split('.');
       int firstValue = int.parse(releaseList.first);

@@ -82,10 +82,10 @@ android {
     }
     flavorDimensions "version"
     productFlavors {
-        AIJL001 {
+        AIJL300 {
             dimension "version"
             applicationId "com.photoking.app"
-            manifestPlaceholders = [CHANNEL_VALUE: "AIJL001",]
+            manifestPlaceholders = [CHANNEL_VALUE: "AIJL300",]
             resValue "mipmap", "app_logo", "@mipmap/logo"
         }
     }

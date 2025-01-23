@@ -98,316 +98,321 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           rk10 = "";
         }
       }
-
-      return Column(
-        children: [
-          Expanded(
-            child: Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                Container(
-                  width: double.infinity, // 或者使用父容器的宽度约束
-                  height: 644.w,
-                  color: Color(0xff000000),
-                  child: _controller.value.isInitialized
-                      ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                      : Container(
-                    child: Center(child: CircularProgressIndicator()),
-                  ), // 使用屏幕高度的百分比
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0x00000000), // 透明
-                          Color(0xff000000), // 黑色
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0.2, 0.2], // 透明从0%到20%，黑色从20%到100%
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Visibility(
-                          child: _listViewWidget(),
-                          visible: !(rk9 == ""),
+      return  WillPopScope(
+        child: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                alignment: Alignment.topLeft,
+                children: [
+                  Container(
+                    width: double.infinity, // 或者使用父容器的宽度约束
+                    height: 644.w,
+                    color: Color(0xff000000),
+                    child: _controller.value.isInitialized
+                        ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                        : Container(
+                      child: Center(child: CircularProgressIndicator()),
+                    ), // 使用屏幕高度的百分比
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0x00000000), // 透明
+                            Color(0xff000000), // 黑色
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.2, 0.2], // 透明从0%到20%，黑色从20%到100%
                         ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 16.w),
-                            child: CommText(
-                              text: rk9,
-                              fontSize: 11.sp,
-                              textColor: Color(0xff7E7E7E),
-                              fontWeight: FontWeight.w500,
+                      ),
+                      child: Column(
+                        children: [
+                          Visibility(
+                            child: _listViewWidget(),
+                            visible: !(rk9 == ""),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 16.w),
+                              child: CommText(
+                                text: rk9,
+                                fontSize: 11.sp,
+                                textColor: Color(0xff7E7E7E),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                        Visibility(
-                          visible: (state.isWx == 1 && state.isZfb == 1),
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10.w, bottom: 10.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Visibility(
-                                    visible: state.isZfb == 1,
-                                    child: InkWell(
-                                      onTap: () {
-                                        logic.onSatePay(0);
-                                        Log.d("pay---${state.statePay.value}");
-                                      },
-                                      child: Container(
-                                        height: 47.w,
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                              "zfb.png".vip,
-                                              width: 26.w,
-                                            ),
-                                            SizedBox(
-                                              width: 8.w,
-                                            ),
-                                            CommText(
-                                              text: "支付宝支付",
-                                              fontSize: 15.w,
-                                              textColor: Color(0xffFFD9D0),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            SizedBox(
-                                              width: 8.w,
-                                            ),
-                                            Obx(() {
-                                              return Image.asset(
-                                                state.statePay.value != 1 ? "checked.png".vip : "un_check.png".vip,
-                                                width: 14.w,
-                                              );
-                                            }),
-                                          ],
+                          Visibility(
+                            visible: (state.isWx == 1 && state.isZfb == 1),
+                            child: Container(
+                              margin: EdgeInsets.only(top: 10.w, bottom: 10.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Visibility(
+                                      visible: state.isZfb == 1,
+                                      child: InkWell(
+                                        onTap: () {
+                                          logic.onSatePay(0);
+                                          Log.d("pay---${state.statePay.value}");
+                                        },
+                                        child: Container(
+                                          height: 47.w,
+                                          child: Row(
+                                            children: [
+                                              Image.asset(
+                                                "zfb.png".vip,
+                                                width: 26.w,
+                                              ),
+                                              SizedBox(
+                                                width: 8.w,
+                                              ),
+                                              CommText(
+                                                text: "支付宝支付",
+                                                fontSize: 15.w,
+                                                textColor: Color(0xffFFD9D0),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              SizedBox(
+                                                width: 8.w,
+                                              ),
+                                              Obx(() {
+                                                return Image.asset(
+                                                  state.statePay.value != 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  width: 14.w,
+                                                );
+                                              }),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )
+                                      )
+                                  ),
+                                  Visibility(
+                                    visible: state.isWx == 1,
+                                    child: InkWell(
+                                        onTap: () {
+                                          logic.onSatePay(1);
+                                        },
+                                        child: Container(
+                                          height: 47.w,
+                                          child: Row(
+                                            children: [
+                                              Image.asset(
+                                                "wx.png".vip,
+                                                width: 26.w,
+                                              ),
+                                              SizedBox(
+                                                width: 8.w,
+                                              ),
+                                              CommText(
+                                                text: "微信支付",
+                                                fontSize: 15.w,
+                                                textColor: Color(0xffFFD9D0),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              SizedBox(
+                                                width: 8.w,
+                                              ),
+                                              Obx(() {
+                                                return Image.asset(
+                                                  state.statePay.value == 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  width: 14.w,
+                                                );
+                                              }),
+                                            ],
+                                          ),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
+                              state.goodsId = vp?.id ?? 0;
+                              if(state.statePay.value==1){
+                                state.payKeyType = 1;
+                              }else{
+                                state.payKeyType = vp?.defaultPayKeyType ?? 0;
+                              }
+                              var zfbType = vp?.defaultZfbPayKeyType ?? 0;
+
+                              logic.click = true;
+                              if (state.isCheck.value) {
+                                if (Platform.isIOS) {
+                                  logic.buyEngin.buyProduct(vp?.iosProductId);
+                                  return;
+                                }
+                              }
+                              state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
+                              state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+                              if (!state.isCheck.value) {
+                                CustomSureVipDialogUtils.showCustomDialog(
+                                    context: context,
+                                    onPressed: () {
+                                      if (Platform.isIOS) {
+                                        logic.buyEngin.buyProduct(vp?.iosProductId);
+                                        return;
+                                      }
+                                      logic.onSelected(true);
+                                      logic.addOrder();
+                                    });
+                              } else {
+                                logic.addOrder();
+                              }
+                            },
+                            child: Stack(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(left: 17.w, right: 17.w, top: 17.w),
+                                  height: 54.w,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
+                                  child: Center(
+                                      child: CommText(
+                                        text: rk8,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                        textColor: Colors.white,
+                                      )),
                                 ),
                                 Visibility(
-                                  visible: state.isWx == 1,
-                                  child: InkWell(
-                                      onTap: () {
-                                        logic.onSatePay(1);
-                                      },
-                                      child: Container(
-                                        height: 47.w,
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                              "wx.png".vip,
-                                              width: 26.w,
-                                            ),
-                                            SizedBox(
-                                              width: 8.w,
-                                            ),
-                                            CommText(
-                                              text: "微信支付",
-                                              fontSize: 15.w,
-                                              textColor: Color(0xffFFD9D0),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                            SizedBox(
-                                              width: 8.w,
-                                            ),
-                                            Obx(() {
-                                              return Image.asset(
-                                                state.statePay.value == 1 ? "checked.png".vip : "un_check.png".vip,
-                                                width: 14.w,
-                                              );
-                                            }),
-                                          ],
-                                        ),
-                                      )),
+                                  visible: !(rk10 == ""),
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 17.w),
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          width: 183.w,
+                                          height: 27.w,
+                                          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
+                                          child: CommText(
+                                            text: rk10,
+                                            fontSize: 13.sp,
+                                            fontWeight: FontWeight.w500,
+                                            textColor: Colors.white,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )),
+                                  ),
                                 )
                               ],
                             ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
-                            state.goodsId = vp?.id ?? 0;
-                            if(state.statePay.value==1){
-                              state.payKeyType = 1;
-                            }else{
-                              state.payKeyType = vp?.defaultPayKeyType ?? 0;
-                            }
-                            var zfbType = vp?.defaultZfbPayKeyType ?? 0;
-
-                            logic.click = true;
-                            if (state.isCheck.value) {
-                              if (Platform.isIOS) {
-                                logic.buyEngin.buyProduct(vp?.iosProductId);
-                                return;
-                              }
-                            }
-                            state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-                            state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
-                            if (!state.isCheck.value) {
-                              CustomSureVipDialogUtils.showCustomDialog(
-                                  context: context,
-                                  onPressed: () {
-                                    if (Platform.isIOS) {
-                                      logic.buyEngin.buyProduct(vp?.iosProductId);
+                          Container(
+                            margin: EdgeInsets.only(left: 20.w, top: 10.w, bottom: 25.w),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                        width: 14.w,
+                                      ),
+                                      CommText(
+                                        text: "点击购买即表示您同意",
+                                        fontSize: 12.sp,
+                                        textColor: Color(0xff646464),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    if (state.isCheck.value) {
+                                      logic.onSelected(false);
+                                    } else {
+                                      logic.onSelected(true);
+                                    }
+                                  },
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    String htmlStr = HandleTool.instance.hYxy;
+                                    if (htmlStr.isEmpty) {
                                       return;
                                     }
-                                    logic.onSelected(true);
-                                    logic.addOrder();
-                                  });
-                            } else {
-                              logic.addOrder();
-                            }
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(left: 17.w, right: 17.w, top: 17.w),
-                                height: 54.w,
-                                width: double.infinity,
-                                decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
-                                child: Center(
-                                    child: CommText(
-                                      text: rk8,
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold,
-                                      textColor: Colors.white,
-                                    )),
-                              ),
-                              Visibility(
-                                visible: !(rk10 == ""),
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 17.w),
-                                  child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        width: 183.w,
-                                        height: 27.w,
-                                        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
-                                        child: CommText(
-                                          text: rk10,
-                                          fontSize: 13.sp,
-                                          fontWeight: FontWeight.w500,
-                                          textColor: Colors.white,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )),
+                                    gotoPushPage(
+                                      MyWebViewPage(
+                                        titleStr: "会员协议",
+                                        htmlUrl: HandleTool.instance.yHxy,
+                                      ),
+                                    );
+                                  },
+                                  child: CommText(
+                                    text: "《会员协议》",
+                                    fontSize: 12.sp,
+                                    textColor: Colors.white,
+                                  ),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 20.w, top: 10.w, bottom: 25.w),
-                          child: Row(
-                            children: [
-                              InkWell(
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
-                                      width: 14.w,
-                                    ),
-                                    CommText(
-                                      text: "点击购买即表示您同意",
-                                      fontSize: 12.sp,
-                                      textColor: Color(0xff646464),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  if (state.isCheck.value) {
-                                    logic.onSelected(false);
-                                  } else {
-                                    logic.onSelected(true);
-                                  }
-                                },
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  String htmlStr = HandleTool.instance.hYxy;
-                                  if (htmlStr.isEmpty) {
-                                    return;
-                                  }
-                                  gotoPushPage(
-                                    MyWebViewPage(
-                                      titleStr: "会员协议",
-                                      htmlUrl: HandleTool.instance.yHxy,
-                                    ),
-                                  );
-                                },
-                                child: CommText(
-                                  text: "《会员协议》",
-                                  fontSize: 12.sp,
-                                  textColor: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ), // 使用屏幕高度的百分比
+                              ],
+                            ),
+                          )
+                        ],
+                      ), // 使用屏幕高度的百分比
+                    ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
-                    // if (state.type == 1) {
-                    //   Get.offAll(() => const MainPage());
-                    // } else {
-                    //   Get.back();
-                    // }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width: 80.w,
-                          height: 30.w,
-                          margin: EdgeInsets.only(top: 44.w, left: 16.w),
-                          child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Image.asset(
-                                "back.png".comm,
-                                width: 16.w,
-                              ))),
-                      Visibility(
-                        visible: Platform.isIOS,
-                        child: GestureDetector(
-                          onTap: () {
-                            logic.click = true;
-                            logic.buyEngin.resumePurchase();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 28.w, right: 16.w),
-                            child: const Text(
-                              "恢复购买",
-                              style: TextStyle(color: Colors.white),
+                  InkWell(
+                    onTap: () {
+                      CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                      // if (state.type == 1) {
+                      //   Get.offAll(() => const MainPage());
+                      // } else {
+                      //   Get.back();
+                      // }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width: 80.w,
+                            height: 30.w,
+                            margin: EdgeInsets.only(top: 44.w, left: 16.w),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Image.asset(
+                                  "back.png".comm,
+                                  width: 16.w,
+                                ))),
+                        Visibility(
+                          visible: Platform.isIOS,
+                          child: GestureDetector(
+                            onTap: () {
+                              logic.click = true;
+                              logic.buyEngin.resumePurchase();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 28.w, right: 16.w),
+                              child: const Text(
+                                "恢复购买",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        onWillPop: () async {
+          return false; // 禁止通过物理返回按钮关闭页面,
+        },
       );
+
     });
   }
 

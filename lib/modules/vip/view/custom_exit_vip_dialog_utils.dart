@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
+import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/vip/view/countdown_timer2.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
@@ -57,8 +58,14 @@ class CustomExitVipDialogUtils2 {
                             ),
                           )),
                       onTap: () {
-                        Navigator.of(context).pop();
-                        Get.back();
+                        if(state.type==1){
+                          Navigator.of(context).pop();
+                          Get.offAll(() => const MainPage());
+                        }else{
+                          Navigator.of(context).pop();
+                          Get.back();
+                        }
+
                       },
                     ),
                     Stack(
