@@ -90,6 +90,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                         title: state.tags.value,
                         funcId: state.id.value,
                         imageUrl: state.returnUrl.value,
+                        videoUrl: "",
                       ),
                     );
                   },

@@ -206,6 +206,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                     title: tags,
                                     funcId: id,
                                     imageUrl: oldUrl,
+                                    videoUrl: "",
                                   ),
                                 );
                               },

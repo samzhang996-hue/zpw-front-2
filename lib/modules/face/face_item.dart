@@ -66,7 +66,8 @@ class _FaceItemState extends State<FaceItem> {
                   () => FaceMakePage(
                     title: bean?.photoFuncResp?.tags ?? '',
                     funcId: bean?.photoFuncResp?.id ?? 0,
-                    imageUrl: bean?.photoFuncResp?.showImgGif ?? "",
+                    imageUrl: bean?.photoFuncResp?.showImgGif ?? '',
+                    videoUrl: bean?.photoFuncResp?.videoUrl ?? '',
                   ),
                 );
               },
