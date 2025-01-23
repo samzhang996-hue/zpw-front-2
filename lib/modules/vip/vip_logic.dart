@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:tobias/tobias.dart';
@@ -24,6 +25,7 @@ class VipLogic extends BaseGetxController {
   late BuyEngin buyEngin;
   var click = false;
   var _success = false;
+  bool isAt = false;
 
   @override
   void onInit() {
@@ -106,6 +108,10 @@ class VipLogic extends BaseGetxController {
     state.isCheck.value = isCheck;
     update();
   }
+  onSatePay(int type) {
+    state.statePay.value = type;
+    update();
+  }
 
   getVipHome() {
     Post<VipBean>(Api.vip_getVipHome,
@@ -125,6 +131,29 @@ class VipLogic extends BaseGetxController {
         onModel: (m) => VipBean.fromJson(m));
   }
 
+  Future<void> test(String url) async {
+    await setOrderZfb(url);
+  }
+
+  addUserAgreementOrder() {
+    Map<String, dynamic> dataMap = {
+      "goodsId": state.goodsId,
+      "payKeyType": state.payKeyType,
+    };
+    Post(Api.payOrder_addUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
+      Log.i("------${results.first} ");
+      if (isSuccess == true && results.isNotEmpty) {
+        var result = results[0];
+        if (Platform.isAndroid) {
+          isAt = true;
+          test(result.toString());
+        } else {
+          //ios
+        }
+      }
+    });
+  }
+
   addOrder() async {
     // String channel = await getChannelInfo(3);
     Map<String, dynamic> dataMap = {
@@ -137,7 +166,7 @@ class VipLogic extends BaseGetxController {
         isShowProgress: true,
         params: dataMap,
         success: (isSuccess, code, message, results) {
-          Log.i("------$results $isSuccess=========");
+          Log.i("------${results.first.toJson()} $isSuccess=========");
           if (isSuccess == true && results.isNotEmpty) {
             state.payBean = results.first;
             Tobias tobias = Tobias();
@@ -146,6 +175,7 @@ class VipLogic extends BaseGetxController {
                 if ("${value["resultStatus"]}" == "9000") {
                   HandleTool.instance.isMember = true;
                   HandleTool.showAppToastText("支付成功");
+                  // _startPolling();
                 } else {
                   HandleTool.showAppToastText("支付失败");
                 }

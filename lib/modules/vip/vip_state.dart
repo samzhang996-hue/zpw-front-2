@@ -11,16 +11,18 @@ class VipState {
   late int goodsId;
   late int isWx;
   late int isZfb;
+  late RxInt statePay;
   VipState() {
     payBean = PayBean();
     vipBean = VipBean();
-    isCheck=true.obs;
+    isCheck=false.obs;
     itemIndex=0;
     payKeyType=0;
     goodsId=0;
     isWx=0;
     isZfb=0;
     type=0;
+    statePay=0.obs;
 
   }
 }

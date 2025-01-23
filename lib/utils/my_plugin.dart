@@ -20,3 +20,7 @@ Future<String> onH5(String url) async {
   Map<String, dynamic> result = {'url': url};
   return await methodChnnel.invokeMethod("onH5", result);
 }
+Future<String> setOrderZfb(String url) async {
+  Map<String, dynamic> result = {'message': url};
+  return await methodChnnel.invokeMethod("setOrderZfb", result);
+}
