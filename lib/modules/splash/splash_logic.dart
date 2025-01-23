@@ -110,10 +110,7 @@ class SplashLogic extends BaseGetxController {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
-            if (userInfoBean.vipExpireTime != null) {
-              HandleTool.instance.isMember = await HandleTool.instance
-                  .compareTimesWithServer(userInfoBean.vipExpireTime);
-            }
+            HandleTool.instance.isMember =userInfoBean.vipFlag == 1;
             Log.d("userInfoBean----${HandleTool.instance.isMember}");
             if (userInfoBean.headImg!.isNotEmpty) {
               isFirst = true;

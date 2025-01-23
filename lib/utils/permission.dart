@@ -7,11 +7,11 @@ class PermissionUtils {
   // /// 存储权限
   static Future<bool> checkFilesAccessPermission() async {
     if (Platform.isIOS) {
-      var status = await Permission.photos.status;
-      if (!status.isGranted) {
-        await Permission.photos.request();
-        var status2 = await Permission.photos.status;
-        return status2.isGranted;
+      PermissionStatus status = await Permission.photos.request();
+      if (status.isGranted) {
+        return true;
+      } else if (status.isLimited) {
+        return true;
       }
       return false;
     }

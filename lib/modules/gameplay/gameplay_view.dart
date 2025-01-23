@@ -7,7 +7,7 @@ import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.da
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
-import 'package:zpw/modules/face/gather_page.dart';
+import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 
@@ -184,10 +184,8 @@ class _GameplayPageState extends State<GameplayPage>
                                     return GestureDetector(
                                       onTap: () {
                                         Get.to(
-                                          () => GatherPage(
-                                            index: index,
-                                            listPhotoGroupBean:
-                                                logic.listPhotoGroupBean,
+                                          () => GatherSinglePage(
+                                            id: bean.id ?? 0,
                                             imgUrlAcross:
                                                 bean.imgUrlAcross ?? "",
                                           ),
@@ -236,7 +234,7 @@ class _GameplayPageState extends State<GameplayPage>
                           // ],
                           onTap: (index) {
                             // page.animateTo(index, duration: duration, curve: curve)
-                            // page.jumpToPage(index);
+                            page?.jumpToPage(index);
                           },
                           controller: logic.tabController,
                           indicator: const TabBarGradientIndicator(

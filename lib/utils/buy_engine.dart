@@ -17,9 +17,10 @@ class BuyEngin {
   late List<ProductDetails> _products; //内购的商品对象集合
   late bool isPay = true;
 
-  final bool showTips;
+  // final bool showTips;
+  late final _vipLogic = Get.find<VipLogic>();
 
-  BuyEngin({this.showTips = true});
+  BuyEngin();
   //初始化购买组件
   void initializeInAppPurchase() {
     // 初始化in_app_purchase插件
@@ -43,7 +44,7 @@ class BuyEngin {
     EasyLoading.show();
     final bool available = await _inAppPurchase.isAvailable();
     if (!available) {
-      if (showTips) {
+      if (_vipLogic.click) {
         HandleTool.showAppToastText("无法连接到商店");
       }
 
@@ -93,7 +94,7 @@ class BuyEngin {
 
     final bool available = await _inAppPurchase.isAvailable();
     if (!available) {
-      if (showTips) {
+      if (_vipLogic.click) {
         HandleTool.showAppToastText("无法连接到商店");
       }
 
@@ -113,7 +114,7 @@ class BuyEngin {
     // print("商品获取结果  " + productDetails.toString());
     if (response.notFoundIDs.isNotEmpty) {
       EasyLoading.dismiss();
-      if (showTips) {
+      if (_vipLogic.click) {
         HandleTool.showAppToastText("未查询到商品订单");
       }
       //
@@ -174,7 +175,7 @@ class BuyEngin {
       List<PurchaseDetails> purchaseDetailsList) async {
     if (purchaseDetailsList.isEmpty) {
       EasyLoading.dismiss();
-      if (showTips) {
+      if (_vipLogic.click) {
         HandleTool.showAppToastText("未查询到商品订单");
       }
       // HandleTool.showAppToastText("未查询到商品订单");

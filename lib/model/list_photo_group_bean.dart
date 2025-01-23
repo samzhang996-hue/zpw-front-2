@@ -24,6 +24,7 @@ class ListPhotoGroupBean {
   int? id;
   int? groupType;
   String? groupName;
+  String? tips;
 
   String? imgUrlAcross;
   String? imgUrlVertical;
@@ -35,6 +36,7 @@ class ListPhotoGroupBean {
       {this.id,
       this.groupType,
       this.groupName,
+      this.tips,
       this.imgUrlAcross,
       this.imgUrlVertical,
       this.tabType,
@@ -45,6 +47,7 @@ class ListPhotoGroupBean {
     id = json["id"];
     groupType = json["groupType"];
     groupName = json["groupName"];
+    tips = json["tips"];
 
     imgUrlAcross = json["imgUrlAcross"];
     imgUrlVertical = json["imgUrlVertical"];
@@ -58,6 +61,7 @@ class ListPhotoGroupBean {
     _data["id"] = id;
     _data["groupType"] = groupType;
     _data["groupName"] = groupName;
+    _data["tips"] = tips;
 
     _data["imgUrlAcross"] = imgUrlAcross;
     _data["imgUrlVertical"] = imgUrlVertical;

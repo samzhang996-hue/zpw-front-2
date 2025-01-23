@@ -24,6 +24,7 @@ class VipLogic extends BaseGetxController {
   late BuyEngin buyEngin;
   var click = false;
   var _success = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -49,9 +50,7 @@ class VipLogic extends BaseGetxController {
       _elapsedSeconds += 2;
       Log.d("el----$_elapsedSeconds");
       // 检查条件
-      if (HandleTool.instance.isMember ||
-          _conditionMet ||
-          _elapsedSeconds >= 180) {
+      if (HandleTool.instance.isMember || _conditionMet || _elapsedSeconds >= 180) {
         stopPolling();
       } else {
         getUserInfo();
@@ -63,8 +62,7 @@ class VipLogic extends BaseGetxController {
     _timer?.cancel();
   }
 
-  restoreIosPay(dynamic receiptData, String transactionId,
-      {bool showSuccessTips = true}) {
+  restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) {
     Log.i("------click : $click=========");
     Post(Api.payOrder_restoreIosPay, isShowProgress: false, params: {
       "receiptData": receiptData,
@@ -84,17 +82,11 @@ class VipLogic extends BaseGetxController {
   }
 
   iosPay(dynamic receiptData, String transactionId) {
-    Map<String, dynamic> dataMap = {
-      "transactionId": transactionId,
-      "receiptData": receiptData,
-      "orderId": "",
-      "isRestore": false
-    };
+    Map<String, dynamic> dataMap = {"transactionId": transactionId, "receiptData": receiptData, "orderId": "", "isRestore": false};
 
     Log.i("------click : $click=========");
 
-    Post(Api.payOrder_iosPay, isShowProgress: false, params: dataMap,
-        success: (isSuccess, code, message, results) {
+    Post(Api.payOrder_iosPay, isShowProgress: false, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         // HandleTool.showAppToastText("购买成功");
         // getVipHome();
@@ -122,13 +114,10 @@ class VipLogic extends BaseGetxController {
           Log.d("vip0000----$isSuccess----$results");
           if (isSuccess == true && results.isNotEmpty) {
             state.vipBean = results.first;
-            if (state.vipBean.vipList == null ||
-                state.vipBean.vipList?.length == 0) {
+            if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
               HandleTool.showAppToastText("暂无会员套餐");
             } else {
-              state.payKeyType =
-                  state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ??
-                      0;
+              state.payKeyType = state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ?? 0;
             }
             update();
           }
@@ -152,11 +141,8 @@ class VipLogic extends BaseGetxController {
           if (isSuccess == true && results.isNotEmpty) {
             state.payBean = results.first;
             Tobias tobias = Tobias();
-            if (state.payBean.payKeyType == 0 ||
-                state.payBean.payKeyType == 4) {
-              tobias
-                  .pay(state.payBean.zfbPayOrderVo!.trademsg.toString())
-                  .then((value) {
+            if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
+              tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
                 if ("${value["resultStatus"]}" == "9000") {
                   HandleTool.instance.isMember = true;
                   HandleTool.showAppToastText("支付成功");
@@ -196,11 +182,7 @@ class VipLogic extends BaseGetxController {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("is----${results.first}");
             mineLogic.state.userInfoBean = results.first;
-            if (mineLogic.state.userInfoBean.vipExpireTime != null) {
-              HandleTool.instance.isMember = await HandleTool.instance
-                  .compareTimesWithServer(
-                      mineLogic.state.userInfoBean.vipExpireTime);
-            }
+            HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
             if (HandleTool.instance.isMember) {
               _conditionMet = true;
               if (_success == false) {
