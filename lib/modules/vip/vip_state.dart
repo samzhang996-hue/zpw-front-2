@@ -14,7 +14,7 @@ class VipState {
   VipState() {
     payBean = PayBean();
     vipBean = VipBean();
-    isCheck=true.obs;
+    isCheck=false.obs;
     itemIndex=0;
     payKeyType=0;
     goodsId=0;

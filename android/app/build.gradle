@@ -108,8 +108,11 @@ flutter {
     source = "../.."
 }
 dependencies {
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.umeng.umsdk:common:9.4.7'// 必选
     implementation 'com.umeng.umsdk:asms:1.4.0'// 必选
     implementation 'com.meituan.android.walle:library:1.1.7'
+    implementation "com.blankj:utilcode:1.23.7"
 }

@@ -9,25 +9,46 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/modules/main/main_page.dart';
+import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
+import 'package:zpw/modules/vip/view/custom_exit_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 import 'vip_logic.dart';
 
 class VipPage extends BaseStatefulWidget {
   @override
-  BaseWidgetState<BaseStatefulWidget> getState() => _VipPageState();
+  BaseWidgetState<VipPage> getState() => _VipPageState();
 }
 
-class _VipPageState extends BaseWidgetState {
+class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver{
   final logic = Get.put(VipLogic());
   final state = Get.find<VipLogic>().state;
   late VideoPlayerController _controller;
-
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        Log.d("AppLifecycleState--paused");
+        break;
+      case AppLifecycleState.resumed:
+        Log.d("AppLifecycleState--resumed--${logic.isAt}");
+        logic.getUserInfo();
+        logic.getVipHome();
+        break;
+      case AppLifecycleState.hidden:
+        Log.d("AppLifecycleState--hidden");
+      default:
+        break;
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // 使用网络视频 URL 或本地视频资产
     _controller = VideoPlayerController.asset(
       'vip.mp4'.vip,
@@ -46,6 +67,7 @@ class _VipPageState extends BaseWidgetState {
     _controller.dispose();
     Get.delete<VipPage>();
     super.dispose();
+    WidgetsBinding.instance.removeObserver(this); // 移除监听器
   }
 
   @override
@@ -84,6 +106,7 @@ class _VipPageState extends BaseWidgetState {
                 Container(
                   width: double.infinity, // 或者使用父容器的宽度约束
                   height: 644.w,
+                  color: Color(0xff000000),
                   child: _controller.value.isInitialized
                       ? AspectRatio(
                           aspectRatio: _controller.value.aspectRatio,
@@ -213,7 +236,6 @@ class _VipPageState extends BaseWidgetState {
                                 return;
                               }
                             }
-
                             state.isWx = state.vipBean.vipList?[state.itemIndex]
                                     .vipPriceOutput?.isWxPay ??
                                 0;
@@ -341,11 +363,14 @@ class _VipPageState extends BaseWidgetState {
                 ),
                 InkWell(
                   onTap: () {
-                    if (state.type == 1) {
-                      Get.offAll(() => const MainPage());
-                    } else {
-                      Get.back();
-                    }
+                    CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: (){
+
+                    });
+                    // if (state.type == 1) {
+                    //   Get.offAll(() => const MainPage());
+                    // } else {
+                    //   Get.back();
+                    // }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

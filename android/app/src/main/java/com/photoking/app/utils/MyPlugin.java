@@ -15,6 +15,9 @@ import android.provider.Settings.Secure;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
+
+import com.blankj.utilcode.util.ActivityUtils;
+import com.photoking.app.CommActivity;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.commonsdk.listener.OnGetOaidListener;
 import java.net.URLEncoder;
@@ -25,7 +28,7 @@ import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import com.meituan.android.walle.WalleChannelReader;
-
+import android.content.Intent;
 public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
     public static final String KEY_SPLASH = "splashId";
     public static final String KEY_BANNER = "bannerId";
@@ -97,7 +100,17 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 }
                 result.success(key == null ? "" : key);
                 break;
-
+            case "setOrderZfb":
+                String url = call.argument("message");
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                activity.startActivity(intent);
+                break;
+            case "onH5":
+                String h5url = call.argument("url");
+                Intent intent1 = new Intent(activity, CommActivity.class);
+                intent1.putExtra("zfbUrl", h5url);
+                ActivityUtils.startActivity(intent1);
+                break;
         }
     }
 
