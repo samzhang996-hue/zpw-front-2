@@ -396,7 +396,11 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           if (HandleTool.instance.isMember) {
                             Get.back();
                           } else {
-                            CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                            if(state.vipBean==null||state.vipBean.vipPopList?.length==0){
+                              Get.back();
+                            }else{
+                              CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                            }
                           }
                         },
                       ),
