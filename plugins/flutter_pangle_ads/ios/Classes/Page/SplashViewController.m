@@ -33,6 +33,15 @@
         logoView.userInteractionEnabled=false;
         [self.splashView addSubview:logoView];
     }
+
+    UIImage *backgroundImage = [UIImage imageNamed:@"LaunchBackground"];
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
+    backgroundImageView.frame = self.splashView.bounds;
+    backgroundImageView.contentMode = UIViewContentModeScaleToFill; // 或者根据需求使用其他的 contentMode
+    [self.splashView addSubview:backgroundImageView];
+    [self.splashView sendSubviewToBack:backgroundImageView];
+    [self.view addSubview:backgroundImageView];
+    
     // 广告区域大小
     CGSize adSize = CGSizeMake(width,adHeight);
     // 广告数据构建

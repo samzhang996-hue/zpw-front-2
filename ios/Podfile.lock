@@ -7,6 +7,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_app_update (0.0.1):
     - Flutter
+  - flutter_native_splash (0.0.1):
+    - Flutter
   - flutter_pangle_ads (2.9.0):
     - Ads-CN
     - Flutter
@@ -62,6 +64,7 @@ DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_update (from `.symlinks/plugins/flutter_app_update/ios`)
+  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_pangle_ads (from `.symlinks/plugins/flutter_pangle_ads/ios`)
   - flutter_udid (from `.symlinks/plugins/flutter_udid/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -94,6 +97,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_app_update:
     :path: ".symlinks/plugins/flutter_app_update/ios"
+  flutter_native_splash:
+    :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_pangle_ads:
     :path: ".symlinks/plugins/flutter_pangle_ads/ios"
   flutter_udid:
@@ -134,6 +139,7 @@ SPEC CHECKSUMS:
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_app_update: 65f61da626cb111d1b24674abc4b01728d7723bc
+  flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   flutter_pangle_ads: fa6d74cca5b2444a47ae1a1883b58831d11cb73e
   flutter_udid: a2482c67a61b9c806ef59dd82ed8d007f1b7ac04
   fluttertoast: e9a18c7be5413da53898f660530c56f35edfba9c
