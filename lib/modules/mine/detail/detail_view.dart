@@ -60,12 +60,17 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
     Log.d("type----${logic.state.returnUrl.value}");
 
     if (worksType == 0) {
-      return QdsImage(
-        // logic.state.returnUrl.value,
-        "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
-        double.infinity,
-        double.infinity,
-      );
+      return Expanded(child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.red,
+        child: QdsImage(
+          logic.state.returnUrl.value,
+          // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
+          double.infinity,
+          double.infinity,
+        ),
+      ));
     } else if (worksType == 1) {
       return _isVideoInitialized
           ? AspectRatio(
@@ -84,9 +89,9 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
       return Scaffold(
           body: Container(
               child: Stack(
-                alignment: Alignment.center,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               YAppBar(
                   title: state.tags.value,

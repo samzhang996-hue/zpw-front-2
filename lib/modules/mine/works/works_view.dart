@@ -26,6 +26,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
   int selectedIndex = 1; // 初始选中第一个选项
 
   void selectTab(int index) {
+    state.index=index;
     setState(() {
       selectedIndex = index;
     });
@@ -202,7 +203,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                     textColor: Colors.white,
                                   ))),
                               onTap: () {
-                                logic.getFuncDetail(funcId);
+                                logic.getFuncDetail(funcId,id);
 
                               },
                             ),
@@ -219,7 +220,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                     "worksType": worksType,
                     "returnUrl": returnUrl,
                     "tags": tags,
-                    "id": id
+                    "id": id,
+                    "funcId": funcId
                   });
                   logic.photoRecord(selectedIndex);
                   return;
