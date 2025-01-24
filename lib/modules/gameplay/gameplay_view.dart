@@ -9,6 +9,7 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
+import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
@@ -161,6 +162,7 @@ class _GameplayPageState extends State<GameplayPage>
                                     visible: !HandleTool.instance.isMember,
                                     child: GestureDetector(
                                       onTap: () {
+                                        Get.find<VipLogic>().getVipHome();
                                         Get.to(() => VipPage());
                                       },
                                       behavior: HitTestBehavior.opaque,

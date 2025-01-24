@@ -21,7 +21,7 @@ class CustomExitVipDialogUtils2 {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        final logic = Get.put(VipLogic());
+        final logic = Get.find<VipLogic>();
         final state = Get.find<VipLogic>().state;
         var vipPriceVos = state.vipBean.vipPopList;
         var rk1 = vipPriceVos?[0].remark1 ?? "";
@@ -33,7 +33,8 @@ class CustomExitVipDialogUtils2 {
         var rk9 = vipPriceVos?[0].remark9 ?? "";
         var agreemenType = vipPriceVos?[0]?.vipPriceOutput?.agreemenType ?? 0;
         var iosProductId = vipPriceVos?[0]?.vipPriceOutput?.iosProductId ?? 0;
-        state.payKeyType = vipPriceVos?[0]?.vipPriceOutput?.defaultPayKeyType ?? 0;
+        state.payKeyType =
+            vipPriceVos?[0]?.vipPriceOutput?.defaultPayKeyType ?? 0;
         state.goodsId = vipPriceVos?[0]?.vipPriceOutput?.id ?? 0;
         // bool? isDjs = vipPriceVos?[0].remark6?.isNotEmpty;
         // bool? isXf = vipPriceVos?[0].remark9?.isNotEmpty;
@@ -58,14 +59,13 @@ class CustomExitVipDialogUtils2 {
                             ),
                           )),
                       onTap: () {
-                        if(state.type==1){
+                        if (state.type == 1) {
                           Navigator.of(context).pop();
                           Get.offAll(() => const MainPage());
-                        }else{
+                        } else {
                           Navigator.of(context).pop();
                           Get.back();
                         }
-
                       },
                     ),
                     Stack(
@@ -90,7 +90,8 @@ class CustomExitVipDialogUtils2 {
                               Opacity(
                                 opacity: rk4.isEmpty ? 0 : 1,
                                 child: Container(
-                                    margin: EdgeInsets.only(top: 70.w, left: 15.w),
+                                    margin:
+                                        EdgeInsets.only(top: 70.w, left: 15.w),
                                     height: 26.w,
                                     width: 100.w,
                                     decoration: const BoxDecoration(
@@ -99,13 +100,17 @@ class CustomExitVipDialogUtils2 {
                                         bottomRight: Radius.circular(14),
                                       ),
                                       gradient: LinearGradient(
-                                        colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
+                                        colors: [
+                                          Color(0xFFFF2EB8),
+                                          Color(0xFFFF2E2E)
+                                        ],
                                         begin: Alignment.topLeft,
                                         end: Alignment.topRight,
                                       ),
                                     ),
                                     child: Container(
-                                      margin: EdgeInsets.only(left: 8.w, right: 8.w),
+                                      margin: EdgeInsets.only(
+                                          left: 8.w, right: 8.w),
                                       child: Center(
                                         child: CommText(
                                           text: rk4,
@@ -116,13 +121,17 @@ class CustomExitVipDialogUtils2 {
                                     )),
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: 25.w, right: 26.w),
+                                margin:
+                                    EdgeInsets.only(left: 25.w, right: 26.w),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -153,7 +162,8 @@ class CustomExitVipDialogUtils2 {
                                     ),
                                     Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         CommText(
                                           text: rk1,
@@ -209,7 +219,9 @@ class CustomExitVipDialogUtils2 {
                                     Obx(() {
                                       return InkWell(
                                         child: Image.asset(
-                                          state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                          state.isCheck.value
+                                              ? "checked.png".vip
+                                              : "un_check.png".vip,
                                           width: 15.w,
                                         ),
                                         onTap: () {
@@ -245,7 +257,8 @@ class CustomExitVipDialogUtils2 {
                                         textColor: const Color(0xff808080),
                                       ),
                                       onTap: () {
-                                        String htmlStr = HandleTool.instance.hYxy;
+                                        String htmlStr =
+                                            HandleTool.instance.hYxy;
                                         if (htmlStr.length > 0) {
                                           Get.to(
                                             MyWebViewPage(
@@ -259,47 +272,49 @@ class CustomExitVipDialogUtils2 {
                                   ],
                                 ),
                               ),
-                             InkWell(
-                               child:  Container(
-                                 margin: EdgeInsets.only(left: 22.w, right: 22.w, top: 12.w),
-                                 height: 48.w,
-                                 width: double.infinity,
-                                 decoration: BoxDecoration(color: Color(0xffFF2E7E), borderRadius: BorderRadius.circular(25)),
-                                 child: Center(
-                                     child: CommText(
-                                       text: rk8,
-                                       fontWeight: FontWeight.bold,
-                                       fontSize: 18.sp,
-                                       textColor: Colors.white,
-                                     )),
-                               ),
-                               onTap: (){
-                                 if(state.isCheck.value){
-                                   if (agreemenType == 2) {
-                                     logic.addUserAgreementOrder();
-                                   } else {
-                                     logic.addOrder();
-                                   }
-                                 }else{
-                                   CustomSureVipDialogUtils.showCustomDialog(
-                                       context: context,
-                                       onPressed: () {
-                                         logic.onSelected(true);
-                                         if (Platform.isIOS) {
-                                           logic.buyEngin
-                                               .buyProduct(iosProductId);
-                                           return;
-                                         }
-                                         if (agreemenType == 2) {
-                                           logic.addUserAgreementOrder();
-                                         } else {
-                                           logic.addOrder();
-                                         }
-                                       });
-                                 }
-
-                               },
-                             ),
+                              InkWell(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: 22.w, right: 22.w, top: 12.w),
+                                  height: 48.w,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffFF2E7E),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Center(
+                                      child: CommText(
+                                    text: rk8,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.sp,
+                                    textColor: Colors.white,
+                                  )),
+                                ),
+                                onTap: () {
+                                  if (state.isCheck.value) {
+                                    if (agreemenType == 2) {
+                                      logic.addUserAgreementOrder();
+                                    } else {
+                                      logic.addOrder();
+                                    }
+                                  } else {
+                                    CustomSureVipDialogUtils.showCustomDialog(
+                                        context: context,
+                                        onPressed: () {
+                                          logic.onSelected(true);
+                                          if (Platform.isIOS) {
+                                            logic.buyEngin
+                                                .buyProduct(iosProductId);
+                                            return;
+                                          }
+                                          if (agreemenType == 2) {
+                                            logic.addUserAgreementOrder();
+                                          } else {
+                                            logic.addOrder();
+                                          }
+                                        });
+                                  }
+                                },
+                              ),
                               SizedBox(
                                 height: 5.w,
                               ),

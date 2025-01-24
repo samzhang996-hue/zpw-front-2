@@ -22,7 +22,7 @@ class VipPage extends BaseStatefulWidget {
 
 class _VipPageState extends BaseWidgetState<VipPage>
     with WidgetsBindingObserver {
-  final logic = Get.put(VipLogic());
+  final logic = Get.find<VipLogic>();
   final state = Get.find<VipLogic>().state;
   late VideoPlayerController _controller;
 
@@ -66,7 +66,8 @@ class _VipPageState extends BaseWidgetState<VipPage>
   @override
   void dispose() {
     _controller.dispose();
-    Get.delete<VipPage>();
+    Log.e("delete.VipPage");
+    // Get.delete<VipPage>();
     super.dispose();
     WidgetsBinding.instance.removeObserver(this); // 移除监听器
   }

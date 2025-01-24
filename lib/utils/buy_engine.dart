@@ -182,7 +182,7 @@ class BuyEngin {
       return;
     }
     Log.d("sta----0000----${purchaseDetailsList.length}");
-    final logic = Get.put(VipLogic());
+    // final logic = Get.put(VipLogic());
     for (PurchaseDetails purchase in purchaseDetailsList) {
       var appstoreDetail = purchase as AppStorePurchaseDetails;
       // Log.d("sta----0000---id:${appstoreDetail.purchaseID}");
@@ -212,7 +212,7 @@ class BuyEngin {
               reData ==
                   appstoreDetail.verificationData.serverVerificationData)) {
             if (isPay == false) {
-              logic.restoreIosPay(
+              _vipLogic.restoreIosPay(
                   appstoreDetail.verificationData.serverVerificationData,
                   "${appstoreDetail.purchaseID}");
               id = "${appstoreDetail.purchaseID}";
@@ -222,7 +222,7 @@ class BuyEngin {
               }
               break;
             } else {
-              logic.iosPay(
+              _vipLogic.iosPay(
                   appstoreDetail.verificationData.serverVerificationData,
                   "${appstoreDetail.purchaseID}");
             }

@@ -9,6 +9,8 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/face_logic.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
+import 'package:zpw/modules/mine/mine_logic.dart';
+import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
@@ -156,21 +158,24 @@ class _FacePageState extends State<FacePage>
                                     height: 34.w,
                                     fit: BoxFit.cover,
                                   ),
-                                  Visibility(
-                                    visible: !HandleTool.instance.isMember,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(() => VipPage());
-                                      },
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Image.asset(
-                                        "face_vip.png".face,
-                                        width: 65.w,
-                                        height: 26.w,
-                                        fit: BoxFit.cover,
+                                  GetBuilder<MineLogic>(builder: (mineLogic) {
+                                    return Visibility(
+                                      visible: !HandleTool.instance.isMember,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Get.find<VipLogic>().getVipHome();
+                                          Get.to(() => VipPage());
+                                        },
+                                        behavior: HitTestBehavior.opaque,
+                                        child: Image.asset(
+                                          "face_vip.png".face,
+                                          width: 65.w,
+                                          height: 26.w,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  }),
                                 ],
                               ),
                             ),

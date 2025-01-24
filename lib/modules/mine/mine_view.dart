@@ -11,6 +11,7 @@ import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/setting/setting_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
@@ -113,7 +114,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
                                   ),
                                   CommText(
                                     text: HandleTool.instance.isMember
-                                        ? (state.userInfoBean.permanentFlag == 0
+                                        ? (state.userInfoBean.permanentFlag == 1
                                             ? "永久会员"
                                             : "到期时间:${state.userInfoBean.vipExpireTime}")
                                         : "未开通会员",
@@ -142,6 +143,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
                       ),
                       InkWell(
                         onTap: () {
+                          Get.find<VipLogic>().getVipHome();
                           gotoPushPage(VipPage());
                         },
                         child: Container(
