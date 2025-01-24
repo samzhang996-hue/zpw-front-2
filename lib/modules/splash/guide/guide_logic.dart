@@ -25,7 +25,7 @@ class GuideLogic extends BaseGetxController {
   }
 
   getFuncDetail() {
-    get(Api.getFuncDetail, isShowProgress: true,
+    get("${Api.getFuncDetail}?id=1", isShowProgress: true,
         success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
