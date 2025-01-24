@@ -35,7 +35,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   // late final _showHeadImg = true.obs;
 
-  late VideoPlayerController? _controller;
+  VideoPlayerController? _controller;
 
   bool get _isNotEmptyVideoUrl => widget.videoUrl.isNotEmpty;
 
@@ -201,12 +201,16 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   void _make() async {
     if (!HandleTool.instance.isMember) {
-      Get.to(() => VipPage());
+      _controller?.pause();
+      await Get.to(() => VipPage());
+      _controller?.play();
       return;
     }
 
     if (_myHeadImg.value.isEmpty) {
+      _controller?.pause();
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+      _controller?.play();
       if (res?.isNotEmpty == true) {
         _myHeadImg.value = res!;
       }
@@ -411,35 +415,42 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 20.w),
-                child: widget.videoUrl.isEmpty
-                    ? LayoutBuilder(builder: (context, boxConstraints) {
-                        return Container(
-                          // color: Colors.grey,
-                          color: Colors.white,
-                          width: 1.sw,
-                          height: boxConstraints.maxHeight,
-                          child: QdsImage(
-                            widget.imageUrl,
-                            1.sw,
-                            boxConstraints.maxHeight,
-                          ),
-                        );
-                      })
-                    : _controller != null
-                        ? _controller!.value.isInitialized
-                            ? AspectRatio(
-                                aspectRatio: _controller!.value.aspectRatio,
-                                child: VideoPlayer(_controller!),
-                              )
-                            : const Center(child: CircularProgressIndicator())
-                        : const Center(child: CircularProgressIndicator()),
-              ),
-            ],
+          Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 20.w),
+                  child: widget.videoUrl.isEmpty
+                      ? LayoutBuilder(builder: (context, boxConstraints) {
+                          return Container(
+                            // color: Colors.grey,
+                            color: Colors.white,
+                            width: 1.sw,
+                            height: widget.videoUrl.isEmpty
+                                ? 0
+                                : boxConstraints.maxHeight,
+                            child: QdsImage(
+                              widget.imageUrl,
+                              1.sw,
+                              boxConstraints.maxHeight,
+                            ),
+                          );
+                        })
+                      : _controller != null
+                          ? _controller!.value.isInitialized
+                              ? AspectRatio(
+                                  aspectRatio: _controller!.value.aspectRatio,
+                                  child: VideoPlayer(_controller!),
+                                )
+                              : const Center(child: CircularProgressIndicator())
+                          : const Center(child: CircularProgressIndicator()),
+                ),
+              ],
+            ),
           ),
           Obx(() => Visibility(
                 visible: _show.isTrue,

@@ -181,7 +181,7 @@ class _CollectionItemState extends State<CollectionItem> {
       child: Container(
         decoration: BoxDecoration(
           // color: index.isOdd ? Colors.amber : Colors.red,
-          color: Colors.red,
+          // color: Colors.red,
           borderRadius: BorderRadius.circular(8.w),
         ),
         child: Stack(
@@ -206,14 +206,15 @@ class _CollectionItemState extends State<CollectionItem> {
                     ),
                   ),
                   SizedBox(height: 3.w),
-                  Text(
-                    "-${"${bean.photoGroupResp?.remark}"}-",
-                    style: TextStyle(
-                      color: const Color(0xFF191919),
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w500,
+                  if (bean.photoGroupResp?.remark?.isNotEmpty == true)
+                    Text(
+                      "-${bean.photoGroupResp?.remark ?? ''}-",
+                      style: TextStyle(
+                        color: const Color(0xFF191919),
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
                   SizedBox(height: 14.w),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.w),
