@@ -2,18 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/src/form_data.dart' as ffff;
+import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
 import 'package:flutter_app_update/azhon_app_update.dart';
 import 'package:flutter_app_update/update_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/main.dart';
+import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/network/network_util.dart';
@@ -52,7 +53,7 @@ class HandleTool {
   String recordDate = "";
 
   String channel = "android";
-  String headImg = "";
+  // String headImg = "";
 
   // Map<String, dynamic> configData = <String, dynamic>{
   //   "QWYHXY": "",
@@ -499,42 +500,61 @@ class HandleTool {
     return base64Image;
   }
 
-  void checkImgAndSave(String? path, {void Function()? success}) async {
+  void checkImgAndSave(String? path,
+      {void Function(String headImageUrl)? success}) async {
     if (path == null) {
       return;
     }
     if (path.isNotEmpty == true) {
       // getApplicationCacheDirectory()
 
-      final cacheDir = await getApplicationCacheDirectory();
-      File old = File(path);
-      final fileExtension = extension(Uri.parse(path).path);
-      final myHeadImg = "my_ai_www_head$fileExtension";
-      final filePath = '${cacheDir.path}/$myHeadImg';
-      old.copySync(filePath);
-      SpUtils.setString("my_ai_head", filePath);
-      Log.e("filePath:$filePath");
-      File xx = File(filePath);
-      Log.e("xx:${xx.existsSync()}");
-      HandleTool.instance.headImg = filePath;
-      // CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      final formData = ffff.FormData.fromMap({
+        "file": await ffff.MultipartFile.fromFile(path),
+      });
+      final bean = await HandleTool.instance.QDSUpload<UploadBean>(
+          Api.uploadFile,
+          params: formData,
+          onModel: (v) => UploadBean.fromJson(v));
+      if (bean == null) return;
+
+      HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
+          isShowProgress: true, success: (isSuccess, code, message, results) {
+        if (isSuccess == true && results.isNotEmpty) {
+          success?.call(bean.url ?? '');
+        } else {
+          CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+        }
+      });
+
+      // final cacheDir = await getApplicationCacheDirectory();
+      // File old = File(path);
+      // final fileExtension = extension(Uri.parse(path).path);
+      // final myHeadImg = "my_ai_www_head$fileExtension";
+      // final filePath = '${cacheDir.path}/$myHeadImg';
+      // old.copySync(filePath);
+      // SpUtils.setString("my_ai_head", filePath);
+      // Log.e("filePath:$filePath");
+      // File xx = File(filePath);
+      // Log.e("xx:${xx.existsSync()}");
+      // HandleTool.instance.headImg = filePath;
+      // // CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      // // return;
+      // final imgBase64 = await _imageToBase64(path);
+
+      // final params = {"imgBase64": imgBase64};
+      // HandleTool.instance.SMWPost(
+      //   Api.imgHaveFace,
+      //   params: params,
+      //   success: (isSuccess, code, message, results) {
+      //     if (isSuccess == true && results.isNotEmpty) {
+      //       success?.call();
+      //     } else {
+      //       CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      //     }
+      //   },
+      // );
+
       // return;
-      final imgBase64 = await _imageToBase64(path);
-
-      final params = {"imgBase64": imgBase64};
-      HandleTool.instance.SMWPost(
-        Api.imgHaveFace,
-        params: params,
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            success?.call();
-          } else {
-            CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
-          }
-        },
-      );
-
-      return;
     }
   }
 }

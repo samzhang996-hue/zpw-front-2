@@ -38,22 +38,22 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
   Widget initDefaultBuild(BuildContext context);
 
   /// 导航栏
-  Widget YAppBar({
-    String? title,
-    Color? navBarTitleColor,
-    Color? bgColor,
-    bool canBack = true,
-    bool divider = false,
-    bool homePage = false,
-    Widget? left,
-    Widget? right,
-    Widget? widget,
-    String? statubar,
-    double? RightValue,
-    Function? leftClick,
-    String? navBar,
-    double rightPadding = 20,
-  }) {
+  Widget YAppBar(
+      {String? title,
+      Color? navBarTitleColor,
+      Color? bgColor,
+      bool canBack = true,
+      bool divider = false,
+      bool homePage = false,
+      Widget? left,
+      Widget? right,
+      Widget? widget,
+      String? statubar,
+      double? RightValue,
+      Function? leftClick,
+      String? navBar,
+      double rightPadding = 20,
+      bool isMake = false}) {
     var screenSize = yScreenSize(navigatorKey.currentContext!);
     double statubarHeight = yStatubarHeight(navigatorKey.currentContext!);
     double navBarHeight = yNavBarHeight();
@@ -68,7 +68,7 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
           ),
           Stack(children: <Widget>[
             Container(
-              padding: const EdgeInsets.only(left: 10),
+              padding: EdgeInsets.only(left: isMake ? 0 : 10),
               color: bgColor ?? Colors.white,
               height: navBarHeight,
               child: Row(
@@ -104,8 +104,12 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
                         SizedBox(
                           width: homePage == true ? 50 : 0,
                         ),
-                        YTitleWidget(title ?? "",
-                            navBarTitleColor: navBarTitleColor ?? Colors.black),
+                        ColoredBox(
+                          color: Colors.red,
+                          child: YTitleWidget(title ?? "",
+                              navBarTitleColor:
+                                  navBarTitleColor ?? Colors.black),
+                        ),
                         right != null
                             ? Container(
                                 alignment: Alignment.center,

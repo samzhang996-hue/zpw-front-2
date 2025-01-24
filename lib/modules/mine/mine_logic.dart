@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/utils/buy_engine.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -9,15 +12,15 @@ import 'mine_state.dart';
 class MineLogic extends BaseGetxController {
   final MineState state = MineState();
 
-  void updateHeadImage() {
-    state.headImage = HandleTool.instance.headImg;
-    update();
-  }
-
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    if (Platform.isIOS) {
+      final buyEngin = BuyEngin();
+      buyEngin.initializeInAppPurchase();
+      buyEngin.resumePurchase();
+    }
     getUserInfo();
   }
 

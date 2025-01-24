@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/src/form_data.dart' as ffff;
-import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,13 +6,11 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
@@ -39,13 +33,13 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   late final _show = false.obs;
 
-  late final _showHeadImg = true.obs;
+  // late final _showHeadImg = true.obs;
 
   late VideoPlayerController? _controller;
 
   bool get _isNotEmptyVideoUrl => widget.videoUrl.isNotEmpty;
 
-  late final _myHeadImg = HandleTool.instance.headImg.obs;
+  late final _myHeadImg = ''.obs;
 
   void _toHistory() async {
     _controller?.pause();
@@ -211,35 +205,39 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       return;
     }
 
-    if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
+    if (_myHeadImg.value.isEmpty) {
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
       if (res?.isNotEmpty == true) {
         _myHeadImg.value = res!;
-        if (_myHeadImg.isNotEmpty) {
-          _showHeadImg.value = true;
-        }
-        return;
-      } else {
-        return;
       }
     }
 
-    if (!HandleTool.instance.isMember) {
-      Get.to(() => VipPage());
-      return;
-    }
+    // if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
+    //   final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+    //   if (res?.isNotEmpty == true) {
+    //     _myHeadImg.value = res!;
+    //     if (_myHeadImg.isNotEmpty) {
+    //       _showHeadImg.value = true;
+    //     }
+    //     return;
+    //   } else {
+    //     return;
+    //   }
+    // }
 
-    final formData = ffff.FormData.fromMap({
-      "file": await ffff.MultipartFile.fromFile(_myHeadImg.value),
-    });
-    final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
-        params: formData, onModel: (v) => UploadBean.fromJson(v));
-    if (bean == null) return;
-    Log.e("bean:${bean.url}");
+    // final formData = ffff.FormData.fromMap({
+    //   "file": await ffff.MultipartFile.fromFile(_myHeadImg.value),
+    // });
+    // final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
+    //     params: formData, onModel: (v) => UploadBean.fromJson(v));
+    // if (bean == null) return;
+    // Log.e("bean:${bean.url}");
+    // Log.e("_myHeadImg.value:${_myHeadImg.value}");
+    // return;
     _show.value = false;
     final params = {
       "funcId": widget.funcId,
-      "imgUrls": [bean.url],
+      "imgUrls": [_myHeadImg.value],
       // "prompt": "",
     };
     HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params,
@@ -254,37 +252,37 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _uploadNewHeadImg() async {
-    if (!HandleTool.instance.isMember) {
-      Get.to(() => VipPage());
-      return;
-    }
+    // if (!HandleTool.instance.isMember) {
+    //   Get.to(() => VipPage());
+    //   return;
+    // }
 
-    final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+    // final res = await Get.to<String>(() => Photo_listPage(isNew: false));
 
-    Log.e("res:$res");
-    if (res?.isNotEmpty == true) {
-      _myHeadImg.value = HandleTool.instance.headImg;
-      if (_myHeadImg.isNotEmpty) {
-        _showHeadImg.value = true;
-      }
-      setState(() {});
-      return;
-    }
+    // Log.e("res:$res");
+    // if (res?.isNotEmpty == true) {
+    //   _myHeadImg.value = res ?? '';
+    //   if (_myHeadImg.isNotEmpty) {
+    //     // _showHeadImg.value = true;
+    //   }
+    //   setState(() {});
+    //   return;
+    // }
 
-    _myHeadImg.value = HandleTool.instance.headImg;
+    // _myHeadImg.value = HandleTool.instance.headImg;
   }
 
   void _closeHeadImg() {
-    _showHeadImg.value = false;
+    // _showHeadImg.value = false;
     // _myHeadImg.value = "";
   }
 
   void _checkImage() {
-    File file = File(_myHeadImg.value);
-    bool isExists = file.existsSync();
-    if (!isExists) {
-      _showHeadImg.value = false;
-    }
+    // File file = File(_myHeadImg.value);
+    // bool isExists = file.existsSync();
+    // if (!isExists) {
+    //   _showHeadImg.value = false;
+    // }
   }
 
   @override
@@ -322,6 +320,49 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
         // alignment: Alignment.center,
         children: [
           YAppBar(
+            widget: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.red,
+                    alignment: Alignment.topCenter,
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: _toHistory,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "my_work_ic.png".make,
+                        width: 22.w,
+                        height: 22.w,
+                      ),
+                      Text(
+                        "我的作品",
+                        style: TextStyle(
+                          color: const Color(0xFF191919),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            isMake: true,
             title: widget.title,
             rightPadding: 16.w,
             right: GestureDetector(
@@ -342,7 +383,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                       fontWeight: FontWeight.w600,
                       fontSize: 14.sp,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -417,7 +458,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.w),
                                     child: QdsImage(
-                                      HandleTool.instance.headImg,
+                                      _myHeadImg.value,
                                       69.w,
                                       94.w,
                                     ),
@@ -536,136 +577,136 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             right: 0,
             bottom: 0,
             child: Container(
-              height: 214.w,
+              height: 120.w,
               width: 1.sw,
               decoration: const BoxDecoration(color: Colors.transparent),
               child: Column(
                 children: [
                   // const Spacer(),
-                  Obx(
-                    () => SizedBox(
-                      width: 1.sw,
-                      height: 76.w,
-                      child: _showHeadImg.isFalse
-                          ? Center(
-                              child: GestureDetector(
-                                onTap: _uploadNewHeadImg,
-                                behavior: HitTestBehavior.opaque,
-                                child: Image.asset(
-                                  "no_head_img.png".make,
-                                  width: 76.w,
-                                  height: 76.w,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
-                          : Center(
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  if (_myHeadImg.isNotEmpty)
-                                    Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                          width: 72.w,
-                                          height: 72.w,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
-                                            shape: BoxShape.circle,
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF2EB8),
-                                                Color(0xFFFF2E2E)
-                                              ],
-                                              begin: Alignment
-                                                  .centerLeft, // 渐变的起始点
-                                              end: Alignment
-                                                  .centerRight, // 渐变的结束点
-                                            ),
-                                          ),
-                                        ),
-                                        ClipOval(
-                                          child: Image.file(
-                                            File(_myHeadImg.value),
-                                            width: 68.w,
-                                            height: 68.w,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  else
-                                    GestureDetector(
-                                      onTap: _uploadNewHeadImg,
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Image.asset(
-                                        "no_head_img.png".make,
-                                        width: 76.w,
-                                        height: 76.w,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  Obx(
-                                    () => Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: Visibility(
-                                        visible: _showHeadImg.isTrue &&
-                                            HandleTool
-                                                .instance.headImg.isNotEmpty,
-                                        child: GestureDetector(
-                                          onTap: _closeHeadImg,
-                                          behavior: HitTestBehavior.opaque,
-                                          child: Image.asset(
-                                            "make_close.png".make,
-                                            width: 18.w,
-                                            height: 18.w,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: -5.w,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: _uploadNewHeadImg,
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Container(
-                                        width: 76.w,
-                                        height: 21.w,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12.w),
-                                          gradient: const LinearGradient(
-                                            colors: [
-                                              Color(0xFFFF2EB8),
-                                              Color(0xFFFF2E2E)
-                                            ],
-                                            begin:
-                                                Alignment.centerLeft, // 渐变的起始点
-                                            end:
-                                                Alignment.centerRight, // 渐变的结束点
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: CommText(
-                                            text: "上传新头像",
-                                            textColor: const Color(0xFFFFFFFF),
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                    ),
-                  ),
-                  SizedBox(height: 16.w),
+                  // Obx(
+                  //   () => SizedBox(
+                  //     width: 1.sw,
+                  //     height: 76.w,
+                  //     child: _showHeadImg.isFalse
+                  //         ? Center(
+                  //             child: GestureDetector(
+                  //               onTap: _uploadNewHeadImg,
+                  //               behavior: HitTestBehavior.opaque,
+                  //               child: Image.asset(
+                  //                 "no_head_img.png".make,
+                  //                 width: 76.w,
+                  //                 height: 76.w,
+                  //                 fit: BoxFit.cover,
+                  //               ),
+                  //             ),
+                  //           )
+                  //         : Center(
+                  //             child: Stack(
+                  //               clipBehavior: Clip.none,
+                  //               children: [
+                  //                 if (_myHeadImg.isNotEmpty)
+                  //                   Stack(
+                  //                     alignment: Alignment.center,
+                  //                     children: [
+                  //                       Container(
+                  //                         width: 72.w,
+                  //                         height: 72.w,
+                  //                         decoration: const BoxDecoration(
+                  //                           color: Colors.grey,
+                  //                           shape: BoxShape.circle,
+                  //                           gradient: LinearGradient(
+                  //                             colors: [
+                  //                               Color(0xFFFF2EB8),
+                  //                               Color(0xFFFF2E2E)
+                  //                             ],
+                  //                             begin: Alignment
+                  //                                 .centerLeft, // 渐变的起始点
+                  //                             end: Alignment
+                  //                                 .centerRight, // 渐变的结束点
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                       ClipOval(
+                  //                         child: Image.file(
+                  //                           File(_myHeadImg.value),
+                  //                           width: 68.w,
+                  //                           height: 68.w,
+                  //                           fit: BoxFit.cover,
+                  //                         ),
+                  //                       ),
+                  //                     ],
+                  //                   )
+                  //                 else
+                  //                   GestureDetector(
+                  //                     onTap: _uploadNewHeadImg,
+                  //                     behavior: HitTestBehavior.opaque,
+                  //                     child: Image.asset(
+                  //                       "no_head_img.png".make,
+                  //                       width: 76.w,
+                  //                       height: 76.w,
+                  //                       fit: BoxFit.cover,
+                  //                     ),
+                  //                   ),
+                  //                 Obx(
+                  //                   () => Positioned(
+                  //                     top: 0,
+                  //                     right: 0,
+                  //                     child: Visibility(
+                  //                       visible: _showHeadImg.isTrue &&
+                  //                           HandleTool
+                  //                               .instance.headImg.isNotEmpty,
+                  //                       child: GestureDetector(
+                  //                         onTap: _closeHeadImg,
+                  //                         behavior: HitTestBehavior.opaque,
+                  //                         child: Image.asset(
+                  //                           "make_close.png".make,
+                  //                           width: 18.w,
+                  //                           height: 18.w,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //                 Positioned(
+                  //                   bottom: -5.w,
+                  //                   right: 0,
+                  //                   child: GestureDetector(
+                  //                     onTap: _uploadNewHeadImg,
+                  //                     behavior: HitTestBehavior.opaque,
+                  //                     child: Container(
+                  //                       width: 76.w,
+                  //                       height: 21.w,
+                  //                       decoration: BoxDecoration(
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(12.w),
+                  //                         gradient: const LinearGradient(
+                  //                           colors: [
+                  //                             Color(0xFFFF2EB8),
+                  //                             Color(0xFFFF2E2E)
+                  //                           ],
+                  //                           begin:
+                  //                               Alignment.centerLeft, // 渐变的起始点
+                  //                           end:
+                  //                               Alignment.centerRight, // 渐变的结束点
+                  //                         ),
+                  //                       ),
+                  //                       child: Center(
+                  //                         child: CommText(
+                  //                           text: "上传新头像",
+                  //                           textColor: const Color(0xFFFFFFFF),
+                  //                           fontSize: 12.sp,
+                  //                           fontWeight: FontWeight.w500,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //   ),
+                  // ),
+                  SizedBox(height: 12.w),
                   Expanded(
                     child: Container(
                       width: 1.sw,
@@ -673,7 +714,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                       color: Colors.white,
                       child: Column(
                         children: [
-                          const Spacer(),
+                          const Spacer(flex: 2),
                           GestureDetector(
                             onTap: _make,
                             behavior: HitTestBehavior.opaque,
@@ -694,7 +735,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                               ),
                             ),
                           ),
-                          const Spacer(),
+                          const Spacer(flex: 3),
                         ],
                       ),
                     ),

@@ -67,7 +67,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
   }
 
   void _uploadImg(String? path) async {
-    HandleTool.instance.checkImgAndSave(path, success: () {
+    HandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
       Log.e("widget.isNew:${widget.isNew}");
       if (path == null) return;
       if (widget.isNew) {
@@ -77,7 +77,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
           Get.offAll(() => const MainPage());
         }
       } else {
-        Get.back(result: path);
+        Get.back(result: headImageUrl);
       }
     });
 
