@@ -12,6 +12,16 @@
         "--target",
         "lib/main.dart"
       ]
+    },
+    {
+      "name": "AIJL001-ios",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_development.dart",
+      "args": [
+        "--target",
+        "lib/main.dart"
+      ]
     }
   ],
   "compounds": []
