@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gradient_borders/gradient_borders.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
@@ -87,13 +88,52 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
 
   @override
   Widget initDefaultBuild(BuildContext context) {
-    return Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: Image.asset(
-          "splash.png".comm,
-          fit: BoxFit.fill,
-        ));
+    return Stack(
+      children: [
+        Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: Image.asset("splash.png".comm, fit: BoxFit.fill),
+        ),
+        Positioned(
+          bottom: 20,
+          width: Get.width,
+          child: Center(
+            child: Column(
+              children: [
+                const Text('应用启动中', style: TextStyle(color: Colors.white, fontSize: 14)),
+                const SizedBox(height: 10),
+                Container(
+                  width: 256,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(21),
+                    border: const GradientBoxBorder(gradient: LinearGradient(colors: [Colors.white, Colors.white]), width: 3),
+                  ),
+                  height: 20,
+                  alignment: Alignment.centerLeft,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Obx(
+                        () => AnimatedContainer(
+                          width: constraints.maxWidth * logic.progress.value,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(21),
+                            gradient: const LinearGradient(colors: [Colors.white, Colors.white]),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
     // return Container(
     //   height: double.infinity,
     //   width: double.infinity,
@@ -136,10 +176,7 @@ class UserAgreementDialog extends GetWidget {
                 padding: EdgeInsets.all(16.0),
                 child: Text(
                   '个人信息保护',
-                  style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
-                      color: ColorPlate.sixThreeColor),
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: ColorPlate.sixThreeColor),
                 ),
               ),
             ),
@@ -150,8 +187,7 @@ class UserAgreementDialog extends GetWidget {
                   children: [
                     const TextSpan(
                       text: "欢迎使用本产品，在使用产品服务前，请仔细阅读并理解",
-                      style: TextStyle(
-                          fontSize: 14, color: ColorPlate.sixSixColor),
+                      style: TextStyle(fontSize: 14, color: ColorPlate.sixSixColor),
                     ),
                     TextSpan(
                       text: "《隐私政策》",
@@ -200,10 +236,8 @@ class UserAgreementDialog extends GetWidget {
                         },
                     ),
                     const TextSpan(
-                      text:
-                          "为了给你提供更好的服务，我们将会向您申请一下权限和信息：\n1.为了帮您统计设备维度数据分析、保障软件服务的正常运行，我们需要申请获取设备信息，日志信息。\n2.我们可能会申请读取设写入手机存储权限，用于下载及缓存相关文件；相机与录音权限，用于拍摄功能。\n3.以上权限以及社戏爱你个头。相册、存储空间等敏感权限均不会默认或强制开启收集信息。\n4.我们尊重你的选择权，同时我们也为你提供注销、投诉渠道。",
-                      style: TextStyle(
-                          fontSize: 14, color: ColorPlate.sixSixColor),
+                      text: "为了给你提供更好的服务，我们将会向您申请一下权限和信息：\n1.为了帮您统计设备维度数据分析、保障软件服务的正常运行，我们需要申请获取设备信息，日志信息。\n2.我们可能会申请读取设写入手机存储权限，用于下载及缓存相关文件；相机与录音权限，用于拍摄功能。\n3.以上权限以及社戏爱你个头。相册、存储空间等敏感权限均不会默认或强制开启收集信息。\n4.我们尊重你的选择权，同时我们也为你提供注销、投诉渠道。",
+                      style: TextStyle(fontSize: 14, color: ColorPlate.sixSixColor),
                     ),
                   ],
                 ),
@@ -221,10 +255,7 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '同意并继续',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     onPressed: () {
                       Get.back(result: true);
@@ -241,10 +272,7 @@ class UserAgreementDialog extends GetWidget {
                   child: TextButton(
                     child: const Text(
                       '不同意',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffB8B8B8)),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xffB8B8B8)),
                     ),
                     onPressed: () {
                       Get.back(result: false);
