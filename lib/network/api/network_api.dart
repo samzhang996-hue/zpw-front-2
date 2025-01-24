@@ -34,7 +34,7 @@ class Api {
   /// 获取vip页面数据
   static const String vip_getVipHome = "/center/getVipShowMsg";
 
-  static const String getFuncDetail = "/photoFunc/getFuncDetail?id=1";
+  static const String getFuncDetail = "/photoFunc/getFuncDetail";
 
   static const String delete = "/photoRecord/delete";
 

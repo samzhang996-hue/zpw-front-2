@@ -132,6 +132,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             var tags = data["tags"] ?? "";
             var oldUrl = data["oldUrl"] ?? "";
             int id = data["id"] ?? 0;
+            int funcId = data["funcId"] ?? 0;
             Log.d("data111--$data");
             return InkWell(
               child: Container(
@@ -201,14 +202,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                     textColor: Colors.white,
                                   ))),
                               onTap: () {
-                                Get.to(
-                                  () => FaceMakePage(
-                                    title: tags,
-                                    funcId: id,
-                                    imageUrl: oldUrl,
-                                    videoUrl: "",
-                                  ),
-                                );
+                                logic.getFuncDetail(funcId);
+
                               },
                             ),
                           )

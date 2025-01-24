@@ -1,7 +1,8 @@
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/log_utils.dart';
-
+import 'package:get/get.dart';
 import 'works_state.dart';
 
 class WorksLogic extends BaseGetxController {
@@ -24,8 +25,30 @@ class WorksLogic extends BaseGetxController {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         state.records =data["records"];
+        Log.d("get----${state.records}");
         update();
       }
     });
+  }
+  getFuncDetail(int id) {
+    get("${Api.getFuncDetail}?id=$id", isShowProgress: true,
+        success: (isSuccess, code, message, results) async {
+          if (isSuccess == true && results.isNotEmpty) {
+            Map data = results.first as Map;
+            String showImgGif = data["showImgGif"];
+            String funcName = data["tags"] ?? "";
+            String videoUrl = data["videoUrl"] ?? "";
+            Log.d("fun---$data");
+            Get.to(
+                  () => FaceMakePage(
+                title: funcName,
+                funcId: id,
+                imageUrl: showImgGif,
+                videoUrl: videoUrl,
+              ),
+            );
+            update();
+          }
+        });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -32,5 +33,26 @@ class DetailLogic extends BaseGetxController {
         Get.back(result: "123");
       }
     });
+  }
+  getFuncDetail(int id) {
+    get("${Api.getFuncDetail}?id=$id", isShowProgress: true,
+        success: (isSuccess, code, message, results) async {
+          if (isSuccess == true && results.isNotEmpty) {
+            Map data = results.first as Map;
+            String showImgGif = data["showImgGif"];
+            String funcName = data["tags"] ?? "";
+            String videoUrl = data["videoUrl"] ?? "";
+            Log.d("fun---$data");
+            Get.to(
+                  () => FaceMakePage(
+                title: funcName,
+                funcId: id,
+                imageUrl: showImgGif,
+                videoUrl: videoUrl,
+              ),
+            );
+            update();
+          }
+        });
   }
 }

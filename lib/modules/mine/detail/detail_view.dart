@@ -56,10 +56,13 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
 
   Widget _buildContent() {
     int worksType = logic.state.worksType.value;
+    Log.d("type----$worksType");
+    Log.d("type----${logic.state.returnUrl.value}");
 
     if (worksType == 0) {
       return QdsImage(
-        logic.state.returnUrl.value,
+        // logic.state.returnUrl.value,
+        "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
         double.infinity,
         double.infinity,
       );
@@ -90,14 +93,16 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                   right: InkWell(
                       onTap: () {
                         _controller.pause();
-                        Get.to(
-                          () => FaceMakePage(
-                            title: state.tags.value,
-                            funcId: state.id.value,
-                            imageUrl: state.returnUrl.value,
-                            videoUrl: "",
-                          ),
-                        );
+                        Log.d("pause---${state.returnUrl.value}----");
+                        logic.getFuncDetail(state.id.value);
+                        // Get.to(
+                        //   () => FaceMakePage(
+                        //     title: state.tags.value,
+                        //     funcId: state.id.value,
+                        //     imageUrl: "",
+                        //     videoUrl: state.returnUrl.value,
+                        //   ),
+                        // );
                       },
                       child: CommText(
                         text: "再次创作",
