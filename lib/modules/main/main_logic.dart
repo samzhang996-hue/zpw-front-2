@@ -17,13 +17,15 @@ class MainLogic extends BaseGetxController {
   @override
   void onInit() {
     super.onInit();
+  }
 
+  @override
+  void onReady() {
+    super.onReady();
     // HandleTool.instance.packagesGetForcePackage();
-    Future.delayed((const Duration(microseconds: 200)), () {
-      if (!HandleTool.instance.isMember) {
-        Get.to(() => VipPage());
-      }
-    });
+    if (!HandleTool.instance.isMember) {
+      Get.to(() => VipPage());
+    }
   }
 
   // 刷新VIP状态，更新以及页面数据集状态

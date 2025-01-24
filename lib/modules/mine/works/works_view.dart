@@ -7,7 +7,6 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/modules/main/main_logic.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -26,7 +25,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
   int selectedIndex = 1; // 初始选中第一个选项
 
   void selectTab(int index) {
-    state.index=index;
+    state.index = index;
     setState(() {
       selectedIndex = index;
     });
@@ -47,25 +46,25 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
         child: Column(
           children: [
             YAppBar(title: "作品"),
-            Container(
-              height: 40.w,
-              width: 200.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  buildTabItem(
-                    text: "视频",
-                    isSelected: selectedIndex == 1,
-                    onTap: () => selectTab(1),
-                  ),
-                  buildTabItem(
-                    text: "图片",
-                    isSelected: selectedIndex == 0,
-                    onTap: () => selectTab(0),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   height: 40.w,
+            //   width: 200.w,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //     children: [
+            //       buildTabItem(
+            //         text: "视频",
+            //         isSelected: selectedIndex == 1,
+            //         onTap: () => selectTab(1),
+            //       ),
+            //       buildTabItem(
+            //         text: "图片",
+            //         isSelected: selectedIndex == 0,
+            //         onTap: () => selectTab(0),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             _item()
           ],
         ),
@@ -203,8 +202,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                     textColor: Colors.white,
                                   ))),
                               onTap: () {
-                                logic.getFuncDetail(funcId,id);
-
+                                logic.getFuncDetail(funcId, id);
                               },
                             ),
                           )

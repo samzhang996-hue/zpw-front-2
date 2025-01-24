@@ -21,7 +21,7 @@ import 'splash_state.dart';
 
 class SplashLogic extends BaseGetxController {
   final SplashState state = SplashState();
-
+  int requestMax = 0;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -92,13 +92,27 @@ class SplashLogic extends BaseGetxController {
     Log.i("requestMax====>${dataMap}");
     Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
         success: (isSuccess, code, message, results) async {
+      requestMax = requestMax + 1;
       if (isSuccess == true && results.isNotEmpty) {
+        requestMax = 100;
         Map data = results.first as Map;
         SpUtils.setString("token", data['token'] ?? "");
         SpUtils.setBool("isAgreed", true);
         Log.d("res----${data}");
         Get.put(VipLogic());
         getUserInfo();
+      } else {
+        /// ------->  这里单独处理已选
+        if (code == -1111) {
+          if (requestMax > 30) {
+            ///请求最大限制
+            HandleTool.showAppToastText("请检查网络连接或者网络授权");
+          } else {
+            Future.delayed(const Duration(seconds: 1), () {
+              _onLogin(channel, deviceId, oaid, isShowProgress: false);
+            });
+          }
+        }
       }
     });
   }

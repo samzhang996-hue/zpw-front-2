@@ -62,19 +62,19 @@ class _MainPageState extends State<MainPage> {
                     ),
                     label: "视频",
                   ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'un_pic.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    activeIcon: Image.asset(
-                      'pic.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    label: "图片",
-                  ),
+                  // BottomNavigationBarItem(
+                  //   icon: Image.asset(
+                  //     'un_pic.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   activeIcon: Image.asset(
+                  //     'pic.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   label: "图片",
+                  // ),
                   // BottomNavigationBarItem(
                   //   icon: Image.asset(
                   //     'un_tx.png'.tabbar,

@@ -20,7 +20,8 @@ class VipPage extends BaseStatefulWidget {
   BaseWidgetState<VipPage> getState() => _VipPageState();
 }
 
-class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver {
+class _VipPageState extends BaseWidgetState<VipPage>
+    with WidgetsBindingObserver {
   final logic = Get.find<VipLogic>();
   final state = Get.find<VipLogic>().state;
   late VideoPlayerController _controller;
@@ -65,7 +66,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
   @override
   void dispose() {
     _controller.dispose();
-    Log.e("delete.VipPage");
+    logic.canBack = false;
     // Get.delete<VipPage>();
     super.dispose();
     WidgetsBinding.instance.removeObserver(this); // 移除监听器
@@ -86,8 +87,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           rk8 = state.vipBean.vipList?[state.itemIndex].remark8;
           rk10 = state.vipBean.vipList?[state.itemIndex].remark10;
           // logic.onSatePay(state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.defaultPayKeyType ?? 0);
-          state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-          state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+          state.isWx =
+              state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ??
+                  0;
+          state.isZfb = state
+                  .vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ??
+              0;
           Log.d("pay---1---${state.statePay.value}");
         } else {
           rk9 = "";
@@ -108,12 +113,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                     color: Color(0xff000000),
                     child: _controller.value.isInitialized
                         ? AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    )
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          )
                         : Container(
-                      child: Center(child: CircularProgressIndicator()),
-                    ), // 使用屏幕高度的百分比
+                            child: Center(child: CircularProgressIndicator()),
+                          ), // 使用屏幕高度的百分比
                   ),
                   Positioned(
                     bottom: 0,
@@ -154,14 +159,16 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             child: Container(
                               margin: EdgeInsets.only(top: 10.w, bottom: 10.w),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Visibility(
                                       visible: state.isZfb == 1,
                                       child: InkWell(
                                         onTap: () {
                                           logic.onSatePay(0);
-                                          Log.d("pay---${state.statePay.value}");
+                                          Log.d(
+                                              "pay---${state.statePay.value}");
                                         },
                                         child: Container(
                                           height: 47.w,
@@ -185,7 +192,9 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                               ),
                                               Obx(() {
                                                 return Image.asset(
-                                                  state.statePay.value != 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  state.statePay.value != 1
+                                                      ? "checked.png".vip
+                                                      : "un_check.png".vip,
                                                   width: 14.w,
                                                 );
                                               }),
@@ -221,7 +230,9 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                               ),
                                               Obx(() {
                                                 return Image.asset(
-                                                  state.statePay.value == 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  state.statePay.value == 1
+                                                      ? "checked.png".vip
+                                                      : "un_check.png".vip,
                                                   width: 14.w,
                                                 );
                                               }),
@@ -235,7 +246,8 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           ),
                           InkWell(
                             onTap: () {
-                              var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
+                              var vp = state.vipBean.vipList?[state.itemIndex]
+                                  .vipPriceOutput;
                               state.goodsId = vp?.id ?? 0;
                               if (state.statePay.value == 1) {
                                 state.payKeyType = 1;
@@ -251,14 +263,25 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                   return;
                                 }
                               }
-                              state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-                              state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+                              state.isWx = state
+                                      .vipBean
+                                      .vipList?[state.itemIndex]
+                                      .vipPriceOutput
+                                      ?.isWxPay ??
+                                  0;
+                              state.isZfb = state
+                                      .vipBean
+                                      .vipList?[state.itemIndex]
+                                      .vipPriceOutput
+                                      ?.isZfbPay ??
+                                  0;
                               if (!state.isCheck.value) {
                                 CustomSureVipDialogUtils.showCustomDialog(
                                     context: context,
                                     onPressed: () {
                                       if (Platform.isIOS) {
-                                        logic.buyEngin.buyProduct(vp?.iosProductId);
+                                        logic.buyEngin
+                                            .buyProduct(vp?.iosProductId);
                                         return;
                                       }
                                       logic.onSelected(true);
@@ -271,17 +294,20 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             child: Stack(
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(left: 17.w, right: 17.w, top: 17.w),
+                                  margin: EdgeInsets.only(
+                                      left: 17.w, right: 17.w, top: 17.w),
                                   height: 54.w,
                                   width: double.infinity,
-                                  decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xffFF2E7E),
+                                      borderRadius: BorderRadius.circular(27)),
                                   child: Center(
                                       child: CommText(
-                                        text: rk8,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold,
-                                        textColor: Colors.white,
-                                      )),
+                                    text: rk8,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                    textColor: Colors.white,
+                                  )),
                                 ),
                                 Visibility(
                                   visible: !(rk10 == ""),
@@ -292,7 +318,11 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                         child: Container(
                                           width: 183.w,
                                           height: 27.w,
-                                          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: AssetImage(
+                                                      "vip_btn_tip.png".vip),
+                                                  fit: BoxFit.cover)),
                                           child: CommText(
                                             text: rk10,
                                             fontSize: 13.sp,
@@ -307,14 +337,17 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(left: 20.w, top: 10.w, bottom: 25.w),
+                            margin: EdgeInsets.only(
+                                left: 20.w, top: 10.w, bottom: 25.w),
                             child: Row(
                               children: [
                                 InkWell(
                                   child: Row(
                                     children: [
                                       Image.asset(
-                                        state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                        state.isCheck.value
+                                            ? "checked.png".vip
+                                            : "un_check.png".vip,
                                         width: 14.w,
                                       ),
                                       CommText(
@@ -396,10 +429,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           if (HandleTool.instance.isMember) {
                             Get.back();
                           } else {
-                            if(state.vipBean==null||state.vipBean.vipPopList?.length==0){
+                            if (state.vipBean == null ||
+                                state.vipBean.vipPopList?.length == 0) {
                               Get.back();
-                            }else{
-                              CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                            } else {
+                              CustomExitVipDialogUtils2.showCustomDialog(
+                                  context: context, onPressed: () {});
                             }
                           }
                         },
@@ -468,7 +503,9 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           borderRadius: BorderRadius.circular(12.0),
                           color: Color(0xFF141414),
                           border: Border.all(
-                            color: isSelect ? Color(0xFFFF2E7E) : Colors.transparent,
+                            color: isSelect
+                                ? Color(0xFFFF2E7E)
+                                : Colors.transparent,
                             width: isSelect ? 2.0 : 0.0, // 你可以根据需要调整边框宽度
                           )),
                       child: Column(
@@ -492,14 +529,18 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                   child: CommText(
                                     text: "¥",
                                     fontSize: 13.sp,
-                                    textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
+                                    textColor: isSelect
+                                        ? Color(0xFFFF2E7E)
+                                        : Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 CommText(
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
-                                  textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
+                                  textColor: isSelect
+                                      ? Color(0xFFFF2E7E)
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
