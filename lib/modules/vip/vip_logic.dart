@@ -27,6 +27,8 @@ class VipLogic extends BaseGetxController {
   var _success = false;
   bool isAt = false;
 
+  bool _canBack = true;
+
   @override
   void onInit() {
     super.onInit();
@@ -43,7 +45,8 @@ class VipLogic extends BaseGetxController {
 
   @override
   void dispose() {
-    buyEngin.onCloseIos();
+    // buyEngin.onCloseIos();
+    _canBack = false;
     super.dispose();
   }
 
@@ -237,8 +240,12 @@ class VipLogic extends BaseGetxController {
             if (HandleTool.instance.isMember) {
               _conditionMet = true;
               if (_success == false) {
-                HandleTool.showAppToastText("您已成为会员");
-                Get.back();
+                if (click) {
+                  HandleTool.showAppToastText("您已成为会员");
+                }
+                if (_canBack) {
+                  Get.back();
+                }
               }
               _success = true;
               String phones = mineLogic.state.userInfoBean.userPhone ?? "";
