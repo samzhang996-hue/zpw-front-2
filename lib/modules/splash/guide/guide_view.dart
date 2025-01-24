@@ -7,9 +7,7 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
-import 'package:zpw/utils/log_utils.dart';
 
 import 'guide_logic.dart';
 
@@ -72,10 +70,6 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
               )),
             ),
             onTap: () {
-              Get.off(() => const MainPage());
-              Log.e("msg");
-              return;
-              // return;
               Get.bottomSheet(
                 Container(
                   width: double.infinity,

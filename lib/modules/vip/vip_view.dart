@@ -8,8 +8,6 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
-import 'package:zpw/modules/main/main_page.dart';
-import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
 import 'package:zpw/modules/vip/view/custom_exit_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -22,11 +20,10 @@ class VipPage extends BaseStatefulWidget {
   BaseWidgetState<VipPage> getState() => _VipPageState();
 }
 
-class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver {
+class _VipPageState extends BaseWidgetState<VipPage>
+    with WidgetsBindingObserver {
   final logic = Get.put(VipLogic());
-  final state = Get
-      .find<VipLogic>()
-      .state;
+  final state = Get.find<VipLogic>().state;
   late VideoPlayerController _controller;
 
   @override
@@ -89,8 +86,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           rk8 = state.vipBean.vipList?[state.itemIndex].remark8;
           rk10 = state.vipBean.vipList?[state.itemIndex].remark10;
           // logic.onSatePay(state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.defaultPayKeyType ?? 0);
-          state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-          state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+          state.isWx =
+              state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ??
+                  0;
+          state.isZfb = state
+                  .vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ??
+              0;
           Log.d("pay---1---${state.statePay.value}");
         } else {
           rk9 = "";
@@ -98,7 +99,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           rk10 = "";
         }
       }
-      return  WillPopScope(
+      return WillPopScope(
         child: Column(
           children: [
             Expanded(
@@ -111,12 +112,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                     color: Color(0xff000000),
                     child: _controller.value.isInitialized
                         ? AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    )
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          )
                         : Container(
-                      child: Center(child: CircularProgressIndicator()),
-                    ), // 使用屏幕高度的百分比
+                            child: Center(child: CircularProgressIndicator()),
+                          ), // 使用屏幕高度的百分比
                   ),
                   Positioned(
                     bottom: 0,
@@ -157,14 +158,16 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             child: Container(
                               margin: EdgeInsets.only(top: 10.w, bottom: 10.w),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Visibility(
                                       visible: state.isZfb == 1,
                                       child: InkWell(
                                         onTap: () {
                                           logic.onSatePay(0);
-                                          Log.d("pay---${state.statePay.value}");
+                                          Log.d(
+                                              "pay---${state.statePay.value}");
                                         },
                                         child: Container(
                                           height: 47.w,
@@ -188,15 +191,16 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                               ),
                                               Obx(() {
                                                 return Image.asset(
-                                                  state.statePay.value != 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  state.statePay.value != 1
+                                                      ? "checked.png".vip
+                                                      : "un_check.png".vip,
                                                   width: 14.w,
                                                 );
                                               }),
                                             ],
                                           ),
                                         ),
-                                      )
-                                  ),
+                                      )),
                                   Visibility(
                                     visible: state.isWx == 1,
                                     child: InkWell(
@@ -225,7 +229,9 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                               ),
                                               Obx(() {
                                                 return Image.asset(
-                                                  state.statePay.value == 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  state.statePay.value == 1
+                                                      ? "checked.png".vip
+                                                      : "un_check.png".vip,
                                                   width: 14.w,
                                                 );
                                               }),
@@ -239,11 +245,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           ),
                           InkWell(
                             onTap: () {
-                              var vp = state.vipBean.vipList?[state.itemIndex].vipPriceOutput;
+                              var vp = state.vipBean.vipList?[state.itemIndex]
+                                  .vipPriceOutput;
                               state.goodsId = vp?.id ?? 0;
-                              if(state.statePay.value==1){
+                              if (state.statePay.value == 1) {
                                 state.payKeyType = 1;
-                              }else{
+                              } else {
                                 state.payKeyType = vp?.defaultPayKeyType ?? 0;
                               }
                               var zfbType = vp?.defaultZfbPayKeyType ?? 0;
@@ -255,14 +262,25 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                   return;
                                 }
                               }
-                              state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
-                              state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
+                              state.isWx = state
+                                      .vipBean
+                                      .vipList?[state.itemIndex]
+                                      .vipPriceOutput
+                                      ?.isWxPay ??
+                                  0;
+                              state.isZfb = state
+                                      .vipBean
+                                      .vipList?[state.itemIndex]
+                                      .vipPriceOutput
+                                      ?.isZfbPay ??
+                                  0;
                               if (!state.isCheck.value) {
                                 CustomSureVipDialogUtils.showCustomDialog(
                                     context: context,
                                     onPressed: () {
                                       if (Platform.isIOS) {
-                                        logic.buyEngin.buyProduct(vp?.iosProductId);
+                                        logic.buyEngin
+                                            .buyProduct(vp?.iosProductId);
                                         return;
                                       }
                                       logic.onSelected(true);
@@ -275,17 +293,20 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             child: Stack(
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(left: 17.w, right: 17.w, top: 17.w),
+                                  margin: EdgeInsets.only(
+                                      left: 17.w, right: 17.w, top: 17.w),
                                   height: 54.w,
                                   width: double.infinity,
-                                  decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xffFF2E7E),
+                                      borderRadius: BorderRadius.circular(27)),
                                   child: Center(
                                       child: CommText(
-                                        text: rk8,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold,
-                                        textColor: Colors.white,
-                                      )),
+                                    text: rk8,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                    textColor: Colors.white,
+                                  )),
                                 ),
                                 Visibility(
                                   visible: !(rk10 == ""),
@@ -296,7 +317,11 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                         child: Container(
                                           width: 183.w,
                                           height: 27.w,
-                                          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: AssetImage(
+                                                      "vip_btn_tip.png".vip),
+                                                  fit: BoxFit.cover)),
                                           child: CommText(
                                             text: rk10,
                                             fontSize: 13.sp,
@@ -311,14 +336,17 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(left: 20.w, top: 10.w, bottom: 25.w),
+                            margin: EdgeInsets.only(
+                                left: 20.w, top: 10.w, bottom: 25.w),
                             child: Row(
                               children: [
                                 InkWell(
                                   child: Row(
                                     children: [
                                       Image.asset(
-                                        state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                        state.isCheck.value
+                                            ? "checked.png".vip
+                                            : "un_check.png".vip,
                                         width: 14.w,
                                       ),
                                       CommText(
@@ -362,51 +390,50 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                       ), // 使用屏幕高度的百分比
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      if(HandleTool.instance.isMember){
-                        Get.back();
-                      }else{
-                        CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
-                      }
-
-                      // if (state.type == 1) {
-                      //   Get.offAll(() => const MainPage());
-                      // } else {
-                      //   Get.back();
-                      // }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            width: 80.w,
-                            height: 30.w,
-                            margin: EdgeInsets.only(top: 44.w, left: 16.w),
-                            child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Image.asset(
-                                  "back.png".comm,
-                                  width: 16.w,
-                                ))),
-                        Visibility(
-                          visible: Platform.isIOS,
-                          child: GestureDetector(
-                            onTap: () {
-                              logic.click = true;
-                              logic.buyEngin.resumePurchase();
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 28.w, right: 16.w),
-                              child: const Text(
-                                "恢复购买",
-                                style: TextStyle(color: Colors.white),
-                              ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 80.w,
+                        height: 30.w,
+                        // color: Colors.red,
+                        padding: EdgeInsets.only(left: 16.w, top: 4),
+                        margin: EdgeInsets.only(top: 40.w, left: 0.w),
+                        child: GestureDetector(
+                          onTap: () {
+                            // Log.e("msg");
+                            if (HandleTool.instance.isMember) {
+                              Get.back();
+                            } else {
+                              CustomExitVipDialogUtils2.showCustomDialog(
+                                  context: context, onPressed: () {});
+                            }
+                          },
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Image.asset(
+                                "back.png".comm,
+                                width: 16.w,
+                              )),
+                        ),
+                      ),
+                      Visibility(
+                        visible: Platform.isIOS,
+                        child: GestureDetector(
+                          onTap: () {
+                            logic.click = true;
+                            logic.buyEngin.resumePurchase();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 28.w, right: 16.w),
+                            child: const Text(
+                              "恢复购买",
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -417,7 +444,6 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           return false; // 禁止通过物理返回按钮关闭页面,
         },
       );
-
     });
   }
 
@@ -455,7 +481,9 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           borderRadius: BorderRadius.circular(12.0),
                           color: Color(0xFF141414),
                           border: Border.all(
-                            color: isSelect ? Color(0xFFFF2E7E) : Colors.transparent,
+                            color: isSelect
+                                ? Color(0xFFFF2E7E)
+                                : Colors.transparent,
                             width: isSelect ? 2.0 : 0.0, // 你可以根据需要调整边框宽度
                           )),
                       child: Column(
@@ -479,14 +507,18 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                   child: CommText(
                                     text: "¥",
                                     fontSize: 13.sp,
-                                    textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
+                                    textColor: isSelect
+                                        ? Color(0xFFFF2E7E)
+                                        : Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 CommText(
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
-                                  textColor: isSelect ? Color(0xFFFF2E7E) : Colors.white,
+                                  textColor: isSelect
+                                      ? Color(0xFFFF2E7E)
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],

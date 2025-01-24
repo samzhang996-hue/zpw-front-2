@@ -321,6 +321,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
         children: [
           YAppBar(
             widget: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -329,25 +330,41 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                   child: Container(
                     width: 50,
                     height: 50,
-                    color: Colors.red,
-                    alignment: Alignment.topCenter,
+                    color: Colors.transparent,
+                    alignment: Alignment.topRight,
                     child: const Icon(
                       Icons.arrow_back_ios,
                       color: Colors.black,
                     ),
                   ),
                 ),
-                Spacer(),
                 Container(
-                  width: 100,
+                  width: 40,
                   height: 50,
-                  color: const Color.fromARGB(255, 149, 102, 99),
+                  color: Colors.transparent,
+                  alignment: Alignment.topLeft,
+                ),
+                const Spacer(),
+                Text(widget.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
+                const Spacer(),
+                Container(
+                  width: 90,
+                  height: 50,
+                  alignment: Alignment.topCenter,
+                  padding: EdgeInsets.only(top: 2),
+                  color: Colors.transparent,
                   child: GestureDetector(
                     onTap: _toHistory,
                     behavior: HitTestBehavior.opaque,
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
                           "my_work_ic.png".make,
@@ -368,7 +385,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                 )
               ],
             ),
-            // isMake: true,
+            isMake: true,
             title: widget.title,
             rightPadding: 16.w,
             right: GestureDetector(
