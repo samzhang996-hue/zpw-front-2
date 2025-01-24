@@ -337,32 +337,38 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: _toHistory,
-                  behavior: HitTestBehavior.opaque,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "my_work_ic.png".make,
-                        width: 22.w,
-                        height: 22.w,
-                      ),
-                      Text(
-                        "我的作品",
-                        style: TextStyle(
-                          color: const Color(0xFF191919),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
+                Spacer(),
+                Container(
+                  width: 100,
+                  height: 50,
+                  color: const Color.fromARGB(255, 149, 102, 99),
+                  child: GestureDetector(
+                    onTap: _toHistory,
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "my_work_ic.png".make,
+                          width: 22.w,
+                          height: 22.w,
                         ),
-                      ),
-                    ],
+                        Text(
+                          "我的作品",
+                          style: TextStyle(
+                            color: const Color(0xFF191919),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
             ),
-            isMake: true,
+            // isMake: true,
             title: widget.title,
             rightPadding: 16.w,
             right: GestureDetector(
