@@ -78,109 +78,119 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
   @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<DetailLogic>(builder: (logic) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Scaffold(
+          body: Container(
+              child: Stack(
+                alignment: Alignment.center,
         children: [
-          YAppBar(
-              title: state.tags.value,
-              right: InkWell(
-                  onTap: () {
-                    Get.to(
-                      () => FaceMakePage(
-                        title: state.tags.value,
-                        funcId: state.id.value,
-                        imageUrl: state.returnUrl.value,
-                        videoUrl: "",
+          Column(
+            children: [
+              YAppBar(
+                  title: state.tags.value,
+                  right: InkWell(
+                      onTap: () {
+                        _controller.pause();
+                        Get.to(
+                          () => FaceMakePage(
+                            title: state.tags.value,
+                            funcId: state.id.value,
+                            imageUrl: state.returnUrl.value,
+                            videoUrl: "",
+                          ),
+                        );
+                      },
+                      child: CommText(
+                        text: "再次创作",
+                        textColor: ColorPlate.themeColor,
+                        fontSize: 13.sp,
+                      ))),
+              // Expanded(child: _buildContent()),
+              _buildContent(),
+
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 90.w,
+              color: Colors.white,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    child: Container(
+                      height: 45.w,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: ColorPlate.themeColor),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 85.w,
+                          ),
+                          Image.asset(
+                            "down.png".mine,
+                            width: 28.w,
+                          ),
+                          CommText(
+                            text: "下载",
+                            textColor: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            width: 85.w,
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: CommText(
-                    text: "再次创作",
-                    textColor: ColorPlate.themeColor,
-                    fontSize: 13.sp,
-                  ))),
-          // Expanded(child: _buildContent()),
-          _buildContent(),
-          Container(
-            margin: EdgeInsets.only(
-                left: 16.w, right: 16.w, bottom: 20.w, top: 25.w),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                InkWell(
-                  child: Container(
-                    height: 45.w,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        color: ColorPlate.themeColor),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 85.w,
-                        ),
-                        Image.asset(
-                          "down.png".mine,
-                          width: 28.w,
-                        ),
-                        CommText(
-                          text: "下载",
-                          textColor: Colors.white,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(
-                          width: 85.w,
-                        ),
-                      ],
                     ),
+                    onTap: () {
+                      if (state.returnUrl.value.isNotEmpty) {
+                        downloadVideoToGallery(state.returnUrl.value);
+                      }
+                    },
                   ),
-                  onTap: () {
-                    if (state.returnUrl.value.isNotEmpty) {
-                      downloadVideoToGallery(state.returnUrl.value);
-                    }
-                  },
-                ),
-                SizedBox(
-                  width: 8.w,
-                ),
-                InkWell(
-                  onTap: () {
-                    logic.delete();
-                  },
-                  child: Container(
-                    height: 45.w,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        color: Color(0xffFFF1F6)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 24.w,
-                        ),
-                        Image.asset(
-                          "lj.png".mine,
-                          width: 28.w,
-                        ),
-                        CommText(
-                          text: "删除",
-                          textColor: Color(0xffFF0707),
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(
-                          width: 24.w,
-                        ),
-                      ],
+                  SizedBox(
+                    width: 8.w,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      logic.delete();
+                    },
+                    child: Container(
+                      height: 45.w,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Color(0xffFFF1F6)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 24.w,
+                          ),
+                          Image.asset(
+                            "lj.png".mine,
+                            width: 28.w,
+                          ),
+                          CommText(
+                            text: "删除",
+                            textColor: Color(0xffFF0707),
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            width: 24.w,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           )
         ],
-      );
+      )));
     });
   }
 }
