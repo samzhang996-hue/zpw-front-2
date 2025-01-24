@@ -108,12 +108,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                     color: Color(0xff000000),
                     child: _controller.value.isInitialized
                         ? AspectRatio(
-                            aspectRatio: _controller.value.aspectRatio,
-                            child: VideoPlayer(_controller),
-                          )
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
                         : Container(
-                            child: Center(child: CircularProgressIndicator()),
-                          ), // 使用屏幕高度的百分比
+                      child: Center(child: CircularProgressIndicator()),
+                    ), // 使用屏幕高度的百分比
                   ),
                   Positioned(
                     bottom: 0,
@@ -277,11 +277,11 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                   decoration: BoxDecoration(color: const Color(0xffFF2E7E), borderRadius: BorderRadius.circular(27)),
                                   child: Center(
                                       child: CommText(
-                                    text: rk8,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: Colors.white,
-                                  )),
+                                        text: rk8,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                        textColor: Colors.white,
+                                      )),
                                 ),
                                 Visibility(
                                   visible: !(rk10 == ""),

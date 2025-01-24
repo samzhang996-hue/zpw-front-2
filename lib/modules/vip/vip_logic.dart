@@ -27,7 +27,7 @@ class VipLogic extends BaseGetxController {
   var _success = false;
   bool isAt = false;
 
-  bool _canBack = true;
+  bool canBack = true;
 
   @override
   void onInit() {
@@ -46,7 +46,7 @@ class VipLogic extends BaseGetxController {
   @override
   void dispose() {
     // buyEngin.onCloseIos();
-    _canBack = false;
+
     super.dispose();
   }
 
@@ -243,7 +243,7 @@ class VipLogic extends BaseGetxController {
                 if (click) {
                   HandleTool.showAppToastText("您已成为会员");
                 }
-                if (_canBack) {
+                if (canBack) {
                   Get.back();
                 }
               }
