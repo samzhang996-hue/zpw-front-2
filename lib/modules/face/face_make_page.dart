@@ -8,9 +8,11 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
+import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
@@ -202,6 +204,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   void _make() async {
     if (!HandleTool.instance.isMember) {
       _controller?.pause();
+      Get.find<VipLogic>().getVipHome();
       await Get.to(() => VipPage());
       _controller?.play();
       return;
@@ -211,10 +214,19 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       _controller?.pause();
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
       _controller?.play();
-      if (res?.isNotEmpty == true) {
-        _myHeadImg.value = res!;
+      Log.e("res:$res");
+      if (res == null) {
+        return;
+      }
+
+      if (res.isNotEmpty == true) {
+        _myHeadImg.value = res;
+      } else {
+        return;
       }
     }
+
+    // return;
 
     // if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
     //   final res = await Get.to<String>(() => Photo_listPage(isNew: false));
@@ -323,133 +335,109 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       child: Stack(
         // alignment: Alignment.center,
         children: [
-          YAppBar(
-            widget: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    color: Colors.transparent,
-                    alignment: Alignment.topRight,
-                    child: const Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 40,
-                  height: 50,
-                  color: Colors.transparent,
-                  alignment: Alignment.topLeft,
-                ),
-                const Spacer(),
-                Text(widget.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold)),
-                const Spacer(),
-                Container(
-                  width: 90,
-                  height: 50,
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.only(top: 2),
-                  color: Colors.transparent,
-                  child: GestureDetector(
-                    onTap: _toHistory,
-                    behavior: HitTestBehavior.opaque,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "my_work_ic.png".make,
-                          width: 22.w,
-                          height: 22.w,
-                        ),
-                        Text(
-                          "我的作品",
-                          style: TextStyle(
-                            color: const Color(0xFF191919),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 0.w),
+                child: widget.videoUrl.isEmpty
+                    ? LayoutBuilder(builder: (context, boxConstraints) {
+                        return Container(
+                          // color: Colors.grey,
+                          color: Colors.white,
+                          width: 1.sw,
+                          height: widget.videoUrl.isEmpty
+                              ? 0
+                              : boxConstraints.maxHeight,
+                          child: QdsImage(
+                            widget.imageUrl,
+                            1.sw,
+                            boxConstraints.maxHeight,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-            isMake: true,
-            title: widget.title,
-            rightPadding: 16.w,
-            right: GestureDetector(
-              onTap: _toHistory,
-              behavior: HitTestBehavior.opaque,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "my_work_ic.png".make,
-                    width: 22.w,
-                    height: 22.w,
-                  ),
-                  Text(
-                    "我的作品",
-                    style: TextStyle(
-                      color: const Color(0xFF191919),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ],
+                        );
+                      })
+                    : _controller != null
+                        ? _controller!.value.isInitialized
+                            ? AspectRatio(
+                                aspectRatio: _controller!.value.aspectRatio,
+                                child: VideoPlayer(_controller!),
+                              )
+                            : const Center(child: CircularProgressIndicator())
+                        : const Center(child: CircularProgressIndicator()),
               ),
-            ),
+            ],
           ),
           Positioned(
-            top: 100,
+            top: 0,
             left: 0,
             right: 0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20.w),
-                  child: widget.videoUrl.isEmpty
-                      ? LayoutBuilder(builder: (context, boxConstraints) {
-                          return Container(
-                            // color: Colors.grey,
-                            color: Colors.white,
-                            width: 1.sw,
-                            height: widget.videoUrl.isEmpty
-                                ? 0
-                                : boxConstraints.maxHeight,
-                            child: QdsImage(
-                              widget.imageUrl,
-                              1.sw,
-                              boxConstraints.maxHeight,
+            child: YAppBar(
+              widget: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                      ).paddingOnly(left: 10),
+                    ),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 50,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                  ),
+                  const Spacer(),
+                  Text(widget.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  Container(
+                    width: 90,
+                    height: 50,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(top: 2),
+                    color: Colors.transparent,
+                    child: GestureDetector(
+                      onTap: _toHistory,
+                      behavior: HitTestBehavior.opaque,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "my_work_ic.png".make,
+                            width: 22.w,
+                            height: 22.w,
+                          ),
+                          Text(
+                            "我的作品",
+                            style: TextStyle(
+                              color: const Color(0xFF191919),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.sp,
                             ),
-                          );
-                        })
-                      : _controller != null
-                          ? _controller!.value.isInitialized
-                              ? AspectRatio(
-                                  aspectRatio: _controller!.value.aspectRatio,
-                                  child: VideoPlayer(_controller!),
-                                )
-                              : const Center(child: CircularProgressIndicator())
-                          : const Center(child: CircularProgressIndicator()),
-                ),
-              ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              isMake: true,
             ),
           ),
           Obx(() => Visibility(

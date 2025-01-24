@@ -11,6 +11,7 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/main/main_page.dart';
+import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -69,6 +70,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
   void _uploadImg(String? path) async {
     HandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
       Log.e("widget.isNew:${widget.isNew}");
+      Get.find<MineLogic>().getUserInfo();
       if (path == null) return;
       if (widget.isNew) {
         if (!HandleTool.instance.isMember) {

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/modules/specially/make_page.dart';
+import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 
 import 'specially_logic.dart';
@@ -155,6 +156,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    Get.find<VipLogic>().getVipHome();
                                     Get.to(() => VipPage());
                                   },
                                   behavior: HitTestBehavior.opaque,

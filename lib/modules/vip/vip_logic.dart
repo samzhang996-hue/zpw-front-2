@@ -69,7 +69,7 @@ class VipLogic extends BaseGetxController {
   restoreIosPay(dynamic receiptData, String transactionId,
       {bool showSuccessTips = true}) {
     Log.i("------click : $click=========");
-    Post(Api.payOrder_restoreIosPay, isShowProgress: false, params: {
+    Post(Api.payOrder_restoreIosPay, isShowProgress: true, params: {
       "receiptData": receiptData,
       "transactionId": transactionId,
       "isRestore": true,
@@ -96,7 +96,7 @@ class VipLogic extends BaseGetxController {
 
     Log.i("------click : $click=========");
 
-    Post(Api.payOrder_iosPay, isShowProgress: false, params: dataMap,
+    Post(Api.payOrder_iosPay, isShowProgress: true, params: dataMap,
         success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         // HandleTool.showAppToastText("购买成功");
@@ -224,6 +224,8 @@ class VipLogic extends BaseGetxController {
 
   getUserInfo() {
     final MineLogic mineLogic = Get.find<MineLogic>();
+
+    mineLogic.getUserInfo();
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: false,
         success: (isSuccess, code, message, results) async {
@@ -236,6 +238,7 @@ class VipLogic extends BaseGetxController {
               _conditionMet = true;
               if (_success == false) {
                 HandleTool.showAppToastText("您已成为会员");
+                Get.back();
               }
               _success = true;
               String phones = mineLogic.state.userInfoBean.userPhone ?? "";

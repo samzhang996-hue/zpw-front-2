@@ -9,6 +9,7 @@ import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/splash/guide/guide_view.dart';
+import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/ads_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -96,6 +97,7 @@ class SplashLogic extends BaseGetxController {
         SpUtils.setString("token", data['token'] ?? "");
         SpUtils.setBool("isAgreed", true);
         Log.d("res----${data}");
+        Get.put(VipLogic());
         getUserInfo();
       }
     });
