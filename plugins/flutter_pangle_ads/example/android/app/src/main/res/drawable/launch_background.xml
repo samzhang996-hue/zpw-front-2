@@ -6,6 +6,6 @@
     <item android:bottom="18dp">
         <bitmap
             android:gravity="bottom"
-            android:src="@mipmap/flutterads_logo" />
+            android:src="@mipmap/splash.png" />
     </item>
 </layer-list>
