@@ -99,7 +99,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                       onTap: () {
                         _controller.pause();
                         Log.d("pause---${state.returnUrl.value}----");
-                        logic.getFuncDetail(state.id.value);
+                        logic.getFuncDetail(state.funcId.value);
                         // Get.to(
                         //   () => FaceMakePage(
                         //     title: state.tags.value,
