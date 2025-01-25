@@ -31,6 +31,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
     Get.delete<SplashPage>();
     // TODO: implement dispose
     super.dispose();
+    logic.stopPolling();
   }
 
   @override
@@ -101,7 +102,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
           child: Center(
             child: Column(
               children: [
-                const Text('应用启动中', style: TextStyle(color: Colors.white, fontSize: 14)),
+                const Text('应用启动中...', style: TextStyle(color: Colors.white, fontSize: 14)),
                 const SizedBox(height: 10),
                 Container(
                   width: 256,

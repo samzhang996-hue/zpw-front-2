@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_udid/flutter_udid.dart';
+
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
@@ -21,9 +23,10 @@ import 'splash_state.dart';
 
 class SplashLogic extends BaseGetxController {
   RxDouble progress = 0.0.obs;
-
+  Timer? _timer;
   final SplashState state = SplashState();
   int requestMax = 0;
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -31,6 +34,18 @@ class SplashLogic extends BaseGetxController {
     HandleTool.instance.getProtocolConfig();
     // handleNetWork();
     test();
+    startProgress();
+  }
+
+  void startProgress() {
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if (progress.value < 1.0) {
+        progress.value += 0.01;
+      }
+    });
+  }
+  void stopPolling() {
+    _timer?.cancel();
   }
 
   void printDeviceInfo() async {
@@ -138,6 +153,7 @@ class SplashLogic extends BaseGetxController {
             // }
             // return;
             AdsUtils.init().then((value) {
+              progress.value = 1.0;
               if (value) {
                 AdsUtils.showSplashAd();
               }
