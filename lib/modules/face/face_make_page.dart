@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
+import 'package:zpw/common/comm_video_player_page.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/model/group_other_func_list_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
@@ -19,11 +20,13 @@ class FaceMakePage extends BaseStatefulWidget {
   final int funcId;
   final String imageUrl;
   final String videoUrl;
+  final int groupId;
   FaceMakePage({
     required this.title,
     required this.funcId,
     required this.imageUrl,
     required this.videoUrl,
+    this.groupId = -1,
   });
 
   @override
@@ -31,22 +34,33 @@ class FaceMakePage extends BaseStatefulWidget {
 }
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
+  late PageController _pageController;
+  late final _videoUrls = <String>[].obs;
+  late final _tags = <String>[].obs;
+  late final _funcIds = <int>[];
+
+  late final _currentIndex = 0.obs;
+
   late final _currentZodiac = 0.obs;
 
   late final _show = false.obs;
-
+  late final _logic = Get.find<CommVideoPlayerController>();
   // late final _showHeadImg = true.obs;
-
-  VideoPlayerController? _controller;
 
   bool get _isNotEmptyVideoUrl => widget.videoUrl.isNotEmpty;
 
   late final _myHeadImg = ''.obs;
 
+  late final _list = <String>[].obs;
+
   void _toHistory() async {
-    _controller?.pause();
+    if (_isNotEmptyVideoUrl) {
+      _logic.controller.pause();
+    }
     await Get.to(() => WorksPage());
-    _controller?.play();
+    if (_isNotEmptyVideoUrl) {
+      _logic.controller.play();
+    }
   }
 
   void _showSuccess() async {
@@ -202,18 +216,21 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    if (_isNotEmptyVideoUrl) {
+      _logic.controller.pause();
+    }
     if (!HandleTool.instance.isMember) {
-      _controller?.pause();
       Get.find<VipLogic>().getVipHome();
       await Get.to(() => VipPage());
-      _controller?.play();
+      if (_isNotEmptyVideoUrl) {
+        _logic.controller.pause();
+      }
       return;
     }
 
     if (_myHeadImg.value.isEmpty) {
-      _controller?.pause();
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
-      _controller?.play();
+
       Log.e("res:$res");
       if (res == null) {
         return;
@@ -252,10 +269,12 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // return;
     _show.value = false;
     final params = {
-      "funcId": widget.funcId,
+      "funcId":
+          widget.groupId == -1 ? widget.funcId : _funcIds[_currentIndex.value],
       "imgUrls": [_myHeadImg.value],
       // "prompt": "",
     };
+
     HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params,
         success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
@@ -301,25 +320,71 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // }
   }
 
+  void _onPageChanged(int index) {
+    _currentIndex.value = index;
+  }
+
+  void _getData() {
+    if (widget.groupId == -1) {
+      if (_isNotEmptyVideoUrl) {
+        _videoUrls.add(widget.videoUrl);
+      } else {
+        _list.add(widget.imageUrl);
+      }
+      return;
+    }
+    final params = {
+      "funcId": widget.funcId,
+      "groupId": widget.groupId,
+    };
+
+    Log.e("params:$params");
+    _funcIds.clear();
+    HandleTool.instance.QDSGet<GroupOtherFuncListBean>(
+      "${Api.getGroupOtherFuncList}?funcId=${widget.funcId}&groupId=${widget.groupId}",
+      isShowProgress: true,
+      success: (isSuccess, code, message, results) {
+        if (isSuccess == true && results.isNotEmpty) {
+          _tags.value = results.map((e) => e.tags ?? "").toList();
+          _funcIds.addAll(results.map((e) => e.id ?? 0).toList());
+          if (_isNotEmptyVideoUrl) {
+            _videoUrls.value = results.map((e) => '${e.videoUrl}').toList();
+          } else {
+            _list.value = results.map((e) => '${e.showImgGif}').toList();
+          }
+        }
+      },
+      onModel: (json) => GroupOtherFuncListBean.fromJson(json),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _checkImage();
-    if (_isNotEmptyVideoUrl) {
-      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-        ..setLooping(true)
-        ..initialize().then((_) {
-          // 确保在视频初始化完成后设置播放状态
-          setState(() {
-            _controller?.play();
-          });
-        });
-    }
+    _getData();
+    Log.e("params:${widget.funcId},params:${widget.groupId}");
+    Log.e(
+        "params.videoUrl:${widget.videoUrl},params.imageUrl:${widget.imageUrl}");
+    // if (_isNotEmptyVideoUrl) {
+    //   _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+    //     ..setLooping(true)
+    //     ..initialize().then((_) {
+    //       // 确保在视频初始化完成后设置播放状态
+    //       setState(() {
+    //         _controller?.play();
+    //       });
+    //     });
+    // }
+
+    _pageController = PageController();
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    // 在销毁时释放资源
+    _pageController.dispose();
+
     super.dispose();
   }
 
@@ -335,43 +400,51 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       child: Stack(
         // alignment: Alignment.center,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 0.w),
-                child: widget.videoUrl.isEmpty
-                    ? LayoutBuilder(builder: (context, boxConstraints) {
-                        return Container(
-                          // color: Colors.grey,
-                          color: Colors.white,
-                          width: 1.sw,
-                          height: widget.videoUrl.isEmpty
-                              ? 0
-                              : boxConstraints.maxHeight,
-                          child: QdsImage(
-                            widget.imageUrl,
-                            1.sw,
-                            boxConstraints.maxHeight,
+          Container(
+            margin: EdgeInsets.only(top: 0.w),
+            child: widget.videoUrl.isEmpty
+                ? Obx(() => PageView.builder(
+                    scrollDirection: Axis.vertical, // 让视频垂直滑动
+                    itemCount: _list.length,
+                    physics: const BouncingScrollPhysics(),
+                    onPageChanged: (index) {
+                      _currentIndex.value = index;
+                    },
+                    itemBuilder: (context, index) {
+                      return Container(
+                        alignment: Alignment.center,
+                        color: Colors.white,
+                        width: 1.sw,
+                        height: 1.sh,
+                        child: QdsImage(
+                          _list[index],
+                          1.sw,
+                          1.sh,
+                        ),
+                      );
+                    }))
+                : Obx(
+                    () => PageView.builder(
+                      controller: _pageController,
+                      itemCount: _videoUrls.length,
+                      onPageChanged: _onPageChanged,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: CommVideoPlayerPage(
+                            videoUrl: _videoUrls[index],
                           ),
                         );
-                      })
-                    : _controller != null
-                        ? _controller!.value.isInitialized
-                            ? AspectRatio(
-                                aspectRatio: _controller!.value.aspectRatio,
-                                child: VideoPlayer(_controller!),
-                              )
-                            : const Center(child: CircularProgressIndicator())
-                        : const Center(child: CircularProgressIndicator()),
-              ),
-            ],
+                      },
+                    ),
+                  ),
           ),
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: YAppBar(
+              bgColor: Colors.transparent,
               widget: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -391,24 +464,29 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                     ),
                   ),
                   Container(
-                    width: 40,
+                    width: 24,
                     height: 50,
                     color: Colors.transparent,
                     alignment: Alignment.center,
                   ),
                   const Spacer(),
-                  Text(widget.title,
+                  Obx(() => Text(
+                      widget.groupId == -1
+                          ? widget.title
+                          : _tags.isEmpty
+                              ? ""
+                              : _tags[_currentIndex.value],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
-                          fontWeight: FontWeight.bold)),
+                          fontWeight: FontWeight.bold))),
                   const Spacer(),
                   Container(
-                    width: 90,
+                    width: 74,
                     height: 50,
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerRight,
                     padding: EdgeInsets.only(top: 2),
                     color: Colors.transparent,
                     child: GestureDetector(
@@ -424,7 +502,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                             height: 22.w,
                           ),
                           Text(
-                            "我的作品",
+                            "作品",
                             style: TextStyle(
                               color: const Color(0xFF191919),
                               fontWeight: FontWeight.w600,
@@ -733,7 +811,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                     child: Container(
                       width: 1.sw,
                       height: 100.w,
-                      color: Colors.white,
+                      color: Colors.transparent,
                       child: Column(
                         children: [
                           const Spacer(flex: 2),

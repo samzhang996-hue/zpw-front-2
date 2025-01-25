@@ -2,7 +2,6 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
@@ -99,6 +98,7 @@ class _CollectionItemState extends State<CollectionItem> {
       onTap: () {
         Get.to(
           () => FaceMakePage(
+            groupId: widget.id,
             title: bean.photoFuncResp?.tags ?? '',
             funcId: bean.photoFuncResp?.id ?? 0,
             imageUrl: bean.photoFuncResp?.showImgGif ?? "",
@@ -186,47 +186,57 @@ class _CollectionItemState extends State<CollectionItem> {
         ),
         child: Stack(
           children: [
-            Image.asset(
-              // index.isEven ? "face_item_2.png".face : "face_item_1.png".face,
-              "face_item_1.png".face,
-              width: 175.w,
-              height: 265.w,
-              fit: BoxFit.cover,
-            ),
-            Center(
-              child: Column(
-                children: [
-                  SizedBox(height: 10.w),
-                  Text(
-                    "${bean.photoGroupResp?.groupName}",
-                    style: TextStyle(
-                      color: const Color(0xFF191919),
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 3.w),
-                  if (bean.photoGroupResp?.remark?.isNotEmpty == true)
-                    Text(
-                      "-${bean.photoGroupResp?.remark ?? ''}-",
-                      style: TextStyle(
-                        color: const Color(0xFF191919),
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  SizedBox(height: 14.w),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.w),
-                    child: QdsImage(
-                      "${bean.photoGroupResp?.imgUrlAcross}",
-                      144.w,
-                      175.w,
-                    ),
-                  )
-                ],
+            // Image.asset(
+            //   // index.isEven ? "face_item_2.png".face : "face_item_1.png".face,
+            //   "face_item_1.png".face,
+            //   width: 175.w,
+            //   height: 265.w,
+            //   fit: BoxFit.cover,
+            // ),
+
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.w),
+              child: QdsImage(
+                "${bean.photoGroupResp?.imgUrlVertical}",
+                175.w,
+                265.w,
+                fit: BoxFit.cover,
               ),
             ),
+            // Center(
+            //   child: Column(
+            //     children: [
+            //       SizedBox(height: 10.w),
+            //       Text(
+            //         "${bean.photoGroupResp?.groupName}",
+            //         style: TextStyle(
+            //           color: const Color(0xFF191919),
+            //           fontSize: 22.sp,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //       SizedBox(height: 3.w),
+            //       if (bean.photoGroupResp?.remark?.isNotEmpty == true)
+            //         Text(
+            //           "-${bean.photoGroupResp?.remark ?? ''}-",
+            //           style: TextStyle(
+            //             color: const Color(0xFF191919),
+            //             fontSize: 11.sp,
+            //             fontWeight: FontWeight.w500,
+            //           ),
+            //         ),
+            //       SizedBox(height: 14.w),
+            //       // ClipRRect(
+            //       //   borderRadius: BorderRadius.circular(8.w),
+            //       //   child: QdsImage(
+            //       //     "${bean.photoGroupResp?.imgUrlAcross}",
+            //       //     144.w,
+            //       //     175.w,
+            //       //   ),
+            //       // )
+            //     ],
+            //   ),
+            // ),
             if (bean.photoGroupResp?.tips?.isNotEmpty == true)
               Positioned(
                 left: 0,

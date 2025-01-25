@@ -281,6 +281,7 @@ class _FacePageState extends State<FacePage>
               // ),
               body: PageView(
                 controller: page,
+
                 children: logic.listPhotoGroupBean2
                     // .map((e) => FaceItem(id: e.id ?? 0))
                     .map((e) => CollectionItem(id: e.id ?? 0))
@@ -435,5 +436,24 @@ class _FacePageState extends State<FacePage>
         ],
       ),
     );
+  }
+}
+
+class CustomScrollPhysics extends BouncingScrollPhysics {
+  final double friction;
+
+  CustomScrollPhysics({this.friction = 0.6, ScrollPhysics? parent})
+      : super(parent: parent);
+
+  @override
+  CustomScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return CustomScrollPhysics(
+        friction: friction, parent: buildParent(ancestor));
+  }
+
+  @override
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    // 使用 friction 值来调整滑动的灵敏度
+    return super.applyPhysicsToUserOffset(position, offset) * friction;
   }
 }

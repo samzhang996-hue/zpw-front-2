@@ -99,4 +99,8 @@ class Api {
 
   ///Get检查图片是否包含人脸
   static const String imgHaveFace = "/imgHaveFace";
+
+  ///Get查询模板所有分类或合集其他的模板
+  static const String getGroupOtherFuncList =
+      "/photoFunc/getGroupOtherFuncList";
 }

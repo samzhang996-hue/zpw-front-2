@@ -21,13 +21,16 @@ class Assets {
   static const String faceFacePhoto = 'images/face/face_photo.png';
   static const String faceFaceVip = 'images/face/face_vip.png';
   static const String faceGameplay = 'images/face/gameplay.png';
-  static const String faceNoMoreContentLeft = 'images/face/no_more_content_left.png';
-  static const String faceNoMoreContentRight = 'images/face/no_more_content_right.png';
+  static const String faceNoMoreContentLeft =
+      'images/face/no_more_content_left.png';
+  static const String faceNoMoreContentRight =
+      'images/face/no_more_content_right.png';
   static const String imagesCommSplash = 'images/comm/splash.png';
   static const String imagesLaunchImage = 'images/LaunchImage.png';
   static const String makeMakeClose = 'images/make/make_close.png';
   static const String makeMakeHistory = 'images/make/make_history.png';
-  static const String makeMakeResultSuccess = 'images/make/make_result_success.png';
+  static const String makeMakeResultSuccess =
+      'images/make/make_result_success.png';
   static const String makeMyWorkIc = 'images/make/my_work_ic.png';
   static const String makeNoHeadImg = 'images/make/no_head_img.png';
   static const String mineAbout = 'images/mine/about.png';
@@ -35,7 +38,8 @@ class Assets {
   static const String mineCall = 'images/mine/call.png';
   static const String mineCustomIndicator = 'images/mine/custom_indicator.png';
   static const String mineDown = 'images/mine/down.png';
-  static const String mineIconDefaultPlaceholder = 'images/mine/icon_default_placeholder.png';
+  static const String mineIconDefaultPlaceholder =
+      'images/mine/icon_default_placeholder.png';
   static const String mineKf = 'images/mine/kf.png';
   static const String mineLj = 'images/mine/lj.png';
   static const String mineLogo = 'images/mine/logo.png';
@@ -47,22 +51,7 @@ class Assets {
   static const String specially030 = 'images/specially/03_0.jpg';
   static const String specially031 = 'images/specially/03_1.jpg';
   static const String specially032 = 'images/specially/03_2.jpg';
-  static const String specially06奶茶女头像A = 'images/specially/06-奶茶女头像A.jpg';
-  static const String specially06奶茶女头像B = 'images/specially/06-奶茶女头像B.jpg';
-  static const String specially06奶茶男头像A = 'images/specially/06-奶茶男头像A.jpg';
-  static const String specially06奶茶男头像B = 'images/specially/06-奶茶男头像B.jpg';
-  static const String specially09吃瓜女孩 = 'images/specially/09-吃瓜女孩.jpg';
-  static const String specially09吃瓜男孩 = 'images/specially/09-吃瓜男孩.jpg';
-  static const String specially09女孩测试 = 'images/specially/09-女孩测试.jpg';
-  static const String specially09爱国女孩 = 'images/specially/09-爱国女孩.jpg';
-  static const String specially09爱国男孩 = 'images/specially/09-爱国男孩.jpg';
-  static const String specially09男孩坐着 = 'images/specially/09-男孩坐着.jpg';
-  static const String specially10接花女孩 = 'images/specially/10-接花女孩.jpg';
-  static const String specially10摆酷女孩 = 'images/specially/10-摆酷女孩.jpg';
-  static const String specially10高枕无忧 = 'images/specially/10-高枕无忧.jpg';
-  static const String specially11墨镜男孩 = 'images/specially/11-墨镜男孩.jpg';
-  static const String specially11摆酷男孩 = 'images/specially/11-摆酷男孩.jpg';
-  static const String specially11男孩背影 = 'images/specially/11-男孩背影.jpg';
+
   static const String speciallySpecially = 'images/specially/specially.png';
   static const String tabbarHome = 'images/tabbar/home.png';
   static const String tabbarMine = 'images/tabbar/mine.png';
@@ -81,5 +70,4 @@ class Assets {
   static const String vipVipBtnTip = 'images/vip/vip_btn_tip.png';
   static const String vipWx = 'images/vip/wx.png';
   static const String vipZfb = 'images/vip/zfb.png';
-
 }
