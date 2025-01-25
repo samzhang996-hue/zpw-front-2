@@ -46,25 +46,25 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
         child: Column(
           children: [
             YAppBar(title: "作品"),
-            // Container(
-            //   height: 40.w,
-            //   width: 200.w,
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       buildTabItem(
-            //         text: "视频",
-            //         isSelected: selectedIndex == 1,
-            //         onTap: () => selectTab(1),
-            //       ),
-            //       buildTabItem(
-            //         text: "图片",
-            //         isSelected: selectedIndex == 0,
-            //         onTap: () => selectTab(0),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            Container(
+              height: 40.w,
+              width: 200.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  buildTabItem(
+                    text: "视频",
+                    isSelected: selectedIndex == 1,
+                    onTap: () => selectTab(1),
+                  ),
+                  buildTabItem(
+                    text: "图片",
+                    isSelected: selectedIndex == 0,
+                    onTap: () => selectTab(0),
+                  ),
+                ],
+              ),
+            ),
             _item()
           ],
         ),

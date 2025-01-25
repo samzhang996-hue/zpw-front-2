@@ -64,6 +64,7 @@ class _FaceItemState extends State<FaceItem> {
               onTap: () {
                 Get.to(
                   () => FaceMakePage(
+                    groupId: widget.id,
                     title: bean?.photoFuncResp?.tags ?? '',
                     funcId: bean?.photoFuncResp?.id ?? 0,
                     imageUrl: bean?.photoFuncResp?.showImgGif ?? '',
