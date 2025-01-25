@@ -213,6 +213,7 @@ class _FacePageState extends State<FacePage>
                                             "${bean.imgUrlAcross}",
                                             182.w,
                                             90.w,
+                                            fit: BoxFit.contain,
                                           ),
                                         ),
                                       ),

@@ -216,6 +216,7 @@ class _GameplayPageState extends State<GameplayPage>
                                             "${bean.imgUrlAcross}",
                                             182.w,
                                             90.w,
+                                            fit: BoxFit.contain,
                                           ),
                                         ),
                                       ),
