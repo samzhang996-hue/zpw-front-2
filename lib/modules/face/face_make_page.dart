@@ -6,6 +6,7 @@ import 'package:zpw/common/comm_video_player_page.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/main.dart';
 import 'package:zpw/model/group_other_func_list_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
@@ -38,13 +39,13 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   late final _videoUrls = <String>[].obs;
   late final _tags = <String>[].obs;
   late final _funcIds = <int>[];
-
+  late final _title = widget.title.obs;
   late final _currentIndex = 0.obs;
 
   late final _currentZodiac = 0.obs;
 
   late final _show = false.obs;
-  late final _logic = Get.find<CommVideoPlayerController>();
+
   // late final _showHeadImg = true.obs;
 
   bool get _isNotEmptyVideoUrl => widget.videoUrl.isNotEmpty;
@@ -55,11 +56,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   void _toHistory() async {
     if (_isNotEmptyVideoUrl) {
-      _logic.controller.pause();
+      eventBus.fire(VideoPlayerPauseEvent());
     }
     await Get.to(() => WorksPage());
     if (_isNotEmptyVideoUrl) {
-      _logic.controller.play();
+      eventBus.fire(VideoPlayerPlayEvent());
     }
   }
 
@@ -217,13 +218,13 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   void _make() async {
     if (_isNotEmptyVideoUrl) {
-      _logic.controller.pause();
+      eventBus.fire(VideoPlayerPauseEvent());
     }
     if (!HandleTool.instance.isMember) {
       Get.find<VipLogic>().getVipHome();
       await Get.to(() => VipPage());
       if (_isNotEmptyVideoUrl) {
-        _logic.controller.pause();
+        eventBus.fire(VideoPlayerPlayEvent());
       }
       return;
     }
@@ -470,18 +471,21 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                     alignment: Alignment.center,
                   ),
                   const Spacer(),
-                  Obx(() => Text(
-                      widget.groupId == -1
-                          ? widget.title
-                          : _tags.isEmpty
-                              ? ""
-                              : _tags[_currentIndex.value],
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold))),
+                  Obx(() => SizedBox(
+                        width: 1.sw * 0.6,
+                        child: Text(
+                            widget.groupId == -1
+                                ? _title.value
+                                : _tags.isEmpty
+                                    ? ""
+                                    : _tags[_currentIndex.value],
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold)),
+                      )),
                   const Spacer(),
                   Container(
                     width: 74,

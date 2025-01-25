@@ -200,7 +200,7 @@ class BuyEngin {
         _handleError(error!);
       } else if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
-        EasyLoading.dismiss();
+        // EasyLoading.dismiss();
         //完成购买, 到服务器验证
         if (Platform.isAndroid) {
           var googleDetail = purchase as GooglePlayPurchaseDetails;

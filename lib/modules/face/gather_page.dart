@@ -67,11 +67,8 @@ class _GatherPageState extends State<GatherPage>
                       height: double.infinity,
                       child: Stack(
                         children: [
-                          QdsImage(
-                            widget.imgUrlAcross,
-                            1.sw,
-                            260.w,
-                          ),
+                          QdsImage(widget.imgUrlAcross, 1.sw, 260.w,
+                              fit: BoxFit.cover),
                           // Positioned(
                           //   left: 0,
                           //   right: 0,
