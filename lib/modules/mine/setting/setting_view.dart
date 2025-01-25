@@ -43,6 +43,17 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
             Obx(() {
               return commItem("检查更新", state.version.value);
             }),
+            InkWell(
+              onTap: () {
+                logic.getChannel();
+              },
+              child: Obx(() {
+                return CommText(
+                  text: "V${state.version.value}    ${state.channel.value}",
+                  textColor: Color(0xffcccccc),
+                );
+              }),
+            ),
             Container(
               margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
               width: double.infinity,

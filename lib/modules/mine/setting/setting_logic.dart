@@ -7,6 +7,7 @@ import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/filecache.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
 
 import 'setting_state.dart';
@@ -20,6 +21,10 @@ class SettingLogic extends BaseGetxController {
     super.onInit();
     version();
     _showCacheSize();
+  }
+  getChannel() async {
+    String channelInfo = await getChannelInfo(3);
+    state.channel.value=channelInfo;
   }
 
   void _showCacheSize() async {
