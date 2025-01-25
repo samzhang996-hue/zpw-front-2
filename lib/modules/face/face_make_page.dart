@@ -472,7 +472,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                   ),
                   const Spacer(),
                   Obx(() => SizedBox(
-                        width: 1.sw * 0.6,
+                        width: 1.sw * 0.4,
                         child: Text(
                             widget.groupId == -1
                                 ? _title.value

@@ -241,21 +241,21 @@ class _MinePageState extends BaseWidgetState<MinePage>
                 )
               ],
             ),
-            Container(
-              margin: EdgeInsets.only(left: 16, right: 16, top: 20.w),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AdBannerWidget(
-                  posId: AdsConfig.bannerId,
-                  width: 345,
-                  interval: 5,
-                  show: true,
-                ),
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.only(left: 16, right: 16, top: 20.w),
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //       color: Colors.white, borderRadius: BorderRadius.circular(12)),
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: AdBannerWidget(
+            //       posId: AdsConfig.bannerId,
+            //       width: 345,
+            //       interval: 5,
+            //       show: true,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       );

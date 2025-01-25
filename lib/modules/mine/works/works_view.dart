@@ -202,6 +202,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                     textColor: Colors.white,
                                   ))),
                               onTap: () {
+                                Log.d("xxxx----------$funcId---$id");
                                 logic.getFuncDetail(funcId, id);
                               },
                             ),

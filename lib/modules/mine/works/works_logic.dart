@@ -32,7 +32,7 @@ class WorksLogic extends BaseGetxController {
     });
   }
   getFuncDetail(int funcId,int id) {
-    get("${Api.getFuncDetail}?id=$id", isShowProgress: true,
+    get("${Api.getFuncDetail}?id=$funcId", isShowProgress: true,
         success: (isSuccess, code, message, results) async {
           if (isSuccess == true && results.isNotEmpty) {
             Map data = results.first as Map;
