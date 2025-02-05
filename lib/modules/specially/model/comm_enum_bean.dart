@@ -1,14 +1,12 @@
-class AnimalsEnum {
-  List<AnimalsEnumBean>? data;
+class CommEnum {
+  List<CommEnumBean>? data;
 
-  AnimalsEnum({this.data});
+  CommEnum({this.data});
 
-  AnimalsEnum.fromJson(Map<String, dynamic> json) {
+  CommEnum.fromJson(Map<String, dynamic> json) {
     data = json["data"] == null
         ? null
-        : (json["data"] as List)
-            .map((e) => AnimalsEnumBean.fromJson(e))
-            .toList();
+        : (json["data"] as List).map((e) => CommEnumBean.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -20,14 +18,14 @@ class AnimalsEnum {
   }
 }
 
-class AnimalsEnumBean {
+class CommEnumBean {
   int? index;
   String? name;
   String? value;
 
-  AnimalsEnumBean({this.index, this.name, this.value});
+  CommEnumBean({this.index, this.name, this.value});
 
-  AnimalsEnumBean.fromJson(Map<String, dynamic> json) {
+  CommEnumBean.fromJson(Map<String, dynamic> json) {
     index = json["index"];
     name = json["name"];
     value = json["value"];

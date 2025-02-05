@@ -91,6 +91,21 @@ class Api {
   ///艺术字-生肖03
   static const String animalsEnum = "/enum/animalsEnum";
 
+  ///艺术字-奶茶头像06
+  static const String milkTeaEnum = "/enum/milkTeaEnum";
+
+  ///艺术字-卡通情侣09
+  static const String cartoonEnum = "/enum/cartoonEnum";
+
+  ///艺术字-卡通头像女孩10
+  static const String cartoonGirlEnum = "/enum/cartoonGirlEnum";
+
+  ///艺术字-卡通头像男孩11
+  static const String cartoonBoyEnum = "/enum/cartoonBoyEnum";
+
+  ///获取api类型
+  static const String apiTypeList = "/enum/apiTypeList";
+
   ///ios恢复订单
   static const String payOrder_restoreIosPay = "/center/handleIosOrder";
 

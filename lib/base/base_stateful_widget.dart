@@ -18,11 +18,13 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
   @override
   bool get wantKeepAlive => true;
 
+  Color backgroundColor = ColorPlate.themeBgColor;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Scaffold(
-            backgroundColor: ColorPlate.themeBgColor,
+            backgroundColor: backgroundColor,
             body: SafeArea(
               top: false,
               bottom: false,

@@ -75,19 +75,19 @@ class _MainPageState extends State<MainPage> {
                     ),
                     label: "图片",
                   ),
-                  // BottomNavigationBarItem(
-                  //   icon: Image.asset(
-                  //     'un_tx.png'.tabbar,
-                  //     width: 36,
-                  //     height: 36,
-                  //   ),
-                  //   activeIcon: Image.asset(
-                  //     'tx.png'.tabbar,
-                  //     width: 36,
-                  //     height: 36,
-                  //   ),
-                  //   label: "特效",
-                  // ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'un_tx.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    activeIcon: Image.asset(
+                      'tx.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    label: "特效",
+                  ),
                   // BottomNavigationBarItem(
                   //   icon: Image.asset(
                   //     'un_wf.png'.tabbar,

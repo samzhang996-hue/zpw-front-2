@@ -5,9 +5,11 @@ import 'package:get/get.dart';
 // import 'package:screen_protector/screen_protector.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/constant.dart';
+import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/specially/make_page.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
+import 'package:zpw/utils/handle_tool.dart';
 
 import 'specially_logic.dart';
 
@@ -18,14 +20,14 @@ class SpeciallyPage extends StatefulWidget {
   State<SpeciallyPage> createState() => _SpeciallyPageState();
 }
 
-final logic = Get.put(SpeciallyLogic());
-
-final state = Get.find<SpeciallyLogic>().state;
-
 class _SpeciallyPageState extends State<SpeciallyPage>
     with SingleTickerProviderStateMixin {
+  final logic = Get.put(SpeciallyLogic());
+
+  final state = Get.find<SpeciallyLogic>().state;
+
   late final TabController _tabController =
-      TabController(length: 1, vsync: this);
+      TabController(length: state.values.keys.length, vsync: this);
   late ScrollController? _scrollViewController = ScrollController();
   var outHeight = 20.0.w;
   late PageController? page = PageController();
@@ -154,19 +156,24 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                                   height: 34.w,
                                   fit: BoxFit.cover,
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.find<VipLogic>().getVipHome();
-                                    Get.to(() => VipPage());
-                                  },
-                                  behavior: HitTestBehavior.opaque,
-                                  child: Image.asset(
-                                    "face_vip.png".face,
-                                    width: 65.w,
-                                    height: 26.w,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                GetBuilder<MineLogic>(builder: (mineLogic) {
+                                  return Visibility(
+                                    visible: !HandleTool.instance.isMember,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Get.find<VipLogic>().getVipHome();
+                                        Get.to(() => VipPage());
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: Image.asset(
+                                        "face_vip.png".face,
+                                        width: 65.w,
+                                        height: 26.w,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
+                                }),
                               ],
                             ),
                           ),
@@ -212,9 +219,9 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                       height: 60.w,
                       child: TabBar(
                         tabAlignment: TabAlignment.start,
-                        tabs: const [
-                          Tab(text: "头像集"),
-                        ],
+                        tabs:
+                            state.values.keys.map((e) => Tab(text: e)).toList(),
+
                         onTap: (index) {
                           // page.animateTo(index, duration: duration, curve: curve)
                           page?.jumpToPage(index);
@@ -252,97 +259,100 @@ class _SpeciallyPageState extends State<SpeciallyPage>
             // ),
             body: PageView(
               controller: page,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  // color: Colors.red,
-                  child: GridView.builder(
-                    padding: EdgeInsets.only(top: 10.w),
-                    itemCount: 3,
-                    itemBuilder: (c, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Get.to(() => MakePage(
-                              index: index, imageUrl: "03_$index.jpg"));
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.w),
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Container(
-                                  width: 200.w,
-                                  height: 200.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.w),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.w),
-                                    child: Image.asset(
-                                      "03_$index.jpg".specially,
-                                      width: 200.w,
-                                      height: 200.w,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+              children: state.values.keys
+                  .map((e) => Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        // color: Colors.red,
+                        child: GridView.builder(
+                          padding: EdgeInsets.only(top: 10.w),
+                          itemCount: state.values[e]?.length ?? 0,
+                          itemBuilder: (c, index) {
+                            final bean = state.values[e]?[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Get.to(() => MakePage(map: bean ?? {}));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.w),
                                 ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  height: 55.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(8.w),
-                                      bottomRight: Radius.circular(8.w),
-                                    ),
-                                    gradient: const LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Color(0x00141414),
-                                        Color(0xBA000000),
-                                      ],
-                                    ),
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 10.w,
-                                        top: 12.w,
-                                      ),
-                                      child: Text(
-                                        "生肖姓氏鼓励头像",
-                                        style: TextStyle(
-                                          color: const Color(0xFFFFFFFF),
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
+                                child: Stack(
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                        width: 200.w,
+                                        height: 200.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.w),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8.w),
+                                          child: Image.asset(
+                                            "${bean?["image"]}",
+                                            width: 200.w,
+                                            height: 200.w,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 55.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(8.w),
+                                            bottomRight: Radius.circular(8.w),
+                                          ),
+                                          gradient: const LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Color(0x00141414),
+                                              Color(0xBA000000),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 10.w,
+                                              top: 12.w,
+                                            ),
+                                            child: Text(
+                                              "${bean?["name"]}",
+                                              style: TextStyle(
+                                                color: const Color(0xFFFFFFFF),
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
+                              ),
+                            );
+                          },
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8.w,
+                            crossAxisSpacing: 8.w,
+                            // childAspectRatio: 175.w / 265.w,
+                            childAspectRatio: 1.w / 1.w,
                           ),
                         ),
-                      );
-                    },
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 8.w,
-                      crossAxisSpacing: 8.w,
-                      // childAspectRatio: 175.w / 265.w,
-                      childAspectRatio: 1.w / 1.w,
-                    ),
-                  ),
-                ),
-              ],
+                      ))
+                  .toList(),
               onPageChanged: (index) {
                 _tabController.animateTo(index);
 
