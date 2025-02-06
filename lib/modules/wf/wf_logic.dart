@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
@@ -25,7 +27,11 @@ class WfLogic extends BaseGetxController {
         },
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
-            state.listPhotoGroupBean = results;
+            if (Platform.isIOS) {
+              state.listPhotoGroupBean = results.where((item) => item.frontType != 'SJHF').toList();
+            } else {
+              state.listPhotoGroupBean = results;
+            }
             Log.d("list----${state.listPhotoGroupBean[1].toJson()}");
             update();
           }
