@@ -9,6 +9,9 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/face/gather_page.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/my_plugin.dart';
+import 'package:zpw/utils/permission.dart';
 
 // import 'package:zpw/modules/wf/wf_page.dart';
 import 'wf_logic.dart';
@@ -89,6 +92,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
             ListPhotoGroupBean data = state.listPhotoGroupBean[index];
             var groupName = data.groupName ?? "";
             var tips = data.tips ?? "";
+            var frontType = data.frontType ?? "";
             var imgUrlVertical = data.imgUrlVertical ?? "";
             var imgUrlAcross = data.imgUrlAcross ?? "";
             return InkWell(
@@ -139,7 +143,11 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                   )
                 ],
               )),
-              onTap: () async {
+              onTap: ()  {
+                Log.d("async----$frontType");
+                if (frontType == "SJHF") {
+                  onStartPhoto();
+                }
                 // Get.to(
                 //   () => WfPage2(
                 //     index: index,
@@ -158,5 +166,9 @@ class _WfPageState extends BaseWidgetState<WfPage> {
             );
           }),
     ));
+  }
+  onStartPhoto() async {
+    await PermissionUtils.checkFilesAccessPermission();
+    startPhoto();
   }
 }

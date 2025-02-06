@@ -2,6 +2,8 @@ package com.photoking.app.utils;
 
 
 
+import static com.blankj.utilcode.util.ActivityUtils.startActivity;
+
 import android.app.Activity;
 
 import android.content.Intent;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.photoking.app.CommActivity;
+import com.photoking.app.LJPhotoActivity;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.commonsdk.listener.OnGetOaidListener;
 import java.net.URLEncoder;
@@ -110,6 +113,9 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 Intent intent1 = new Intent(activity, CommActivity.class);
                 intent1.putExtra("zfbUrl", h5url);
                 ActivityUtils.startActivity(intent1);
+                break;
+            case "startPhoto":
+                startActivity(LJPhotoActivity.class);
                 break;
         }
     }

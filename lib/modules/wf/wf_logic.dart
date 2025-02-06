@@ -26,7 +26,7 @@ class WfLogic extends BaseGetxController {
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
             state.listPhotoGroupBean = results;
-            Log.d("list----${state.listPhotoGroupBean[0].toJson()}");
+            Log.d("list----${state.listPhotoGroupBean[1].toJson()}");
             update();
           }
         },

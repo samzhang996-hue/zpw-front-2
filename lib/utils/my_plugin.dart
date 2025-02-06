@@ -24,3 +24,6 @@ Future<String> setOrderZfb(String url) async {
   Map<String, dynamic> result = {'message': url};
   return await methodChnnel.invokeMethod("setOrderZfb", result);
 }
+Future<void> startPhoto() async {
+  return await methodChnnel.invokeMethod("startPhoto");
+}
