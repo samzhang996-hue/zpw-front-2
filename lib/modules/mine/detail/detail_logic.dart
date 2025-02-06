@@ -21,6 +21,7 @@ class DetailLogic extends BaseGetxController {
       state.funcId.value = map["funcId"] ?? 0;
       state.returnUrl.value = map["returnUrl"] ?? "";
       state.tags.value = map["tags"] ?? "";
+      state.apiType.value = map["apiType"] ??0;
       Log.d("param---${state.returnUrl.value}---${state.worksType.value}");
       update();
     }

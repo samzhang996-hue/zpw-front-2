@@ -95,7 +95,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
             children: [
               YAppBar(
                   title: state.tags.value,
-                  right: InkWell(
+                  right: Opacity(opacity:state.apiType.value==-1?0:1,child: InkWell(
                       onTap: () {
                         _controller.pause();
                         Log.d("pause---${state.returnUrl.value}----");
@@ -113,7 +113,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                         text: "再次创作",
                         textColor: ColorPlate.themeColor,
                         fontSize: 13.sp,
-                      ))),
+                      )))),
               // Expanded(child: _buildContent()),
               _buildContent(),
 

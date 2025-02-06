@@ -18,8 +18,7 @@ class WorksPage extends BaseStatefulWidget {
   BaseWidgetState<WorksPage> getState() => _WorksPageState();
 }
 
-class _WorksPageState extends BaseWidgetState<WorksPage>
-    with SingleTickerProviderStateMixin {
+class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
   int selectedIndex = 1; // 初始选中第一个选项
@@ -92,9 +91,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
               child: Container(
                 width: 122.w,
                 height: 40.w,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(21),
-                    color: ColorPlate.themeColor),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(21), color: ColorPlate.themeColor),
                 child: Center(
                     child: CommText(
                   text: "去创作",
@@ -133,12 +130,13 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             var oldUrl = data["oldUrl"] ?? "";
             int id = data["id"] ?? 0;
             int funcId = data["funcId"] ?? 0;
+            int apiType = data["apiType"] ?? 0;
             Log.d("data111--$data");
             return InkWell(
               child: Container(
                   child: Stack(
                 children: [
-                  QdsImageCorner(oldUrl, 175.w, 265.w, 8),
+                  QdsImageCorner(apiType == -1 ? returnUrl : oldUrl, 175.w, 265.w, 8),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
@@ -162,15 +160,11 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                     ),
                   ),
                   Visibility(
-                    visible: (worksStatus == 0 ||
-                        worksStatus == 1 ||
-                        worksStatus == 2),
+                    visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
                     child: Container(
                       width: 175.w,
                       height: 265.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Color(0xff99000000)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Color(0xff99000000)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -189,12 +183,9 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                             visible: worksStatus == 2,
                             child: InkWell(
                               child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: 20.w, right: 20.w, top: 10.w),
+                                  margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.w),
                                   height: 35.w,
-                                  decoration: BoxDecoration(
-                                      color: ColorPlate.themeColor,
-                                      borderRadius: BorderRadius.circular(20)),
+                                  decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: CommText(
                                     text: "重新制作",
@@ -215,13 +206,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
               )),
               onTap: () async {
                 if (worksStatus == 3) {
-                  final res = await Get.to(() => DetailPage(), arguments: {
-                    "worksType": worksType,
-                    "returnUrl": returnUrl,
-                    "tags": tags,
-                    "id": id,
-                    "funcId": funcId
-                  });
+                  final res = await Get.to(() => DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
                   logic.photoRecord(selectedIndex);
                   return;
                   // final res = await gotoPushPage(
