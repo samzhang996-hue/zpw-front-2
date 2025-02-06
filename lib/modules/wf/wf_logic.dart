@@ -18,7 +18,6 @@ class WfLogic extends BaseGetxController {
   }
 
   void getData() {
-    Log.d("list----");
     get<ListPhotoGroupBean>(Api.listPhotoGroup,
         isShowProgress: true,
         params: {

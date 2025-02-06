@@ -88,19 +88,19 @@ class _MainPageState extends State<MainPage> {
                     ),
                     label: "特效",
                   ),
-                  // BottomNavigationBarItem(
-                  //   icon: Image.asset(
-                  //     'un_wf.png'.tabbar,
-                  //     width: 36,
-                  //     height: 36,
-                  //   ),
-                  //   activeIcon: Image.asset(
-                  //     'wf.png'.tabbar,
-                  //     width: 36,
-                  //     height: 36,
-                  //   ),
-                  //   label: "玩法",
-                  // ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'un_wf.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    activeIcon: Image.asset(
+                      'wf.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    label: "玩法",
+                  ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'un_mine.png'.tabbar,

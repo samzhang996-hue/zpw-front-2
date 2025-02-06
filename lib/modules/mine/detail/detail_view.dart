@@ -158,7 +158,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                     ),
                     onTap: () {
                       if (state.returnUrl.value.isNotEmpty) {
-                        downloadVideoToGallery(state.returnUrl.value);
+                        downloadAndSaveMedia(state.returnUrl.value);
                       }
                     },
                   ),

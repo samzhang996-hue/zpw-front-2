@@ -39,7 +39,7 @@ class SplashLogic extends BaseGetxController {
 
   void startProgress() {
     _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      if (progress.value < 1.0) {
+      if (progress.value < 0.8) {
         progress.value += 0.01;
       }
     });

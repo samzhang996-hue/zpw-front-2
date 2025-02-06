@@ -9,10 +9,13 @@ class Assets {
   static const String commEmty = 'images/comm/emty.png';
   static const String commEmtyData = 'images/comm/emty_data.png';
   static const String commFace = 'images/comm/face.png';
+  static const String commFaceBg = 'images/comm/face_bg.png';
   static const String commFacecheck = 'images/comm/facecheck.png';
+  static const String commHistory = 'images/comm/history.png';
   static const String commSplash = 'images/comm/splash.mp4';
   static const String commUpdateBg = 'images/comm/update_bg.png';
   static const String commVipUpdate = 'images/comm/vip_update.png';
+  static const String commWf = 'images/comm/wf.png';
   static const String faceFaceBg = 'images/face/face_bg.png';
   static const String faceFaceItem1 = 'images/face/face_item_1.png';
   static const String faceFaceItem2 = 'images/face/face_item_2.png';
@@ -21,16 +24,13 @@ class Assets {
   static const String faceFacePhoto = 'images/face/face_photo.png';
   static const String faceFaceVip = 'images/face/face_vip.png';
   static const String faceGameplay = 'images/face/gameplay.png';
-  static const String faceNoMoreContentLeft =
-      'images/face/no_more_content_left.png';
-  static const String faceNoMoreContentRight =
-      'images/face/no_more_content_right.png';
+  static const String faceNoMoreContentLeft = 'images/face/no_more_content_left.png';
+  static const String faceNoMoreContentRight = 'images/face/no_more_content_right.png';
   static const String imagesCommSplash = 'images/comm/splash.png';
   static const String imagesLaunchImage = 'images/LaunchImage.png';
   static const String makeMakeClose = 'images/make/make_close.png';
   static const String makeMakeHistory = 'images/make/make_history.png';
-  static const String makeMakeResultSuccess =
-      'images/make/make_result_success.png';
+  static const String makeMakeResultSuccess = 'images/make/make_result_success.png';
   static const String makeMyWorkIc = 'images/make/my_work_ic.png';
   static const String makeNoHeadImg = 'images/make/no_head_img.png';
   static const String mineAbout = 'images/mine/about.png';
@@ -38,8 +38,7 @@ class Assets {
   static const String mineCall = 'images/mine/call.png';
   static const String mineCustomIndicator = 'images/mine/custom_indicator.png';
   static const String mineDown = 'images/mine/down.png';
-  static const String mineIconDefaultPlaceholder =
-      'images/mine/icon_default_placeholder.png';
+  static const String mineIconDefaultPlaceholder = 'images/mine/icon_default_placeholder.png';
   static const String mineKf = 'images/mine/kf.png';
   static const String mineLj = 'images/mine/lj.png';
   static const String mineLogo = 'images/mine/logo.png';
@@ -51,7 +50,22 @@ class Assets {
   static const String specially030 = 'images/specially/03_0.jpg';
   static const String specially031 = 'images/specially/03_1.jpg';
   static const String specially032 = 'images/specially/03_2.jpg';
-
+  static const String specially060 = 'images/specially/06_0.jpg';
+  static const String specially061 = 'images/specially/06_1.jpg';
+  static const String specially062 = 'images/specially/06_2.jpg';
+  static const String specially063 = 'images/specially/06_3.jpg';
+  static const String specially090 = 'images/specially/09_0.jpg';
+  static const String specially091 = 'images/specially/09_1.jpg';
+  static const String specially092 = 'images/specially/09_2.jpg';
+  static const String specially093 = 'images/specially/09_3.jpg';
+  static const String specially094 = 'images/specially/09_4.jpg';
+  static const String specially095 = 'images/specially/09_5.jpg';
+  static const String specially100 = 'images/specially/10_0.jpg';
+  static const String specially101 = 'images/specially/10_1.jpg';
+  static const String specially102 = 'images/specially/10_2.jpg';
+  static const String specially110 = 'images/specially/11_0.jpg';
+  static const String specially111 = 'images/specially/11_1.jpg';
+  static const String specially112 = 'images/specially/11_2.jpg';
   static const String speciallySpecially = 'images/specially/specially.png';
   static const String tabbarHome = 'images/tabbar/home.png';
   static const String tabbarMine = 'images/tabbar/mine.png';
@@ -70,4 +84,5 @@ class Assets {
   static const String vipVipBtnTip = 'images/vip/vip_btn_tip.png';
   static const String vipWx = 'images/vip/wx.png';
   static const String vipZfb = 'images/vip/zfb.png';
+
 }
