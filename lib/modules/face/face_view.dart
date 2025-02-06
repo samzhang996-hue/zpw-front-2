@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-// import 'package:screen_protector/screen_protector.dart';
+import 'package:screen_protector/screen_protector.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
@@ -29,41 +30,31 @@ class _FacePageState extends State<FacePage>
   var outHeight = 20.0.w;
   late PageController? page = PageController();
   Color _backgroundColor = Colors.transparent; // 初始背景色为透明
-  // void _preventScreenshotOn() async =>
-  //     await ScreenProtector.preventScreenshotOn();
+  void _preventScreenshotOn() async =>
+      await ScreenProtector.preventScreenshotOn();
 
-  // void _preventScreenshotOff() async =>
-  //     await ScreenProtector.preventScreenshotOff();
+  void _preventScreenshotOff() async =>
+      await ScreenProtector.preventScreenshotOff();
 
-  // void _addListenerPreventScreenshot() async {
-  //   ScreenProtector.addListener(() {
-  //     // Screenshot
-  //     debugPrint('Screenshot:');
-  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //       content: Text('Screenshot!'),
-  //     ));
-  //   }, (isCaptured) {
-  //     // Screen Record
-  //     debugPrint('Screen Record:');
-  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //       content: Text('Screen Record!'),
-  //     ));
-  //   });
-  // }
+  void _addListenerPreventScreenshot() async {
+    ScreenProtector.addListener(() {
+      HandleTool.showAppToastText("当前页面涉及隐私，不允许截图");
+    }, (isCaptured) {
+      HandleTool.showAppToastText("当前页面涉及隐私，不允许录屏");
+    });
+  }
 
-  // void _removeListenerPreventScreenshot() async {
-  //   ScreenProtector.removeListener();
-  // }
+  void _removeListenerPreventScreenshot() async {
+    ScreenProtector.removeListener();
+  }
 
-  // void _checkScreenRecording() async {
-  //   final isRecording = await ScreenProtector.isRecording();
+  void _checkScreenRecording() async {
+    final isRecording = await ScreenProtector.isRecording();
 
-  //   if (isRecording) {
-  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //       content: Text('Screen Recording...'),
-  //     ));
-  //   }
-  // }
+    if (isRecording) {
+      HandleTool.showAppToastText("当前页面涉及隐私，不允许录屏");
+    }
+  }
 
   @override
   void initState() {
@@ -87,18 +78,20 @@ class _FacePageState extends State<FacePage>
       }
     });
 
-    // _addListenerPreventScreenshot();
-    // _preventScreenshotOn();
-    // _checkScreenRecording();
+    if (kReleaseMode) {
+      _addListenerPreventScreenshot();
+      _preventScreenshotOn();
+      _checkScreenRecording();
+    }
   }
 
   @override
   void dispose() {
-    // For iOS only.
-    // _removeListenerPreventScreenshot();
+    if (kReleaseMode) {
+      _removeListenerPreventScreenshot();
+      _preventScreenshotOff();
+    }
 
-    // // For iOS and Android
-    // _preventScreenshotOff();
     super.dispose();
   }
 
@@ -132,7 +125,9 @@ class _FacePageState extends State<FacePage>
                       systemNavigationBarColor: Colors.white, // Navigation bar
                       statusBarColor: Colors.transparent, // Status bar
                     ),
-                    expandedHeight: 196.w + outHeight,
+                    expandedHeight: 86.w +
+                        outHeight +
+                        (logic.listPhotoGroupBean.isEmpty ? 0 : 110.w),
                     backgroundColor: _backgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
@@ -180,46 +175,47 @@ class _FacePageState extends State<FacePage>
                               ),
                             ),
                             SizedBox(height: 20.w),
-                            SizedBox(
-                              height: 90.w,
-                              child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: logic.listPhotoGroupBean.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (c, index) {
-                                    final bean =
-                                        logic.listPhotoGroupBean[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Get.to(
-                                          () => GatherSinglePage(
-                                            id: bean.id ?? 0,
-                                            imgUrlAcross:
-                                                bean.imgUrlAcross ?? "",
-                                          ),
-                                        );
-                                      },
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Container(
-                                        width: 182.w,
-                                        height: 90.w,
-                                        margin: EdgeInsets.only(
-                                            left: 16.w,
-                                            right: index == 2 ? 16.w : 0),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8.w),
-                                          child: QdsImage(
-                                            "${bean.imgUrlAcross}",
-                                            182.w,
-                                            90.w,
-                                            fit: BoxFit.contain,
+                            if (logic.listPhotoGroupBean.isNotEmpty)
+                              SizedBox(
+                                height: 90.w,
+                                child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemCount: logic.listPhotoGroupBean.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (c, index) {
+                                      final bean =
+                                          logic.listPhotoGroupBean[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.to(
+                                            () => GatherSinglePage(
+                                              id: bean.id ?? 0,
+                                              imgUrlAcross:
+                                                  bean.imgUrlAcross ?? "",
+                                            ),
+                                          );
+                                        },
+                                        behavior: HitTestBehavior.opaque,
+                                        child: Container(
+                                          width: 182.w,
+                                          height: 90.w,
+                                          margin: EdgeInsets.only(
+                                              left: 16.w,
+                                              right: index == 2 ? 16.w : 0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.w),
+                                            child: QdsImage(
+                                              "${bean.imgUrlAcross}",
+                                              182.w,
+                                              90.w,
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  }),
-                            ),
+                                      );
+                                    }),
+                              ),
                           ],
                         ),
                       ),
