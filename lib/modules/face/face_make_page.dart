@@ -402,7 +402,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
         // alignment: Alignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 0.w),
+            margin: widget.videoUrl.isEmpty
+                ? EdgeInsets.zero
+                : EdgeInsets.only(
+                    top: ScreenUtil().statusBarHeight,
+                  ),
             child: widget.videoUrl.isEmpty
                 ? Obx(() => PageView.builder(
                     scrollDirection: Axis.vertical, // 让视频垂直滑动

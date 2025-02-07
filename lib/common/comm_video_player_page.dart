@@ -1,5 +1,5 @@
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:zpw/main.dart';
 
 class CommVideoPlayerPage extends StatefulWidget {
@@ -12,16 +12,18 @@ class CommVideoPlayerPage extends StatefulWidget {
 }
 
 class _CommVideoPlayerPageState extends State<CommVideoPlayerPage> {
-  late VideoPlayerController controller;
+  late CachedVideoPlayerPlusController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-    controller.initialize().then((_) {
-      setState(() {});
-      controller.setLooping(true);
+    controller = CachedVideoPlayerPlusController.networkUrl(
+        Uri.parse(widget.videoUrl),
+        invalidateCacheIfOlderThan: const Duration(days: 7));
+    controller.initialize().then((_) async {
+      await controller.setLooping(true);
       controller.play();
+      setState(() {});
     });
 
     eventBus.on<VideoPlayerPauseEvent>().listen((e) {
@@ -45,7 +47,7 @@ class _CommVideoPlayerPageState extends State<CommVideoPlayerPage> {
       child: controller.value.isInitialized
           ? AspectRatio(
               aspectRatio: controller.value.aspectRatio,
-              child: VideoPlayer(controller),
+              child: CachedVideoPlayerPlus(controller),
             )
           : const CircularProgressIndicator(),
       // 显示加载进度
