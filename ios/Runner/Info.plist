@@ -44,11 +44,11 @@
 			<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		</array>
 		<key>NSCameraUsageDescription</key>
-		<string>我们需要访问您的相机，以便您可以拍摄照片。</string>
+		<string>&quot;AI照片王&quot;需要您的同意，才能访问摄像头以拍摄照片进行AI制作。</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>我们需要访问您的相册，以便您可以选择照片。</string>
+		<string>&quot;AI照片王&quot;需要您的同意，才能访问相册以选择图片进行AI制作。</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
-		<string>我们需要访问您的相册，以便您可以选择照片。</string>
+		<string>&quot;AI照片王&quot;需要您的同意，才能访问相册以选择图片进行AI制作。</string>
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>

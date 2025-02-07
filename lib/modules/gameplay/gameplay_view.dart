@@ -133,7 +133,9 @@ class _GameplayPageState extends State<GameplayPage>
                       systemNavigationBarColor: Colors.white, // Navigation bar
                       statusBarColor: Colors.transparent, // Status bar
                     ),
-                    expandedHeight: 196.w + outHeight,
+                    expandedHeight: 86.w +
+                        outHeight +
+                        (logic.listPhotoGroupBean.isEmpty ? 0 : 110.w),
                     backgroundColor: _backgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
@@ -183,46 +185,47 @@ class _GameplayPageState extends State<GameplayPage>
                               ),
                             ),
                             SizedBox(height: 20.w),
-                            SizedBox(
-                              height: 90.w,
-                              child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: logic.listPhotoGroupBean.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (c, index) {
-                                    final bean =
-                                        logic.listPhotoGroupBean[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Get.to(
-                                          () => GatherSinglePage(
-                                            id: bean.id ?? 0,
-                                            imgUrlAcross:
-                                                bean.imgUrlAcross ?? "",
-                                          ),
-                                        );
-                                      },
-                                      behavior: HitTestBehavior.opaque,
-                                      child: Container(
-                                        width: 182.w,
-                                        height: 90.w,
-                                        margin: EdgeInsets.only(
-                                            left: 16.w,
-                                            right: index == 2 ? 16.w : 0),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8.w),
-                                          child: QdsImage(
-                                            "${bean.imgUrlAcross}",
-                                            182.w,
-                                            90.w,
-                                            fit: BoxFit.contain,
+                            if (logic.listPhotoGroupBean.isNotEmpty)
+                              SizedBox(
+                                height: 90.w,
+                                child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemCount: logic.listPhotoGroupBean.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (c, index) {
+                                      final bean =
+                                          logic.listPhotoGroupBean[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.to(
+                                            () => GatherSinglePage(
+                                              id: bean.id ?? 0,
+                                              imgUrlAcross:
+                                                  bean.imgUrlAcross ?? "",
+                                            ),
+                                          );
+                                        },
+                                        behavior: HitTestBehavior.opaque,
+                                        child: Container(
+                                          width: 182.w,
+                                          height: 90.w,
+                                          margin: EdgeInsets.only(
+                                              left: 16.w,
+                                              right: index == 2 ? 16.w : 0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.w),
+                                            child: QdsImage(
+                                              "${bean.imgUrlAcross}",
+                                              182.w,
+                                              90.w,
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  }),
-                            ),
+                                      );
+                                    }),
+                              ),
                           ],
                         ),
                       ),
