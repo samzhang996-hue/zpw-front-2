@@ -25,12 +25,17 @@ public class LjPhotoAdapter extends BaseQuickAdapter<PhotoBean, BaseViewHolder> 
     @Override
     protected void convert(@NonNull BaseViewHolder baseViewHolder, PhotoBean allPhotoBean) {
         ImageView img = baseViewHolder.getView(R.id.iv_all_img);
+        ImageView iv_select = baseViewHolder.getView(R.id.iv_select);
 //        if (allPhotoBean.getPath().equals("All") && baseViewHolder.getLayoutPosition() == 0) {
 //            img.setImageResource(allPhotoBean.img);
 //        } else {
-            GlideUtils.loadImage(getContext(), Uri.fromFile(new File(allPhotoBean.getImagePath())), img);
+        GlideUtils.loadImage(getContext(), Uri.fromFile(new File(allPhotoBean.getImagePath())), img);
 //        }
-
+        if (allPhotoBean.isSelect()) {
+            iv_select.setImageResource(R.mipmap.select);
+        } else {
+            iv_select.setImageResource(R.mipmap.un_select);
+        }
     }
 
     public interface OnItemChildClickCallBack {

@@ -9,7 +9,15 @@
         android:id="@+id/iv_all_img"
         android:layout_width="124dp"
         android:layout_height="124dp"
-        android:scaleType="centerCrop"
         android:layout_margin="1dp"
-     />
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/iv_select"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="right"
+        android:layout_margin="4dp"
+        android:src="@mipmap/select"/>
+
 </FrameLayout>

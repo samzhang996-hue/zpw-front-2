@@ -37,12 +37,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class LJPhotoActivity extends AppCompatActivity {
     RecyclerView recycler_ljPhoto;
     TextView toolbar_name;
-    LinearLayout ll_left_back;
+    LinearLayout ll_left_back, ll_hf;
     LjPhotoAdapter ljPhotoAdapter;
 
     private LoadingProgressDialog mProgressDialog;
@@ -57,6 +60,19 @@ public class LJPhotoActivity extends AppCompatActivity {
         fullScreen(this);
         toolbar_name = findViewById(R.id.toolbar_name);
         recycler_ljPhoto = findViewById(R.id.recycler_ljPhoto);
+        findViewById(R.id.ll_hf).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(LJPhotoActivity.this, "正在恢复中...", Toast.LENGTH_LONG).show();
+                        saveAllImagesToGallery(selectedPhotos);
+                    }
+                });
+
+            }
+        });
         findViewById(R.id.ll_left_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,31 +101,13 @@ public class LJPhotoActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * 通过设置全屏，设置状态栏透明
-     */
-    private void fullScreen(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = activity.getWindow();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
-                View decorView = window.getDecorView();
-                //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
-                int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                decorView.setSystemUiVisibility(option);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.TRANSPARENT);
-            } else {
-                WindowManager.LayoutParams attributes = window.getAttributes();
-                int flagTranslucentStatus = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-                attributes.flags |= flagTranslucentStatus;
-                window.setAttributes(attributes);
-            }
-        }
-    }
+
+    List<PhotoBean> photoBeanList;
+    List<PhotoBean> selectedPhotos = new ArrayList<>();
+
     @SuppressLint("Range")
     public void getAllPhotoData() {
-        List<PhotoBean> photoBeanList = getAllShownImages();
+        photoBeanList = getAllShownImages();
         hideLoading();
         ljPhotoAdapter = new LjPhotoAdapter(photoBeanList);
         recycler_ljPhoto.setLayoutManager(new GridLayoutManager(this, 3, RecyclerView.VERTICAL, false));
@@ -118,22 +116,27 @@ public class LJPhotoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
                 PhotoBean o = (PhotoBean) adapter.getData().get(position);
-                LjPhotoDialog ljPhotoDialog = new LjPhotoDialog(LJPhotoActivity.this);
-                ljPhotoDialog.show();
-                ljPhotoDialog.setOnConfirmClickListener(new LjPhotoDialog.OnConfirmClickListener() {
-                    @Override
-                    public void onLeftClick() {
-                        ljPhotoDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onRightClick() {
-                        saveImageToGallery(o.getImagePath());
-                        ljPhotoDialog.dismiss();
-                    }
-                });
+                toggleSelection(o);
+                ljPhotoAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void toggleSelection(PhotoBean photoBean) {
+        if (selectedPhotos.contains(photoBean)) {
+            // 如果已选择，则取消选择并从列表中移除
+            selectedPhotos.remove(photoBean);
+            photoBean.setSelect(false);
+        } else {
+            // 如果未选择且未超过99张限制，则选择并添加到列表中
+            if (selectedPhotos.size() < 99) {
+                selectedPhotos.add(photoBean);
+                photoBean.setSelect(true);
+            } else {
+                // 可选：显示一个Toast或错误消息，告知用户已达到最大选择数
+                Toast.makeText(LJPhotoActivity.this, "一次最多恢复99张", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public List<PhotoBean> getAllShownImages() {
@@ -159,12 +162,8 @@ public class LJPhotoActivity extends AppCompatActivity {
                     // 检查文件扩展名
                     String fileName = file.getName().toLowerCase();
                     if (fileName.endsWith(".jpg") || fileName.endsWith(".png") || fileName.endsWith(".mp4")) {
-                        if ((file.getAbsolutePath().toLowerCase().contains("trash") ||
-                                file.getAbsolutePath().toLowerCase().contains("dcim") ||
-                                file.getAbsolutePath().toLowerCase().contains("recycle") ||
-                                file.getAbsolutePath().toLowerCase().contains("pictures"))
-                        ) {
-                            listOfAllImages.add(new PhotoBean(file.getAbsolutePath()));
+                        if ((file.getAbsolutePath().toLowerCase().contains("trash") || file.getAbsolutePath().toLowerCase().contains("dcim") || file.getAbsolutePath().toLowerCase().contains("recycle") || file.getAbsolutePath().toLowerCase().contains("pictures"))) {
+                            listOfAllImages.add(new PhotoBean(file.getAbsolutePath(), false));
                         }
                     }
                 }
@@ -185,23 +184,73 @@ public class LJPhotoActivity extends AppCompatActivity {
     public void hideLoading() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
+            mProgressDialog=null;
         }
     }
 
     private void saveImageToGallery(String imagePath) {
         String sourcePath = imagePath;
         File destDir = Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM); // 应用私有目录
-        String destPath = destDir.getAbsolutePath() + File.separator + System.currentTimeMillis()+"_saved_image.jpg";
+        String destPath = destDir.getAbsolutePath() + File.separator + System.currentTimeMillis() + "_saved_image.jpg";
 
         boolean isSaved = ImageUtils.saveImage(this, sourcePath, destPath);
-        if (isSaved) {
-            // 保存成功
+
+    }
+
+    private void saveAllImagesToGallery(List<PhotoBean> selectedPhotos) {
+        int numberOfPhotos = selectedPhotos.size();
+        if(numberOfPhotos==0){
+            Toast.makeText(this, "未选择需要恢复的照片", Toast.LENGTH_LONG).show();
+            return;
+        }
+        CountDownLatch latch = new CountDownLatch(numberOfPhotos);
+
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfPhotos); // 或者使用更小的线程池大小
+
+        for (PhotoBean photoBean : selectedPhotos) {
+            // 假设你有一个方法可以从PhotoBean获取图片路径
+            String imagePath = photoBean.getImagePath();
+
+            executor.submit(() -> {
+                saveImageToGallery(imagePath);
+                latch.countDown(); // 每次保存完成后递减计数
+            });
+        }
+        try {
+            latch.await(); // 等待所有任务完成
             Toast.makeText(this, "恢复成功!可到相册查看", Toast.LENGTH_LONG).show();
-        } else {
-            // 保存失败
-            Toast.makeText(this, "恢复失败", Toast.LENGTH_LONG).show();
+            finish();
+        } catch (InterruptedException e) {
+            // 处理中断异常，可能需要恢复中断状态
+            Thread.currentThread().interrupt();
+            Toast.makeText(this, "恢复过程中断", Toast.LENGTH_LONG).show();
+
+        } finally {
+            executor.shutdown(); // 关闭线程池
+
         }
     }
 
-
+    /**
+     * 通过设置全屏，设置状态栏透明
+     */
+    private void fullScreen(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = activity.getWindow();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
+                View decorView = window.getDecorView();
+                //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
+                int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                decorView.setSystemUiVisibility(option);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(Color.TRANSPARENT);
+            } else {
+                WindowManager.LayoutParams attributes = window.getAttributes();
+                int flagTranslucentStatus = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+                attributes.flags |= flagTranslucentStatus;
+                window.setAttributes(attributes);
+            }
+        }
+    }
 }

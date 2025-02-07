@@ -87,7 +87,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
           ),
           // physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: state.listPhotoGroupBean.length,
+          itemCount: logic.state.listPhotoGroupBean.length,
           itemBuilder: (BuildContext context, int index) {
             ListPhotoGroupBean data = state.listPhotoGroupBean[index];
             var groupName = data.groupName ?? "";
@@ -143,7 +143,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                   )
                 ],
               )),
-              onTap: ()  {
+              onTap: () {
                 Log.d("async----$frontType");
                 if (frontType == "SJHF") {
                   onStartPhoto();
@@ -167,6 +167,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
           }),
     ));
   }
+
   onStartPhoto() async {
     await PermissionUtils.checkFilesAccessPermission();
     startPhoto();
