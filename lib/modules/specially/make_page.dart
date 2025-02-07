@@ -59,6 +59,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
   }
 
   void _make() {
+    _canBack = true;
     if (_nicknameEditingController.text.isEmpty) {
       HandleTool.showAppToastText("请输入文案");
       return;
