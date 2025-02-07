@@ -9,6 +9,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/face/gather_page.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/wf/restore/restore_view.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/permission.dart';
@@ -146,7 +147,8 @@ class _WfPageState extends BaseWidgetState<WfPage> {
               onTap: () {
                 Log.d("async----$frontType");
                 if (frontType == "SJHF") {
-                  onStartPhoto();
+                  gotoPushPage(RestorePage());
+                  // onStartPhoto();
                 }
                 // Get.to(
                 //   () => WfPage2(
@@ -168,8 +170,5 @@ class _WfPageState extends BaseWidgetState<WfPage> {
     ));
   }
 
-  onStartPhoto() async {
-    await PermissionUtils.checkFilesAccessPermission();
-    startPhoto();
-  }
+
 }
