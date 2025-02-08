@@ -53,7 +53,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
       }
     }
     _isFilesAccessPermission.value = true;
-    List<AssetPathEntity> resultList = await PhotoManager.getAssetPathList();
+    List<AssetPathEntity> resultList = await PhotoManager.getAssetPathList(type: RequestType.image);
     Log.d("list----list----${resultList.length}");
     // 假设我们只获取第一个相册的照片
     if (resultList.isNotEmpty) {
