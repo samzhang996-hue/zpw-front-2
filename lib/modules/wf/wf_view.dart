@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
-import 'package:zpw/modules/face/gather_page.dart';
+import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/modules/wf/aikt/aikt_view.dart';
 import 'package:zpw/modules/wf/restore/restore_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
-import 'package:zpw/utils/my_plugin.dart';
-import 'package:zpw/utils/permission.dart';
 
 // import 'package:zpw/modules/wf/wf_page.dart';
 import 'wf_logic.dart';
@@ -135,7 +131,9 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                       Container(
                         width: 56.w,
                         height: 27.w,
-                        decoration: BoxDecoration(color: Color(0xffFFEEF2), borderRadius: BorderRadius.circular(15)),
+                        decoration: BoxDecoration(
+                            color: Color(0xffFFEEF2),
+                            borderRadius: BorderRadius.circular(15)),
                         child: Center(
                             child: CommText(
                           text: "使用",
@@ -159,11 +157,19 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                     gotoPushPage(RestorePage());
                     break;
                   case "AIKT":
-                    gotoPushPage(Photo_listPage(isNew: false), arguments: {"type": 1});
+                    gotoPushPage(Photo_listPage(isNew: false),
+                        arguments: {"type": 1});
                     break;
                   default:
+                    Log.e("xx: ${data.toJson()}");
+                    Get.to(
+                      () => GatherSinglePage(
+                        id: data.id ?? 0,
+                        imgUrlAcross: imgUrlVertical,
+                        isWF: true,
+                      ),
+                    );
                     break;
-
                 }
 
                 // Get.to(
