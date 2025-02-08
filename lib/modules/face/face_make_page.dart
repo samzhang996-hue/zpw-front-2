@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/comm_video_player_page.dart';
+import 'package:zpw/common/comm_video_player_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/main.dart';
 import 'package:zpw/model/group_other_func_list_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
@@ -35,7 +35,6 @@ class FaceMakePage extends BaseStatefulWidget {
 }
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
-  late PageController _pageController;
   late final _videoUrls = <String>[].obs;
   late final _tags = <String>[].obs;
   late final _funcIds = <int>[];
@@ -53,14 +52,14 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   late final _myHeadImg = ''.obs;
 
   late final _list = <String>[].obs;
-
+  VideoPlayerController? _videoPlayerController;
   void _toHistory() async {
     if (_isNotEmptyVideoUrl) {
-      eventBus.fire(VideoPlayerPauseEvent());
+      _videoPlayerController?.pause();
     }
     await Get.to(() => WorksPage());
     if (_isNotEmptyVideoUrl) {
-      eventBus.fire(VideoPlayerPlayEvent());
+      _videoPlayerController?.play();
     }
   }
 
@@ -218,13 +217,13 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   void _make() async {
     if (_isNotEmptyVideoUrl) {
-      eventBus.fire(VideoPlayerPauseEvent());
+      _videoPlayerController?.pause();
     }
     if (!HandleTool.instance.isMember) {
       Get.find<VipLogic>().getVipHome();
       await Get.to(() => VipPage());
       if (_isNotEmptyVideoUrl) {
-        eventBus.fire(VideoPlayerPlayEvent());
+        _videoPlayerController?.play();
       }
       return;
     }
@@ -321,10 +320,6 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // }
   }
 
-  void _onPageChanged(int index) {
-    _currentIndex.value = index;
-  }
-
   void _getData() {
     if (widget.groupId == -1) {
       if (_isNotEmptyVideoUrl) {
@@ -377,15 +372,10 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     //       });
     //     });
     // }
-
-    _pageController = PageController();
   }
 
   @override
   void dispose() {
-    // 在销毁时释放资源
-    _pageController.dispose();
-
     super.dispose();
   }
 
@@ -429,19 +419,15 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                       );
                     }))
                 : Obx(
-                    () => PageView.builder(
-                      controller: _pageController,
-                      itemCount: _videoUrls.length,
-                      onPageChanged: _onPageChanged,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return Center(
-                          child: CommVideoPlayerPage(
-                            videoUrl: _videoUrls[index],
+                    () => _videoUrls.isEmpty
+                        ? const SizedBox.shrink()
+                        : CommVideoPlayerWidget(
+                            videoUrls: _videoUrls,
+                            onPageChanged: (index, videoPlayerController) {
+                              _currentIndex.value = index;
+                              _videoPlayerController = videoPlayerController;
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ),
           ),
           Positioned(

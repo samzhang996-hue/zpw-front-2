@@ -1,6 +1,5 @@
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:zpw/main.dart';
+import 'package:video_player/video_player.dart';
 
 class CommVideoPlayerPage extends StatefulWidget {
   final String videoUrl;
@@ -12,25 +11,15 @@ class CommVideoPlayerPage extends StatefulWidget {
 }
 
 class _CommVideoPlayerPageState extends State<CommVideoPlayerPage> {
-  late CachedVideoPlayerPlusController controller;
+  late VideoPlayerController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = CachedVideoPlayerPlusController.networkUrl(
-        Uri.parse(widget.videoUrl),
-        invalidateCacheIfOlderThan: const Duration(days: 7));
-    controller.initialize().then((_) async {
-      await controller.setLooping(true);
-      controller.play();
+    controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+    controller.initialize().then((_) {
       setState(() {});
-    });
-
-    eventBus.on<VideoPlayerPauseEvent>().listen((e) {
-      controller.pause();
-    });
-
-    eventBus.on<VideoPlayerPlayEvent>().listen((e) {
+      controller.setLooping(true);
       controller.play();
     });
   }
@@ -47,18 +36,9 @@ class _CommVideoPlayerPageState extends State<CommVideoPlayerPage> {
       child: controller.value.isInitialized
           ? AspectRatio(
               aspectRatio: controller.value.aspectRatio,
-              child: CachedVideoPlayerPlus(controller),
+              child: VideoPlayer(controller),
             )
           : const CircularProgressIndicator(),
-      // 显示加载进度
     );
   }
-}
-
-class VideoPlayerPauseEvent {
-  VideoPlayerPauseEvent();
-}
-
-class VideoPlayerPlayEvent {
-  VideoPlayerPlayEvent();
 }
