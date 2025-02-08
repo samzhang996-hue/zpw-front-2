@@ -13,6 +13,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
+import 'package:zpw/modules/wf/aikt/aikt_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/permission.dart';
@@ -68,6 +69,11 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
   }
 
   void _uploadImg(String? path) async {
+    if (state.type == 1) {
+      // gotoPushPage(AiktPage(), arguments: {"path": path});
+      Get.off(AiktPage(), arguments: {"path": path});
+      return;
+    }
     HandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
       Log.e("widget.isNew:${widget.isNew}");
       Get.find<MineLogic>().getUserInfo();
@@ -125,17 +131,22 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
       return;
     }
     Log.e('file----${pickedFile.path}');
-    if (Platform.isIOS) {
-      int fileSize = await pickedFile.length();
-      if (fileSize > _maxSize) {
-        HandleTool.showAppToastText("文件过大,请重新选择");
-        return;
-      }
-      Log.e("file:${formatFileSize(fileSize)}");
-      // Get.back(result: pickedFile.path);
-      _uploadImg(pickedFile.path);
+    // if (Platform.isIOS) {
+    int fileSize = await pickedFile.length();
+    if (fileSize > _maxSize) {
+      HandleTool.showAppToastText("文件过大,请重新选择");
       return;
     }
+    Log.e("file:${formatFileSize(fileSize)}");
+    if (state.type == 1) {
+      // gotoPushPage(AiktPage(), arguments: {"path": pickedFile.path});
+      Get.off(AiktPage(), arguments: {"path": pickedFile.path});
+      return;
+    }
+    // Get.back(result: pickedFile.path);
+    _uploadImg(pickedFile.path);
+    return;
+    // }
 
     _loadPhotos();
   }
@@ -180,8 +191,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                 child: GestureDetector(
                                     onTap: () {
                                       if (!HandleTool.instance.isMember) {
-                                        gotoPushPage(VipPage(),
-                                            arguments: {"type": 1});
+                                        gotoPushPage(VipPage(), arguments: {"type": 1});
                                       } else {
                                         Get.offAll(() => const MainPage());
                                       }
@@ -239,8 +249,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                         margin: EdgeInsets.only(left: 16.w, right: 16.w),
                         child: GridView.builder(
                           padding: const EdgeInsets.all(0),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             crossAxisSpacing: 2.0,
                             mainAxisSpacing: 2.0,
@@ -250,13 +259,10 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                             final AssetEntity photo = _photos[index];
                             return FutureBuilder<Uint8List?>(
                               future: photo.thumbnailData,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<Uint8List?> snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
+                              builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
                                   if (snapshot.hasError) {
-                                    return CommText(
-                                        text: 'Error loading thumbnail');
+                                    return CommText(text: 'Error loading thumbnail');
                                   }
                                   Uint8List? thumbnail = snapshot.data;
                                   if (thumbnail != null) {
@@ -269,22 +275,18 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                           int fileSize = await file.length();
 
                                           if (fileSize > _maxSize) {
-                                            HandleTool.showAppToastText(
-                                                "文件过大,请重新选择");
+                                            HandleTool.showAppToastText("文件过大,请重新选择");
                                             return;
                                           }
-                                          Log.e(
-                                              "file:${formatFileSize(fileSize)}");
+                                          Log.e("file:${formatFileSize(fileSize)}");
                                           _uploadImg(file.path);
                                           // Log.e(
                                           //     "file:${formatFileSize(fileSize)}");
                                           // Get.back(result: file.path);
                                         },
-                                        child: Image.memory(thumbnail,
-                                            fit: BoxFit.cover));
+                                        child: Image.memory(thumbnail, fit: BoxFit.cover));
                                   } else {
-                                    return CommText(
-                                        text: 'No thumbnail available');
+                                    return CommText(text: 'No thumbnail available');
                                   }
                                 } else {
                                   // 可以显示一个占位符，比如一个圆形进度指示器
@@ -319,9 +321,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                   width: 1.sw,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.w),
-                        topRight: Radius.circular(20.w)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.w), topRight: Radius.circular(20.w)),
                   ),
                   child: Column(
                     children: [
@@ -358,8 +358,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                             children: [
                               const Spacer(),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   GestureDetector(
                                     onTap: Get.back,
@@ -369,11 +368,8 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                       height: 52.w,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        border: Border.all(
-                                            width: 1.w,
-                                            color: const Color(0xFFFF2E7E)),
-                                        borderRadius:
-                                            BorderRadius.circular(26.w),
+                                        border: Border.all(width: 1.w, color: const Color(0xFFFF2E7E)),
+                                        borderRadius: BorderRadius.circular(26.w),
                                       ),
                                       child: Center(
                                         child: CommText(
@@ -395,8 +391,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                       height: 52.w,
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFFF2E7E),
-                                        borderRadius:
-                                            BorderRadius.circular(26.w),
+                                        borderRadius: BorderRadius.circular(26.w),
                                       ),
                                       child: Center(
                                         child: CommText(

@@ -6,7 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/log_utils.dart';
-Future<void> downloadAndSaveMedia(String videoUrl) async {
+typedef DownloadCallback = void Function(bool success);
+Future<void> downloadAndSaveMedia(String videoUrl, DownloadCallback callback) async {
   try {
     Log.d("video----$videoUrl");
     String endStr="temp_video.mp4";
@@ -21,6 +22,7 @@ Future<void> downloadAndSaveMedia(String videoUrl) async {
     // 获取临时目录路径
     final tempDir = await getTemporaryDirectory();
     final tempPath = '${tempDir.path}/$endStr';
+    Log.d("path---$tempPath");
     EasyLoading.show();
     // 使用 Dio 下载文件
     Dio dio = Dio();
@@ -34,8 +36,10 @@ Future<void> downloadAndSaveMedia(String videoUrl) async {
     }
     if (result == true) {
       HandleTool.showAppToastText("已下载到相册");
+      callback(true);
     } else {
       HandleTool.showAppToastText("保存失败");
+      callback(false);
     }
     EasyLoading.dismiss();
 

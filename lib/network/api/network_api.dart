@@ -4,6 +4,7 @@ class Api {
   //本地
   // static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
   static const String API_BASE_URL_DEBUG = "http://photo.jlhkj168.cn";
+
   // static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001/";
 
   ///正式
@@ -25,8 +26,7 @@ class Api {
   static const String photoRecord = "/photoRecord/pageRecord";
 
   ///签约接口
-  static const String payOrder_addUserAgreementOrder =
-      "/center/addUserAgreementOrder";
+  static const String payOrder_addUserAgreementOrder = "/center/addUserAgreementOrder";
 
   /// 下单接口
   static const String payOrder_addOrder = "/center/createOrder";
@@ -54,8 +54,7 @@ class Api {
   static const String sso_bindUserPhone = "/sso/bindUserPhone";
 
   ///新增血糖
-  static const String bloodRecord_addBloodRecord =
-      "/bloodRecord/addBloodRecord";
+  static const String bloodRecord_addBloodRecord = "/bloodRecord/addBloodRecord";
 
   ///血糖记录
   static const String bloodRecord_pageList = "/bloodRecord/pageList";
@@ -81,6 +80,9 @@ class Api {
   ///Get 查询分类下(模板合集)或合集下模板 id 分类或合集id
   ///http://photo.jlhkj168.cn/doc.html#/App%20Knife4j%20doc/%E7%85%A7%E7%89%87%E7%BB%84%E5%90%88%E8%A1%A8/pagePhotoGroupBindUsingGET
   static const String pagePhotoGroupBind = "/photoGroup/pagePhotoGroupBind";
+
+  ///智能扩图
+  static const String outPaint = "/photoRecord/outPaint";
 
   ///添加处理图片
   static const String addPhotoRecord = "/photoRecord/addPhotoRecord";
@@ -116,6 +118,5 @@ class Api {
   static const String imgHaveFace = "/imgHaveFace";
 
   ///Get查询模板所有分类或合集其他的模板
-  static const String getGroupOtherFuncList =
-      "/photoFunc/getGroupOtherFuncList";
+  static const String getGroupOtherFuncList = "/photoFunc/getGroupOtherFuncList";
 }

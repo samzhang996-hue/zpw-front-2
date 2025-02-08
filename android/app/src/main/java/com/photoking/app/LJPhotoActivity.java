@@ -224,10 +224,8 @@ public class LJPhotoActivity extends AppCompatActivity {
             // 处理中断异常，可能需要恢复中断状态
             Thread.currentThread().interrupt();
             Toast.makeText(this, "恢复过程中断", Toast.LENGTH_LONG).show();
-
         } finally {
             executor.shutdown(); // 关闭线程池
-
         }
     }
 

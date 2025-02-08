@@ -1,5 +1,6 @@
 class Photo_listState {
+  late int type;
   Photo_listState() {
-    ///Initialize variables
+    type=0;
   }
 }
