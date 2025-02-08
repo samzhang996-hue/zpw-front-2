@@ -9,6 +9,7 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
+import 'package:zpw/modules/specially/widget/avatar_set_item.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -228,7 +229,9 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                 controller: page,
                 children: logic.listPhotoGroupBean2
                     // .map((e) => FaceItem(id: e.id ?? 0))
-                    .map((e) => CollectionItem(id: e.id ?? 0))
+                    .map((e) => e.id == -1
+                        ? const AvatarSetItem()
+                        : CollectionItem(id: e.id ?? 0))
                     .toList(),
                 onPageChanged: (index) {
                   logic.tabController?.animateTo(index);

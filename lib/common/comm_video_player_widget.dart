@@ -4,13 +4,17 @@ import 'package:video_player/video_player.dart';
 
 class CommVideoPlayerWidget extends StatefulWidget {
   final List<String> videoUrls;
+  final int initialPage;
+  final bool autoPlay;
   final void Function(int index, VideoPlayerController? videoPlayerController)?
       onPageChanged;
 
   const CommVideoPlayerWidget({
     super.key,
     required this.videoUrls,
+    required this.initialPage,
     required this.onPageChanged,
+    required this.autoPlay,
   });
 
   @override
@@ -37,8 +41,10 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
     controller.initialize().then((_) {
       if (mounted) {
         controller.setLooping(true);
-        if (index == 0) {
-          controller.play();
+        if (index == widget.initialPage) {
+          if (widget.autoPlay) {
+            controller.play();
+          }
           widget.onPageChanged?.call(index, controller);
         }
         setState(() {});
@@ -77,11 +83,15 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
     }
   }
 
+  void _init() {
+    _initializeControllers();
+    _pageController = PageController(initialPage: widget.initialPage);
+  }
+
   @override
   void initState() {
     super.initState();
-    _initializeControllers();
-    _pageController = PageController();
+    _init();
   }
 
   @override

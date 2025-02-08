@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
+import 'package:zpw/common/comm_images_widget.dart';
 import 'package:zpw/common/comm_video_player_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
@@ -35,6 +36,8 @@ class FaceMakePage extends BaseStatefulWidget {
 }
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
+  late final _autoPlay = true.obs;
+  late final _initialPage = 0.obs;
   late final _videoUrls = <String>[].obs;
   late final _tags = <String>[].obs;
   late final _funcIds = <int>[];
@@ -54,6 +57,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   late final _list = <String>[].obs;
   VideoPlayerController? _videoPlayerController;
   void _toHistory() async {
+    _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
       _videoPlayerController?.pause();
     }
@@ -216,6 +220,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
       _videoPlayerController?.pause();
     }
@@ -343,6 +348,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
         if (isSuccess == true && results.isNotEmpty) {
           _tags.value = results.map((e) => e.tags ?? "").toList();
           _funcIds.addAll(results.map((e) => e.id ?? 0).toList());
+          _initialPage.value = _funcIds.indexOf(widget.funcId);
           if (_isNotEmptyVideoUrl) {
             _videoUrls.value = results.map((e) => '${e.videoUrl}').toList();
           } else {
@@ -398,30 +404,23 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                     top: ScreenUtil().statusBarHeight,
                   ),
             child: widget.videoUrl.isEmpty
-                ? Obx(() => PageView.builder(
-                    scrollDirection: Axis.vertical, // 让视频垂直滑动
-                    itemCount: _list.length,
-                    physics: const BouncingScrollPhysics(),
-                    onPageChanged: (index) {
-                      _currentIndex.value = index;
-                    },
-                    itemBuilder: (context, index) {
-                      return Container(
-                        alignment: Alignment.center,
-                        color: Colors.white,
-                        width: 1.sw,
-                        height: 1.sh,
-                        child: QdsImage(
-                          _list[index],
-                          1.sw,
-                          1.sh,
-                        ),
-                      );
-                    }))
+                ? Obx(
+                    () => _list.isEmpty
+                        ? const SizedBox.shrink()
+                        : CommImagesWidget(
+                            images: _list,
+                            initialPage: _initialPage.value,
+                            onPageChanged: (index) {
+                              _currentIndex.value = index;
+                            },
+                          ),
+                  )
                 : Obx(
                     () => _videoUrls.isEmpty
                         ? const SizedBox.shrink()
                         : CommVideoPlayerWidget(
+                            autoPlay: _autoPlay.value,
+                            initialPage: _initialPage.value,
                             videoUrls: _videoUrls,
                             onPageChanged: (index, videoPlayerController) {
                               _currentIndex.value = index;

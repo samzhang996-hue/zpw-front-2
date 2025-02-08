@@ -38,6 +38,8 @@ class SpeciallyLogic extends GetxController
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
             listPhotoGroupBean2 = results;
+            listPhotoGroupBean2
+                .add(ListPhotoGroupBean(id: -1, groupName: "头像集"));
             tabController =
                 TabController(length: listPhotoGroupBean2.length, vsync: this);
             update();
