@@ -73,14 +73,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.0"
-  cached_video_player_plus:
-    dependency: "direct main"
-    description:
-      name: cached_video_player_plus
-      sha256: "451ee48bdbd28fac3d49b4389929c44d259b1def5be6dab0c5bfd3ae1f05e8b5"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "3.0.3"
   characters:
     dependency: transitive
     description:
@@ -149,10 +141,10 @@ packages:
     dependency: "direct dev"
     description:
       name: device_info_plus
-      sha256: e3fc9a65820fef83035af8ee8c09004a719d5d1d54e6de978fcb0d84bbeb241a
+      sha256: "72d146c6d7098689ff5c5f66bcf593ac11efc530095385356e131070333e64da"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "11.2.2"
+    version: "11.3.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -193,14 +185,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.0.3"
-  event_bus:
-    dependency: "direct main"
-    description:
-      name: event_bus
-      sha256: "1a55e97923769c286d295240048fc180e7b0768902c3c2e869fe059aafa15304"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -383,14 +367,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.6.6"
-  get_storage:
-    dependency: transitive
-    description:
-      name: get_storage
-      sha256: "39db1fffe779d0c22b3a744376e86febe4ade43bf65e06eab5af707dc84185a2"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.1.1"
   gradient_borders:
     dependency: "direct main"
     description:
@@ -627,10 +603,10 @@ packages:
     dependency: "direct dev"
     description:
       name: package_info_plus
-      sha256: c447a3c3e7be4addf129b8f9ab6a4bd5d166b78918223e223b61fddf4d07e254
+      sha256: "67eae327b1b0faf761964a1d2e5d323c797f3799db0e85aa232db8d9e922bc35"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "8.2.0"
+    version: "8.2.1"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -1104,10 +1080,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_avfoundation
-      sha256: "8a4e73a3faf2b13512978a43cf1cdda66feeeb900a0527f1fbfd7b19cf3458d3"
+      sha256: "84b4752745eeccb6e75865c9aab39b3d28eb27ba5726d352d45db8297fbd75bc"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.6.7"
+    version: "2.7.0"
   video_player_platform_interface:
     dependency: transitive
     description:

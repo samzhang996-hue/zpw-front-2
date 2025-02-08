@@ -1,7 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, depend_on_referenced_packages,library_private_types_in_public_api
 
 import 'package:easy_refresh/easy_refresh.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -13,7 +12,6 @@ import 'package:zpw/utils/ads_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-EventBus eventBus = EventBus();
 void main() {
   Get.lazyPut(() => MainState());
 
