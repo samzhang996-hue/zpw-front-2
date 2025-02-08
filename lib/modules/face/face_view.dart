@@ -63,9 +63,7 @@ class _FacePageState extends State<FacePage>
     _scrollViewController?.addListener(() {
       double? offset = _scrollViewController?.offset;
 
-      // print("offset:${offset}");
-
-      if ((offset! > 166.36363636363615) == true) {
+      if ((offset! >= kToolbarHeight) == true) {
         // 滚动到最顶部时，背景色为淡紫色
         setState(() {
           _backgroundColor = Colors.white;
