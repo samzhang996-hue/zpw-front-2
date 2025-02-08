@@ -12,7 +12,7 @@ class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
   TabController? tabController;
   var listPhotoGroupBean = <ListPhotoGroupBean>[];
   var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
-  late final isOk = false.obs;
+
   @override
   void onInit() {
     super.onInit();

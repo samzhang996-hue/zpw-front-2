@@ -230,7 +230,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
     if (_myHeadImg.value.isEmpty) {
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
-
+      _videoPlayerController?.play();
       Log.e("res:$res");
       if (res == null) {
         return;
