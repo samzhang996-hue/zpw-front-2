@@ -12,9 +12,10 @@ import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 class CollectionItem extends StatefulWidget {
-  const CollectionItem({super.key, required this.id});
+  const CollectionItem({super.key, required this.id, this.hasAvatar = true});
 
   final int id;
+  final bool hasAvatar;
 
   @override
   State<CollectionItem> createState() => _CollectionItemState();
@@ -32,7 +33,7 @@ class _CollectionItemState extends State<CollectionItem> {
     final params = {
       "id": widget.id,
       "pageIndex": 1,
-      "pageSize": 5,
+      "pageSize": 10,
     };
 
     Log.e("params:$params");
@@ -103,6 +104,7 @@ class _CollectionItemState extends State<CollectionItem> {
             funcId: bean.photoFuncResp?.id ?? 0,
             imageUrl: bean.photoFuncResp?.showImgGif ?? "",
             videoUrl: bean.photoFuncResp?.videoUrl ?? "",
+            hasAvatar: widget.hasAvatar,
           ),
         );
       },

@@ -24,12 +24,14 @@ class FaceMakePage extends BaseStatefulWidget {
   final String imageUrl;
   final String videoUrl;
   final int groupId;
+  final bool hasAvatar;
   FaceMakePage({
     required this.title,
     required this.funcId,
     required this.imageUrl,
     required this.videoUrl,
     this.groupId = -1,
+    this.hasAvatar = true,
   });
 
   @override
@@ -228,6 +230,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
         ),
         barrierDismissible: false);
     if (res == true) {}
+    if (_isNotEmptyVideoUrl) {
+      _videoPlayerController?.play();
+    }
   }
 
   void _make() async {
@@ -245,7 +250,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       return;
     }
 
-    if (_myHeadImg.value.isEmpty) {
+    if (!widget.hasAvatar || _myHeadImg.value.isEmpty) {
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
       _videoPlayerController?.play();
       Log.e("res:$res");
@@ -529,44 +534,106 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             bottom: 0,
             child: SafeArea(
               child: Container(
-                height: 146.w,
+                height: widget.hasAvatar ? 146.w : 65.w,
                 width: 1.sw,
                 decoration: const BoxDecoration(color: Colors.transparent),
                 child: Column(
                   children: [
                     // const Spacer(),
-                    Obx(
-                      () => SizedBox(
-                        width: 1.sw,
-                        height: 76.w,
-                        child: _showHeadImg.isFalse
-                            ? Center(
-                                child: GestureDetector(
-                                  onTap: _uploadNewHeadImg,
-                                  behavior: HitTestBehavior.opaque,
-                                  child: Image.asset(
-                                    "no_head_img.png".make,
-                                    width: 76.w,
-                                    height: 76.w,
-                                    fit: BoxFit.cover,
+                    if (widget.hasAvatar)
+                      Obx(
+                        () => SizedBox(
+                          width: 1.sw,
+                          height: 76.w,
+                          child: _showHeadImg.isFalse
+                              ? Center(
+                                  child: GestureDetector(
+                                    onTap: _uploadNewHeadImg,
+                                    behavior: HitTestBehavior.opaque,
+                                    child: Image.asset(
+                                      "no_head_img.png".make,
+                                      width: 76.w,
+                                      height: 76.w,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                              )
-                            : Center(
-                                child: Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    if (_myHeadImg.isNotEmpty)
-                                      Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Container(
-                                            width: 72.w,
-                                            height: 72.w,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.grey,
-                                              shape: BoxShape.circle,
-                                              gradient: LinearGradient(
+                                )
+                              : Center(
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      if (_myHeadImg.isNotEmpty)
+                                        Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 72.w,
+                                              height: 72.w,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.grey,
+                                                shape: BoxShape.circle,
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Color(0xFFFF2EB8),
+                                                    Color(0xFFFF2E2E)
+                                                  ],
+                                                  begin: Alignment
+                                                      .centerLeft, // 渐变的起始点
+                                                  end: Alignment
+                                                      .centerRight, // 渐变的结束点
+                                                ),
+                                              ),
+                                            ),
+                                            ClipOval(
+                                              child: QdsImage(
+                                                  _myHeadImg.value, 68.w, 68.w),
+                                            ),
+                                          ],
+                                        )
+                                      else
+                                        GestureDetector(
+                                          onTap: _uploadNewHeadImg,
+                                          behavior: HitTestBehavior.opaque,
+                                          child: Image.asset(
+                                            "no_head_img.png".make,
+                                            width: 76.w,
+                                            height: 76.w,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      Obx(
+                                        () => Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: Visibility(
+                                            visible: _showHeadImg.isTrue &&
+                                                HandleTool.instance.headImg
+                                                    .isNotEmpty,
+                                            child: GestureDetector(
+                                              onTap: _closeHeadImg,
+                                              behavior: HitTestBehavior.opaque,
+                                              child: Image.asset(
+                                                "make_close.png".make,
+                                                width: 18.w,
+                                                height: 18.w,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: -5.w,
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTap: _uploadNewHeadImg,
+                                          behavior: HitTestBehavior.opaque,
+                                          child: Container(
+                                            width: 76.w,
+                                            height: 21.w,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.w),
+                                              gradient: const LinearGradient(
                                                 colors: [
                                                   Color(0xFFFF2EB8),
                                                   Color(0xFFFF2E2E)
@@ -577,85 +644,24 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                                     .centerRight, // 渐变的结束点
                                               ),
                                             ),
-                                          ),
-                                          ClipOval(
-                                            child: QdsImage(
-                                                _myHeadImg.value, 68.w, 68.w),
-                                          ),
-                                        ],
-                                      )
-                                    else
-                                      GestureDetector(
-                                        onTap: _uploadNewHeadImg,
-                                        behavior: HitTestBehavior.opaque,
-                                        child: Image.asset(
-                                          "no_head_img.png".make,
-                                          width: 76.w,
-                                          height: 76.w,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    Obx(
-                                      () => Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child: Visibility(
-                                          visible: _showHeadImg.isTrue &&
-                                              HandleTool
-                                                  .instance.headImg.isNotEmpty,
-                                          child: GestureDetector(
-                                            onTap: _closeHeadImg,
-                                            behavior: HitTestBehavior.opaque,
-                                            child: Image.asset(
-                                              "make_close.png".make,
-                                              width: 18.w,
-                                              height: 18.w,
+                                            child: Center(
+                                              child: CommText(
+                                                text: "上传新头像",
+                                                textColor:
+                                                    const Color(0xFFFFFFFF),
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Positioned(
-                                      bottom: -5.w,
-                                      right: 0,
-                                      child: GestureDetector(
-                                        onTap: _uploadNewHeadImg,
-                                        behavior: HitTestBehavior.opaque,
-                                        child: Container(
-                                          width: 76.w,
-                                          height: 21.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12.w),
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFFFF2EB8),
-                                                Color(0xFFFF2E2E)
-                                              ],
-                                              begin: Alignment
-                                                  .centerLeft, // 渐变的起始点
-                                              end: Alignment
-                                                  .centerRight, // 渐变的结束点
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: CommText(
-                                              text: "上传新头像",
-                                              textColor:
-                                                  const Color(0xFFFFFFFF),
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 12.w),
+                    if (widget.hasAvatar) SizedBox(height: 12.w),
                     Expanded(
                       child: Container(
                         width: 1.sw,

@@ -4,8 +4,15 @@
 	<dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDevelopmentRegion</key>
+  <array>
+     <string>zh-CN</string>
+    
+  </array>
+<key>CFBundleLocalizations</key>
+  <array>
+   <string>zh-CN</string>
+  </array>
 		<key>CFBundleDisplayName</key>
 		<string>AI照片王</string>
 		<key>CFBundleExecutable</key>

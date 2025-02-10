@@ -199,11 +199,11 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                       width: 28.w,
                                     )),
                               ),
-                        leftClick: !widget.isNew
-                            ? null
-                            : () {
-                                HandleTool.showAppToastText("message");
-                              },
+                        // leftClick: !widget.isNew
+                        //     ? null
+                        //     : () {
+                        //         HandleTool.showAppToastText("message");
+                        //       },
                         right: InkWell(
                             onTap: () {
                               pickImage();
