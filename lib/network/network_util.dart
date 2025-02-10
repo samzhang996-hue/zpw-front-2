@@ -144,7 +144,7 @@ class DioUtils {
           }
         }
       } else {
-        Log.i("=====response==error=====${response?.data}");
+        Log.i("==502===response==error=====${response?.data}");
         if (success != null) {
           success(false, response.statusCode, response?.data, []);
         }

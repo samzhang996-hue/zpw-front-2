@@ -53,7 +53,7 @@ class HandleTool {
   String recordDate = "";
 
   String channel = "android";
-  // String headImg = "";
+  String headImg = "";
 
   // Map<String, dynamic> configData = <String, dynamic>{
   //   "QWYHXY": "",
@@ -520,6 +520,7 @@ class HandleTool {
       HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
           isShowProgress: true, success: (isSuccess, code, message, results) {
         if (isSuccess == true && results.isNotEmpty) {
+          HandleTool.instance.headImg = '${bean.url}';
           success?.call(bean.url ?? '');
         } else {
           CustomFaceDialogUtils.showCustomDialog(onPressed: () {});

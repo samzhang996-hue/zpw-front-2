@@ -139,10 +139,10 @@ class SplashLogic extends BaseGetxController {
             Log.d("userInfoBean----${HandleTool.instance.isMember}");
             // Get.offAll(const MainPage());
             // return;
-            // if (userInfoBean.headImg!.isNotEmpty) {
-            //   isFirst = true;
-            // }
-            // HandleTool.instance.headImg = userInfoBean.headImg ?? '';
+            if (userInfoBean.headImg!.isNotEmpty) {
+              isFirst = true;
+            }
+            HandleTool.instance.headImg = userInfoBean.headImg ?? '';
             // Get.offAll(const MainPage());
             // return;
             // return;
@@ -170,8 +170,8 @@ class SplashLogic extends BaseGetxController {
           if (isFirst) {
             Get.offAll(const MainPage());
           } else {
-            Get.offAll(const MainPage());
-            return;
+            // Get.offAll(const MainPage());
+            // return;
             Get.offAll(GuidePage());
           }
         }

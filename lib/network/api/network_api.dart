@@ -26,7 +26,8 @@ class Api {
   static const String photoRecord = "/photoRecord/pageRecord";
 
   ///签约接口
-  static const String payOrder_addUserAgreementOrder = "/center/addUserAgreementOrder";
+  static const String payOrder_addUserAgreementOrder =
+      "/center/addUserAgreementOrder";
 
   /// 下单接口
   static const String payOrder_addOrder = "/center/createOrder";
@@ -54,7 +55,8 @@ class Api {
   static const String sso_bindUserPhone = "/sso/bindUserPhone";
 
   ///新增血糖
-  static const String bloodRecord_addBloodRecord = "/bloodRecord/addBloodRecord";
+  static const String bloodRecord_addBloodRecord =
+      "/bloodRecord/addBloodRecord";
 
   ///血糖记录
   static const String bloodRecord_pageList = "/bloodRecord/pageList";
@@ -118,5 +120,6 @@ class Api {
   static const String imgHaveFace = "/imgHaveFace";
 
   ///Get查询模板所有分类或合集其他的模板
-  static const String getGroupOtherFuncList = "/photoFunc/getGroupOtherFuncList";
+  static const String getGroupOtherFuncList =
+      "/photoFunc/getGroupOtherFuncList";
 }

@@ -42,7 +42,10 @@ class _WfPageState extends BaseWidgetState<WfPage> {
             return Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 44.w, left: 16.w, right: 16.w),
+                  margin: EdgeInsets.only(
+                      top: ScreenUtil().statusBarHeight + 10.w,
+                      left: 16.w,
+                      right: 16.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

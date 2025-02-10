@@ -142,6 +142,9 @@ class VipLogic extends BaseGetxController {
                       0;
             }
             update();
+          } else {
+            state.vipBean = state.normalVipBean;
+            update();
           }
         },
         onModel: (m) => VipBean.fromJson(m));

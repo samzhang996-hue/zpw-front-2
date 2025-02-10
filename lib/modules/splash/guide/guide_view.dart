@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
@@ -28,6 +29,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
   }
 
   void _uploadImg() async {
+    logic.videoPlayerController?.pause();
     Get.to(() => Photo_listPage());
   }
 
@@ -48,10 +50,32 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
           SizedBox(
             height: 8.w,
           ),
-          Expanded(
-            child: QdsImage(state.showImgGif, double.infinity, double.infinity,
-                fit: BoxFit.cover),
-          ),
+          if (state.videoUrl.isNotEmpty)
+            logic.videoPlayerController == null
+                ? Expanded(
+                    child: Container(
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  )
+                : logic.videoPlayerController!.value.isInitialized
+                    ? Expanded(
+                        child: AspectRatio(
+                          aspectRatio:
+                              logic.videoPlayerController!.value.aspectRatio,
+                          child: VideoPlayer(logic.videoPlayerController!),
+                        ),
+                      )
+                    : Expanded(
+                        child: Container(
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                      )
+          else
+            Expanded(
+              child: QdsImage(
+                  state.showImgGif, double.infinity, double.infinity,
+                  fit: BoxFit.cover),
+            ),
           InkWell(
             child: Container(
               margin: EdgeInsets.only(

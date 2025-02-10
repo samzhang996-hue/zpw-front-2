@@ -2,13 +2,13 @@
   "version": "1.2.0",
   "configurations": [
     {
-      "name": "AIJL001",
+      "name": "AIJL300",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_development.dart",
       "args": [
         "--flavor",
-        "AIJL001",
+        "AIJL300",
         "--target",
         "lib/main.dart"
       ]

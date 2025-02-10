@@ -1,8 +1,10 @@
 class GuideState {
   late String showImgGif;
+  late String videoUrl;
   late String funcName;
   GuideState() {
-    showImgGif="";
-    funcName="";
+    showImgGif = "";
+    videoUrl = "";
+    funcName = "";
   }
 }
