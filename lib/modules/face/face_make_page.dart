@@ -409,8 +409,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
           _funcIds.addAll(results.map((e) => e.id ?? 0).toList());
           _initialPage.value = _funcIds.indexOf(widget.funcId);
           if (_isNotEmptyVideoUrl) {
-            _videoUrls.value =
-                results.map((e) => '${e.videoUrl}').take(8).toList();
+            _videoUrls.value = results.map((e) => '${e.videoUrl}').toList();
           } else {
             _list.value = results.map((e) => '${e.showImgGif}').toList();
           }
@@ -518,7 +517,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                 ? _title.value
                                 : _tags.isEmpty
                                     ? ""
-                                    : '${_tags[_currentIndex.value]},${_currentIndex.value},${_videoUrls.length}',
+                                    : _tags[_currentIndex.value],
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: const TextStyle(

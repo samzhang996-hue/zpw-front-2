@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:zpw/utils/log_utils.dart';
 
 class CommVideoPlayerWidget extends StatefulWidget {
   final List<String> videoUrls;
@@ -56,7 +55,7 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
 
   void _onPageChanged(int newIndex) {
     int validIndex = newIndex % widget.videoUrls.length;
-    Log.e('validIndex:$validIndex');
+
     widget.onPageChanged?.call(validIndex, _controllers[validIndex]);
 
     for (int i = 0; i < _controllers.length; i++) {

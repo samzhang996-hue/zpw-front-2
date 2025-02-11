@@ -22,7 +22,6 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
   late PageController _pageController;
 
   void _onPageChanged(int newIndex) {
-    Log.e('_onPageChanged,$newIndex');
     int validIndex = newIndex % widget.images.length;
     widget.onPageChanged?.call(validIndex);
   }
@@ -30,7 +29,7 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
   // 监听页面变化
   void _onPageChangedListener() {
     int newIndex = _pageController.page!.toInt();
-    Log.e('newIndex:$newIndex, widget.images.length:${widget.images.length}');
+
     // 实现循环效果
     if (newIndex == widget.images.length) {
       _pageController.jumpToPage(0); // 循环到第一个
