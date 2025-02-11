@@ -21,21 +21,45 @@ class CommImagesWidget extends StatefulWidget {
 class _CommImagesWidgetState extends State<CommImagesWidget> {
   late PageController _pageController;
 
-  void _onPageChanged(int newIndex) {}
+  void _onPageChanged(int newIndex) {
+    Log.e('_onPageChanged,$newIndex');
+    int validIndex = newIndex % widget.images.length;
+    widget.onPageChanged?.call(validIndex);
+  }
+
+  // 监听页面变化
+  void _onPageChangedListener() {
+    int newIndex = _pageController.page!.toInt();
+    Log.e('newIndex:$newIndex, widget.images.length:${widget.images.length}');
+    // 实现循环效果
+    if (newIndex == widget.images.length) {
+      _pageController.jumpToPage(0); // 循环到第一个
+    }
+
+    // else if (newIndex == 0) {
+    //   _pageController.jumpToPage(widget.images.length); // 循环到最后一个
+    // }
+  }
 
   void _init() {
     _pageController = PageController(initialPage: widget.initialPage);
+    Future.delayed(const Duration(milliseconds: 200), () {
+      widget.onPageChanged?.call(widget.initialPage);
+    });
+    // _pageController.addListener(_onPageChangedListener);
   }
 
   @override
   void initState() {
     super.initState();
     Log.e('widget.initialPage:${widget.initialPage}');
+
     _init();
   }
 
   @override
   void dispose() {
+    // _pageController.removeListener(_onPageChangedListener);
     _pageController.dispose();
     super.dispose();
   }
@@ -45,17 +69,18 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
     return PageView.builder(
       controller: _pageController,
       scrollDirection: Axis.vertical,
-      itemCount: widget.images.length,
+      itemCount: null,
       physics: const BouncingScrollPhysics(),
       onPageChanged: _onPageChanged,
       itemBuilder: (context, index) {
+        int validIndex = index % widget.images.length;
         return Container(
           alignment: Alignment.center,
           color: Colors.white,
           width: 1.sw,
           height: 1.sh,
           child: QdsImage(
-            widget.images[index],
+            widget.images[validIndex],
             1.sw,
             1.sh,
           ),

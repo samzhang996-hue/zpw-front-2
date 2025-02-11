@@ -29,7 +29,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
   late ScrollController? _scrollViewController = ScrollController();
-  var outHeight = 20.0.w;
+  // var outHeight = 0.0.w;
   var listPhotoGroupBean = <ListPhotoGroupBean>[];
   late PageController? _pageController = PageController();
 
@@ -89,27 +89,10 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                       collapseMode: CollapseMode.pin,
                       background: SizedBox(
                         height: double.infinity,
-                        child: Stack(
-                          children: [
-                            QdsImage(widget.imgUrlAcross, 1.sw, 260.w,
-                                fit: BoxFit.contain),
-                            // Positioned(
-                            //   left: 0,
-                            //   right: 0,
-                            //   bottom: 30.w,
-                            //   child: Container(
-                            //     width: 1.sw,
-                            //     height: 28.w,
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.blue,
-                            //       borderRadius: BorderRadius.only(
-                            //         topLeft: Radius.circular(22.w),
-                            //         topRight: Radius.circular(22.w),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // )
-                          ],
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: QdsImage(widget.imgUrlAcross, 1.sw, 280.w,
+                              fit: BoxFit.cover),
                         ),
                       ),
                     ),
@@ -324,7 +307,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                             if (index == 1) {
                               if (_scrollViewController!.offset > 600) {
                                 _scrollViewController!
-                                    .jumpTo(_scrollViewController!.offset - 70);
+                                    .jumpTo(_scrollViewController!.offset);
                               }
                             }
                           },

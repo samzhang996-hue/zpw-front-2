@@ -230,17 +230,10 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                 children: logic.listPhotoGroupBean2
                     // .map((e) => FaceItem(id: e.id ?? 0))
                     .map((e) {
-                  var hasAvatar = false;
-                  if (e.groupName == "异性的你" ||
-                      e.groupName == "变老变年轻" ||
-                      e.groupName == "换发型") {
-                    hasAvatar = true;
-                  }
                   return e.id == -1
                       ? const AvatarSetItem()
                       : CollectionItem(
                           id: e.id ?? 0,
-                          hasAvatar: hasAvatar,
                         );
                 }).toList(),
                 onPageChanged: (index) {

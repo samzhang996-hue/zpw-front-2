@@ -24,14 +24,15 @@ class FaceMakePage extends BaseStatefulWidget {
   final String imageUrl;
   final String videoUrl;
   final int groupId;
-  final bool hasAvatar;
+
+  final int apiType;
   FaceMakePage({
     required this.title,
     required this.funcId,
     required this.imageUrl,
     required this.videoUrl,
     this.groupId = -1,
-    this.hasAvatar = true,
+    required this.apiType,
   });
 
   @override
@@ -39,11 +40,20 @@ class FaceMakePage extends BaseStatefulWidget {
 }
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
+  late final _hasAvatar = (widget.apiType == 10 ||
+          widget.apiType == 2 ||
+          widget.apiType == 9 ||
+          widget.apiType == 3 ||
+          widget.apiType == 1 ||
+          widget.apiType == 0
+      ? true.obs
+      : false.obs);
   var _canBack = true;
   late final _autoPlay = true.obs;
   late final _initialPage = 0.obs;
   late final _videoUrls = <String>[].obs;
   late final _tags = <String>[].obs;
+  late final _apiTypes = <int>[].obs;
   late final _funcIds = <int>[];
   late final _title = widget.title.obs;
   late final _currentIndex = 0.obs;
@@ -235,6 +245,25 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     }
   }
 
+  void _getNewHasAvatar() {
+    if (widget.groupId == -1) {
+      return;
+    }
+    var apiType = _apiTypes[_currentIndex.value];
+    if (apiType == 10 ||
+        apiType == 2 ||
+        apiType == 9 ||
+        apiType == 3 ||
+        apiType == 1 ||
+        apiType == 0) {
+      _hasAvatar.value = true;
+    } else {
+      _hasAvatar.value = false;
+    }
+
+    // Log.e("_hasAvatar:${_hasAvatar.value}");
+  }
+
   void _make() async {
     _canBack = true;
     _autoPlay.value = false;
@@ -250,8 +279,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       return;
     }
 
-    if (!widget.hasAvatar || _myHeadImg.value.isEmpty) {
-      final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+    if (!_hasAvatar.value || _myHeadImg.value.isEmpty) {
+      final res = await Get.to<String>(
+          () => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
       _videoPlayerController?.play();
       Log.e("res:$res");
       if (res == null) {
@@ -374,11 +404,13 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       isShowProgress: true,
       success: (isSuccess, code, message, results) {
         if (isSuccess == true && results.isNotEmpty) {
+          _apiTypes.value = results.map((e) => e.apiType ?? -1).toList();
           _tags.value = results.map((e) => e.tags ?? "").toList();
           _funcIds.addAll(results.map((e) => e.id ?? 0).toList());
           _initialPage.value = _funcIds.indexOf(widget.funcId);
           if (_isNotEmptyVideoUrl) {
-            _videoUrls.value = results.map((e) => '${e.videoUrl}').toList();
+            _videoUrls.value =
+                results.map((e) => '${e.videoUrl}').take(8).toList();
           } else {
             _list.value = results.map((e) => '${e.showImgGif}').toList();
           }
@@ -429,6 +461,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                             initialPage: _initialPage.value,
                             onPageChanged: (index) {
                               _currentIndex.value = index;
+                              _getNewHasAvatar();
                             },
                           ),
                   )
@@ -442,6 +475,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                             onPageChanged: (index, videoPlayerController) {
                               _currentIndex.value = index;
                               _videoPlayerController = videoPlayerController;
+                              _getNewHasAvatar();
                             },
                           ),
                   ),
@@ -484,7 +518,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                 ? _title.value
                                 : _tags.isEmpty
                                     ? ""
-                                    : _tags[_currentIndex.value],
+                                    : '${_tags[_currentIndex.value]},${_currentIndex.value},${_videoUrls.length}',
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
@@ -533,172 +567,178 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             right: 0,
             bottom: 0,
             child: SafeArea(
-              child: Container(
-                height: widget.hasAvatar ? 146.w : 65.w,
-                width: 1.sw,
-                decoration: const BoxDecoration(color: Colors.transparent),
-                child: Column(
-                  children: [
-                    // const Spacer(),
-                    if (widget.hasAvatar)
-                      Obx(
-                        () => SizedBox(
-                          width: 1.sw,
-                          height: 76.w,
-                          child: _showHeadImg.isFalse
-                              ? Center(
-                                  child: GestureDetector(
-                                    onTap: _uploadNewHeadImg,
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Image.asset(
-                                      "no_head_img.png".make,
-                                      width: 76.w,
-                                      height: 76.w,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                )
-                              : Center(
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      if (_myHeadImg.isNotEmpty)
-                                        Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: 72.w,
-                                              height: 72.w,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.grey,
-                                                shape: BoxShape.circle,
-                                                gradient: LinearGradient(
-                                                  colors: [
-                                                    Color(0xFFFF2EB8),
-                                                    Color(0xFFFF2E2E)
-                                                  ],
-                                                  begin: Alignment
-                                                      .centerLeft, // 渐变的起始点
-                                                  end: Alignment
-                                                      .centerRight, // 渐变的结束点
+              child: Obx(() => Container(
+                    height: _hasAvatar.value ? 146.w : 65.w,
+                    width: 1.sw,
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                    child: Column(
+                      children: [
+                        // const Spacer(),
+                        if (_hasAvatar.value)
+                          Obx(
+                            () => SizedBox(
+                              width: 1.sw,
+                              height: 76.w,
+                              child: _showHeadImg.isFalse
+                                  ? Center(
+                                      child: GestureDetector(
+                                        onTap: _uploadNewHeadImg,
+                                        behavior: HitTestBehavior.opaque,
+                                        child: Image.asset(
+                                          "no_head_img.png".make,
+                                          width: 76.w,
+                                          height: 76.w,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                  : Center(
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          if (_myHeadImg.isNotEmpty)
+                                            Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 72.w,
+                                                  height: 72.w,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.grey,
+                                                    shape: BoxShape.circle,
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        Color(0xFFFF2EB8),
+                                                        Color(0xFFFF2E2E)
+                                                      ],
+                                                      begin: Alignment
+                                                          .centerLeft, // 渐变的起始点
+                                                      end: Alignment
+                                                          .centerRight, // 渐变的结束点
+                                                    ),
+                                                  ),
+                                                ),
+                                                ClipOval(
+                                                  child: QdsImage(
+                                                      _myHeadImg.value,
+                                                      68.w,
+                                                      68.w),
+                                                ),
+                                              ],
+                                            )
+                                          else
+                                            GestureDetector(
+                                              onTap: _uploadNewHeadImg,
+                                              behavior: HitTestBehavior.opaque,
+                                              child: Image.asset(
+                                                "no_head_img.png".make,
+                                                width: 76.w,
+                                                height: 76.w,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          Obx(
+                                            () => Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              child: Visibility(
+                                                visible: _showHeadImg.isTrue &&
+                                                    HandleTool.instance.headImg
+                                                        .isNotEmpty,
+                                                child: GestureDetector(
+                                                  onTap: _closeHeadImg,
+                                                  behavior:
+                                                      HitTestBehavior.opaque,
+                                                  child: Image.asset(
+                                                    "make_close.png".make,
+                                                    width: 18.w,
+                                                    height: 18.w,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                            ClipOval(
-                                              child: QdsImage(
-                                                  _myHeadImg.value, 68.w, 68.w),
-                                            ),
-                                          ],
-                                        )
-                                      else
-                                        GestureDetector(
-                                          onTap: _uploadNewHeadImg,
-                                          behavior: HitTestBehavior.opaque,
-                                          child: Image.asset(
-                                            "no_head_img.png".make,
-                                            width: 76.w,
-                                            height: 76.w,
-                                            fit: BoxFit.cover,
                                           ),
-                                        ),
-                                      Obx(
-                                        () => Positioned(
-                                          top: 0,
-                                          right: 0,
-                                          child: Visibility(
-                                            visible: _showHeadImg.isTrue &&
-                                                HandleTool.instance.headImg
-                                                    .isNotEmpty,
+                                          Positioned(
+                                            bottom: -5.w,
+                                            right: 0,
                                             child: GestureDetector(
-                                              onTap: _closeHeadImg,
+                                              onTap: _uploadNewHeadImg,
                                               behavior: HitTestBehavior.opaque,
-                                              child: Image.asset(
-                                                "make_close.png".make,
-                                                width: 18.w,
-                                                height: 18.w,
+                                              child: Container(
+                                                width: 76.w,
+                                                height: 21.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.w),
+                                                  gradient:
+                                                      const LinearGradient(
+                                                    colors: [
+                                                      Color(0xFFFF2EB8),
+                                                      Color(0xFFFF2E2E)
+                                                    ],
+                                                    begin: Alignment
+                                                        .centerLeft, // 渐变的起始点
+                                                    end: Alignment
+                                                        .centerRight, // 渐变的结束点
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: CommText(
+                                                    text: "上传新头像",
+                                                    textColor:
+                                                        const Color(0xFFFFFFFF),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                      Positioned(
-                                        bottom: -5.w,
-                                        right: 0,
-                                        child: GestureDetector(
-                                          onTap: _uploadNewHeadImg,
-                                          behavior: HitTestBehavior.opaque,
-                                          child: Container(
-                                            width: 76.w,
-                                            height: 21.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.w),
-                                              gradient: const LinearGradient(
-                                                colors: [
-                                                  Color(0xFFFF2EB8),
-                                                  Color(0xFFFF2E2E)
-                                                ],
-                                                begin: Alignment
-                                                    .centerLeft, // 渐变的起始点
-                                                end: Alignment
-                                                    .centerRight, // 渐变的结束点
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: CommText(
-                                                text: "上传新头像",
-                                                textColor:
-                                                    const Color(0xFFFFFFFF),
-                                                fontSize: 12.sp,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                        ),
-                      ),
-                    if (widget.hasAvatar) SizedBox(height: 12.w),
-                    Expanded(
-                      child: Container(
-                        width: 1.sw,
-                        height: 100.w,
-                        color: Colors.transparent,
-                        child: Column(
-                          children: [
-                            const Spacer(flex: 2),
-                            GestureDetector(
-                              onTap: _make,
-                              behavior: HitTestBehavior.opaque,
-                              child: Container(
-                                width: 357.w,
-                                height: 52.w,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFF2E7E),
-                                  borderRadius: BorderRadius.circular(26.w),
-                                ),
-                                child: Center(
-                                  child: CommText(
-                                    text: "一键制作",
-                                    textColor: const Color(0xFFFFFFFF),
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
+                                    ),
                             ),
-                            const Spacer(flex: 3),
-                          ],
+                          ),
+                        if (_hasAvatar.value) SizedBox(height: 12.w),
+                        Expanded(
+                          child: Container(
+                            width: 1.sw,
+                            height: 100.w,
+                            color: Colors.transparent,
+                            child: Column(
+                              children: [
+                                const Spacer(flex: 2),
+                                GestureDetector(
+                                  onTap: _make,
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Container(
+                                    width: 357.w,
+                                    height: 52.w,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFF2E7E),
+                                      borderRadius: BorderRadius.circular(26.w),
+                                    ),
+                                    child: Center(
+                                      child: CommText(
+                                        text: "一键制作",
+                                        textColor: const Color(0xFFFFFFFF),
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(flex: 3),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        // SizedBox(height: 10.w),
+                      ],
                     ),
-                    // SizedBox(height: 10.w),
-                  ],
-                ),
-              ),
+                  )),
             ),
           )
         ],

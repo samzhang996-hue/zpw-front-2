@@ -21,8 +21,9 @@ import 'photo_list_logic.dart';
 
 class Photo_listPage extends BaseStatefulWidget {
   final bool isNew;
+  final bool hasAvatar;
 
-  Photo_listPage({this.isNew = true});
+  Photo_listPage({this.isNew = true, this.hasAvatar = true});
 
   @override
   BaseWidgetState<Photo_listPage> getState() => _Photo_listPageState();
@@ -76,14 +77,16 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     }
     HandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
       Log.e("widget.isNew:${widget.isNew}");
-      if (path == null) return;
+      // if (path == null) return;
       if (widget.isNew) {
         Get.offAll(() => const MainPage());
       } else {
-        Get.find<MineLogic>().getUserInfo();
+        if (widget.hasAvatar) {
+          Get.find<MineLogic>().getUserInfo();
+        }
         Get.back(result: headImageUrl);
       }
-    });
+    }, bindDefaultImg: widget.hasAvatar);
 
     // if (res?.isNotEmpty == true) {
     //   final formData = ffff.FormData.fromMap({

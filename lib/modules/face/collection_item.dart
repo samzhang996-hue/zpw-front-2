@@ -12,10 +12,9 @@ import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 class CollectionItem extends StatefulWidget {
-  const CollectionItem({super.key, required this.id, this.hasAvatar = true});
+  const CollectionItem({super.key, required this.id});
 
   final int id;
-  final bool hasAvatar;
 
   @override
   State<CollectionItem> createState() => _CollectionItemState();
@@ -97,6 +96,7 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType0(Records bean) {
     return GestureDetector(
       onTap: () {
+        Log.e('xxx.onTap:${bean.toJson()}');
         Get.to(
           () => FaceMakePage(
             groupId: widget.id,
@@ -104,7 +104,7 @@ class _CollectionItemState extends State<CollectionItem> {
             funcId: bean.photoFuncResp?.id ?? 0,
             imageUrl: bean.photoFuncResp?.showImgGif ?? "",
             videoUrl: bean.photoFuncResp?.videoUrl ?? "",
-            hasAvatar: widget.hasAvatar,
+            apiType: bean.photoFuncResp?.apiType ?? -1,
           ),
         );
       },

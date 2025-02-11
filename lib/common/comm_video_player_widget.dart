@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class CommVideoPlayerWidget extends StatefulWidget {
   final List<String> videoUrls;
@@ -23,7 +23,7 @@ class CommVideoPlayerWidget extends StatefulWidget {
 
 class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
   late PageController _pageController;
-  late final _currentIndex = 0.obs;
+  // late final _currentIndex = 0.obs;
   List<VideoPlayerController?> _controllers = [];
   void _initializeControllers() {
     var temp = widget.videoUrls.length > 5 ? 5 : widget.videoUrls.length;
@@ -34,14 +34,14 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
     }
   }
 
-  void _initVideoController({required int index}) {
+  void _initVideoController({required int index, isZero = false}) {
     if (_controllers[index] != null) return;
     var controller =
         VideoPlayerController.networkUrl(Uri.parse(widget.videoUrls[index]));
     controller.initialize().then((_) {
       if (mounted) {
         controller.setLooping(true);
-        if (index == widget.initialPage) {
+        if (index == widget.initialPage || isZero == true) {
           if (widget.autoPlay) {
             controller.play();
           }
@@ -55,12 +55,13 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
   }
 
   void _onPageChanged(int newIndex) {
-    _currentIndex.value = newIndex;
-    widget.onPageChanged?.call(newIndex, _controllers[newIndex]);
+    int validIndex = newIndex % widget.videoUrls.length;
+    Log.e('validIndex:$validIndex');
+    widget.onPageChanged?.call(validIndex, _controllers[validIndex]);
 
     for (int i = 0; i < _controllers.length; i++) {
       if (_controllers[i] != null) {
-        if (i == newIndex) {
+        if (i == validIndex) {
           _controllers[i]!.play();
         } else {
           _controllers[i]!.pause();
@@ -68,18 +69,26 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
       }
     }
 
-    if (newIndex + 1 < widget.videoUrls.length) {
-      _initVideoController(index: newIndex + 1);
+    if (validIndex + 1 < widget.videoUrls.length) {
+      _initVideoController(index: validIndex + 1);
     }
-    if (newIndex - 1 >= 0) {
-      _initVideoController(index: newIndex - 1);
+    if (validIndex - 1 >= 0) {
+      _initVideoController(index: validIndex - 1);
     }
 
     for (int i = 0; i < _controllers.length; i++) {
-      if (i < newIndex - 2 || i > newIndex + 2) {
+      if (i < validIndex - 2 || i > validIndex + 2) {
         _controllers[i]?.dispose();
         _controllers[i] = null;
       }
+    }
+
+    if (validIndex == 0) {
+      _initVideoController(index: validIndex, isZero: true);
+    }
+
+    if (validIndex == widget.videoUrls.length - 1) {
+      _initVideoController(index: validIndex, isZero: true);
     }
   }
 
@@ -107,11 +116,13 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
   Widget build(BuildContext context) {
     return PageView.builder(
       controller: _pageController,
-      itemCount: widget.videoUrls.length,
+      // itemCount: widget.videoUrls.length,
+      itemCount: null,
       onPageChanged: _onPageChanged,
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
-        var controller = _controllers[index];
+        int validIndex = index % widget.videoUrls.length;
+        var controller = _controllers[validIndex];
         return controller != null && controller.value.isInitialized
             ? Center(
                 child: AspectRatio(

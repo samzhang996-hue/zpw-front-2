@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_udid/flutter_udid.dart';
-
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
@@ -26,6 +25,7 @@ class SplashLogic extends BaseGetxController {
   Timer? _timer;
   final SplashState state = SplashState();
   int requestMax = 0;
+  int requestUserInfoMax = 0;
 
   @override
   void onInit() {
@@ -44,6 +44,7 @@ class SplashLogic extends BaseGetxController {
       }
     });
   }
+
   void stopPolling() {
     _timer?.cancel();
   }
@@ -71,7 +72,8 @@ class SplashLogic extends BaseGetxController {
       channel = "AIIOS";
     }
     HandleTool.instance.channel = channel;
-    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    Log.i(
+        'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
@@ -90,18 +92,26 @@ class SplashLogic extends BaseGetxController {
     HandleTool.instance.getProtocolConfig();
   }
 
-  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = true}) async {
+  _onLogin(String channel, String deviceId, String oaid,
+      {bool isShowProgress = true}) async {
     String udid = "";
     if (Platform.isIOS) {
       udid = await FlutterUdid.udid;
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
-      "userDeviceInfo": {"deviceCode": deviceId, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": udid},
+      "userDeviceInfo": {
+        "deviceCode": deviceId,
+        "systemDevice": Platform.isAndroid ? "android" : "ios",
+        "oaid": oaid,
+        "idfa": udid
+      },
     };
     Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
+    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
+        success: (isSuccess, code, message, results) async {
       requestMax = requestMax + 1;
+      Log.i("isSuccess====>${isSuccess},$code");
       if (isSuccess == true && results.isNotEmpty) {
         requestMax = 100;
         Map data = results.first as Map;
@@ -111,6 +121,17 @@ class SplashLogic extends BaseGetxController {
         Get.put(VipLogic());
         getUserInfo();
       } else {
+        if (code == -2222) {
+          if (requestMax > 30) {
+            ///请求最大限制
+            HandleTool.showAppToastText("请退出程序，稍后重试");
+          } else {
+            Future.delayed(const Duration(seconds: 1), () {
+              _onLogin(channel, deviceId, oaid, isShowProgress: false);
+            });
+          }
+        }
+
         /// ------->  这里单独处理已选
         if (code == -1111) {
           if (requestMax > 30) {
@@ -132,7 +153,9 @@ class SplashLogic extends BaseGetxController {
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: true,
         success: (isSuccess, code, message, results) async {
+          requestUserInfoMax = requestUserInfoMax + 1;
           if (isSuccess == true && results.isNotEmpty) {
+            requestUserInfoMax = 100;
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
             HandleTool.instance.isMember = userInfoBean.vipFlag == 1;
@@ -158,6 +181,17 @@ class SplashLogic extends BaseGetxController {
                 AdsUtils.showSplashAd();
               }
             });
+          } else {
+            if (code == -2222) {
+              if (requestUserInfoMax > 30) {
+                ///请求最大限制
+                HandleTool.showAppToastText("请退出程序，稍后重试");
+              } else {
+                Future.delayed(const Duration(seconds: 1), () {
+                  getUserInfo();
+                });
+              }
+            }
           }
         },
         onModel: (m) => UserInfoBean.fromJson(m));
@@ -166,7 +200,8 @@ class SplashLogic extends BaseGetxController {
   test() {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
-        if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
+        if (event.action == AdEventAction.onAdError ||
+            event.action == AdEventAction.onAdLoaded) {
           if (isFirst) {
             Get.offAll(const MainPage());
           } else {

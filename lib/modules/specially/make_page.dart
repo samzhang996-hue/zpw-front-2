@@ -425,25 +425,28 @@ class _MakePageState extends BaseWidgetState<MakePage> {
             left: 0,
             right: 0,
             bottom: 0,
-            child: SafeArea(
-              minimum: EdgeInsets.only(bottom: 20.w),
-              child: Center(
-                child: GestureDetector(
-                  onTap: _make,
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    width: 357.w,
-                    height: 52.w,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF2E7E),
-                      borderRadius: BorderRadius.circular(26.w),
-                    ),
-                    child: Center(
-                      child: CommText(
-                        text: "一键制作",
-                        textColor: const Color(0xFFFFFFFF),
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500,
+            child: Visibility(
+              visible: MediaQuery.of(context).viewInsets.bottom == 0,
+              child: SafeArea(
+                minimum: EdgeInsets.only(bottom: 20.w),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: _make,
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      width: 357.w,
+                      height: 52.w,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF2E7E),
+                        borderRadius: BorderRadius.circular(26.w),
+                      ),
+                      child: Center(
+                        child: CommText(
+                          text: "一键制作",
+                          textColor: const Color(0xFFFFFFFF),
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),

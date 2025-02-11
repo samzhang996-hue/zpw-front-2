@@ -501,7 +501,8 @@ class HandleTool {
   }
 
   void checkImgAndSave(String? path,
-      {void Function(String headImageUrl)? success}) async {
+      {void Function(String headImageUrl)? success,
+      bool bindDefaultImg = true}) async {
     if (path == null) {
       return;
     }
@@ -515,7 +516,15 @@ class HandleTool {
           Api.uploadFile,
           params: formData,
           onModel: (v) => UploadBean.fromJson(v));
-      if (bean == null) return;
+      if (bean == null) {
+        HandleTool.showAppToastText("上传失败,请重试");
+        return;
+      }
+
+      if (!bindDefaultImg) {
+        success?.call(bean.url ?? '');
+        return;
+      }
 
       HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
           isShowProgress: true, success: (isSuccess, code, message, results) {

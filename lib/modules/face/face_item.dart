@@ -69,6 +69,7 @@ class _FaceItemState extends State<FaceItem> {
                     funcId: bean?.photoFuncResp?.id ?? 0,
                     imageUrl: bean?.photoFuncResp?.showImgGif ?? '',
                     videoUrl: bean?.photoFuncResp?.videoUrl ?? '',
+                    apiType: bean?.photoFuncResp?.apiType ?? -1,
                   ),
                 );
               },

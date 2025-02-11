@@ -21,7 +21,7 @@ class DetailLogic extends BaseGetxController {
       state.funcId.value = map["funcId"] ?? 0;
       state.returnUrl.value = map["returnUrl"] ?? "";
       state.tags.value = map["tags"] ?? "";
-      state.apiType.value = map["apiType"] ??0;
+      state.apiType.value = map["apiType"] ?? -1;
       Log.d("param---${state.returnUrl.value}---${state.worksType.value}");
       update();
     }
@@ -29,32 +29,37 @@ class DetailLogic extends BaseGetxController {
   }
 
   delete() {
-    Post("${Api.delete}/${state.id.value}", isShowProgress: true, success: (isSuccess, code, message, results) async {
+    Post("${Api.delete}/${state.id.value}", isShowProgress: true,
+        success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         HandleTool.showAppToastText("删除成功");
         Get.back(result: "123");
       }
     });
   }
+
   getFuncDetail(int id) {
     get("${Api.getFuncDetail}?id=$id", isShowProgress: true,
         success: (isSuccess, code, message, results) async {
-          if (isSuccess == true && results.isNotEmpty) {
-            Map data = results.first as Map;
-            String showImgGif = data["showImgGif"];
-            String funcName = data["tags"] ?? "";
-            String videoUrl = data["videoUrl"] ?? "";
-            Log.d("fun---$data");
-            Get.to(
-                  () => FaceMakePage(
-                title: funcName,
-                funcId: id,
-                imageUrl: showImgGif,
-                videoUrl: videoUrl,
-              ),
-            );
-            update();
-          }
-        });
+      if (isSuccess == true && results.isNotEmpty) {
+        Map data = results.first as Map;
+        String showImgGif = data["showImgGif"];
+        String funcName = data["tags"] ?? "";
+        String videoUrl = data["videoUrl"] ?? "";
+        int apiType = data["apiType"] ?? -1;
+
+        Log.d("fun---$data");
+        Get.to(
+          () => FaceMakePage(
+            title: funcName,
+            funcId: id,
+            imageUrl: showImgGif,
+            videoUrl: videoUrl,
+            apiType: apiType,
+          ),
+        );
+        update();
+      }
+    });
   }
 }

@@ -192,7 +192,7 @@ class DioUtils {
     }
     adapterInterceptor?.errHandler = (e) {
       Log.i("eeee=====$e");
-      success!(false, 0, e.toString(), []);
+      success!(false, -2222, e.toString(), []);
       if (e.contains('取消重复请求') == true) {
         // Tool.showToastText("cancle");
       }
