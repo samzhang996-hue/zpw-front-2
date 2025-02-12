@@ -92,6 +92,7 @@ class SplashLogic extends BaseGetxController {
     HandleTool.instance.getProtocolConfig();
   }
 
+  bool _showAd = true;
   _onLogin(String channel, String deviceId, String oaid,
       {bool isShowProgress = true}) async {
     String udid = "";
@@ -111,7 +112,8 @@ class SplashLogic extends BaseGetxController {
     Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
         success: (isSuccess, code, message, results) async {
       requestMax = requestMax + 1;
-      Log.i("isSuccess====>${isSuccess},$code");
+      Log.i(
+          "isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
       if (isSuccess == true && results.isNotEmpty) {
         requestMax = 100;
         Map data = results.first as Map;
@@ -121,17 +123,6 @@ class SplashLogic extends BaseGetxController {
         Get.put(VipLogic());
         getUserInfo();
       } else {
-        if (code == -2222) {
-          if (requestMax > 30) {
-            ///请求最大限制
-            HandleTool.showAppToastText("请退出程序，稍后重试");
-          } else {
-            Future.delayed(const Duration(seconds: 1), () {
-              _onLogin(channel, deviceId, oaid, isShowProgress: false);
-            });
-          }
-        }
-
         /// ------->  这里单独处理已选
         if (code == -1111) {
           if (requestMax > 30) {
@@ -140,6 +131,19 @@ class SplashLogic extends BaseGetxController {
           } else {
             Future.delayed(const Duration(seconds: 1), () {
               _onLogin(channel, deviceId, oaid, isShowProgress: false);
+            });
+          }
+          return;
+        }
+
+        if (code == -2222) {
+          _showAd = false;
+          if (requestUserInfoMax > 30) {
+            ///请求最大限制
+            HandleTool.showAppToastText("请退出程序，稍后重试");
+          } else {
+            Future.delayed(const Duration(seconds: 1), () {
+              _onLogin(channel, deviceId, oaid, isShowProgress: true);
             });
           }
         }
@@ -154,7 +158,10 @@ class SplashLogic extends BaseGetxController {
         isShowProgress: true,
         success: (isSuccess, code, message, results) async {
           requestUserInfoMax = requestUserInfoMax + 1;
+          Log.d("requestUserInfoMax----$requestUserInfoMax");
           if (isSuccess == true && results.isNotEmpty) {
+            Log.d(
+                "requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
             requestUserInfoMax = 100;
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
@@ -175,6 +182,18 @@ class SplashLogic extends BaseGetxController {
             //   Get.offAll(GuidePage());
             // }
             // return;
+            if (!_showAd) {
+              progress.value = 1.0;
+              if (isFirst) {
+                Get.offAll(const MainPage());
+              } else {
+                // Get.offAll(const MainPage());
+                // return;
+                Get.offAll(GuidePage());
+              }
+              return;
+            }
+
             AdsUtils.init().then((value) {
               progress.value = 1.0;
               if (value) {
@@ -183,6 +202,7 @@ class SplashLogic extends BaseGetxController {
             });
           } else {
             if (code == -2222) {
+              _showAd = false;
               if (requestUserInfoMax > 30) {
                 ///请求最大限制
                 HandleTool.showAppToastText("请退出程序，稍后重试");

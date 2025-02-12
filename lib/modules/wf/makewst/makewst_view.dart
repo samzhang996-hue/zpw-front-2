@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
@@ -12,8 +11,8 @@ import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/detail/detail_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/utils/log_utils.dart';
+
 import 'makewst_logic.dart';
 
 class MakewstPage extends BaseStatefulWidget {
@@ -70,185 +69,229 @@ class MakewstPageState extends BaseWidgetState {
                   ],
                 ),
               ),
-              Container(
-                width: double.infinity,
-                color: Colors.white,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: 16.w, right: 16.w),
-                        width: double.infinity,
-                        // height: 80.w,
-                        decoration: BoxDecoration(color: Color(0xffF9F9F9), borderRadius: BorderRadius.circular(16)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(child: buildTextField(), margin: EdgeInsets.only(left: 12.w, right: 12.w)),
-                            // CommText(text: state.funcValue.value,fontSize: 14.sp,textColor: Color(0xff191919),),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 5.w),
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                      onTap: () {
-                                        logic.isAddState(!state.isAdd.value);
-                                      },
-                                      child: Container(
-                                        child: Image.asset(
-                                          state.isAdd.value ? "hide.png".comm : "add.png".comm,
-                                          width: 30.w,
-                                          height: 30.w,
-                                        ),
-                                        margin: EdgeInsets.only(left: 12.w),
-                                      )),
-                                  Container(
-                                      margin: EdgeInsets.only(left: 5.w),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 55.w,
-                                            height: 23.w,
-                                            decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6)),
-                                            child: Center(
-                                                child: CommText(
-                                              text: state.title.value,
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w500,
-                                              textColor: Color(0xff818181),
-                                            )),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(left: 6.w),
-                                            width: 55.w,
-                                            height: 23.w,
-                                            decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6.w)),
-                                            child: Center(
-                                                child: CommText(
-                                              text: state.name.value,
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w500,
-                                              textColor: Color(0xff818181),
-                                            )),
-                                          ),
-                                        ],
-                                      )),
-                                  Spacer(),
-                                  InkWell(
-                                    onTap: () {
-                                      logic.addPhotoRecord();
-                                    },
-                                    child: Container(
-                                        margin: EdgeInsets.only(right: 12.w),
-                                        child: Image.asset(
-                                          "push.png".comm,
-                                          width: 30.w,
-                                          height: 30.w,
-                                        )),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
-                    Visibility(
-                        visible: state.isAdd.value,
-                        child: Container(
-                          color: Colors.white,
+              SafeArea(
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
                           margin: EdgeInsets.only(left: 16.w, right: 16.w),
+                          width: double.infinity,
+                          // height: 80.w,
+                          decoration: BoxDecoration(
+                              color: Color(0xffF9F9F9),
+                              borderRadius: BorderRadius.circular(16)),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                  margin: EdgeInsets.only(top: 18.w, bottom: 14.w),
-                                  child: CommText(
-                                    text: "选择比例",
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: Color(0xff191919),
-                                  )),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: List.generate(state.itemTitles.length, (index) {
-                                    String title = state.itemTitles[index]["title"];
-                                    bool isSelect = state.titleIndex.value == index;
-                                    return InkWell(
+                                  child: buildTextField(),
+                                  margin:
+                                      EdgeInsets.only(left: 12.w, right: 12.w)),
+                              // CommText(text: state.funcValue.value,fontSize: 14.sp,textColor: Color(0xff191919),),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 5.w),
+                                child: Row(
+                                  children: [
+                                    InkWell(
                                         onTap: () {
-                                          logic.titleIndexState(index);
+                                          logic.isAddState(!state.isAdd.value);
                                         },
                                         child: Container(
-                                          width: 55.w,
-                                          height: 23.w,
-                                          decoration: BoxDecoration(color: isSelect ? ColorPlate.themeColor : Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6)),
-                                          child: Center(
-                                              child: CommText(
-                                            text: title,
-                                            fontSize: 13.sp,
-                                            fontWeight: FontWeight.w500,
-                                            textColor: isSelect ? Colors.white : Color(0xff818181),
-                                          )),
-                                        ));
-                                  })),
-                              Container(
-                                  margin: EdgeInsets.only(top: 18.w, bottom: 14.w),
-                                  child: CommText(
-                                    text: "选择比例",
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: Color(0xff191919),
-                                  )),
-                              Container(
-                                width: double.infinity,
-                                height: 120.w,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal, // 设置滚动方向为水平
-                                  itemCount: state.hfList.length,
-                                  itemBuilder: (context, index) {
-                                    String bgImg = state.hfList[index]["bgImg"];
-                                    String name = state.hfList[index]["name"];
-                                    bool isSelect = state.fgIndex.value == index;
-                                    return InkWell(
-                                        onTap: () {
-                                          logic.fgIndexState(index);
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.only(right: 8.w),
-                                          width: 80.w,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(color: isSelect ? ColorPlate.themeColor : Colors.transparent, width: isSelect ? 2.w : 0), borderRadius: BorderRadius.circular(10)),
-                                          child: Stack(
-                                            alignment: Alignment.bottomCenter,
-                                            children: [
-                                              // 假设 QdsImageCorner 是一个自定义组件，它接受图像 URL、宽度、高度和圆角半径作为参数
-                                              QdsImageCorner(bgImg, 80.w, 118.w, 8),
-                                              Container(
-                                                height: 27.w,
-                                                decoration: BoxDecoration(
-                                                    color: Color(0xff36000000),
-                                                    borderRadius: BorderRadius.only(
-                                                      bottomLeft: Radius.circular(8),
-                                                      bottomRight: Radius.circular(8),
-                                                    )),
-                                                child: Center(
-                                                    child: CommText(
-                                                  text: name,
-                                                  textColor: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.sp,
-                                                )),
-                                              ),
-                                            ],
+                                          child: Image.asset(
+                                            state.isAdd.value
+                                                ? "hide.png".comm
+                                                : "add.png".comm,
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
-                                        ));
-                                  },
+                                          margin: EdgeInsets.only(left: 12.w),
+                                        )),
+                                    Container(
+                                        margin: EdgeInsets.only(left: 5.w),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 55.w,
+                                              height: 23.w,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xffEEEEEE),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6)),
+                                              child: Center(
+                                                  child: CommText(
+                                                text: state.title.value,
+                                                fontSize: 13.sp,
+                                                fontWeight: FontWeight.w500,
+                                                textColor: Color(0xff818181),
+                                              )),
+                                            ),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 6.w),
+                                              width: 55.w,
+                                              height: 23.w,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xffEEEEEE),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          6.w)),
+                                              child: Center(
+                                                  child: CommText(
+                                                text: state.name.value,
+                                                fontSize: 13.sp,
+                                                fontWeight: FontWeight.w500,
+                                                textColor: Color(0xff818181),
+                                              )),
+                                            ),
+                                          ],
+                                        )),
+                                    Spacer(),
+                                    InkWell(
+                                      onTap: () {
+                                        logic.addPhotoRecord();
+                                      },
+                                      child: Container(
+                                          margin: EdgeInsets.only(right: 12.w),
+                                          child: Image.asset(
+                                            "push.png".comm,
+                                            width: 30.w,
+                                            height: 30.w,
+                                          )),
+                                    )
+                                  ],
                                 ),
                               )
                             ],
-                          ),
-                        ))
-                  ],
+                          )),
+                      Visibility(
+                          visible: state.isAdd.value,
+                          child: Container(
+                            color: Colors.white,
+                            margin: EdgeInsets.only(left: 16.w, right: 16.w),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(
+                                        top: 18.w, bottom: 14.w),
+                                    child: CommText(
+                                      text: "选择比例",
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      textColor: Color(0xff191919),
+                                    )),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: List.generate(
+                                        state.itemTitles.length, (index) {
+                                      String title =
+                                          state.itemTitles[index]["title"];
+                                      bool isSelect =
+                                          state.titleIndex.value == index;
+                                      return InkWell(
+                                          onTap: () {
+                                            logic.titleIndexState(index);
+                                          },
+                                          child: Container(
+                                            width: 55.w,
+                                            height: 23.w,
+                                            decoration: BoxDecoration(
+                                                color: isSelect
+                                                    ? ColorPlate.themeColor
+                                                    : Color(0xffEEEEEE),
+                                                borderRadius:
+                                                    BorderRadius.circular(6)),
+                                            child: Center(
+                                                child: CommText(
+                                              text: title,
+                                              fontSize: 13.sp,
+                                              fontWeight: FontWeight.w500,
+                                              textColor: isSelect
+                                                  ? Colors.white
+                                                  : Color(0xff818181),
+                                            )),
+                                          ));
+                                    })),
+                                Container(
+                                    margin: EdgeInsets.only(
+                                        top: 18.w, bottom: 14.w),
+                                    child: CommText(
+                                      text: "选择比例",
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      textColor: Color(0xff191919),
+                                    )),
+                                Container(
+                                  width: double.infinity,
+                                  height: 120.w,
+                                  child: ListView.builder(
+                                    scrollDirection:
+                                        Axis.horizontal, // 设置滚动方向为水平
+                                    itemCount: state.hfList.length,
+                                    itemBuilder: (context, index) {
+                                      String bgImg =
+                                          state.hfList[index]["bgImg"];
+                                      String name = state.hfList[index]["name"];
+                                      bool isSelect =
+                                          state.fgIndex.value == index;
+                                      return InkWell(
+                                          onTap: () {
+                                            logic.fgIndexState(index);
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(right: 8.w),
+                                            width: 80.w,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: isSelect
+                                                        ? ColorPlate.themeColor
+                                                        : Colors.transparent,
+                                                    width: isSelect ? 2.w : 0),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Stack(
+                                              alignment: Alignment.bottomCenter,
+                                              children: [
+                                                // 假设 QdsImageCorner 是一个自定义组件，它接受图像 URL、宽度、高度和圆角半径作为参数
+                                                QdsImageCorner(
+                                                    bgImg, 80.w, 118.w, 8),
+                                                Container(
+                                                  height: 27.w,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Color(0xff36000000),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomLeft:
+                                                            Radius.circular(8),
+                                                        bottomRight:
+                                                            Radius.circular(8),
+                                                      )),
+                                                  child: Center(
+                                                      child: CommText(
+                                                    text: name,
+                                                    textColor: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.sp,
+                                                  )),
+                                                ),
+                                              ],
+                                            ),
+                                          ));
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
                 ),
               )
             ],
@@ -264,7 +307,8 @@ class MakewstPageState extends BaseWidgetState {
         // border: OutlineInputBorder(),
         border: InputBorder.none,
         labelStyle: TextStyle(fontSize: 14.sp, color: Color(0xff191919)),
-        contentPadding: const EdgeInsets.only(top: 4.0, bottom: 8.0, left: 8.0, right: 8.0),
+        contentPadding:
+            const EdgeInsets.only(top: 4.0, bottom: 8.0, left: 8.0, right: 8.0),
       ),
       style: TextStyle(fontSize: 14.sp),
       maxLines: null,
@@ -285,7 +329,7 @@ class MakewstPageState extends BaseWidgetState {
     );
   }
 
-  Widget createImage(int worksStatus, String returnUrl, String bl,int id) {
+  Widget createImage(int worksStatus, String returnUrl, String bl, int id) {
     double w = 210;
     double h = 290;
     if (bl == "1:1") {
@@ -308,7 +352,9 @@ class MakewstPageState extends BaseWidgetState {
       return Container(
         width: w.w,
         height: h.w,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.w), color: Color(0xff99000000)),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.w),
+            color: Color(0xff99000000)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -329,7 +375,9 @@ class MakewstPageState extends BaseWidgetState {
                 child: Container(
                     margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.w),
                     height: 35.w,
-                    decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(
+                        color: ColorPlate.themeColor,
+                        borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: CommText(
                       text: "重新制作",
@@ -353,7 +401,7 @@ class MakewstPageState extends BaseWidgetState {
 
   Widget createListView() {
     return Container(
-        margin: const EdgeInsets.only(top: 22,bottom: 20),
+        margin: const EdgeInsets.only(top: 22, bottom: 20),
         child: ListView.builder(
             padding: EdgeInsets.all(0),
             // physics: const NeverScrollableScrollPhysics(),
@@ -382,10 +430,14 @@ class MakewstPageState extends BaseWidgetState {
                 children: [
                   Container(
                       width: double.infinity,
-                      margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 18.w),
-                      decoration: const BoxDecoration(color: Color(0xffF9F9F9), borderRadius: BorderRadius.all(Radius.circular(16))),
+                      margin: EdgeInsets.only(
+                          left: 16.w, right: 16.w, bottom: 18.w),
+                      decoration: const BoxDecoration(
+                          color: Color(0xffF9F9F9),
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
                       child: Container(
-                          margin: EdgeInsets.only(left: 12.w, top: 14.w, bottom: 20.w),
+                          margin: EdgeInsets.only(
+                              left: 12.w, top: 14.w, bottom: 20.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -403,7 +455,9 @@ class MakewstPageState extends BaseWidgetState {
                                   Container(
                                     width: 55.w,
                                     height: 23.w,
-                                    decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6)),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xffEEEEEE),
+                                        borderRadius: BorderRadius.circular(6)),
                                     child: Center(
                                         child: CommText(
                                       text: jsonTitle,
@@ -416,7 +470,10 @@ class MakewstPageState extends BaseWidgetState {
                                     margin: EdgeInsets.only(left: 6.w),
                                     width: 55.w,
                                     height: 23.w,
-                                    decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6.w)),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xffEEEEEE),
+                                        borderRadius:
+                                            BorderRadius.circular(6.w)),
                                     child: Center(
                                         child: CommText(
                                       text: jsonName,
@@ -440,12 +497,21 @@ class MakewstPageState extends BaseWidgetState {
                           InkWell(
                             onTap: () async {
                               if (worksStatus == 3) {
-                                final res = await Get.to(() => DetailPage(), arguments: {"worksType": type, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
+                                final res = await Get.to(() => DetailPage(),
+                                    arguments: {
+                                      "worksType": type,
+                                      "returnUrl": returnUrl,
+                                      "tags": tags,
+                                      "id": id,
+                                      "funcId": funcId,
+                                      "apiType": apiType
+                                    });
                                 logic.photoRecord(true);
                                 return;
                               }
                             },
-                            child:createImage(worksStatus, returnUrl,jsonTitle,id),
+                            child: createImage(
+                                worksStatus, returnUrl, jsonTitle, id),
                           ),
 
                           SizedBox(

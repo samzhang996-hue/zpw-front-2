@@ -98,7 +98,14 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType0(Records bean) {
     return GestureDetector(
       onTap: () {
-        Log.e('xxx.onTap:${bean.toJson()}');
+        if (bean.photoFuncResp?.apiType == 6) {
+          Get.to(WstPage(), arguments: {
+            "funcValue": bean.photoFuncResp?.funcValue ?? "",
+            "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
+            "funcId": bean.photoFuncResp?.id ?? 0
+          });
+          return;
+        }
         Get.to(
           () => FaceMakePage(
             groupId: widget.id,
@@ -175,10 +182,16 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType1(Records bean) {
     return GestureDetector(
       onTap: () {
+        Log.e('bean:${bean.toJson()}');
         if (bean.photoFuncResp?.apiType == 6) {
-          Get.to(WstPage(), arguments: {"funcValue": bean.photoFuncResp?.funcValue ?? "", "showImgGif": bean.photoFuncResp?.showImgGif ?? "","funcId":bean.photoFuncResp?.id??0});
+          Get.to(WstPage(), arguments: {
+            "funcValue": bean.photoFuncResp?.funcValue ?? "",
+            "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
+            "funcId": bean.photoFuncResp?.id ?? 0
+          });
           return;
         }
+
         Get.to(
           () => GatherSinglePage(
             id: bean.photoGroupResp?.id ?? 0,
@@ -325,7 +338,9 @@ class _CollectionItemState extends State<CollectionItem> {
                       ),
                       itemBuilder: (c, index) {
                         final bean = _records[index];
-                        return bean.bindType == 0 ? _getBindType0(bean) : _getBindType1(bean);
+                        return bean.bindType == 0
+                            ? _getBindType0(bean)
+                            : _getBindType1(bean);
                       },
                     ),
                     SliverToBoxAdapter(
