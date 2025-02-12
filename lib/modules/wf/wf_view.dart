@@ -150,10 +150,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                 ],
               )),
               onTap: () {
-                if (!HandleTool.instance.isMember) {
-                  gotoPushPage(VipPage());
-                  return;
-                }
+
                 Log.d("async----$frontType");
                 switch (frontType) {
                   case "SJHF":
@@ -163,6 +160,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                     gotoPushPage(Photo_listPage(isNew: false),
                         arguments: {"type": 1});
                     break;
+                  case "WST":
                   default:
                     Log.e("xx: ${data.toJson()}");
                     Get.to(

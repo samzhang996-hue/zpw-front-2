@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String commAdd = 'images/comm/add.png';
   static const String commAllPhotosClose = 'images/comm/all_photos_close.png';
   static const String commBack = 'images/comm/back.png';
   static const String commCamera = 'images/comm/camera.png';
@@ -16,10 +17,14 @@ class Assets {
   static const String commFaceBg = 'images/comm/face_bg.png';
   static const String commFacecheck = 'images/comm/facecheck.png';
   static const String commHf = 'images/comm/hf.png';
+  static const String commHide = 'images/comm/hide.png';
   static const String commHistory = 'images/comm/history.png';
   static const String commLeftBg = 'images/comm/left_bg.png';
+  static const String commPush = 'images/comm/push.png';
   static const String commRightBg = 'images/comm/right_bg.png';
+  static const String commRush = 'images/comm/rush.png';
   static const String commSplash = 'images/comm/splash.mp4';
+  static const String commTk = 'images/comm/tk.png';
   static const String commUpdateBg = 'images/comm/update_bg.png';
   static const String commVipUpdate = 'images/comm/vip_update.png';
   static const String commWf = 'images/comm/wf.png';

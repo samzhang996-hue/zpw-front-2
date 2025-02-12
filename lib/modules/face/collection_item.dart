@@ -7,6 +7,7 @@ import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
+import 'package:zpw/modules/wf/wst/wst_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -28,6 +29,7 @@ class _CollectionItemState extends State<CollectionItem> {
 
   var _isLoading = false;
   late final _showNoMoreContent = false.obs;
+
   void _getData() {
     final params = {
       "id": widget.id,
@@ -173,6 +175,10 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType1(Records bean) {
     return GestureDetector(
       onTap: () {
+        if (bean.photoFuncResp?.apiType == 6) {
+          Get.to(WstPage(), arguments: {"funcValue": bean.photoFuncResp?.funcValue ?? "", "showImgGif": bean.photoFuncResp?.showImgGif ?? "","funcId":bean.photoFuncResp?.id??0});
+          return;
+        }
         Get.to(
           () => GatherSinglePage(
             id: bean.photoGroupResp?.id ?? 0,
@@ -319,9 +325,7 @@ class _CollectionItemState extends State<CollectionItem> {
                       ),
                       itemBuilder: (c, index) {
                         final bean = _records[index];
-                        return bean.bindType == 0
-                            ? _getBindType0(bean)
-                            : _getBindType1(bean);
+                        return bean.bindType == 0 ? _getBindType0(bean) : _getBindType1(bean);
                       },
                     ),
                     SliverToBoxAdapter(

@@ -9,8 +9,10 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/aikt/view/my_slider.dart';
 import 'package:zpw/utils/dowload.dart';
+import 'package:zpw/utils/handle_tool.dart';
 import 'aikt_logic.dart';
 
 class AiktPage extends BaseStatefulWidget {
@@ -89,6 +91,10 @@ class _AiktPageState extends BaseWidgetState {
           }),
           InkWell(
             onTap: () {
+              if (!HandleTool.instance.isMember) {
+                gotoPushPage(VipPage());
+                return;
+              }
               if (state.text.value == "保存图片") {
                 downloadAndSaveMedia(state.path.value, (res) {
                   if (res) {
