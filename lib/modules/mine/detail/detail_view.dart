@@ -68,7 +68,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
               // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
               double.infinity,
               358.w,
-              fit: BoxFit.cover),
+              fit: BoxFit.contain),
           alignment: Alignment.center,
         );
       } else {
@@ -79,7 +79,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
               // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
               double.infinity,
               double.infinity,
-              fit: BoxFit.cover),
+              fit: BoxFit.contain),
         ));
       }
     } else if (worksType == 1) {

@@ -99,11 +99,7 @@ class _CollectionItemState extends State<CollectionItem> {
     return GestureDetector(
       onTap: () {
         if (bean.photoFuncResp?.apiType == 6) {
-          Get.to(WstPage(), arguments: {
-            "funcValue": bean.photoFuncResp?.funcValue ?? "",
-            "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
-            "funcId": bean.photoFuncResp?.id ?? 0
-          });
+          Get.to(WstPage(), arguments: {"funcValue": bean.photoFuncResp?.funcValue ?? "", "showImgGif": bean.photoFuncResp?.showImgGif ?? "", "funcId": bean.photoFuncResp?.id ?? 0});
           return;
         }
         Get.to(
@@ -182,15 +178,15 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType1(Records bean) {
     return GestureDetector(
       onTap: () {
-        Log.e('bean:${bean.toJson()}');
-        if (bean.photoFuncResp?.apiType == 6) {
-          Get.to(WstPage(), arguments: {
-            "funcValue": bean.photoFuncResp?.funcValue ?? "",
-            "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
-            "funcId": bean.photoFuncResp?.id ?? 0
-          });
-          return;
-        }
+        // Log.e('bean:${bean.toJson()}');
+        // if (bean.photoFuncResp?.apiType == 6) {
+        //   Get.to(WstPage(), arguments: {
+        //     "funcValue": bean.photoFuncResp?.funcValue ?? "",
+        //     "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
+        //     "funcId": bean.photoFuncResp?.id ?? 0
+        //   });
+        //   return;
+        // }
 
         Get.to(
           () => GatherSinglePage(
@@ -338,9 +334,7 @@ class _CollectionItemState extends State<CollectionItem> {
                       ),
                       itemBuilder: (c, index) {
                         final bean = _records[index];
-                        return bean.bindType == 0
-                            ? _getBindType0(bean)
-                            : _getBindType1(bean);
+                        return bean.bindType == 0 ? _getBindType0(bean) : _getBindType1(bean);
                       },
                     ),
                     SliverToBoxAdapter(

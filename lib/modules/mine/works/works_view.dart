@@ -136,7 +136,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               child: Container(
                   child: Stack(
                 children: [
-                  QdsImageCorner(apiType == -1 ? returnUrl : oldUrl, 175.w, 265.w, 8),
+                  QdsImageCorner((apiType == -1 || apiType == 6) ? returnUrl : oldUrl, 175.w, 265.w, 8),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(

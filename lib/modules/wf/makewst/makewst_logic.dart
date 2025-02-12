@@ -68,14 +68,16 @@ class MakewstLogic extends BaseGetxController {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         state.records.value = data["records"];
+        Log.d("get----${state.records}");
         update();
-        bool shouldContinuePolling = state.records.value.any((record) => record['worksStatus'] == 1 || record['worksStatus'] == 2);
+        bool shouldContinuePolling = state.records.value.any((record) => (record['worksStatus'] == 0 || record['worksStatus'] == 1));
+        Log.d("msg1111---$shouldContinuePolling");
         if (!shouldContinuePolling) {
           stopPolling();
         } else {
           startPolling();
         }
-        Log.d("get----${state.records}");
+        Log.d("get----${state.records.value}");
       }
     });
   }
