@@ -48,8 +48,11 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     } else {
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
       if (!ps.hasAccess) {
-        _isFilesAccessPermission.value = false;
-        return;
+        final res = await PermissionUtils.checkFilesAccessPermission();
+        if (!res) {
+          _isFilesAccessPermission.value = false;
+          return;
+        }
       }
     }
     _isFilesAccessPermission.value = true;
