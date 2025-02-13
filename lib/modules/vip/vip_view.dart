@@ -299,7 +299,7 @@ class _VipPageState extends BaseWidgetState<VipPage>
                                   height: 54.w,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                      color: const Color(0xffFF2E7E),
+                                      color: const Color(0xFF19CDF2),
                                       borderRadius: BorderRadius.circular(27)),
                                   child: Center(
                                       child: CommText(
@@ -504,7 +504,7 @@ class _VipPageState extends BaseWidgetState<VipPage>
                           color: Color(0xFF141414),
                           border: Border.all(
                             color: isSelect
-                                ? Color(0xFFFF2E7E)
+                                ? Color(0xFF19CDF2)
                                 : Colors.transparent,
                             width: isSelect ? 2.0 : 0.0, // 你可以根据需要调整边框宽度
                           )),
@@ -530,7 +530,7 @@ class _VipPageState extends BaseWidgetState<VipPage>
                                     text: "¥",
                                     fontSize: 13.sp,
                                     textColor: isSelect
-                                        ? Color(0xFFFF2E7E)
+                                        ? Color(0xFF19CDF2)
                                         : Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -539,7 +539,7 @@ class _VipPageState extends BaseWidgetState<VipPage>
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
                                   textColor: isSelect
-                                      ? Color(0xFFFF2E7E)
+                                      ? Color(0xFF19CDF2)
                                       : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -573,11 +573,12 @@ class _VipPageState extends BaseWidgetState<VipPage>
                               topLeft: Radius.circular(14.0),
                               bottomRight: Radius.circular(14),
                             ),
-                            gradient: LinearGradient(
-                              colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.topRight,
-                            ),
+                            color: Color(0xFF19CDF2),
+                            // gradient: LinearGradient(
+                            //   colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
+                            //   begin: Alignment.topLeft,
+                            //   end: Alignment.topRight,
+                            // ),
                           ),
                           child: Container(
                             margin: EdgeInsets.only(left: 8, right: 8),

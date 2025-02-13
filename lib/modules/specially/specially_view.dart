@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-// import 'package:screen_protector/screen_protector.dart';
-import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
@@ -87,7 +85,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                       systemNavigationBarColor: Colors.white,
                       statusBarColor: Colors.transparent,
                     ),
-                    expandedHeight: 86.w +
+                    expandedHeight: 70.w +
                         outHeight +
                         (logic.listPhotoGroupBean.isEmpty ? 0 : 110.w),
                     backgroundColor: _backgroundColor,
@@ -110,8 +108,8 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                                 children: [
                                   Image.asset(
                                     "specially.png".specially,
-                                    width: 58.w,
-                                    height: 34.w,
+                                    width: 50.w,
+                                    height: 25.w,
                                     fit: BoxFit.cover,
                                   ),
                                   GetBuilder<MineLogic>(
@@ -184,10 +182,11 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                       ),
                     ),
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(60.w),
-                      child: SizedBox(
+                      preferredSize: Size.fromHeight(36.w),
+                      child: Container(
                         width: double.maxFinite,
-                        height: 60.w,
+                        height: 36.w,
+                        padding: EdgeInsets.only(left: 15.w, right: 15.w),
                         child: TabBar(
                           tabAlignment: TabAlignment.center,
                           tabs: logic.listPhotoGroupBean2
@@ -197,23 +196,27 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                             page?.jumpToPage(index);
                           },
                           controller: logic.tabController,
-                          indicator: const TabBarGradientIndicator(
-                            gradientColor: [
-                              Color(0xFFFF2E7E),
-                              Color(0x00FF2E7E)
-                            ],
-                            indicatorWidth: 4,
+                          indicator: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(50.w), // Creates border
+                            gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF7EFAEF),
+                                  Color(0xFF7FE1FB),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight),
                           ),
-                          indicatorSize: TabBarIndicatorSize.label,
+                          indicatorSize: TabBarIndicatorSize.tab,
                           labelColor: const Color(0xFF191919),
                           isScrollable: true,
                           labelStyle: TextStyle(
-                            fontSize: 20.sp,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF191919),
                           ),
                           unselectedLabelStyle: TextStyle(
-                            fontSize: 15.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                             color: const Color(0xFF656565),
                           ),

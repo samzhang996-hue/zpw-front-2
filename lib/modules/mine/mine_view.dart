@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
@@ -57,7 +55,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
   Widget image() {
     return state.userInfoBean.headImg == ""
         ? Image.asset(
-            "logo.png".mine,
+            "default_avatar.png".mine,
             width: 56.w,
           )
         : QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w,
@@ -146,86 +144,123 @@ class _MinePageState extends BaseWidgetState<MinePage>
                           Get.find<VipLogic>().getVipHome();
                           gotoPushPage(VipPage());
                         },
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: 15.w, right: 17.w, top: 23.w),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Color(0xff342D2C),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Container(
-                            margin: EdgeInsets.only(left: 16.w, top: 4.w),
-                            child: Row(
-                              children: [
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                            "vip_logo.png".mine,
-                                            width: 21.w,
-                                            height: 22.w,
-                                          ),
-                                          CommText(
-                                            text: "VIP会员",
-                                            fontSize: 22.sp,
-                                            fontWeight: FontWeight.bold,
-                                            textColor: Color(0xffF7C8AA),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 4.w,
-                                      ),
-                                      CommText(
-                                        text: "海量风格模板 | 持续更新备份",
-                                        fontSize: 14.sp,
-                                        textColor: Color(0xffFFDEC9),
-                                      ),
-                                      SizedBox(
-                                        height: 10.w,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Spacer(),
-                                Container(
-                                  margin: EdgeInsets.only(right: 15.w),
-                                  width: 82.w,
-                                  height: 30.w,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xffFFD9AE),
-                                          Color(0xffEFBB94),
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.topRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Center(
-                                      child: CommText(
-                                    text: HandleTool.instance.isMember
-                                        ? "已开通"
-                                        : "立即开通",
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: Color(0xff350F03),
-                                  )),
-                                ),
-                              ],
+                        child: Stack(
+                          children: [
+                            Image.asset(
+                              "mine_vip_bg.png".mine,
+                              width: 358.w,
+                              height: 175.w,
+                              fit: BoxFit.cover,
                             ),
-                          ),
+                            Positioned(
+                              bottom: 20.w,
+                              right: 2.w,
+                              child: Container(
+                                margin: EdgeInsets.only(right: 20.w),
+                                width: 82.w,
+                                height: 30.w,
+                                decoration: BoxDecoration(
+                                    color: const Color(0xFF4C3504),
+                                    borderRadius: BorderRadius.circular(16.w)),
+                                child: Center(
+                                    child: CommText(
+                                  text: HandleTool.instance.isMember
+                                      ? "已开通"
+                                      : "立即开通",
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  textColor: const Color(0xFFFFFFFF),
+                                )),
+                              ),
+                            )
+                          ],
                         ),
-                      )
+                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Get.find<VipLogic>().getVipHome();
+                      //     gotoPushPage(VipPage());
+                      //   },
+                      //   child: Container(
+                      //     margin: EdgeInsets.only(
+                      //         left: 15.w, right: 17.w, top: 23.w),
+                      //     width: double.infinity,
+                      //     decoration: BoxDecoration(
+                      //         color: Color(0xff342D2C),
+                      //         borderRadius: BorderRadius.circular(10)),
+                      //     child: Container(
+                      //       margin: EdgeInsets.only(left: 16.w, top: 4.w),
+                      //       child: Row(
+                      //         children: [
+                      //           Container(
+                      //             child: Column(
+                      //               crossAxisAlignment:
+                      //                   CrossAxisAlignment.start,
+                      //               children: [
+                      //                 Row(
+                      //                   children: [
+                      //                     Image.asset(
+                      //                       "vip_logo.png".mine,
+                      //                       width: 21.w,
+                      //                       height: 22.w,
+                      //                     ),
+                      //                     CommText(
+                      //                       text: "VIP会员",
+                      //                       fontSize: 22.sp,
+                      //                       fontWeight: FontWeight.bold,
+                      //                       textColor: Color(0xffF7C8AA),
+                      //                     )
+                      //                   ],
+                      //                 ),
+                      //                 SizedBox(
+                      //                   height: 4.w,
+                      //                 ),
+                      //                 CommText(
+                      //                   text: "海量风格模板 | 持续更新备份",
+                      //                   fontSize: 14.sp,
+                      //                   textColor: Color(0xffFFDEC9),
+                      //                 ),
+                      //                 SizedBox(
+                      //                   height: 10.w,
+                      //                 )
+                      //               ],
+                      //             ),
+                      //           ),
+                      //           Spacer(),
+                      //           Container(
+                      //             margin: EdgeInsets.only(right: 15.w),
+                      //             width: 82.w,
+                      //             height: 30.w,
+                      //             decoration: BoxDecoration(
+                      //                 gradient: LinearGradient(
+                      //                   colors: [
+                      //                     Color(0xffFFD9AE),
+                      //                     Color(0xffEFBB94),
+                      //                   ],
+                      //                   begin: Alignment.topLeft,
+                      //                   end: Alignment.topRight,
+                      //                 ),
+                      //                 borderRadius: BorderRadius.circular(20)),
+                      //             child: Center(
+                      //                 child: CommText(
+                      //               text: HandleTool.instance.isMember
+                      //                   ? "已开通"
+                      //                   : "立即开通",
+                      //               fontSize: 14.sp,
+                      //               fontWeight: FontWeight.bold,
+                      //               textColor: Color(0xff350F03),
+                      //             )),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 232.w),
+                  margin: EdgeInsets.only(left: 15.w, right: 17.w, top: 314.w),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),

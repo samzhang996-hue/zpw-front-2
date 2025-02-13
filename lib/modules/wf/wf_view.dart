@@ -9,9 +9,7 @@ import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
-import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/restore/restore_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 // import 'package:zpw/modules/wf/wf_page.dart';
@@ -52,14 +50,15 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                     children: [
                       Image.asset(
                         "wf.png".comm,
-                        width: 58.w,
-                        height: 34.w,
+                        width: 50.w,
+                        height: 25.w,
                       ),
                       InkWell(
-                        child: Image.asset(
-                          "history.png".comm,
-                          width: 28.w,
-                          height: 28.w,
+                        child: CommText(
+                          text: '我的作品',
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w500,
+                          textColor: const Color(0xFF656565),
                         ),
                         onTap: () {
                           gotoPushPage(WorksPage());
@@ -125,7 +124,6 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                           CommText(
                             text: tips,
                             fontSize: 13.sp,
-                            fontWeight: FontWeight.bold,
                             textColor: Color(0xff999999),
                           )
                         ],
@@ -135,13 +133,21 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                         width: 56.w,
                         height: 27.w,
                         decoration: BoxDecoration(
-                            color: Color(0xffFFEEF2),
-                            borderRadius: BorderRadius.circular(15)),
+                            // color: Color(0xffFFEEF2),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF7EFAEF).withOpacity(0.11),
+                                Color(0xFF7FE1FB).withOpacity(0.11),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.topRight,
+                            ),
+                            borderRadius: BorderRadius.circular(15.w)),
                         child: Center(
                             child: CommText(
                           text: "使用",
                           fontSize: 15.sp,
-                          textColor: Color(0xffFF2E7E),
+                          textColor: Color(0xFF19CDF2),
                           fontWeight: FontWeight.bold,
                         )),
                       )
@@ -150,7 +156,6 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                 ],
               )),
               onTap: () {
-
                 Log.d("async----$frontType");
                 switch (frontType) {
                   case "SJHF":

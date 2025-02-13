@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class SysSize {
   static const double avatar = 56;
@@ -101,6 +100,7 @@ class ColorPlate {
   static const Color fffffffOpacity1 = Color(0xffFFFFFF);
   //主题颜色
   static const Color themeColor = Color(0xffFF2D7D);
+  static const Color tabbarThemeColor = Color(0xFF191919);
   // tabbar未选中时的文字颜色
   static const Color tabbarTextColorNormal = Color(0xffB3B3B3);
   // 主题背景颜色

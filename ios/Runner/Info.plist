@@ -4,15 +4,14 @@
 	<dict>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
-	<key>CFBundleDevelopmentRegion</key>
-  <array>
-     <string>zh-CN</string>
-    
-  </array>
-<key>CFBundleLocalizations</key>
-  <array>
-   <string>zh-CN</string>
-  </array>
+		<key>CFBundleDevelopmentRegion</key>
+		<array>
+			<string>zh-CN</string>
+		</array>
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>zh-CN</string>
+		</array>
 		<key>CFBundleDisplayName</key>
 		<string>AI照片王</string>
 		<key>CFBundleExecutable</key>
@@ -51,11 +50,11 @@
 			<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		</array>
 		<key>NSCameraUsageDescription</key>
-		<string>&quot;AI照片王&quot;需要您的同意，才能访问摄像头以拍摄照片进行AI制作。</string>
+		<string>"AI照片王"需要您的同意，才能访问摄像头以拍摄照片进行AI制作。</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>&quot;AI照片王&quot;需要您的同意，才能访问相册以选择图片进行AI制作。</string>
+		<string>"AI照片王"需要您的同意，才能访问相册以选择图片进行AI制作。</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
-		<string>&quot;AI照片王&quot;需要您的同意，才能访问相册以选择图片进行AI制作。</string>
+		<string>"AI照片王"需要您的同意，才能访问相册以选择图片进行AI制作。</string>
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>

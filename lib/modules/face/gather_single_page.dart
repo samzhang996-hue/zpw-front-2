@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
@@ -102,11 +101,11 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                             child: SizedBox.shrink(),
                           )
                         : PreferredSize(
-                            preferredSize: Size.fromHeight(60.w),
+                            preferredSize: Size.fromHeight(36.w),
                             child: Container(
                               width: double.maxFinite,
                               alignment: Alignment.topCenter,
-                              padding: EdgeInsets.only(top: 6.w),
+                              padding: EdgeInsets.only(top: 4.w),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(22.w),
@@ -114,7 +113,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                                 ),
                                 color: Colors.white,
                               ),
-                              height: 60.w,
+                              height: 36.w,
                               child: TabBar(
                                 tabAlignment: TabAlignment.center,
                                 tabs: listPhotoGroupBean
@@ -124,23 +123,27 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                                   _pageController?.jumpToPage(index);
                                 },
                                 controller: _tabController,
-                                indicator: const TabBarGradientIndicator(
-                                  gradientColor: [
-                                    Color(0xFFFF2E7E),
-                                    Color(0x00FF2E7E)
-                                  ],
-                                  indicatorWidth: 4,
+                                indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      50.w), // Creates border
+                                  gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFF7EFAEF),
+                                        Color(0xFF7FE1FB),
+                                      ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight),
                                 ),
-                                indicatorSize: TabBarIndicatorSize.label,
+                                indicatorSize: TabBarIndicatorSize.tab,
                                 labelColor: const Color(0xFF191919),
                                 isScrollable: true,
                                 labelStyle: TextStyle(
-                                  fontSize: 20.sp,
+                                  fontSize: 16.sp,
                                   fontWeight: FontWeight.w500,
                                   color: const Color(0xFF191919),
                                 ),
                                 unselectedLabelStyle: TextStyle(
-                                  fontSize: 15.sp,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
                                   color: const Color(0xFF656565),
                                 ),

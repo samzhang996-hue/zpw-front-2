@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
                   logic.changeIndex(idx);
                 },
                 iconSize: 36.0,
-                selectedItemColor: ColorPlate.themeColor,
+                selectedItemColor: ColorPlate.tabbarThemeColor,
                 unselectedItemColor: ColorPlate.tabbarTextColorNormal,
                 type: BottomNavigationBarType.fixed,
                 backgroundColor: Colors.white,
