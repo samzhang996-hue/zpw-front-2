@@ -187,26 +187,16 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                         left: !widget.isNew
                             ? null
                             : Center(
-                                child: GestureDetector(
-                                    onTap: () {
-                                      Get.offAll(() => const MainPage());
-                                      // if (!HandleTool.instance.isMember) {
-                                      //   gotoPushPage(VipPage(), arguments: {"type": 1});
-                                      // } else {
-                                      //   Get.offAll(() => const MainPage());
-                                      // }
-                                      // Get.back();
-                                    },
-                                    child: Image.asset(
-                                      "all_photos_close.png".comm,
-                                      width: 28.w,
-                                    )),
+                                child: Image.asset(
+                                  "all_photos_close.png".comm,
+                                  width: 28.w,
+                                ),
                               ),
-                        // leftClick: !widget.isNew
-                        //     ? null
-                        //     : () {
-                        //         HandleTool.showAppToastText("message");
-                        //       },
+                        leftClick: !widget.isNew
+                            ? null
+                            : () {
+                                Get.offAll(() => const MainPage());
+                              },
                         right: InkWell(
                             onTap: () {
                               pickImage();
