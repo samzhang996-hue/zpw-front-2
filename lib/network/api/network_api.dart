@@ -3,13 +3,13 @@
 class Api {
   //本地
   // static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
-  // static const String API_BASE_URL_DEBUG = "http://photo.jlhkj168.cn";
-  static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001";
+  static const String API_BASE_URL_DEBUG = "http://photo.jlhkj168.cn";
+  // static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001";
   // static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001/";
 
   ///正式
-  // static const String API_BASE_URL_RELEASE = "http://photo.jlhkj168.cn";
-  static const String API_BASE_URL_RELEASE = "http://192.168.1.231:5000";
+  static const String API_BASE_URL_RELEASE = "http://photo.jlhkj168.cn";
+  // static const String API_BASE_URL_RELEASE = "http://192.168.1.231:5000";
 
   /// 更新
   static const String getForcePackage = "/packge/getForcePackage";
