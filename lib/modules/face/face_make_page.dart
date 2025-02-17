@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/comm_images_widget.dart';
@@ -265,6 +266,8 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    UmengCommonSdk.onEvent(
+        'Make_click_event', {'name': _tags[_currentIndex.value]});
     _canBack = true;
     _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
@@ -423,6 +426,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   void initState() {
     super.initState();
     // _checkImage();
+    UmengCommonSdk.onPageStart("FaceMakePage");
     _getData();
     Log.e("params:${widget.funcId},params:${widget.groupId}");
     Log.e(
@@ -431,6 +435,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
   @override
   void dispose() {
+    UmengCommonSdk.onPageEnd("FaceMakePage");
     _canBack = false;
     super.dispose();
   }

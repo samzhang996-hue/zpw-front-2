@@ -5,6 +5,7 @@ import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/modules/main/main_page.dart';
@@ -72,6 +73,9 @@ class SplashLogic extends BaseGetxController {
       channel = "AIIOS";
     }
     HandleTool.instance.channel = channel;
+
+    UmengCommonSdk.initCommon('', '67aeea638f232a05f113c1be', channel);
+    UmengCommonSdk.setPageCollectionModeManual();
     Log.i(
         'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
@@ -166,7 +170,9 @@ class SplashLogic extends BaseGetxController {
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
             HandleTool.instance.isMember = userInfoBean.vipFlag == 1;
-            Log.d("userInfoBean----${HandleTool.instance.isMember}");
+            Log.d(
+                "userInfoBean----${HandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
+            UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
             // Get.offAll(const MainPage());
             // return;
             if (userInfoBean.headImg!.isNotEmpty) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/filecache.dart';
@@ -22,9 +23,10 @@ class SettingLogic extends BaseGetxController {
     version();
     _showCacheSize();
   }
+
   getChannel() async {
     String channelInfo = await getChannelInfo(3);
-    state.channel.value=channelInfo;
+    state.channel.value = channelInfo;
   }
 
   void _showCacheSize() async {
@@ -57,6 +59,7 @@ class SettingLogic extends BaseGetxController {
   deleteUser() {
     get(Api.deleteUser, isShowProgress: true,
         success: (isSuccess, code, message, results) async {
+      UmengCommonSdk.onProfileSignOff();
       HandleTool.showAppToastText("注销成功");
       await 0.5.delay();
       SpUtils.clear();

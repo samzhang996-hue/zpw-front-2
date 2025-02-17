@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
@@ -104,7 +105,7 @@ class _GameplayPageState extends State<GameplayPage>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Image.asset(
-                                    "gameplay.png".face,
+                                    "gameplay.png".gameplay,
                                     width: 50.w,
                                     height: 25.w,
                                     fit: BoxFit.cover,
@@ -190,6 +191,10 @@ class _GameplayPageState extends State<GameplayPage>
                               .map((e) => Tab(text: "${e.groupName}"))
                               .toList(),
                           onTap: (index) {
+                            UmengCommonSdk.onEvent('Gameplay_click_event', {
+                              'Tab':
+                                  '${logic.listPhotoGroupBean2[index].toJson()}'
+                            });
                             page?.jumpToPage(index);
                           },
                           controller: logic.tabController,
@@ -243,7 +248,47 @@ class _GameplayPageState extends State<GameplayPage>
                 },
               ),
             );
-          })
+          }),
+          Positioned(
+            bottom: ScreenUtil().bottomBarHeight + 20.w,
+            right: 0.w,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Obx(
+                  () => Visibility(
+                    visible: logic.showVip.value == true,
+                    child: GestureDetector(
+                      onTap: logic.showVip.toggle,
+                      child: Container(
+                        width: 24.w,
+                        height: 24.w,
+                        color: Colors.transparent,
+                        alignment: Alignment.centerRight,
+                        child: Image.asset(
+                          "gameplay_close.png".gameplay,
+                          width: 16.w,
+                          height: 16.w,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: logic.showVip.value == true,
+                    child: Image.asset(
+                      "gameplay_vip.png".gameplay,
+                      width: 99.w,
+                      height: 82.w,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_overrides
 
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/modules/main/main_state.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
@@ -10,6 +11,7 @@ class MainLogic extends BaseGetxController {
   final MainState state = MainState();
 
   changeIndex(int index) {
+    UmengCommonSdk.onEvent('MainLogic_click_event', {'index': '$index'});
     state.currentIndex.value = index;
     update();
   }

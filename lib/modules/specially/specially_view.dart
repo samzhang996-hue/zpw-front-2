@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
@@ -193,6 +194,10 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                               .map((e) => Tab(text: "${e.groupName}"))
                               .toList(),
                           onTap: (index) {
+                            UmengCommonSdk.onEvent('Specially_click_event', {
+                              'Tab':
+                                  '${logic.listPhotoGroupBean2[index].toJson()}'
+                            });
                             page?.jumpToPage(index);
                           },
                           controller: logic.tabController,

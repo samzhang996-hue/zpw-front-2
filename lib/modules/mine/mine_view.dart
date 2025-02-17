@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
@@ -126,6 +127,9 @@ class _MinePageState extends BaseWidgetState<MinePage>
                             Spacer(),
                             InkWell(
                               onTap: () {
+                                UmengCommonSdk.onEvent(
+                                    'Mine_click_event_setting',
+                                    {'name': 'setting.png'});
                                 gotoPushPage(SettingPage());
                               },
                               child: Container(
@@ -300,6 +304,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
   Widget commItem(String icon, String title) {
     return InkWell(
         onTap: () {
+          UmengCommonSdk.onEvent('Mine_click_event', {'name': title});
           switch (title) {
             case "我的作品":
               gotoPushPage(WorksPage());

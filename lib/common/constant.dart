@@ -19,4 +19,5 @@ extension ImageLoad on String {
   String get make => 'images/make/$this';
   String get face => 'images/face/$this';
   String get specially => 'images/specially/$this';
+  String get gameplay => 'images/gameplay/$this';
 }

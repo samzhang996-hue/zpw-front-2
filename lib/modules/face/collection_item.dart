@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
@@ -98,6 +99,8 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType0(Records bean) {
     return GestureDetector(
       onTap: () {
+        UmengCommonSdk.onEvent(
+            'Muban_click_event', {'Records': '${bean.toJson()}'});
         if (bean.photoFuncResp?.apiType == 6) {
           Get.to(WstPage(), arguments: {
             "funcValue": bean.photoFuncResp?.funcValue ?? "",

@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
@@ -13,6 +14,7 @@ import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/aikt/view/my_slider.dart';
 import 'package:zpw/utils/dowload.dart';
 import 'package:zpw/utils/handle_tool.dart';
+
 import 'aikt_logic.dart';
 
 class AiktPage extends BaseStatefulWidget {
@@ -91,6 +93,7 @@ class _AiktPageState extends BaseWidgetState {
           }),
           InkWell(
             onTap: () {
+              UmengCommonSdk.onEvent('Aikt_click_event', {'name': ''});
               if (!HandleTool.instance.isMember) {
                 gotoPushPage(VipPage());
                 return;
@@ -109,7 +112,9 @@ class _AiktPageState extends BaseWidgetState {
               margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 26.w),
               height: 51.w,
               width: double.infinity,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: ColorPlate.themeColor),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: ColorPlate.themeColor),
               child: Center(child: Obx(() {
                 return CommText(
                   text: state.text.value,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:screen_protector/screen_protector.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
@@ -237,6 +238,10 @@ class _FacePageState extends State<FacePage>
                           // ],
                           onTap: (index) {
                             // page.animateTo(index, duration: duration, curve: curve)
+                            UmengCommonSdk.onEvent('Face_click_event', {
+                              'Tab':
+                                  '${logic.listPhotoGroupBean2[index].toJson()}'
+                            });
                             page?.jumpToPage(index);
                           },
                           controller: logic.tabController,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
@@ -138,6 +139,14 @@ class _VipPageState extends BaseWidgetState<VipPage>
                       ),
                       child: Column(
                         children: [
+                          Center(
+                            child: CommText(
+                              text: "会员无限制作 / 无水印 / 无广告 / 专属客服",
+                              fontSize: 15.w,
+                              textColor: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ).paddingOnly(bottom: 6.w),
                           Visibility(
                             child: _listViewWidget(),
                             visible: !(rk9 == ""),
@@ -248,6 +257,10 @@ class _VipPageState extends BaseWidgetState<VipPage>
                             onTap: () {
                               var vp = state.vipBean.vipList?[state.itemIndex]
                                   .vipPriceOutput;
+                              UmengCommonSdk.onEvent('Vip_click_event', {
+                                'name':
+                                    '${state.vipBean.vipList?[state.itemIndex].remark2}'
+                              });
                               state.goodsId = vp?.id ?? 0;
                               if (state.statePay.value == 1) {
                                 state.payKeyType = 1;
