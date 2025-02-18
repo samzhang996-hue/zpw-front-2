@@ -101,11 +101,11 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                             child: SizedBox.shrink(),
                           )
                         : PreferredSize(
-                            preferredSize: Size.fromHeight(36.w),
+                            preferredSize: Size.fromHeight(56.w),
                             child: Container(
                               width: double.maxFinite,
                               alignment: Alignment.topCenter,
-                              padding: EdgeInsets.only(top: 4.w),
+                              padding: EdgeInsets.only(top: 16.w),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(22.w),
@@ -113,7 +113,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                                 ),
                                 color: Colors.white,
                               ),
-                              height: 36.w,
+                              height: 56.w,
                               child: TabBar(
                                 tabAlignment: TabAlignment.center,
                                 tabs: listPhotoGroupBean
@@ -122,6 +122,8 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                                 onTap: (index) {
                                   _pageController?.jumpToPage(index);
                                 },
+                                overlayColor:
+                                    WidgetStateProperty.all(Colors.transparent),
                                 controller: _tabController,
                                 indicator: BoxDecoration(
                                   borderRadius: BorderRadius.circular(

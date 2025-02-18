@@ -244,6 +244,8 @@ class _FacePageState extends State<FacePage>
                             });
                             page?.jumpToPage(index);
                           },
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
                           controller: logic.tabController,
                           indicator: BoxDecoration(
                             borderRadius:
@@ -426,7 +428,7 @@ class _FacePageState extends State<FacePage>
                 // ],
                 onPageChanged: (index) {
                   logic.tabController?.animateTo(index);
-                  print(_scrollViewController!.offset);
+
                   if (index == 1) {
                     if (_scrollViewController!.offset > 600) {
                       _scrollViewController!

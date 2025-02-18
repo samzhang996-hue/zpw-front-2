@@ -48,13 +48,21 @@ class _MakeResultPageState extends BaseWidgetState<MakeResultPage> {
                 width: 357.w,
                 height: 52.w,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF2E7E),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF7EFAEF),
+                      Color(0xFF7FE1FB),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  // color: const Color(0xFFFF2E7E),
                   borderRadius: BorderRadius.circular(26.w),
                 ),
                 child: Center(
                   child: CommText(
                     text: "一键制作",
-                    textColor: const Color(0xFFFFFFFF),
+                    textColor: const Color(0xFF191919),
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
                   ),

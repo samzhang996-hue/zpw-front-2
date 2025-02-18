@@ -200,6 +200,8 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                             });
                             page?.jumpToPage(index);
                           },
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
                           controller: logic.tabController,
                           indicator: BoxDecoration(
                             borderRadius:

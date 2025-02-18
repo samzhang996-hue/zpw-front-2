@@ -197,6 +197,8 @@ class _GameplayPageState extends State<GameplayPage>
                             });
                             page?.jumpToPage(index);
                           },
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
                           controller: logic.tabController,
                           indicator: BoxDecoration(
                             borderRadius:
@@ -278,11 +280,18 @@ class _GameplayPageState extends State<GameplayPage>
                 Obx(
                   () => Visibility(
                     visible: logic.showVip.value == true,
-                    child: Image.asset(
-                      "gameplay_vip.png".gameplay,
-                      width: 99.w,
-                      height: 82.w,
-                      fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.find<VipLogic>().getVipHome();
+                        Get.to(() => VipPage());
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: Image.asset(
+                        "gameplay_vip.png".gameplay,
+                        width: 99.w,
+                        height: 82.w,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

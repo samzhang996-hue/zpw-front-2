@@ -49,13 +49,26 @@ class _MakePageState extends BaseWidgetState<MakePage> {
   }
 
   void _showSuccess() {
-    Get.dialog(const CommSuccess(headImg: ""), barrierDismissible: false);
+    Get.dialog(const CommSuccess(), barrierDismissible: false);
 
     Future.delayed(const Duration(seconds: 3), () {
       if (_canBack) {
         Get.back();
       }
     });
+  }
+
+  String findKeyByPartialIcon(String partialKey) {
+    var foundKeys =
+        animalsIcon.keys.where((key) => key.contains(partialKey)).toList();
+    return foundKeys.isNotEmpty ? foundKeys.first : '鼠';
+  }
+
+  String findKeyByPartialNormalIcon(String partialKey) {
+    var foundKeys = animalsNormalIcon.keys
+        .where((key) => key.contains(partialKey))
+        .toList();
+    return foundKeys.isNotEmpty ? foundKeys.first : '鼠';
   }
 
   void _make() {
@@ -257,6 +270,11 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.zero,
+                                    hintText: "周少",
+                                    hintStyle: TextStyle(
+                                        color: const Color(0xFF999999),
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w500),
                                     labelStyle: TextStyle(
                                         color: const Color(0xFF1A1A1A),
                                         fontSize: 16.sp,
@@ -287,55 +305,57 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                           fontWeight: FontWeight.w500,
                         ),
                         SizedBox(height: 14.w),
-                        SizedBox(
-                          height: 34.w,
-                          child: Obx(
-                            () => ListView.builder(
-                                itemCount: _commEnumBean.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      _currentZodiac.value = index;
-                                    },
-                                    behavior: HitTestBehavior.opaque,
-                                    child: Obx(
-                                      () => Container(
-                                        width: 65.w,
-                                        height: 34.w,
-                                        margin: EdgeInsets.only(
-                                            right: index ==
-                                                    _commEnumBean.length - 1
-                                                ? 16.w
-                                                : 4.w),
-                                        decoration: BoxDecoration(
-                                          color: _currentZodiac.value == index
-                                              ? const Color(0xFFFF2E7E)
-                                              : const Color(0xFFF2F2F2),
-                                          borderRadius:
-                                              BorderRadius.circular(6.w),
+                        Obx(
+                          () => Padding(
+                            padding: EdgeInsets.only(right: 16.w),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 6,
+                                mainAxisSpacing: 8.w,
+                                crossAxisSpacing: 17.w,
+                                childAspectRatio: 45 / 61,
+                              ),
+                              itemCount: _commEnumBean.length,
+                              // scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _currentZodiac.value = index;
+                                  },
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Obx(
+                                    () => Column(
+                                      children: [
+                                        Image.asset(
+                                          _currentZodiac.value == index
+                                              ? "${animalsIcon[findKeyByPartialIcon(_commEnumBean[index].name ?? '')]}"
+                                              : "${animalsNormalIcon[findKeyByPartialNormalIcon(_commEnumBean[index].name ?? '')]}",
+                                          width: 45.w,
+                                          height: 44.w,
+                                          fit: BoxFit.cover,
                                         ),
-                                        child: Center(
-                                          child: CommText(
-                                            text:
-                                                '${_commEnumBean[index].name}',
-                                            textColor:
-                                                _currentZodiac.value == index
-                                                    ? Colors.white
-                                                    : const Color(0xFF999999),
-                                            fontSize: 16.sp,
-                                            fontWeight:
-                                                _currentZodiac.value == index
-                                                    ? FontWeight.w500
-                                                    : FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
+                                        CommText(
+                                          text: findKeyByPartialIcon(
+                                              _commEnumBean[index].name ?? ''),
+                                          textColor:
+                                              _currentZodiac.value == index
+                                                  ? const Color(0xFF191919)
+                                                  : const Color(0xFFB2B2B2),
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        )
+                                      ],
                                     ),
-                                  );
-                                }),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
+                        SizedBox(height: 44.w),
                       ],
                       if (widget.map["useMethod"] == "09" ||
                           widget.map["useMethod"] == "10" ||
@@ -368,6 +388,11 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.zero,
+                                      hintText: "生活甜甜 好运连连",
+                                      hintStyle: TextStyle(
+                                          color: const Color(0xFF999999),
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.w500),
                                       labelStyle: TextStyle(
                                           color: const Color(0xFF1A1A1A),
                                           fontSize: 16.sp,
@@ -409,16 +434,77 @@ class _MakePageState extends BaseWidgetState<MakePage> {
             right: 0,
             top: 0,
             child: YAppBar(
-              title: "${widget.map["name"]}",
-              right: GestureDetector(
-                onTap: _toHistory,
-                behavior: HitTestBehavior.opaque,
-                child: Image.asset(
-                  "make_history.png".make,
-                  width: 28.w,
-                  height: 28.w,
-                ),
+              bgColor: Colors.transparent,
+              widget: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                      ).paddingOnly(left: 10),
+                    ),
+                  ),
+                  Container(
+                    width: 44,
+                    height: 50,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: 1.sw * 0.4,
+                    child: Text("${widget.map["name"]}",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Color(0xFF191919),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 94,
+                    height: 50,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.only(top: 2),
+                    color: Colors.transparent,
+                    child: GestureDetector(
+                      onTap: _toHistory,
+                      behavior: HitTestBehavior.opaque,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // Image.asset(
+                          //   "my_work_ic.png".make,
+                          //   width: 22.w,
+                          //   height: 22.w,
+                          // ),
+                          Text(
+                            "我的作品",
+                            style: TextStyle(
+                              color: const Color(0xFF656565),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                          SizedBox(width: 16.w)
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
+              isMake: true,
             ),
           ),
           Positioned(
@@ -437,13 +523,21 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                       width: 357.w,
                       height: 52.w,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF2E7E),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF7EFAEF),
+                            Color(0xFF7FE1FB),
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        // color: const Color(0xFFFF2E7E),
                         borderRadius: BorderRadius.circular(26.w),
                       ),
                       child: Center(
                         child: CommText(
                           text: "一键制作",
-                          textColor: const Color(0xFFFFFFFF),
+                          textColor: const Color(0xFF191919),
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                         ),
@@ -459,3 +553,33 @@ class _MakePageState extends BaseWidgetState<MakePage> {
     );
   }
 }
+
+var animalsIcon = {
+  "鼠": "animal_12.png".make,
+  "牛": "animal_11.png".make,
+  "虎": "animal_10.png".make,
+  "兔": "animal_9.png".make,
+  "龙": "animal_8.png".make,
+  "蛇": "animal_7.png".make,
+  "马": "animal_6.png".make,
+  "羊": "animal_5.png".make,
+  "猴": "animal_4.png".make,
+  "鸡": "animal_3.png".make,
+  "狗": "animal_2.png".make,
+  "猪": "animal_1.png".make,
+};
+
+var animalsNormalIcon = {
+  "鼠": "animal_normal_12.png".make,
+  "牛": "animal_normal_11.png".make,
+  "虎": "animal_normal_10.png".make,
+  "兔": "animal_normal_9.png".make,
+  "龙": "animal_normal_8.png".make,
+  "蛇": "animal_normal_7.png".make,
+  "马": "animal_normal_6.png".make,
+  "羊": "animal_normal_5.png".make,
+  "猴": "animal_normal_4.png".make,
+  "鸡": "animal_normal_3.png".make,
+  "狗": "animal_normal_2.png".make,
+  "猪": "animal_normal_1.png".make,
+};
