@@ -13,7 +13,7 @@ class GameplayLogic extends GetxController
   var listPhotoGroupBean = <ListPhotoGroupBean>[];
   var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
   late final isOk = false.obs;
-  late final showVip = true.obs;
+  late final showVip = HandleTool.instance.isMember.obs;
 
   @override
   void onInit() {

@@ -262,7 +262,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       commItem("zp.png", "我的作品"),
                       commItem("about.png", "关于我们"),
                       commItem("kf.png", "联系客服"),
-                      commItem("sf.png", "算法公司"),
+                      // commItem("sf.png", "算法公式"),
                     ],
                   ),
                 )
@@ -334,9 +334,6 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
               break;
             case "联系客服":
               gotoPushPage(CallPage());
-              break;
-            case "算法公式":
-              gotoPushPage(SfPage());
               break;
           }
         },

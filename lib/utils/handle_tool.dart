@@ -66,17 +66,7 @@ class HandleTool {
   String hYxy = "http://imgser.zyykj168.com/xyhtml/ai_hyxy.html";
   String pHone = "4000732899";
   String gz = "http://imgser.zyykj168.com/xyhtml/SX_YK_GZSM.html";
-  // /// 获取协议
-  // getConfigWithKey() {
-  //   QDSGet(Api.config_getConFigByTypeList,
-  //       isShowProgress: false, params: {"key": "QWYHXY,QWYSXY,QWHYXY,PHONE"},
-  //       success: (isSuccess, code, message, results) {
-  //     if (isSuccess == true && results.isNotEmpty) {
-  //       configData = results[0] as Map<String, dynamic>;
-  //     }
-  //     // Log.i("results=====>${results}");
-  //   });
-  // }
+
   Future<bool> compareTimesWithServer(String serverTimeString) async {
     // 获取当前设备时间
     DateTime currentTime = DateTime.now();
@@ -99,32 +89,40 @@ class HandleTool {
   getProtocolConfig() {
     SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
         success: (isSuccess, code, message, results) {
-      Log.d("config---$isSuccess----$results");
-      if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
-        // 遍历 results 列表,提取 configType 和 configValue
-        for (Map<String, dynamic> item in results) {
-          int configType = item['configType'];
-          String configValue = item['configValue'];
-          // 根据 configType 获取对应的 configValue
-          if (configType == 1) {
-            // 用户协议 URL
-            yHxy = configValue;
-          } else if (configType == 4) {
-            // 隐私政策 URL
-            ySxy = configValue;
-          } else if (configType == 5) {
-            // 会员协议 URL
-            hYxy = configValue;
-          } else if (configType == 6) {
-            // 手机号
-            pHone = configValue;
-          } else if (configType == 7) {
-            // 规则
-            gz = configValue;
+          Log.d("config---$isSuccess----$results");
+          if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
+            // 遍历 results 列表,提取 configType 和 configValue
+            for (Map<String, dynamic> item in results) {
+              int configType = item['configType'];
+              String configValue = item['configValue'];
+              // 根据 configType 获取对应的 configValue
+              if (configType == 1) {
+                // 用户协议 URL
+                yHxy = configValue;
+              } else if (configType == 4) {
+                // 隐私政策 URL
+                ySxy = configValue;
+              } else if (configType == 5) {
+                // 会员协议 URL
+                hYxy = configValue;
+              } else if (configType == 6) {
+                // 手机号
+                pHone = configValue;
+              } else if (configType == 7) {
+                // 规则
+                gz = configValue;
+              } else if (configType == 17) {
+                gz = configValue;
+              }
+              else if (configType == 18) {
+                gz = configValue;
+              }
+              else if (configType == 19) {
+                gz = configValue;
+              }
+            }
           }
-        }
-      }
-    });
+        });
   }
 
   static showAppToastText(String message,
@@ -137,7 +135,9 @@ class HandleTool {
       return "";
     }
     if (t is int || t is double) {
-      return t.toString().isEmpty ? "0" : t.toString();
+      return t
+          .toString()
+          .isEmpty ? "0" : t.toString();
     } else if (t is String) {
       return t;
     }
@@ -186,7 +186,7 @@ class HandleTool {
     value = filterText(value);
     TextPainter painter = TextPainter(
 
-        ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
+      ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
         locale: Localizations.localeOf(navigatorKey.currentContext!),
         maxLines: maxLines,
         textDirection: TextDirection.ltr,
@@ -247,9 +247,9 @@ class HandleTool {
     if (isNeed == true) {
       String hour = now.hour < 10 ? "0${now.hour}" : now.hour.toString();
       String minute =
-          now.minute < 10 ? "0${now.minute}" : now.minute.toString();
+      now.minute < 10 ? "0${now.minute}" : now.minute.toString();
       String second =
-          now.second < 10 ? "0${now.second}" : now.second.toString();
+      now.second < 10 ? "0${now.second}" : now.second.toString();
       date = "$date $hour:$minute:$second";
     }
     return date;
@@ -274,35 +274,35 @@ class HandleTool {
     QDSGet(Api.appPackage_latestPackage,
         isShowProgress: isShowProgress,
         params: map, success: (isSuccess, code, message, results) {
-      Log.i("版本=====>$results $channel");
-      if (isSuccess && results.isNotEmpty) {
-        /// 获取本地版本
-        isCheckUpdateAction(results.first as Map);
-      }
-    });
+          Log.i("版本=====>$results $channel");
+          if (isSuccess && results.isNotEmpty) {
+            /// 获取本地版本
+            isCheckUpdateAction(results.first as Map);
+          }
+        });
   }
 
   SMWPost<T>(String url,
       {Function(bool isSuccess, int code, String message, List<T> results)?
-          success,
-      Function(int totalCount)? totalCount,
-      Map<String, dynamic>? params,
-      onModel,
-      bool isShowError = true,
-      bool isShowProgress = true,
-      bool isCancleToken = false}) {
+      success,
+        Function(int totalCount)? totalCount,
+        Map<String, dynamic>? params,
+        onModel,
+        bool isShowError = true,
+        bool isShowProgress = true,
+        bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
     DioUtils.instance.post<T>(url,
         success: (isSuccess, code, message, resulsts) {
-      if (code == -1004) {
-        HandleTool.deleteDataWithKey("token");
-      } else {
-        if (success != null) {
-          success(isSuccess, code, message, resulsts);
-        }
-      }
-    },
+          if (code == -1004) {
+            HandleTool.deleteDataWithKey("token");
+          } else {
+            if (success != null) {
+              success(isSuccess, code, message, resulsts);
+            }
+          }
+        },
         successTotalCount: totalCount,
         params: params,
         onModel: onModel,
@@ -315,13 +315,13 @@ class HandleTool {
   /// get
   QDSGet<T>(String url,
       {Function(bool isSuccess, int code, String message, List<T> results)?
-          success,
-      Function(int totalCount)? totalCount,
-      Map<String, dynamic>? params,
-      onModel,
-      bool isShowError = true,
-      bool isShowProgress = true,
-      bool isCancleToken = false}) {
+      success,
+        Function(int totalCount)? totalCount,
+        Map<String, dynamic>? params,
+        onModel,
+        bool isShowError = true,
+        bool isShowProgress = true,
+        bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
     DioUtils.instance.get<T>(url, success: (isSuccess, code, message, results) {
@@ -342,8 +342,7 @@ class HandleTool {
         isCancleToken: isCancleToken);
   }
 
-  Future<T?> QDSUpload<T>(
-    String url, {
+  Future<T?> QDSUpload<T>(String url, {
     Object? params,
     onModel,
   }) {
@@ -379,7 +378,7 @@ class HandleTool {
     /// 比对
     int localNum = int.parse("${localVersion.replaceAll(".", "")}");
     int serviceNum =
-        int.parse("${version.replaceAll(".", "").replaceAll(" ", "")}");
+    int.parse("${version.replaceAll(".", "").replaceAll(" ", "")}");
     if (serviceNum > localNum) {
       // Log.i("22233111");
       /// 需要更新
@@ -426,7 +425,7 @@ class HandleTool {
                     width: 80,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        // color: ColorPlate.themeColor,
+                      // color: ColorPlate.themeColor,
                         border: Border.all(color: const Color(0xffA2AAAE)),
                         borderRadius: BorderRadius.circular(15)),
                     child: CommText(
@@ -502,7 +501,7 @@ class HandleTool {
 
   void checkImgAndSave(String? path,
       {void Function(String headImageUrl)? success,
-      bool bindDefaultImg = true}) async {
+        bool bindDefaultImg = true}) async {
     if (path == null) {
       return;
     }
@@ -528,13 +527,13 @@ class HandleTool {
 
       HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
           isShowProgress: true, success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          HandleTool.instance.headImg = '${bean.url}';
-          success?.call(bean.url ?? '');
-        } else {
-          CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
-        }
-      });
+            if (isSuccess == true && results.isNotEmpty) {
+              HandleTool.instance.headImg = '${bean.url}';
+              success?.call(bean.url ?? '');
+            } else {
+              CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+            }
+          });
 
       // final cacheDir = await getApplicationCacheDirectory();
       // File old = File(path);

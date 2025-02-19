@@ -6,6 +6,7 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
+import 'package:zpw/modules/mine/sf/sf_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'about_logic.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
@@ -33,6 +34,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
           commItem("用户协议", ""),
           commItem("隐私政策", ""),
           commItem("会员协议", ""),
+          commItem("算法公式", ""),
           Container(
             margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
             width: double.infinity,
@@ -100,6 +102,9 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                     htmlUrl: HandleTool.instance.hYxy,
                   ),
                 );
+                break;
+              case "算法公式":
+                gotoPushPage(SfPage());
                 break;
             }
           },
