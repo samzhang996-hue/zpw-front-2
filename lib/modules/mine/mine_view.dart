@@ -318,8 +318,8 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
           UmengCommonSdk.onEvent('Mine_click_event', {'name': title});
           switch (title) {
             case "我的作品":
-              showTopSnackBar();
-              // gotoPushPage(WorksPage());
+              // HandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
+              gotoPushPage(WorksPage());
               break;
             case "关于我们":
               gotoPushPage(AboutPage());

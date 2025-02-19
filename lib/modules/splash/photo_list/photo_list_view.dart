@@ -48,7 +48,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
       }
     } else {
       bool storagePermission = await Permission.storage.isGranted;
-      Log.d("msg----$storagePermission---12333333");
       if (!storagePermission) {
         PermissionUtils.showTopSnackbar();
         storagePermission = await Permission.storage.request().isGranted;

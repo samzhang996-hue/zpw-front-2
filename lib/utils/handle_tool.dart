@@ -383,7 +383,7 @@ class HandleTool {
     if (serviceNum > localNum) {
       // Log.i("22233111");
       /// 需要更新
-      _showUpdateDialog(isForce == "1" ? true : false, versionCode,
+      showUpdateDialog(isForce == "1" ? true : false, versionCode,
           appendInformation, fileUrl);
     } else {
       if (isShow) {
@@ -397,7 +397,7 @@ class HandleTool {
 
   ///Flutter侧处理升级对话框
   ///[forcedUpgrade] 是否强制升级
-  _showUpdateDialog(bool forcedUpgrade, String newVersion,
+  showUpdateDialog(bool forcedUpgrade, String newVersion,
       String appendInformation, String fileUrl) {
     showDialog(
       context: navigatorKey.currentContext!,

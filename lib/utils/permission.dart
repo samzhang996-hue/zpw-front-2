@@ -71,7 +71,7 @@ class PermissionUtils {
           fontSize: 14,
         ),
       ),
-      duration: null, // 设置为 null，弹窗不会自动关闭
+      duration: const Duration(seconds: 12), // 设置为 null，弹窗不会自动关闭
     );
   }
 }
