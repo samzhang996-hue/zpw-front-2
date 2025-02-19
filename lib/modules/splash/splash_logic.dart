@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_udid/flutter_udid.dart';
+
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
@@ -76,8 +77,7 @@ class SplashLogic extends BaseGetxController {
 
     UmengCommonSdk.initCommon('', '67aeea638f232a05f113c1be', channel);
     UmengCommonSdk.setPageCollectionModeManual();
-    Log.i(
-        'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
@@ -97,27 +97,20 @@ class SplashLogic extends BaseGetxController {
   }
 
   bool _showAd = true;
-  _onLogin(String channel, String deviceId, String oaid,
-      {bool isShowProgress = true}) async {
+
+  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = true}) async {
     String udid = "";
     if (Platform.isIOS) {
       udid = await FlutterUdid.udid;
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
-      "userDeviceInfo": {
-        "deviceCode": deviceId,
-        "systemDevice": Platform.isAndroid ? "android" : "ios",
-        "oaid": oaid,
-        "idfa": udid
-      },
+      "userDeviceInfo": {"deviceCode": deviceId, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": udid},
     };
     Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
-        success: (isSuccess, code, message, results) async {
+    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
       requestMax = requestMax + 1;
-      Log.i(
-          "isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
+      Log.i("isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
       if (isSuccess == true && results.isNotEmpty) {
         requestMax = 100;
         Map data = results.first as Map;
@@ -164,14 +157,12 @@ class SplashLogic extends BaseGetxController {
           requestUserInfoMax = requestUserInfoMax + 1;
           Log.d("requestUserInfoMax----$requestUserInfoMax");
           if (isSuccess == true && results.isNotEmpty) {
-            Log.d(
-                "requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
+            Log.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
             requestUserInfoMax = 100;
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
             HandleTool.instance.isMember = userInfoBean.vipFlag == 1;
-            Log.d(
-                "userInfoBean----${HandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
+            Log.d("userInfoBean----${HandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
             UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
             // Get.offAll(const MainPage());
             // return;
@@ -226,8 +217,7 @@ class SplashLogic extends BaseGetxController {
   test() {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
-        if (event.action == AdEventAction.onAdError ||
-            event.action == AdEventAction.onAdLoaded) {
+        if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
           if (isFirst) {
             Get.offAll(const MainPage());
           } else {

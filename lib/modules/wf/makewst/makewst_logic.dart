@@ -59,11 +59,7 @@ class MakewstLogic extends BaseGetxController {
   }
 
   photoRecord(bool rush) {
-    Map<String, dynamic> dataMap = {
-      "pageIndex": 1,
-      "pageSize": 100,
-      "apiType": 6,
-    };
+    Map<String, dynamic> dataMap = {"pageIndex": 1, "pageSize": 100, "apiType": 6, "sortType": 1};
     get(Api.photoRecord, isShowProgress: rush, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;

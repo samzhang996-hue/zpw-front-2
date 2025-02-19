@@ -21,15 +21,33 @@ class MakewstPage extends BaseStatefulWidget {
 }
 
 class MakewstPageState extends BaseWidgetState {
+  final ScrollController _scrollController = ScrollController();
   final _controller = TextEditingController();
   final logic = Get.put(MakewstLogic());
   final state = Get.find<MakewstLogic>().state;
 
   @override
+  void initState() {
+    super.initState();
+    // 监听数据变化，滚动到底部
+    ever(state.records, (_) => _scrollToBottom());
+  }
+
+  @override
   void dispose() {
+    _scrollController.dispose();
     _controller.dispose();
     logic.stopPolling();
     super.dispose();
+  }
+
+  // 滚动到底部
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
   }
 
   @override
@@ -66,8 +84,13 @@ class MakewstPageState extends BaseWidgetState {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          margin: EdgeInsets.only(left: 16.w,bottom: 4.w),
-                          child: CommText(text: "内容由ai生成，禁止利用本功能从事违法活",fontWeight: FontWeight.w400,textColor: Color(0xffCCCCCC),fontSize: 10.sp,)),
+                          margin: EdgeInsets.only(left: 16.w, bottom: 4.w),
+                          child: CommText(
+                            text: "内容由ai生成，禁止利用本功能从事违法活",
+                            fontWeight: FontWeight.w400,
+                            textColor: Color(0xffCCCCCC),
+                            fontSize: 10.sp,
+                          )),
                       Container(
                           margin: EdgeInsets.only(left: 16.w, right: 16.w),
                           width: double.infinity,
@@ -76,7 +99,6 @@ class MakewstPageState extends BaseWidgetState {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-
                               Container(child: buildTextField(), margin: EdgeInsets.only(left: 12.w, right: 12.w)),
                               // CommText(text: state.funcValue.value,fontSize: 14.sp,textColor: Color(0xff191919),),
                               Container(
@@ -350,6 +372,7 @@ class MakewstPageState extends BaseWidgetState {
     return Container(
       margin: const EdgeInsets.only(top: 22, bottom: 20),
       child: ListView.builder(
+        controller: _scrollController,
         padding: EdgeInsets.all(0),
         shrinkWrap: true,
         itemCount: state.records.value.length,
