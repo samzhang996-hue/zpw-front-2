@@ -34,7 +34,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
           commItem("用户协议", ""),
           commItem("隐私政策", ""),
           commItem("会员协议", ""),
-          commItem("算法公式", ""),
+          commItem("算法公示", ""),
           Container(
             margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
             width: double.infinity,
@@ -103,7 +103,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                   ),
                 );
                 break;
-              case "算法公式":
+              case "算法公示":
                 gotoPushPage(SfPage());
                 break;
             }
