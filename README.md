@@ -18,3 +18,5 @@ samples, guidance on mobile development, and a full API reference.
 dart run flutter_launcher_icons
 
 dart run flutter_native_splash:create
+
+flutter build ios --release --obfuscate --split-debug-info=./symbols
