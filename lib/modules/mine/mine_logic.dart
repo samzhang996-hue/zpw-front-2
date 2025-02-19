@@ -18,7 +18,7 @@ class MineLogic extends BaseGetxController {
 
   getUserInfo() {
     Post<UserInfoBean>(Api.sso_getUserInfo,
-        isShowProgress: true,
+        isShowProgress: false,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("userInfoBean----${results.first}");
