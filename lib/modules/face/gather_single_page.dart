@@ -95,7 +95,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                         ),
                       ),
                     ),
-                    bottom: _tabController == null
+                    bottom: (_tabController == null||listPhotoGroupBean.length==1)
                         ? const PreferredSize(
                             preferredSize: Size.zero,
                             child: SizedBox.shrink(),

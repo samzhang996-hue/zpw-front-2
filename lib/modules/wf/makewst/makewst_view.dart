@@ -50,20 +50,8 @@ class MakewstPageState extends BaseWidgetState {
                             onTap: () {
                               gotoPushPage(WorksPage());
                             },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  "my_work_ic.png".make,
-                                  width: 22.w,
-                                  height: 22.w,
-                                ),
-                                CommText(
-                                  text: "作品",
-                                  fontSize: 13.sp,
-                                  textColor: Color(0xff191919),
-                                  fontWeight: FontWeight.bold,
-                                )
-                              ],
+                            child: CommText(
+                              text: "我的作品",
                             ))),
                     Expanded(child: createListView())
                   ],
@@ -78,6 +66,9 @@ class MakewstPageState extends BaseWidgetState {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
+                          margin: EdgeInsets.only(left: 16.w,bottom: 4.w),
+                          child: CommText(text: "内容由ai生成，禁止利用本功能从事违法活",fontWeight: FontWeight.w400,textColor: Color(0xffCCCCCC),fontSize: 10.sp,)),
+                      Container(
                           margin: EdgeInsets.only(left: 16.w, right: 16.w),
                           width: double.infinity,
                           // height: 80.w,
@@ -85,6 +76,7 @@ class MakewstPageState extends BaseWidgetState {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+
                               Container(child: buildTextField(), margin: EdgeInsets.only(left: 12.w, right: 12.w)),
                               // CommText(text: state.funcValue.value,fontSize: 14.sp,textColor: Color(0xff191919),),
                               Container(
@@ -166,7 +158,7 @@ class MakewstPageState extends BaseWidgetState {
                                     child: CommText(
                                       text: "选择比例",
                                       fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       textColor: Color(0xff191919),
                                     )),
                                 Row(
@@ -179,24 +171,24 @@ class MakewstPageState extends BaseWidgetState {
                                             logic.titleIndexState(index);
                                           },
                                           child: Container(
-                                            width: 55.w,
-                                            height: 23.w,
-                                            decoration: BoxDecoration(color: isSelect ? ColorPlate.themeColor : Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6)),
+                                            width: 65.w,
+                                            height: 34.w,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), border: Border.all(width: 1.w, color: isSelect ? Color(0xff191919) : Color(0xffCCCCCC))),
                                             child: Center(
                                                 child: CommText(
                                               text: title,
-                                              fontSize: 13.sp,
+                                              fontSize: 16.sp,
                                               fontWeight: FontWeight.w500,
-                                              textColor: isSelect ? Colors.white : Color(0xff818181),
+                                              textColor: isSelect ? Color(0xff191919) : Color(0xffCCCCCC),
                                             )),
                                           ));
                                     })),
                                 Container(
                                     margin: EdgeInsets.only(top: 18.w, bottom: 14.w),
                                     child: CommText(
-                                      text: "选择比例",
+                                      text: "选择风格",
                                       fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       textColor: Color(0xff191919),
                                     )),
                                 Container(
@@ -217,7 +209,7 @@ class MakewstPageState extends BaseWidgetState {
                                             margin: EdgeInsets.only(right: 8.w),
                                             width: 80.w,
                                             decoration: BoxDecoration(
-                                                border: Border.all(color: isSelect ? ColorPlate.themeColor : Colors.transparent, width: isSelect ? 2.w : 0), borderRadius: BorderRadius.circular(10)),
+                                                border: Border.all(color: isSelect ? Color(0xff191919) : Colors.transparent, width: isSelect ? 2.w : 0), borderRadius: BorderRadius.circular(10)),
                                             child: Stack(
                                               alignment: Alignment.bottomCenter,
                                               children: [
@@ -235,8 +227,10 @@ class MakewstPageState extends BaseWidgetState {
                                                       child: CommText(
                                                     text: name,
                                                     textColor: Colors.white,
-                                                    fontWeight: FontWeight.bold,
+                                                    fontWeight: FontWeight.w400,
                                                     fontSize: 14.sp,
+                                                    maxLines: 1,
+                                                    overTextFlow: TextOverflow.ellipsis,
                                                   )),
                                                 ),
                                               ],
@@ -354,162 +348,127 @@ class MakewstPageState extends BaseWidgetState {
 
   Widget createListView() {
     return Container(
-        margin: const EdgeInsets.only(top: 22, bottom: 20),
-        child: ListView.builder(
-            padding: EdgeInsets.all(0),
-            // physics: const NeverScrollableScrollPhysics(),
-            // 禁用ListView的滚动
-            shrinkWrap: true,
-            itemCount: state.records.value.length,
-            itemBuilder: (BuildContext context, int index) {
-              final item = state.records.value[index];
-              final int type = item['worksType'] ?? 0;
-              final int worksStatus = item['worksStatus'] ?? 0;
-              final String returnUrl = item['returnUrl'] ?? "";
-              final String novel = item['novel'] ?? "";
-              var tags = item["tags"] ?? "";
-              int id = item["id"] ?? 0;
-              int funcId = item["funcId"] ?? 0;
-              int apiType = item["apiType"] ?? 0;
-              Log.d("msg----${item["valueJson"]}");
-              String jsonName = "无风格";
-              String jsonTitle = "1:1";
-              if (item["valueJson"]!=null) {
-                Map<String, dynamic> jsonMap = jsonDecode(item["valueJson"]);
-                jsonName = jsonMap["name"] ?? "";
-                jsonTitle = jsonMap["title"] ?? "";
-              }
-              Log.d("list----$novel----$returnUrl---$type");
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 18.w),
-                      decoration: const BoxDecoration(color: Color(0xffF9F9F9), borderRadius: BorderRadius.all(Radius.circular(16))),
-                      child: Container(
-                          margin: EdgeInsets.only(left: 12.w, top: 14.w, bottom: 20.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CommText(
-                                text: novel,
-                                fontSize: 14.sp,
-                                textColor: Color(0xff191919),
-                                fontWeight: FontWeight.bold,
-                              ),
-                              SizedBox(
-                                height: 11.w,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 55.w,
-                                    height: 23.w,
-                                    decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6)),
-                                    child: Center(
-                                        child: CommText(
-                                      text: jsonTitle,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500,
-                                      textColor: Color(0xff818181),
-                                    )),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 6.w),
-                                    width: 55.w,
-                                    height: 23.w,
-                                    decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6.w)),
-                                    child: Center(
-                                        child: CommText(
-                                      text: jsonName,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500,
-                                      textColor: Color(0xff818181),
-                                    )),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ))),
-                  Container(
-                      width: 210.w,
-                      margin: EdgeInsets.only(left: 16.w, bottom: 18.w),
+      margin: const EdgeInsets.only(top: 22, bottom: 20),
+      child: ListView.builder(
+        padding: EdgeInsets.all(0),
+        shrinkWrap: true,
+        itemCount: state.records.value.length,
+        itemBuilder: (BuildContext context, int index) {
+          final item = state.records.value[index];
+          final int type = item['worksType'] ?? 0;
+          final int worksStatus = item['worksStatus'] ?? 0;
+          final String returnUrl = item['returnUrl'] ?? "";
+          final String novel = item['novel'] ?? "";
+          var tags = item["tags"] ?? "";
+          int id = item["id"] ?? 0;
+          int funcId = item["funcId"] ?? 0;
+          int apiType = item["apiType"] ?? 0;
+          Log.d("msg----${item["valueJson"]}");
+          String jsonName = "无风格";
+          String jsonTitle = "1:1";
+          if (item["valueJson"] != null) {
+            Map<String, dynamic> jsonMap = jsonDecode(item["valueJson"]);
+            jsonName = jsonMap["name"] ?? "";
+            jsonTitle = jsonMap["title"] ?? "";
+          }
+          Log.d("list----$novel----$returnUrl---$type");
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: IntrinsicWidth(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 69.w, right: 16.w, bottom: 18.w),
+                    decoration: const BoxDecoration(
+                      color: Color(0xffE9F7FF),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(right: 12.w, left: 12.w, top: 14.w, bottom: 13.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // QdsImageCorner(returnUrl, 210.w, 290.w, 16.w),
-                          InkWell(
-                            onTap: () async {
-                              if (worksStatus == 3) {
-                                final res = await Get.to(() => DetailPage(), arguments: {"worksType": type, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
-                                logic.photoRecord(true);
-                                return;
-                              }
-                            },
-                            child: createImage(worksStatus, returnUrl, jsonTitle, id),
+                          CommText(
+                            text: novel,
+                            fontSize: 14.sp,
+                            textColor: Color(0xff191919),
+                            fontWeight: FontWeight.bold,
                           ),
-
                           SizedBox(
-                            height: 12.w,
+                            height: 11.w,
                           ),
-                          // Row(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          //   children: [
-                          //     Container(
-                          //       width: 101.w,
-                          //       height: 32.w,
-                          //       decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(26)),
-                          //       child: Row(
-                          //         crossAxisAlignment: CrossAxisAlignment.center,
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           Image.asset(
-                          //             "tk.png".comm,
-                          //             width: 20.w,
-                          //             height: 20.w,
-                          //           ),
-                          //           CommText(
-                          //             text: "做同款",
-                          //             fontSize: 15.sp,
-                          //             fontWeight: FontWeight.bold,
-                          //             textColor: Colors.white,
-                          //           )
-                          //         ],
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       margin: EdgeInsets.only(left: 8.w),
-                          //       width: 101.w,
-                          //       height: 32.w,
-                          //       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.w), border: Border.all(width: 2.w, color: ColorPlate.themeColor)),
-                          //       child: Row(
-                          //         crossAxisAlignment: CrossAxisAlignment.center,
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           Image.asset(
-                          //             "rush.png".comm,
-                          //             width: 20.w,
-                          //             height: 20.w,
-                          //           ),
-                          //           CommText(
-                          //             text: "再次生成",
-                          //             fontSize: 15.sp,
-                          //             fontWeight: FontWeight.bold,
-                          //             textColor: ColorPlate.themeColor,
-                          //           )
-                          //         ],
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                width: 55.w,
+                                height: 23.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Center(
+                                  child: CommText(
+                                    text: jsonTitle,
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w400,
+                                    textColor: Color(0xff818181),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(left: 6.w),
+                                width: 55.w,
+                                height: 23.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4.w),
+                                ),
+                                child: Center(
+                                  child: CommText(
+                                    text: jsonName,
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w400,
+                                    textColor: Color(0xff818181),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
-                      ))
-                ],
-              );
-            }));
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: 210.w,
+                margin: EdgeInsets.only(left: 16.w, bottom: 18.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        if (worksStatus == 3) {
+                          final res = await Get.to(() => DetailPage(), arguments: {"worksType": type, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
+                          logic.photoRecord(true);
+                          return;
+                        }
+                      },
+                      child: createImage(worksStatus, returnUrl, jsonTitle, id),
+                    ),
+                    SizedBox(
+                      height: 12.w,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

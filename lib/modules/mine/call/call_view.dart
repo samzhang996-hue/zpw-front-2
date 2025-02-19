@@ -24,6 +24,7 @@ class _CallPageState extends BaseWidgetState<CallPage> {
     Get.delete<CallPage>();
     super.dispose();
   }
+
   @override
   Widget initDefaultBuild(BuildContext context) {
     return Container(
@@ -31,12 +32,20 @@ class _CallPageState extends BaseWidgetState<CallPage> {
       child: Column(
         children: [
           YAppBar(title: "联系客服"),
+          Container(
+              margin: EdgeInsets.all(16),
+              child: Image.asset(
+                "kf_banner.png".mine,
+                width: double.infinity,
+                height: 150.w,
+                fit: BoxFit.cover,
+              )),
           InkWell(
             onTap: () {
               toUrl();
             },
             child: Container(
-              margin: EdgeInsets.all(16),
+              margin: EdgeInsets.only(left: 16.w, right: 16.w),
               width: double.infinity,
               height: 86.h,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Color(0xffF9F9F9)),
@@ -62,7 +71,7 @@ class _CallPageState extends BaseWidgetState<CallPage> {
                             CommText(
                               text: "在线客服",
                               fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                               textColor: Color(0xff191919),
                             ),
                             CommText(
@@ -84,7 +93,7 @@ class _CallPageState extends BaseWidgetState<CallPage> {
               launchPhone(HandleTool.instance.pHone);
             },
             child: Container(
-              margin: EdgeInsets.only(left: 16.w, right: 16.w),
+              margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.w),
               width: double.infinity,
               height: 86.h,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Color(0xffF9F9F9)),
@@ -110,7 +119,7 @@ class _CallPageState extends BaseWidgetState<CallPage> {
                             CommText(
                               text: "电话客服",
                               fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                               textColor: Color(0xff191919),
                             ),
                             CommText(

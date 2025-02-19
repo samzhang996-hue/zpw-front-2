@@ -113,14 +113,19 @@ class _AiktPageState extends BaseWidgetState {
               height: 51.w,
               width: double.infinity,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: ColorPlate.themeColor),
+                borderRadius: BorderRadius.circular(25),
+                gradient: LinearGradient(
+                  colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.topRight,
+                ),
+              ),
               child: Center(child: Obx(() {
                 return CommText(
                   text: state.text.value,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   fontSize: 18.sp,
-                  textColor: Colors.white,
+                  textColor: Color(0xff191919),
                 );
               })),
             ),

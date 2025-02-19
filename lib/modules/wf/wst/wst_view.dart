@@ -7,7 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/makewst/makewst_view.dart';
+import 'package:zpw/utils/handle_tool.dart';
 import 'wst_logic.dart';
 
 class WstPage extends BaseStatefulWidget {
@@ -84,14 +86,23 @@ class WstPageState extends BaseWidgetState {
               right: 0,
               child: InkWell(
                 onTap: (){
-                  gotoPushPage(MakewstPage(),arguments: {"funcValue":state.funcValue.value,"funcId":state.funcId.value});
+                  if(HandleTool.instance.isMember){
+                    gotoPushPage(MakewstPage(),arguments: {"funcValue":state.funcValue.value,"funcId":state.funcId.value});
+                  }else{
+                    gotoPushPage(VipPage());
+                  }
+
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 10.w,right: 10.w),
                   width: double.infinity,
                   height: 52.w,
                   decoration: BoxDecoration(
-                      color: ColorPlate.themeColor,
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.topRight,
+                      ),
                       borderRadius: BorderRadius.circular(26)
                   ),
                   child:Row(
@@ -99,7 +110,7 @@ class WstPageState extends BaseWidgetState {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset("tk.png".comm,width: 26.w,height: 26.w,),
-                      CommText(text: "做同款",fontSize: 18.sp,fontWeight: FontWeight.bold,textColor: Colors.white,)
+                      CommText(text: "做同款",fontSize: 18.sp,fontWeight: FontWeight.w500,textColor: Color(0xff191919),)
                     ],
                   ),
                 )

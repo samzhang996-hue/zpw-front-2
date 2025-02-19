@@ -115,14 +115,18 @@ class CustomSureVipDialogUtils {
                                   width: 256.w,
                                   height: 43.h,
                                   decoration: BoxDecoration(
-                                      color: Color(0xFF19CDF2),
+                                      gradient: LinearGradient(
+                                        colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                      ),
                                       borderRadius: BorderRadius.circular(30)),
                                   child: Center(
                                       child: CommText(
                                     text: "继续开通",
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
-                                    textColor: Colors.white,
+                                    textColor: Color(0xff191919),
                                   )),
                                 ),
                                 onTap: () {

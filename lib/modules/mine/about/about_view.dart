@@ -116,7 +116,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                   text: title,
                   textColor: const Color(0xff191919),
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
                 const Spacer(),
                 CommText(

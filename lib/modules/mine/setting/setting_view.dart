@@ -115,7 +115,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                   text: title,
                   textColor: const Color(0xff191919),
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
                 const Spacer(),
                 CommText(

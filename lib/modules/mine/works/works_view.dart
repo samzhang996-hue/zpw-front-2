@@ -44,24 +44,68 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
         color: Colors.white,
         child: Column(
           children: [
-            YAppBar(title: "作品"),
+            // YAppBar(title: "作品"),
             Container(
-              height: 40.w,
-              width: 200.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  buildTabItem(
-                    text: "视频",
-                    isSelected: selectedIndex == 1,
-                    onTap: () => selectTab(1),
-                  ),
-                  buildTabItem(
-                    text: "图片",
-                    isSelected: selectedIndex == 0,
-                    onTap: () => selectTab(0),
-                  ),
-                ],
+              padding: EdgeInsets.only(left: 10),
+              height: 74.w,
+              child: Container(
+                margin: EdgeInsets.only(top: 24.w),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Container(
+                        child: Icon(Icons.arrow_back_ios, color: Colors.black),
+                        margin: EdgeInsets.only(left: 13.w),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 40.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            buildTabItem(
+                              text: "视频",
+                              isSelected: selectedIndex == 1,
+                              onTap: () => selectTab(1),
+                            ),
+                            SizedBox(
+                              width: 24.w,
+                            ),
+                            buildTabItem(
+                              text: "图片",
+                              isSelected: selectedIndex == 0,
+                              onTap: () => selectTab(0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Opacity(
+                      opacity: 0,
+                      child: Container(
+                        child: Icon(Icons.arrow_back_ios, color: Colors.black),
+                        margin: EdgeInsets.only(right: 13.w),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16.w, top: 10.w,bottom: 10.w),
+              child: Align(
+                child: CommText(
+                  text: "内容由ai生成，禁止利用本功能从事违法活动",
+                  textColor: Color(0xffCCCCCC),
+                  fontSize: 10.sp,
+                ),
+                alignment: Alignment.centerLeft,
               ),
             ),
             _item()
@@ -91,13 +135,18 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               child: Container(
                 width: 122.w,
                 height: 40.w,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(21), color: ColorPlate.themeColor),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(21),
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+                  ),),
                 child: Center(
                     child: CommText(
                   text: "去创作",
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  textColor: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  textColor: Color(0xff191919),
                 )),
               ),
             )
@@ -109,7 +158,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
         child: Container(
       margin: EdgeInsets.only(left: 16.w, right: 16.w),
       child: GridView.builder(
-          padding: EdgeInsets.only(top: 17.w),
+          padding: EdgeInsets.all(0),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 8,
@@ -156,6 +205,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                             text: tags,
                             fontSize: 14.sp,
                             textColor: Colors.white,
+                            overTextFlow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           )),
                     ),
                   ),
@@ -175,22 +226,35 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                             ),
                           ),
                           CommText(
-                            text: worksStatus == 2 ? "制作失败" : "制作中...",
+                            text: worksStatus == 2 ? "制作失败" : "生成中...",
                             fontSize: 12.sp,
                             textColor: Colors.white,
+                            fontWeight: FontWeight.w400,
                           ),
                           Visibility(
                             visible: worksStatus == 2,
                             child: InkWell(
                               child: Container(
-                                  margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.w),
-                                  height: 35.w,
-                                  decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
+                                width: 80.w,
+                                  margin: EdgeInsets.only(top: 10.w),
+                                  height: 24.w,
+                                  decoration: BoxDecoration( borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      width: 1.w,
+                                      color:ColorPlate.themeColor
+                                    )
+                                    // gradient: LinearGradient(
+                                    //   colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                    //   begin: Alignment.topLeft,
+                                    //   end: Alignment.topRight,
+                                    // ),
+                                      ),
                                   child: Center(
                                       child: CommText(
                                     text: "重新制作",
-                                    fontSize: 15.sp,
-                                    textColor: Colors.white,
+                                    fontSize: 13.sp,
+                                    textColor: ColorPlate.themeColor,
+                                        fontWeight: FontWeight.w400,
                                   ))),
                               onTap: () {
                                 Log.d("xxxx----------$funcId---$id");
@@ -240,17 +304,17 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
             Text(
               text,
               style: TextStyle(
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                 fontSize: isSelected ? 20.0 : 16.0, // 选中时字体大小为20，未选中时为16
-                color: Color(0xff191919),
+                color: isSelected ? const Color(0xff191919) : const Color(0xff656565),
               ),
             ),
-            if (isSelected) // 只有当选中时才显示图片
-              Image.asset(
-                "custom_indicator.png".mine, // 注意：".mine" 不是有效的资源引用方式
-                width: 36.0, // 注意：.w 不是有效单位，应该使用具体的数值
-                height: 4.0, // 注意：.w 不是有效单位，应该使用具体的数值或根据需求调整
-              ),
+            // if (isSelected) // 只有当选中时才显示图片
+            //   Image.asset(
+            //     "custom_indicator.png".mine, // 注意：".mine" 不是有效的资源引用方式
+            //     width: 36.0, // 注意：.w 不是有效单位，应该使用具体的数值
+            //     height: 4.0, // 注意：.w 不是有效单位，应该使用具体的数值或根据需求调整
+            //   ),
           ],
         ),
       ),

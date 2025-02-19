@@ -9,6 +9,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/setting/setting_view.dart';
+import 'package:zpw/modules/mine/sf/sf_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
@@ -21,8 +22,7 @@ class MinePage extends BaseStatefulWidget {
   BaseWidgetState<MinePage> getState() => _MinePageState();
 }
 
-class _MinePageState extends BaseWidgetState<MinePage>
-    with WidgetsBindingObserver {
+class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserver {
   final logic = Get.put(MineLogic());
   final state = Get.find<MineLogic>().state;
 
@@ -59,8 +59,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
             "default_avatar.png".mine,
             width: 56.w,
           )
-        : QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w,
-            isLocal: true);
+        : QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w, isLocal: true);
   }
 
   @override
@@ -75,9 +74,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
                 Container(
                   width: double.infinity,
                   height: 371.w,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("mine_bg.png".mine))),
+                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("mine_bg.png".mine))),
                   child: Column(
                     children: [
                       // CommHeadCircle(),
@@ -112,11 +109,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
                                     height: 4.w,
                                   ),
                                   CommText(
-                                    text: HandleTool.instance.isMember
-                                        ? (state.userInfoBean.permanentFlag == 1
-                                            ? "永久会员"
-                                            : "到期时间:${state.userInfoBean.vipExpireTime}")
-                                        : "未开通会员",
+                                    text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "永久会员" : "到期时间:${state.userInfoBean.vipExpireTime}") : "未开通会员",
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,
                                     textColor: Color(0xff818181),
@@ -127,9 +120,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
                             Spacer(),
                             InkWell(
                               onTap: () {
-                                UmengCommonSdk.onEvent(
-                                    'Mine_click_event_setting',
-                                    {'name': 'setting.png'});
+                                UmengCommonSdk.onEvent('Mine_click_event_setting', {'name': 'setting.png'});
                                 gotoPushPage(SettingPage());
                               },
                               child: Container(
@@ -163,14 +154,10 @@ class _MinePageState extends BaseWidgetState<MinePage>
                                 margin: EdgeInsets.only(right: 20.w),
                                 width: 82.w,
                                 height: 30.w,
-                                decoration: BoxDecoration(
-                                    color: const Color(0xFF4C3504),
-                                    borderRadius: BorderRadius.circular(16.w)),
+                                decoration: BoxDecoration(color: const Color(0xFF4C3504), borderRadius: BorderRadius.circular(16.w)),
                                 child: Center(
                                     child: CommText(
-                                  text: HandleTool.instance.isMember
-                                      ? "已开通"
-                                      : "立即开通",
+                                  text: HandleTool.instance.isMember ? "已开通" : "立即开通",
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
                                   textColor: const Color(0xFFFFFFFF),
@@ -275,6 +262,7 @@ class _MinePageState extends BaseWidgetState<MinePage>
                       commItem("zp.png", "我的作品"),
                       commItem("about.png", "关于我们"),
                       commItem("kf.png", "联系客服"),
+                      commItem("sf.png", "算法公司"),
                     ],
                   ),
                 )
@@ -300,6 +288,29 @@ class _MinePageState extends BaseWidgetState<MinePage>
       );
     });
   }
+   showTopSnackBar() {
+    Get.rawSnackbar(
+      title: '相机、相册权限使用说明',
+      message: 'AI照片王正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
+      duration: Duration(seconds: 5), // 弹窗显示时间
+      snackPosition: SnackPosition.TOP, // 弹窗显示在顶部
+      backgroundColor: Colors.blue, // 背景颜色
+      borderRadius: 8, // 圆角
+      margin: EdgeInsets.all(10), // 外边距
+      padding: EdgeInsets.all(16), // 内边距
+      // icon: Icon(Icons.camera_alt, color: Colors.white), // 图标
+      shouldIconPulse: true, // 图标是否闪烁
+      mainButton: TextButton(
+        onPressed: () {
+          Get.back(); // 关闭弹窗
+        },
+        child: Text(
+          '知道了',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
 
   Widget commItem(String icon, String title) {
     return InkWell(
@@ -307,13 +318,17 @@ class _MinePageState extends BaseWidgetState<MinePage>
           UmengCommonSdk.onEvent('Mine_click_event', {'name': title});
           switch (title) {
             case "我的作品":
-              gotoPushPage(WorksPage());
+              showTopSnackBar();
+              // gotoPushPage(WorksPage());
               break;
             case "关于我们":
               gotoPushPage(AboutPage());
               break;
             case "联系客服":
               gotoPushPage(CallPage());
+              break;
+            case "算法公式":
+              gotoPushPage(SfPage());
               break;
           }
         },

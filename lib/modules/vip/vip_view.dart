@@ -312,14 +312,19 @@ class _VipPageState extends BaseWidgetState<VipPage>
                                   height: 54.w,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                      color: const Color(0xFF19CDF2),
-                                      borderRadius: BorderRadius.circular(27)),
+                                      // color: const Color(0xFF19CDF2),
+                                      borderRadius: BorderRadius.circular(27),
+                                    gradient: LinearGradient(
+                                      colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.topRight,
+                                    ),),
                                   child: Center(
                                       child: CommText(
                                     text: rk8,
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
-                                    textColor: Colors.white,
+                                    textColor: Color(0xff191919),
                                   )),
                                 ),
                                 Visibility(
@@ -586,12 +591,12 @@ class _VipPageState extends BaseWidgetState<VipPage>
                               topLeft: Radius.circular(14.0),
                               bottomRight: Radius.circular(14),
                             ),
-                            color: Color(0xFF19CDF2),
-                            // gradient: LinearGradient(
-                            //   colors: [Color(0xFFFF2EB8), Color(0xFFFF2E2E)],
-                            //   begin: Alignment.topLeft,
-                            //   end: Alignment.topRight,
-                            // ),
+                            // color: Color(0xFF19CDF2),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFFFFF75), Color(0xFFFFC243)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.topRight,
+                            ),
                           ),
                           child: Container(
                             margin: EdgeInsets.only(left: 8, right: 8),
@@ -599,7 +604,8 @@ class _VipPageState extends BaseWidgetState<VipPage>
                               child: CommText(
                                 text: vp?.remark1 ?? "",
                                 fontSize: 12.sp,
-                                textColor: Colors.white,
+                                textColor: Color(0xff191919),
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           )),

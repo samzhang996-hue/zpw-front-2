@@ -8,6 +8,8 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
+import 'package:zpw/modules/mine/view/custom_del_dialog_utils.dart';
+import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
 import 'package:zpw/utils/dowload.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -124,7 +126,14 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                       InkWell(
                         child: Container(
                           height: 45.w,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: ColorPlate.themeColor),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(22),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.topRight,
+                            ),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -137,9 +146,9 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                               ),
                               CommText(
                                 text: "下载",
-                                textColor: Colors.white,
+                                textColor: Color(0xff191919),
                                 fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                               ),
                               SizedBox(
                                 width: 85.w,
@@ -158,7 +167,12 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                       ),
                       InkWell(
                         onTap: () {
-                          logic.delete();
+                          CustomDelDialogUtils.showCustomDialog(
+                              context: context,
+                              onPressed: () {
+                                logic.delete();
+                              });
+
                         },
                         child: Container(
                           height: 45.w,
@@ -177,7 +191,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                 text: "删除",
                                 textColor: Color(0xffFF0707),
                                 fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                               ),
                               SizedBox(
                                 width: 24.w,
@@ -215,8 +229,9 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                             },
                             child: CommText(
                               text: "再次创作",
-                              textColor: ColorPlate.themeColor,
+                              textColor: Color(0xff4D4D4D),
                               fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
                             )))),
               )
             ],

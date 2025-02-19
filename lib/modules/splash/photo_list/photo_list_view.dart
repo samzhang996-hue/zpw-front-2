@@ -16,7 +16,7 @@ import 'package:zpw/modules/wf/aikt/aikt_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/permission.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 import 'photo_list_logic.dart';
 
 class Photo_listPage extends BaseStatefulWidget {
@@ -43,21 +43,31 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
       final res = await PermissionUtils.checkFilesAccessPermission();
       if (!res) {
         _isFilesAccessPermission.value = false;
+        state.isPermission.value = false;
         return;
       }
     } else {
+      bool storagePermission = await Permission.storage.isGranted;
+      Log.d("msg----$storagePermission---12333333");
+      if (!storagePermission) {
+        PermissionUtils.showTopSnackbar();
+        storagePermission = await Permission.storage.request().isGranted;
+        if(storagePermission) Get.back();
+      }
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
+      Log.d("msg----${ps.hasAccess}");
       if (!ps.hasAccess) {
         final res = await PermissionUtils.checkFilesAccessPermission();
         if (!res) {
           _isFilesAccessPermission.value = false;
+          state.isPermission.value = false;
           return;
         }
       }
     }
     _isFilesAccessPermission.value = true;
-    List<AssetPathEntity> resultList =
-        await PhotoManager.getAssetPathList(type: RequestType.image);
+    state.isPermission.value = true;
+    List<AssetPathEntity> resultList = await PhotoManager.getAssetPathList(type: RequestType.image);
     Log.d("list----list----${resultList.length}");
     // 假设我们只获取第一个相册的照片
     if (resultList.isNotEmpty) {
@@ -242,8 +252,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                         margin: EdgeInsets.only(left: 16.w, right: 16.w),
                         child: GridView.builder(
                           padding: const EdgeInsets.all(0),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             crossAxisSpacing: 2.0,
                             mainAxisSpacing: 2.0,
@@ -253,13 +262,10 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                             final AssetEntity photo = _photos[index];
                             return FutureBuilder<Uint8List?>(
                               future: photo.thumbnailData,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<Uint8List?> snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
+                              builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
                                   if (snapshot.hasError) {
-                                    return CommText(
-                                        text: 'Error loading thumbnail');
+                                    return CommText(text: 'Error loading thumbnail');
                                   }
                                   Uint8List? thumbnail = snapshot.data;
                                   if (thumbnail != null) {
@@ -272,22 +278,18 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                           int fileSize = await file.length();
 
                                           if (fileSize > _maxSize) {
-                                            HandleTool.showAppToastText(
-                                                "文件过大,请重新选择");
+                                            HandleTool.showAppToastText("文件过大,请重新选择");
                                             return;
                                           }
-                                          Log.e(
-                                              "file:${formatFileSize(fileSize)}");
+                                          Log.e("file:${formatFileSize(fileSize)}");
                                           _uploadImg(file.path);
                                           // Log.e(
                                           //     "file:${formatFileSize(fileSize)}");
                                           // Get.back(result: file.path);
                                         },
-                                        child: Image.memory(thumbnail,
-                                            fit: BoxFit.cover));
+                                        child: Image.memory(thumbnail, fit: BoxFit.cover));
                                   } else {
-                                    return CommText(
-                                        text: 'No thumbnail available');
+                                    return CommText(text: 'No thumbnail available');
                                   }
                                 } else {
                                   // 可以显示一个占位符，比如一个圆形进度指示器
@@ -322,9 +324,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                   width: 1.sw,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.w),
-                        topRight: Radius.circular(20.w)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.w), topRight: Radius.circular(20.w)),
                   ),
                   child: Column(
                     children: [
@@ -361,8 +361,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                             children: [
                               const Spacer(),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   GestureDetector(
                                     onTap: Get.back,
@@ -372,16 +371,13 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                       height: 52.w,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        border: Border.all(
-                                            width: 1.w,
-                                            color: const Color(0xFFFF2E7E)),
-                                        borderRadius:
-                                            BorderRadius.circular(26.w),
+                                        border: Border.all(width: 1.w, color: const Color(0xFF191919)),
+                                        borderRadius: BorderRadius.circular(26.w),
                                       ),
                                       child: Center(
                                         child: CommText(
                                           text: "取消",
-                                          textColor: const Color(0xFFFF2E7E),
+                                          textColor: const Color(0xFF191919),
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -397,14 +393,17 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                       width: 175.w,
                                       height: 52.w,
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFFF2E7E),
-                                        borderRadius:
-                                            BorderRadius.circular(26.w),
+                                        gradient: LinearGradient(
+                                          colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.topRight,
+                                        ),
+                                        borderRadius: BorderRadius.circular(26.w),
                                       ),
                                       child: Center(
                                         child: CommText(
                                           text: "去设置",
-                                          textColor: const Color(0xFFFFFFFF),
+                                          textColor: const Color(0xFF191919),
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w500,
                                         ),

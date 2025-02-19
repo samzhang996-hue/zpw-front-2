@@ -7,7 +7,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
-class CustomExitDialogUtils {
+class CustomDelDialogUtils {
   static void showCustomDialog({
     required BuildContext context,
     required Function() onPressed,
@@ -30,7 +30,7 @@ class CustomExitDialogUtils {
                         Center(
                           child: Container(
                             width: 318.w,
-                            height: 219.h,
+                            height: 173.h,
                             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
                           ),
                         ),
@@ -40,7 +40,7 @@ class CustomExitDialogUtils {
                             children: [
                               Container(
                                 child: CommText(
-                                  text: "注销账号",
+                                  text: "确定要删除作品？",
                                   textColor: Color(0xff191919),
                                   fontSize: 20.sp,
                                   fontWeight: FontWeight.w500,
@@ -48,15 +48,16 @@ class CustomExitDialogUtils {
                                 ),
                                 margin: EdgeInsets.only(top: 26.h),
                               ),
-                              Container(
-                                margin: EdgeInsets.all(20),
-                                child: CommText(
-                                  text: "所有相关数据将被删除并无法找回，确定要删除账号吗？",
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: Color(0xff818181),
-                                ),
-                              ),
+                              // Container(
+                              //   margin: EdgeInsets.all(20),
+                              //   child: CommText(
+                              //     text: "所有相关数据将被删除并无法找回，确定要删除账号吗？",
+                              //     fontSize: 13.sp,
+                              //     fontWeight: FontWeight.w500,
+                              //     textColor: Color(0xff818181),
+                              //   ),
+                              // ),
+                              SizedBox(height: 35.w,),
                               Container(
                                 margin: EdgeInsets.all(17.w),
                                 child: Row(
@@ -87,13 +88,11 @@ class CustomExitDialogUtils {
                                       child: Container(
                                         width: 124.w,
                                         height: 44.h,
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.topRight,
-                                            ),
-                                            borderRadius: BorderRadius.circular(30)),
+                                        decoration: BoxDecoration(    gradient: LinearGradient(
+                                          colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.topRight,
+                                        ), borderRadius: BorderRadius.circular(30)),
                                         child: Center(
                                             child: CommText(
                                           text: "确定",

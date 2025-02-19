@@ -7,6 +7,7 @@ class CommImagesWidget extends StatefulWidget {
   final List<String> images;
   final int initialPage;
   final void Function(int index)? onPageChanged;
+
   const CommImagesWidget({
     super.key,
     required this.images,
@@ -75,14 +76,10 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
         int validIndex = index % widget.images.length;
         return Container(
           alignment: Alignment.center,
-          color: Colors.white,
+          color: Colors.black,
           width: 1.sw,
           height: 1.sh,
-          child: QdsImage(
-            widget.images[validIndex],
-            1.sw,
-            1.sh,
-          ),
+          child: QdsImage(widget.images[validIndex], 1.sw, 1.sh, fit: BoxFit.contain),
         );
       },
     );

@@ -99,7 +99,7 @@ class ColorPlate {
   //纯白色
   static const Color fffffffOpacity1 = Color(0xffFFFFFF);
   //主题颜色
-  static const Color themeColor = Color(0xffFF2D7D);
+  static const Color themeColor = Color(0xff7FE7F9);
   static const Color tabbarThemeColor = Color(0xFF191919);
   // tabbar未选中时的文字颜色
   static const Color tabbarTextColorNormal = Color(0xffB3B3B3);
