@@ -288,18 +288,26 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
       );
     });
   }
-   showTopSnackBar() {
+
+  showTopSnackBar() {
     Get.rawSnackbar(
       title: '相机、相册权限使用说明',
       message: 'AI照片王正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
-      duration: Duration(seconds: 5), // 弹窗显示时间
-      snackPosition: SnackPosition.TOP, // 弹窗显示在顶部
-      backgroundColor: Colors.blue, // 背景颜色
-      borderRadius: 8, // 圆角
-      margin: EdgeInsets.all(10), // 外边距
-      padding: EdgeInsets.all(16), // 内边距
+      duration: Duration(seconds: 5),
+      // 弹窗显示时间
+      snackPosition: SnackPosition.TOP,
+      // 弹窗显示在顶部
+      backgroundColor: Colors.blue,
+      // 背景颜色
+      borderRadius: 8,
+      // 圆角
+      margin: EdgeInsets.all(10),
+      // 外边距
+      padding: EdgeInsets.all(16),
+      // 内边距
       // icon: Icon(Icons.camera_alt, color: Colors.white), // 图标
-      shouldIconPulse: true, // 图标是否闪烁
+      shouldIconPulse: true,
+      // 图标是否闪烁
       mainButton: TextButton(
         onPressed: () {
           Get.back(); // 关闭弹窗

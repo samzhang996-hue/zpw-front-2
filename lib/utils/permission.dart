@@ -15,6 +15,7 @@ class PermissionUtils {
       } else if (status.isDenied || status.isPermanentlyDenied) {
         showTopSnackbar();
         status = await Permission.photos.request();
+        Get.back();
         return status.isGranted;
       }
       return false;
