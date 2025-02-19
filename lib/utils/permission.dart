@@ -34,8 +34,8 @@ class PermissionUtils {
       }
     }
     if (!storagePermission || !manageExternal) {
-      showTopSnackbar();
       if (!storagePermission) {
+        showTopSnackbar();
         storagePermission = await Permission.storage.request().isGranted;
         if(storagePermission) Get.back();
       }

@@ -236,7 +236,7 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
               children: [
                 Obx(
                   () => Visibility(
-                    visible: !logic.showVip.value == true,
+                    visible: logic.showVip.value,
                     child: GestureDetector(
                       onTap: logic.showVip.toggle,
                       child: Container(
@@ -256,7 +256,7 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                 ),
                 Obx(
                   () => Visibility(
-                    visible: !logic.showVip.value,
+                    visible: logic.showVip.value,
                     child: GestureDetector(
                       onTap: () {
                         Get.find<VipLogic>().getVipHome();
