@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/utils/log_utils.dart';
 
 class CommImagesWidget extends StatefulWidget {
   final List<String> images;
   final int initialPage;
+  final int groupId;
   final void Function(int index)? onPageChanged;
 
   const CommImagesWidget({
@@ -13,6 +13,7 @@ class CommImagesWidget extends StatefulWidget {
     required this.images,
     required this.initialPage,
     this.onPageChanged,
+    this.groupId = -1,
   });
 
   @override
@@ -52,7 +53,6 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
   @override
   void initState() {
     super.initState();
-    Log.e('widget.initialPage:${widget.initialPage}');
 
     _init();
   }
@@ -69,7 +69,7 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
     return PageView.builder(
       controller: _pageController,
       scrollDirection: Axis.vertical,
-      itemCount: null,
+      itemCount: widget.groupId == -1 ? widget.images.length : null,
       physics: const BouncingScrollPhysics(),
       onPageChanged: _onPageChanged,
       itemBuilder: (context, index) {
@@ -79,7 +79,8 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
           color: Colors.black,
           width: 1.sw,
           height: 1.sh,
-          child: QdsImage(widget.images[validIndex], 1.sw, 1.sh, fit: BoxFit.contain),
+          child: QdsImage(widget.images[validIndex], 1.sw, 1.sh,
+              fit: BoxFit.contain),
         );
       },
     );
