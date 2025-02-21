@@ -30,9 +30,13 @@ class SplashLogic extends BaseGetxController {
   int requestUserInfoMax = 0;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
+    String projectId = await getProjectId();
+    String channel = await getChannelInfo();
+    await SpUtils.setString("channel", channel);
+    await SpUtils.setString("projectId", projectId);
     HandleTool.instance.getProtocolConfig();
     // handleNetWork();
     test();
@@ -120,7 +124,6 @@ class SplashLogic extends BaseGetxController {
         Get.put(VipLogic());
         getUserInfo();
       } else {
-
         /// ------->  这里单独处理已选
         if (code == -1111) {
           if (requestMax > 30) {
@@ -183,7 +186,7 @@ class SplashLogic extends BaseGetxController {
             if (!_showAd || HandleTool.instance.channelAds) {
               progress.value = 1.0;
               // if (isFirst) {
-                Get.offAll(const MainPage());
+              Get.offAll(const MainPage());
               // } else {
               //   // Get.offAll(const MainPage());
               //   // return;
@@ -219,7 +222,7 @@ class SplashLogic extends BaseGetxController {
       if (event.adId == AdsConfig.splashId) {
         if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
           // if (isFirst) {
-            Get.offAll(const MainPage());
+          Get.offAll(const MainPage());
           // } else {
           //   // Get.offAll(const MainPage());
           //   // return;
