@@ -28,7 +28,19 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
   List<VideoPlayerController?> _controllers = [];
   void _initializeControllers() {
     // var temp = widget.videoUrls.length > 5 ? 5 : widget.videoUrls.length;
+    if (widget.groupId == -1) {
+      _controllers = List.generate(widget.videoUrls.length, (index) => null);
+      _initVideoController(index: 0);
+      return;
+    }
 
+    if (widget.videoUrls.length < 5) {
+      _controllers = List.generate(widget.videoUrls.length, (index) => null);
+      for (int i = 0; i < widget.videoUrls.length; i++) {
+        _initVideoController(index: i);
+      }
+      return;
+    }
     _controllers = List.generate(widget.videoUrls.length, (index) => null);
 
     final tempFirst = getClosestValues(widget.videoUrls, widget.initialPage);
