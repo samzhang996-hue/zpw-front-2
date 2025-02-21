@@ -1,7 +1,6 @@
 package com.photoking.app.utils;
 
 
-
 import static com.blankj.utilcode.util.ActivityUtils.startActivity;
 
 import android.app.Activity;
@@ -16,6 +15,7 @@ import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ActivityUtils;
@@ -23,15 +23,20 @@ import com.photoking.app.CommActivity;
 import com.photoking.app.LJPhotoActivity;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.commonsdk.listener.OnGetOaidListener;
+
 import java.net.URLEncoder;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+
 import com.meituan.android.walle.WalleChannelReader;
+
 import android.content.Intent;
+
 public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
     public static final String KEY_SPLASH = "splashId";
     public static final String KEY_BANNER = "bannerId";
@@ -88,20 +93,14 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 });
                 break;
             case "getChannelInfo":
-                int type = call.argument("type");
-                String key;
                 String _channel = WalleChannelReader.getChannel(activity);
-                // 或者也可以直接根据key获取
-                String uid = WalleChannelReader.get(activity, "uid");
-                String projectId = WalleChannelReader.get(activity, "projectId");
-                if (type == 1) {
-                    key = uid;
-                } else if (type == 2) {
-                    key = TextUtils.isEmpty(projectId) ? "30" : projectId;
-                } else {
-                    key = TextUtils.isEmpty(_channel) ? "AIJL300" : _channel;
-                }
-                result.success(key == null ? "" : key);
+                _channel = TextUtils.isEmpty(_channel) ? "AIJL300" : _channel;
+                result.success(_channel);
+                break;
+            case "projectId":
+                String projectId2 = WalleChannelReader.get(activity, "projectId");
+                projectId2 = TextUtils.isEmpty(projectId2) ? "30" : projectId2;
+                result.success(projectId2);
                 break;
             case "setOrderZfb":
                 String url = call.argument("message");

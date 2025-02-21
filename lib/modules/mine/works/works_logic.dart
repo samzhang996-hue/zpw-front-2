@@ -13,12 +13,12 @@ class WorksLogic extends BaseGetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    photoRecord(1);
+    photoRecord(0);
   }
 
   photoRecord(int type) {
     Map<String, dynamic> dataMap = {
-      "pageIndex": 1,
+      "pageIndex": 0,
       "pageSize": 100,
       "worksType": type,
     };

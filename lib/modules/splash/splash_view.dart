@@ -94,14 +94,14 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
           child: Center(
             child: Column(
               children: [
-                const Text('应用启动中...', style: TextStyle(color: Colors.white, fontSize: 14)),
+                const Text('应用启动中...', style: TextStyle(color: ColorPlate.themeColor, fontSize: 14)),
                 const SizedBox(height: 10),
                 Container(
                   width: 256,
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(21),
-                    border: const GradientBoxBorder(gradient: LinearGradient(colors: [Colors.white, Colors.white]), width: 3),
+                    border: const GradientBoxBorder( gradient: const LinearGradient(colors: [Color(0xff7EFAEF), Color(0xff7FE1FB)]), width: 3),
                   ),
                   height: 20,
                   alignment: Alignment.centerLeft,
@@ -114,7 +114,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
                           curve: Curves.ease,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(21),
-                            gradient: const LinearGradient(colors: [Colors.white, Colors.white]),
+                            gradient: const LinearGradient(colors: [Color(0xff7EFAEF), Color(0xff7FE1FB)]),
                           ),
                         ),
                       );

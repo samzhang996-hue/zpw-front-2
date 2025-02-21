@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
@@ -21,18 +22,22 @@ class WorksPage extends BaseStatefulWidget {
 class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
-  int selectedIndex = 1; // 初始选中第一个选项
+  late TabController _tabController;
 
-  void selectTab(int index) {
-    state.index = index;
-    setState(() {
-      selectedIndex = index;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    // 监听 TabController 的 index 变化
+    _tabController.addListener(() {
+      Log.d("msg----${_tabController.index}");
+      logic.photoRecord(_tabController.index);
     });
-    logic.photoRecord(index);
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     Get.delete<WorksPage>();
     super.dispose();
   }
@@ -44,9 +49,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
         color: Colors.white,
         child: Column(
           children: [
-            // YAppBar(title: "作品"),
             Container(
-              padding: EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10),
               height: 74.w,
               child: Container(
                 margin: EdgeInsets.only(top: 24.w),
@@ -59,37 +63,41 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                         Get.back();
                       },
                       child: Container(
-                        child: Icon(Icons.arrow_back_ios, color: Colors.black),
                         margin: EdgeInsets.only(left: 13.w),
+                        child: const Icon(Icons.arrow_back_ios, color: Colors.black),
                       ),
                     ),
                     Expanded(
                       child: Container(
-                        height: 40.w,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            buildTabItem(
-                              text: "视频",
-                              isSelected: selectedIndex == 1,
-                              onTap: () => selectTab(1),
-                            ),
-                            SizedBox(
-                              width: 24.w,
-                            ),
-                            buildTabItem(
-                              text: "图片",
-                              isSelected: selectedIndex == 0,
-                              onTap: () => selectTab(0),
-                            ),
+                        child: TabBar(
+                          controller: _tabController,
+                          indicatorColor: Colors.transparent,
+                          dividerColor: Colors.transparent,
+                          // 去掉底部分割线
+                          labelColor: const Color(0xff191919),
+                          unselectedLabelColor: const Color(0xff656565),
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20.0,
+                          ),
+                          unselectedLabelStyle: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16.0,
+                          ),
+                          tabs: const [
+                            Tab(text: "图片"),
+                            Tab(text: "视频"),
                           ],
+                          onTap: (index) {
+                            logic.photoRecord(index);
+                          },
                         ),
                       ),
                     ),
                     Opacity(
                       opacity: 0,
                       child: Container(
-                        child: Icon(Icons.arrow_back_ios, color: Colors.black),
+                        child: const Icon(Icons.arrow_back_ios, color: Colors.black),
                         margin: EdgeInsets.only(right: 13.w),
                       ),
                     )
@@ -98,17 +106,25 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 16.w, top: 10.w,bottom: 10.w),
+              margin: EdgeInsets.only(left: 16.w, top: 10.w, bottom: 10.w),
               child: Align(
                 child: CommText(
                   text: "内容由ai生成，禁止利用本功能从事违法活动",
-                  textColor: Color(0xffCCCCCC),
+                  textColor: const Color(0xffCCCCCC),
                   fontSize: 10.sp,
                 ),
                 alignment: Alignment.centerLeft,
               ),
             ),
-            _item()
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _item(),
+                  _item(),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -118,6 +134,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
   Widget _item() {
     if (state.records.isEmpty) {
       return Container(
+        margin: EdgeInsets.only(top: 93.w),
         child: Column(
           children: [
             Image.asset(
@@ -130,76 +147,84 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
             InkWell(
               onTap: () {
                 Get.back();
-                Get.find<MainLogic>().changeIndex(selectedIndex == 1 ? 0 : 1);
+                Get.find<MainLogic>().changeIndex(_tabController.index == 1 ? 0 : 1);
               },
               child: Container(
                 width: 122.w,
                 height: 40.w,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(21),
-                  gradient: LinearGradient(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(21),
+                  gradient: const LinearGradient(
                     colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
-                  ),),
+                  ),
+                ),
                 child: Center(
-                    child: CommText(
-                  text: "去创作",
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                  textColor: Color(0xff191919),
-                )),
+                  child: CommText(
+                    text: "去创作",
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    textColor: const Color(0xff191919),
+                  ),
+                ),
               ),
             )
           ],
         ),
       );
     }
-    return Flexible(
-        child: Container(
-      margin: EdgeInsets.only(left: 16.w, right: 16.w),
-      child: GridView.builder(
-          padding: EdgeInsets.all(0),
+    return Container(
+        margin: EdgeInsets.only(left: 16.w, right: 16.w),
+        child: GridView.builder(
+          padding: const EdgeInsets.all(0),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             childAspectRatio: 175 / 265,
           ),
-          // physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: state.records.length,
           itemBuilder: (BuildContext context, int index) {
             var data = state.records[index];
-            //任务状态(WorksStatus 0:等待 1:工作中 2:失败 3:成功)
             int worksStatus = data["worksStatus"] ?? 0;
-            //任务结果类型(WorksTypeEnum 0:图片 1:视频 2:音频 3:文字)
             int worksType = data["worksType"] ?? 0;
             var returnUrl = data["returnUrl"] ?? "";
+            var firstFrameUrl = data["firstFrameUrl"] ?? "";
             var tags = data["tags"] ?? "";
             var oldUrl = data["oldUrl"] ?? "";
             int id = data["id"] ?? 0;
             int funcId = data["funcId"] ?? 0;
             int apiType = data["apiType"] ?? 0;
             Log.d("data111--$data");
+            String imagUrl;
+            if ((apiType == -1 || apiType == 6)) {
+              imagUrl = returnUrl;
+            } else if (worksType == 1) {
+              imagUrl = firstFrameUrl.toString().isEmpty ? oldUrl : firstFrameUrl;
+            } else {
+              imagUrl = oldUrl;
+            }
             return InkWell(
               child: Container(
-                  child: Stack(
-                children: [
-                  QdsImageCorner((apiType == -1 || apiType == 6) ? returnUrl : oldUrl, 175.w, 265.w, 8),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: double.infinity,
-                      height: 30.h,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF00141414), Color(0xFF73000000)],
-                          begin: Alignment.topCenter, // 渐变的起始点
-                          end: Alignment.bottomCenter, // 渐变的结束点
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                child: Stack(
+                  children: [
+                    QdsImageCorner(imagUrl, 175.w, 265.w, 8),
+                    Align(
+                      alignment: Alignment.bottomCenter,
                       child: Container(
+                        width: double.infinity,
+                        height: 30.h,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF00141414), Color(0xFF73000000)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
                           margin: EdgeInsets.only(left: 10.w),
                           child: CommText(
                             text: tags,
@@ -207,117 +232,77 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                             textColor: Colors.white,
                             overTextFlow: TextOverflow.ellipsis,
                             maxLines: 1,
-                          )),
-                    ),
-                  ),
-                  Visibility(
-                    visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
-                    child: Container(
-                      width: 175.w,
-                      height: 265.w,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Color(0xff99000000)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Visibility(
-                            visible: (worksStatus != 2),
-                            child: const CupertinoActivityIndicator(
-                              color: Colors.white,
-                            ),
                           ),
-                          CommText(
-                            text: worksStatus == 2 ? "制作失败" : "生成中...",
-                            fontSize: 12.sp,
-                            textColor: Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          Visibility(
-                            visible: worksStatus == 2,
-                            child: InkWell(
-                              child: Container(
-                                width: 80.w,
-                                  margin: EdgeInsets.only(top: 10.w),
-                                  height: 24.w,
-                                  decoration: BoxDecoration( borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      width: 1.w,
-                                      color:ColorPlate.themeColor
-                                    )
-                                    // gradient: LinearGradient(
-                                    //   colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
-                                    //   begin: Alignment.topLeft,
-                                    //   end: Alignment.topRight,
-                                    // ),
-                                      ),
-                                  child: Center(
-                                      child: CommText(
-                                    text: "重新制作",
-                                    fontSize: 13.sp,
-                                    textColor: ColorPlate.themeColor,
-                                        fontWeight: FontWeight.w400,
-                                  ))),
-                              onTap: () {
-                                Log.d("xxxx----------$funcId---$id");
-                                logic.getFuncDetail(funcId, id);
-                              },
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ),
-                  )
-                ],
-              )),
+                    Visibility(
+                      visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
+                      child: Container(
+                        width: 175.w,
+                        height: 265.w,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: const Color(0xff99000000)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Visibility(
+                              visible: (worksStatus != 2),
+                              child: const CupertinoActivityIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                            CommText(
+                              text: worksStatus == 2 ? "制作失败" : "生成中...",
+                              fontSize: 12.sp,
+                              textColor: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            Visibility(
+                              visible: worksStatus == 2,
+                              child: InkWell(
+                                child: Container(
+                                  width: 80.w,
+                                  margin: EdgeInsets.only(top: 10.w),
+                                  height: 24.w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      width: 1.w,
+                                      color: ColorPlate.themeColor,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: CommText(
+                                      text: "重新制作",
+                                      fontSize: 13.sp,
+                                      textColor: ColorPlate.themeColor,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Log.d("xxxx----------$funcId---$id");
+                                  logic.getFuncDetail(funcId, id);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               onTap: () async {
                 if (worksStatus == 3) {
                   final res = await Get.to(() => DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
-                  logic.photoRecord(selectedIndex);
+                  logic.photoRecord(_tabController.index);
                   return;
-                  // final res = await gotoPushPage(
-                  //   DetailPage(),
-                  //   arguments: {
-                  //     "worksType": worksType,
-                  //     "returnUrl": returnUrl,
-                  //     "tags": tags,
-                  //     "id": id
-                  //   },
-                  // );
-                  // logic.photoRecord(selectedIndex);
                 }
               },
             );
-          }),
-    ));
-  }
-
-  Widget buildTabItem({
-    required String text,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-                fontSize: isSelected ? 20.0 : 16.0, // 选中时字体大小为20，未选中时为16
-                color: isSelected ? const Color(0xff191919) : const Color(0xff656565),
-              ),
-            ),
-            // if (isSelected) // 只有当选中时才显示图片
-            //   Image.asset(
-            //     "custom_indicator.png".mine, // 注意：".mine" 不是有效的资源引用方式
-            //     width: 36.0, // 注意：.w 不是有效单位，应该使用具体的数值
-            //     height: 4.0, // 注意：.w 不是有效单位，应该使用具体的数值或根据需求调整
-            //   ),
-          ],
+          },
         ),
-      ),
     );
   }
 }

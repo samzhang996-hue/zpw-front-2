@@ -14,14 +14,12 @@ class AuthInterceptor extends Interceptor {
     // String token = await SpUtils.getString("token");
     // Log.d("token--$token");
     String token = await SpUtils.getString("token");
-    String uid = await getChannelInfo(1);
-    String projectId = await getChannelInfo(2);
-    String channel = await getChannelInfo(3);
+    String projectId = await getProjectId();
+    String channel = await getChannelInfo();
     print("token--$token");
     options.headers["Accept"] = "application/json";
     options.headers["User-Agent"] = "insomnia/6.4.1";
     options.headers["Authorization"] = token;
-    options.headers["uid"] = uid;
     options.headers["projectId"] = projectId;
     options.headers["channel"] = channel;
     super.onRequest(options, handler);

@@ -41,7 +41,7 @@ class SplashLogic extends BaseGetxController {
 
   void startProgress() {
     _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      if (progress.value < 0.8) {
+      if (progress.value < 0.9) {
         progress.value += 0.01;
       }
     });
@@ -61,7 +61,7 @@ class SplashLogic extends BaseGetxController {
       String channelStr = await SpUtils.getString("channel");
       oaid = oaidStr.isEmpty ? await getOAID() : oaidStr;
       deviceId = deviceIdStr.isEmpty ? await getDeviceId() : deviceIdStr;
-      channel = channelStr.isEmpty ? await getChannelInfo(3) : channelStr;
+      channel = channelStr.isEmpty ? await getChannelInfo() : channelStr;
 
       await SpUtils.setString("oaid", oaid);
       await SpUtils.setString("deviceId", deviceId);
@@ -98,7 +98,7 @@ class SplashLogic extends BaseGetxController {
 
   bool _showAd = true;
 
-  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = true}) async {
+  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = false}) async {
     String udid = "";
     if (Platform.isIOS) {
       udid = await FlutterUdid.udid;
@@ -120,6 +120,7 @@ class SplashLogic extends BaseGetxController {
         Get.put(VipLogic());
         getUserInfo();
       } else {
+
         /// ------->  这里单独处理已选
         if (code == -1111) {
           if (requestMax > 30) {
@@ -140,7 +141,7 @@ class SplashLogic extends BaseGetxController {
             HandleTool.showAppToastText("请退出程序，稍后重试");
           } else {
             Future.delayed(const Duration(seconds: 1), () {
-              _onLogin(channel, deviceId, oaid, isShowProgress: true);
+              _onLogin(channel, deviceId, oaid, isShowProgress: false);
             });
           }
         }

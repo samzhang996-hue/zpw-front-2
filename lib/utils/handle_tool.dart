@@ -252,11 +252,11 @@ class HandleTool {
   packagesGetForcePackage({bool isShowProgress = false}) async {
     String channel = await SpUtils.getString("channel");
     if (Platform.isAndroid) {
-      channel = channel.isEmpty ? await getChannelInfo(3) : channel;
+      channel = channel.isEmpty ? await getChannelInfo() : channel;
     } else {
       channel = "AIIOS";
     }
-    String projectId = await getChannelInfo(2);
+    String projectId = await getProjectId();
     Map<String, dynamic> map = {
       "channel": channel,
       "projectId": projectId,

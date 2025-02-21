@@ -25,7 +25,7 @@ class SettingLogic extends BaseGetxController {
   }
 
   getChannel() async {
-    String channelInfo = await getChannelInfo(3);
+    String channelInfo = await getChannelInfo();
     state.channel.value = channelInfo;
   }
 
