@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
@@ -19,10 +18,34 @@ class WorksPage extends BaseStatefulWidget {
   BaseWidgetState<WorksPage> getState() => _WorksPageState();
 }
 
-class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProviderStateMixin {
+class _WorksPageState extends BaseWidgetState<WorksPage>
+    with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
+  final List<String> _tabs = ['图片', '视频'];
   late TabController _tabController;
+
+  int _currentIndex = 0;
+
+  Widget _animatedTab(int index, String text) {
+    TextStyle normalStyle = const TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 16.0,
+      color: Color(0xff656565),
+    );
+    TextStyle selectedStyle = const TextStyle(
+      fontWeight: FontWeight.w500,
+      fontSize: 20.0,
+      color: Color(0xff191919),
+    );
+    return Tab(
+      child: AnimatedDefaultTextStyle(
+        style: _currentIndex == index ? selectedStyle : normalStyle,
+        duration: const Duration(milliseconds: 100),
+        child: Text(text),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -49,61 +72,56 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
         color: Colors.white,
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.only(left: 10),
-              height: 74.w,
-              child: Container(
-                margin: EdgeInsets.only(top: 24.w),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Get.back();
+            YAppBar(
+              bgColor: Colors.transparent,
+              widget: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      child:
+                          const Icon(Icons.arrow_back_ios, color: Colors.black)
+                              .paddingOnly(left: 10),
+                    ),
+                  ),
+                  Container(
+                    width: 44,
+                    height: 50,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                  ),
+                  const Spacer(),
+                  Container(
+                    alignment: Alignment.center,
+                    color: Colors.white,
+                    child: TabBar(
+                      controller: _tabController,
+                      indicatorColor: Colors.transparent,
+                      tabAlignment: TabAlignment.center,
+                      dividerColor: Colors.transparent,
+                      tabs: _tabs.asMap().entries.map((e) {
+                        return _animatedTab(e.key, e.value);
+                      }).toList(),
+                      onTap: (index) {
+                        logic.photoRecord(index);
                       },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 13.w),
-                        child: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                      ),
                     ),
-                    Expanded(
-                      child: Container(
-                        child: TabBar(
-                          controller: _tabController,
-                          indicatorColor: Colors.transparent,
-                          dividerColor: Colors.transparent,
-                          // 去掉底部分割线
-                          labelColor: const Color(0xff191919),
-                          unselectedLabelColor: const Color(0xff656565),
-                          labelStyle: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20.0,
-                          ),
-                          unselectedLabelStyle: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16.0,
-                          ),
-                          tabs: const [
-                            Tab(text: "图片"),
-                            Tab(text: "视频"),
-                          ],
-                          onTap: (index) {
-                            logic.photoRecord(index);
-                          },
-                        ),
-                      ),
-                    ),
-                    Opacity(
-                      opacity: 0,
-                      child: Container(
-                        child: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                        margin: EdgeInsets.only(right: 13.w),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  const Spacer(),
+                  const SizedBox(
+                    width: 94,
+                    height: 50,
+                  )
+                ],
               ),
+              isMake: true,
             ),
             Container(
               margin: EdgeInsets.only(left: 16.w, top: 10.w, bottom: 10.w),
@@ -117,12 +135,31 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               ),
             ),
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _item(),
-                  _item(),
-                ],
+              child: NotificationListener(
+                onNotification: (ScrollNotification scrollNotification) {
+                  if (scrollNotification is ScrollUpdateNotification) {
+                    if (scrollNotification.metrics.axisDirection ==
+                        AxisDirection.right) {
+                      double progress = scrollNotification.metrics.pixels /
+                          scrollNotification.metrics.maxScrollExtent;
+                      double unit = 1.0 / _tabs.length;
+                      int index = progress ~/ unit;
+                      if (index != _currentIndex && index < _tabs.length) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      }
+                    }
+                  }
+                  return true;
+                },
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _item(),
+                    _item(),
+                  ],
+                ),
               ),
             ),
           ],
@@ -147,7 +184,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
             InkWell(
               onTap: () {
                 Get.back();
-                Get.find<MainLogic>().changeIndex(_tabController.index == 1 ? 0 : 1);
+                Get.find<MainLogic>()
+                    .changeIndex(_tabController.index == 1 ? 0 : 1);
               },
               child: Container(
                 width: 122.w,
@@ -175,134 +213,145 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
       );
     }
     return Container(
-        margin: EdgeInsets.only(left: 16.w, right: 16.w),
-        child: GridView.builder(
-          padding: const EdgeInsets.all(0),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 175 / 265,
-          ),
-          shrinkWrap: true,
-          itemCount: state.records.length,
-          itemBuilder: (BuildContext context, int index) {
-            var data = state.records[index];
-            int worksStatus = data["worksStatus"] ?? 0;
-            int worksType = data["worksType"] ?? 0;
-            var returnUrl = data["returnUrl"] ?? "";
-            var firstFrameUrl = data["firstFrameUrl"] ?? "";
-            var tags = data["tags"] ?? "";
-            var oldUrl = data["oldUrl"] ?? "";
-            int id = data["id"] ?? 0;
-            int funcId = data["funcId"] ?? 0;
-            int apiType = data["apiType"] ?? 0;
-            Log.d("data111--$data");
-            String imagUrl;
-            if ((apiType == -1 || apiType == 6)) {
-              imagUrl = returnUrl;
-            } else if (worksType == 1) {
-              imagUrl = firstFrameUrl.toString().isEmpty ? oldUrl : firstFrameUrl;
-            } else {
-              imagUrl = oldUrl;
-            }
-            return InkWell(
-              child: Container(
-                child: Stack(
-                  children: [
-                    QdsImageCorner(imagUrl, 175.w, 265.w, 8),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: double.infinity,
-                        height: 30.h,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF00141414), Color(0xFF73000000)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
+      margin: EdgeInsets.only(left: 16.w, right: 16.w),
+      child: GridView.builder(
+        padding: const EdgeInsets.all(0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 175 / 265,
+        ),
+        shrinkWrap: true,
+        itemCount: state.records.length,
+        itemBuilder: (BuildContext context, int index) {
+          var data = state.records[index];
+          int worksStatus = data["worksStatus"] ?? 0;
+          int worksType = data["worksType"] ?? 0;
+          var returnUrl = data["returnUrl"] ?? "";
+          var firstFrameUrl = data["firstFrameUrl"] ?? "";
+          var tags = data["tags"] ?? "";
+          var oldUrl = data["oldUrl"] ?? "";
+          int id = data["id"] ?? 0;
+          int funcId = data["funcId"] ?? 0;
+          int apiType = data["apiType"] ?? 0;
+          Log.d("data111--$data");
+          String imagUrl;
+          if ((apiType == -1 || apiType == 6)) {
+            imagUrl = returnUrl;
+          } else if (worksType == 1) {
+            imagUrl = firstFrameUrl.toString().isEmpty ? oldUrl : firstFrameUrl;
+          } else {
+            imagUrl = oldUrl;
+          }
+          return InkWell(
+            child: Container(
+              child: Stack(
+                children: [
+                  QdsImageCorner(imagUrl, 175.w, 265.w, 8),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF00141414), Color(0xFF73000000)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
                         ),
-                        child: Container(
-                          margin: EdgeInsets.only(left: 10.w),
-                          child: CommText(
-                            text: tags,
-                            fontSize: 14.sp,
-                            textColor: Colors.white,
-                            overTextFlow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10.w),
+                        child: CommText(
+                          text: tags,
+                          fontSize: 14.sp,
+                          textColor: Colors.white,
+                          overTextFlow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
-                      child: Container(
-                        width: 175.w,
-                        height: 265.w,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: const Color(0xff99000000)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Visibility(
-                              visible: (worksStatus != 2),
-                              child: const CupertinoActivityIndicator(
-                                color: Colors.white,
-                              ),
+                  ),
+                  Visibility(
+                    visible: (worksStatus == 0 ||
+                        worksStatus == 1 ||
+                        worksStatus == 2),
+                    child: Container(
+                      width: 175.w,
+                      height: 265.w,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color(0xff99000000)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Visibility(
+                            visible: (worksStatus != 2),
+                            child: const CupertinoActivityIndicator(
+                              color: Colors.white,
                             ),
-                            CommText(
-                              text: worksStatus == 2 ? "制作失败" : "生成中...",
-                              fontSize: 12.sp,
-                              textColor: Colors.white,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            Visibility(
-                              visible: worksStatus == 2,
-                              child: InkWell(
-                                child: Container(
-                                  width: 80.w,
-                                  margin: EdgeInsets.only(top: 10.w),
-                                  height: 24.w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      width: 1.w,
-                                      color: ColorPlate.themeColor,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: CommText(
-                                      text: "重新制作",
-                                      fontSize: 13.sp,
-                                      textColor: ColorPlate.themeColor,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                          ),
+                          CommText(
+                            text: worksStatus == 2 ? "制作失败" : "生成中...",
+                            fontSize: 12.sp,
+                            textColor: Colors.white,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          Visibility(
+                            visible: worksStatus == 2,
+                            child: InkWell(
+                              child: Container(
+                                width: 80.w,
+                                margin: EdgeInsets.only(top: 10.w),
+                                height: 24.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    width: 1.w,
+                                    color: ColorPlate.themeColor,
                                   ),
                                 ),
-                                onTap: () {
-                                  Log.d("xxxx----------$funcId---$id");
-                                  logic.getFuncDetail(funcId, id);
-                                },
+                                child: Center(
+                                  child: CommText(
+                                    text: "重新制作",
+                                    fontSize: 13.sp,
+                                    textColor: ColorPlate.themeColor,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
                               ),
-                            )
-                          ],
-                        ),
+                              onTap: () {
+                                Log.d("xxxx----------$funcId---$id");
+                                logic.getFuncDetail(funcId, id);
+                              },
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
-              onTap: () async {
-                if (worksStatus == 3) {
-                  final res = await Get.to(() => DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
-                  logic.photoRecord(_tabController.index);
-                  return;
-                }
-              },
-            );
-          },
-        ),
+            ),
+            onTap: () async {
+              if (worksStatus == 3) {
+                final res = await Get.to(() => DetailPage(), arguments: {
+                  "worksType": worksType,
+                  "returnUrl": returnUrl,
+                  "tags": tags,
+                  "id": id,
+                  "funcId": funcId,
+                  "apiType": apiType
+                });
+                logic.photoRecord(_tabController.index);
+                return;
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }
