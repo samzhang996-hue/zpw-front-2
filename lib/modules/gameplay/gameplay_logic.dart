@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/gameplay/gameplay_state.dart';
+import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
-class GameplayLogic extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class GameplayLogic extends BaseGetxController with GetSingleTickerProviderStateMixin {
   final GameplayState state = GameplayState();
   TabController? tabController;
   var listPhotoGroupBean = <ListPhotoGroupBean>[];
@@ -49,12 +50,16 @@ class GameplayLogic extends GetxController
 
             Log.d("listPhotoGroup.bean----${bean.length}");
             listPhotoGroupBean2 = results;
-            tabController =
-                TabController(length: listPhotoGroupBean2.length, vsync: this);
+            tabController = TabController(length: listPhotoGroupBean2.length, vsync: this);
             update();
           }
         },
         onModel: (json) => ListPhotoGroupBean.fromJson(json));
+  }
+
+  stateShowVip(bool isVip) {
+    showVip.value = isVip;
+    update();
   }
 
   @override

@@ -66,6 +66,8 @@ class HandleTool {
   String hYxy = "http://imgser.zyykj168.com/xyhtml/ai_hyxy.html";
   String pHone = "4000732899";
   String gz = "http://imgser.zyykj168.com/xyhtml/SX_YK_GZSM.html";
+  bool channelAds = false;
+  bool channelLogin = false;
 
   Future<bool> compareTimesWithServer(String serverTimeString) async {
     // 获取当前设备时间
@@ -87,46 +89,42 @@ class HandleTool {
   }
 
   getProtocolConfig() {
-    SMWPost(Api.center_getProtocolConfig, isShowProgress: false,
-        success: (isSuccess, code, message, results) {
-          Log.d("config---$isSuccess----$results");
-          if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
-            // 遍历 results 列表,提取 configType 和 configValue
-            for (Map<String, dynamic> item in results) {
-              int configType = item['configType'];
-              String configValue = item['configValue'];
-              // 根据 configType 获取对应的 configValue
-              if (configType == 1) {
-                // 用户协议 URL
-                yHxy = configValue;
-              } else if (configType == 4) {
-                // 隐私政策 URL
-                ySxy = configValue;
-              } else if (configType == 5) {
-                // 会员协议 URL
-                hYxy = configValue;
-              } else if (configType == 6) {
-                // 手机号
-                pHone = configValue;
-              } else if (configType == 7) {
-                // 规则
-                gz = configValue;
-              } else if (configType == 17) {
-                gz = configValue;
-              }
-              else if (configType == 18) {
-                gz = configValue;
-              }
-              else if (configType == 19) {
-                gz = configValue;
-              }
-            }
+    SMWPost(Api.center_getProtocolConfig, isShowProgress: false, success: (isSuccess, code, message, results) {
+      Log.d("config---$isSuccess----$results");
+      if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
+        // 遍历 results 列表,提取 configType 和 configValue
+        for (Map<String, dynamic> item in results) {
+          int configType = item['configType'];
+          String configValue = item['configValue'];
+          // 根据 configType 获取对应的 configValue
+          if (configType == 1) {
+            // 用户协议 URL
+            yHxy = configValue;
+          } else if (configType == 4) {
+            // 隐私政策 URL
+            ySxy = configValue;
+          } else if (configType == 5) {
+            // 会员协议 URL
+            hYxy = configValue;
+          } else if (configType == 6) {
+            // 手机号
+            pHone = configValue;
+          } else if (configType == 7) {
+            // 规则
+            gz = configValue;
+          } else if (configType == 17) {
+            channelAds = configValue == "0";
+            Log.d("configValue------$configValue");
+          } else if (configType == 18) {
+            channelLogin = configValue == "0";
+            Log.d("configValue------$configValue");
           }
-        });
+        }
+      }
+    });
   }
 
-  static showAppToastText(String message,
-      {ToastGravity gravity = ToastGravity.CENTER}) {
+  static showAppToastText(String message, {ToastGravity gravity = ToastGravity.CENTER}) {
     Fluttertoast.showToast(msg: message, gravity: gravity);
   }
 
@@ -135,9 +133,7 @@ class HandleTool {
       return "";
     }
     if (t is int || t is double) {
-      return t
-          .toString()
-          .isEmpty ? "0" : t.toString();
+      return t.toString().isEmpty ? "0" : t.toString();
     } else if (t is String) {
       return t;
     }
@@ -181,12 +177,11 @@ class HandleTool {
   }
 
   ///value: 文本内容；fontSize : 文字的大小；fontWeight：文字权重；maxWidth：文本框的最大宽度；maxLines：文本支持最大多少行 ；locale：当前手机语言；textScaleFactor：手机系统可以设置字体大小（默认1.0）
-  static double calculateTextHeight(String value, fontSize,
-      FontWeight fontWeight, double maxWidth, int maxLines) {
+  static double calculateTextHeight(String value, fontSize, FontWeight fontWeight, double maxWidth, int maxLines) {
     value = filterText(value);
     TextPainter painter = TextPainter(
 
-      ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
+        ///AUTO：华为手机如果不指定locale的时候，该方法算出来的文字高度是比系统计算偏小的。
         locale: Localizations.localeOf(navigatorKey.currentContext!),
         maxLines: maxLines,
         textDirection: TextDirection.ltr,
@@ -246,10 +241,8 @@ class HandleTool {
     String date = "${now.year}-$month-$day";
     if (isNeed == true) {
       String hour = now.hour < 10 ? "0${now.hour}" : now.hour.toString();
-      String minute =
-      now.minute < 10 ? "0${now.minute}" : now.minute.toString();
-      String second =
-      now.second < 10 ? "0${now.second}" : now.second.toString();
+      String minute = now.minute < 10 ? "0${now.minute}" : now.minute.toString();
+      String second = now.second < 10 ? "0${now.second}" : now.second.toString();
       date = "$date $hour:$minute:$second";
     }
     return date;
@@ -271,57 +264,45 @@ class HandleTool {
 
     Log.i("map====>$map");
 
-    QDSGet(Api.appPackage_latestPackage,
-        isShowProgress: isShowProgress,
-        params: map, success: (isSuccess, code, message, results) {
-          Log.i("版本=====>$results $channel");
-          if (isSuccess && results.isNotEmpty) {
-            /// 获取本地版本
-            isCheckUpdateAction(results.first as Map);
-          }
-        });
+    QDSGet(Api.appPackage_latestPackage, isShowProgress: isShowProgress, params: map, success: (isSuccess, code, message, results) {
+      Log.i("版本=====>$results $channel");
+      if (isSuccess && results.isNotEmpty) {
+        /// 获取本地版本
+        isCheckUpdateAction(results.first as Map);
+      }
+    });
   }
 
   SMWPost<T>(String url,
-      {Function(bool isSuccess, int code, String message, List<T> results)?
-      success,
-        Function(int totalCount)? totalCount,
-        Map<String, dynamic>? params,
-        onModel,
-        bool isShowError = true,
-        bool isShowProgress = true,
-        bool isCancleToken = false}) {
+      {Function(bool isSuccess, int code, String message, List<T> results)? success,
+      Function(int totalCount)? totalCount,
+      Map<String, dynamic>? params,
+      onModel,
+      bool isShowError = true,
+      bool isShowProgress = true,
+      bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
-    DioUtils.instance.post<T>(url,
-        success: (isSuccess, code, message, resulsts) {
-          if (code == -1004) {
-            HandleTool.deleteDataWithKey("token");
-          } else {
-            if (success != null) {
-              success(isSuccess, code, message, resulsts);
-            }
-          }
-        },
-        successTotalCount: totalCount,
-        params: params,
-        onModel: onModel,
-        isShowProgress: isShowProgress,
-        isShowError: isShowError,
-        cancelToken: cancelToken,
-        isCancleToken: isCancleToken);
+    DioUtils.instance.post<T>(url, success: (isSuccess, code, message, resulsts) {
+      if (code == -1004) {
+        HandleTool.deleteDataWithKey("token");
+      } else {
+        if (success != null) {
+          success(isSuccess, code, message, resulsts);
+        }
+      }
+    }, successTotalCount: totalCount, params: params, onModel: onModel, isShowProgress: isShowProgress, isShowError: isShowError, cancelToken: cancelToken, isCancleToken: isCancleToken);
   }
 
   /// get
   QDSGet<T>(String url,
-      {Function(bool isSuccess, int code, String message, List<T> results)?
-      success,
-        Function(int totalCount)? totalCount,
-        Map<String, dynamic>? params,
-        onModel,
-        bool isShowError = true,
-        bool isShowProgress = true,
-        bool isCancleToken = false}) {
+      {Function(bool isSuccess, int code, String message, List<T> results)? success,
+      Function(int totalCount)? totalCount,
+      Map<String, dynamic>? params,
+      onModel,
+      bool isShowError = true,
+      bool isShowProgress = true,
+      bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
     DioUtils.instance.get<T>(url, success: (isSuccess, code, message, results) {
@@ -332,17 +313,11 @@ class HandleTool {
           success(isSuccess, code, message, results);
         }
       }
-    },
-        successTotalCount: totalCount,
-        params: params,
-        onModel: onModel,
-        isShowProgress: isShowProgress,
-        isShowError: isShowError,
-        cancelToken: cancelToken,
-        isCancleToken: isCancleToken);
+    }, successTotalCount: totalCount, params: params, onModel: onModel, isShowProgress: isShowProgress, isShowError: isShowError, cancelToken: cancelToken, isCancleToken: isCancleToken);
   }
 
-  Future<T?> QDSUpload<T>(String url, {
+  Future<T?> QDSUpload<T>(
+    String url, {
     Object? params,
     onModel,
   }) {
@@ -377,13 +352,11 @@ class HandleTool {
 
     /// 比对
     int localNum = int.parse("${localVersion.replaceAll(".", "")}");
-    int serviceNum =
-    int.parse("${version.replaceAll(".", "").replaceAll(" ", "")}");
+    int serviceNum = int.parse("${version.replaceAll(".", "").replaceAll(" ", "")}");
     if (serviceNum > localNum) {
       // Log.i("22233111");
       /// 需要更新
-      showUpdateDialog(isForce == "1" ? true : false, versionCode,
-          appendInformation, fileUrl);
+      showUpdateDialog(isForce == "1" ? true : false, versionCode, appendInformation, fileUrl);
     } else {
       if (isShow) {
         HandleTool.showAppToastText("当前已是最新版本");
@@ -396,8 +369,7 @@ class HandleTool {
 
   ///Flutter侧处理升级对话框
   ///[forcedUpgrade] 是否强制升级
-  showUpdateDialog(bool forcedUpgrade, String newVersion,
-      String appendInformation, String fileUrl) {
+  showUpdateDialog(bool forcedUpgrade, String newVersion, String appendInformation, String fileUrl) {
     showDialog(
       context: navigatorKey.currentContext!,
       barrierDismissible: !forcedUpgrade,
@@ -410,10 +382,7 @@ class HandleTool {
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
-            content: CommText(
-                fontSize: 15,
-                textColor: ColorPlate.sixThreeColor,
-                text: appendInformation),
+            content: CommText(fontSize: 15, textColor: ColorPlate.sixThreeColor, text: appendInformation),
             actions: <Widget>[
               if (!forcedUpgrade)
                 InkWell(
@@ -425,7 +394,7 @@ class HandleTool {
                     width: 80,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      // color: ColorPlate.themeColor,
+                        // color: ColorPlate.themeColor,
                         border: Border.all(color: const Color(0xffA2AAAE)),
                         borderRadius: BorderRadius.circular(15)),
                     child: CommText(
@@ -444,9 +413,7 @@ class HandleTool {
                   width: 80,
                   margin: const EdgeInsets.only(left: 15),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: ColorPlate.themeColor,
-                      borderRadius: BorderRadius.circular(15)),
+                  decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(15)),
                   child: CommText(
                     text: "升级",
                     fontSize: 14,
@@ -499,9 +466,7 @@ class HandleTool {
     return base64Image;
   }
 
-  void checkImgAndSave(String? path,
-      {void Function(String headImageUrl)? success,
-        bool bindDefaultImg = true}) async {
+  void checkImgAndSave(String? path, {void Function(String headImageUrl)? success, bool bindDefaultImg = true}) async {
     if (path == null) {
       return;
     }
@@ -511,10 +476,7 @@ class HandleTool {
       final formData = ffff.FormData.fromMap({
         "file": await ffff.MultipartFile.fromFile(path),
       });
-      final bean = await HandleTool.instance.QDSUpload<UploadBean>(
-          Api.uploadFile,
-          params: formData,
-          onModel: (v) => UploadBean.fromJson(v));
+      final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile, params: formData, onModel: (v) => UploadBean.fromJson(v));
       if (bean == null) {
         HandleTool.showAppToastText("上传失败,请重试");
         return;
@@ -525,15 +487,14 @@ class HandleTool {
         return;
       }
 
-      HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
-          isShowProgress: true, success: (isSuccess, code, message, results) {
-            if (isSuccess == true && results.isNotEmpty) {
-              HandleTool.instance.headImg = '${bean.url}';
-              success?.call(bean.url ?? '');
-            } else {
-              CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
-            }
-          });
+      HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}', isShowProgress: true, success: (isSuccess, code, message, results) {
+        if (isSuccess == true && results.isNotEmpty) {
+          HandleTool.instance.headImg = '${bean.url}';
+          success?.call(bean.url ?? '');
+        } else {
+          CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+        }
+      });
 
       // final cacheDir = await getApplicationCacheDirectory();
       // File old = File(path);

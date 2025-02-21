@@ -1,4 +1,6 @@
+import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -17,6 +19,7 @@ class MineLogic extends BaseGetxController {
   }
 
   getUserInfo() {
+    final logic = Get.put(GameplayLogic());
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: false,
         success: (isSuccess, code, message, results) {
@@ -24,6 +27,7 @@ class MineLogic extends BaseGetxController {
             Log.d("userInfoBean----${results.first}");
             state.userInfoBean = results.first;
             HandleTool.instance.isMember = state.userInfoBean.vipFlag == 1;
+            logic.stateShowVip(HandleTool.instance.isMember);
             update();
           }
         },

@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
+import 'package:zpw/modules/gameplay/gameplay_logic.dart';
+import 'package:zpw/modules/gameplay/gameplay_view.dart';
 import 'package:zpw/modules/main/main_logic.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -14,6 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final logic = Get.put(MainLogic());
+
   final state = Get.find<MainLogic>().state;
 
   @override
@@ -40,6 +44,7 @@ class _MainPageState extends State<MainPage> {
                 onTap: (int idx) {
                   // if (idx == 1) return;
                   logic.changeIndex(idx);
+
                 },
                 iconSize: 36.0,
                 selectedItemColor: ColorPlate.tabbarThemeColor,

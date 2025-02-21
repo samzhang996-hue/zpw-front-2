@@ -39,8 +39,8 @@ class CustomPhotoDialogUtils {
                                 child: CommText(
                                   text: "温馨提示",
                                   textColor: Color(0xff1A1A1A),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w500,
                                   textAlign: TextAlign.center,
                                 ),
                                 margin: EdgeInsets.only(top: 26.w),
@@ -51,7 +51,7 @@ class CustomPhotoDialogUtils {
                                   text:
                                       "1.视频换脸技术类似视频版PS技术，利用人脸图像和视频结合。人脸照片在视频合成后会立即删除，不会保留你的人脸照片数据。\n\n2.请确保你使用的照片获得本人授权同意，严禁使用未获得本人授权同意的照片。如因照片为授权对他人肖像权造成侵犯所产生的法律责任由本人承担。\n\n3.严禁使用涉黄照片和视频。",
                                   fontSize: 13.sp,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   textColor: Color(0xff818181),
                                 ),
                               ),
@@ -62,14 +62,18 @@ class CustomPhotoDialogUtils {
                                   width: double.infinity,
                                   height: 44.w,
                                   decoration: BoxDecoration(
-                                      color: Color(0xffFF2E7E),
+                                      gradient: LinearGradient(
+                                        colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                      ),
                                       borderRadius: BorderRadius.circular(30)),
                                   child: Center(
                                       child: CommText(
                                     text: "确定",
                                     fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: Color(0xff191919),
                                   )),
                                 ),
                                 onTap: () {

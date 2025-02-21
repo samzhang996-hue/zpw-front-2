@@ -179,18 +179,17 @@ class SplashLogic extends BaseGetxController {
             //   Get.offAll(GuidePage());
             // }
             // return;
-            if (!_showAd) {
+            if (!_showAd || HandleTool.instance.channelAds) {
               progress.value = 1.0;
-              if (isFirst) {
+              // if (isFirst) {
                 Get.offAll(const MainPage());
-              } else {
-                // Get.offAll(const MainPage());
-                // return;
-                Get.offAll(GuidePage());
-              }
+              // } else {
+              //   // Get.offAll(const MainPage());
+              //   // return;
+              //   Get.offAll(GuidePage());
+              // }
               return;
             }
-
             AdsUtils.init().then((value) {
               progress.value = 1.0;
               if (value) {
@@ -218,13 +217,13 @@ class SplashLogic extends BaseGetxController {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
         if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
-          if (isFirst) {
+          // if (isFirst) {
             Get.offAll(const MainPage());
-          } else {
-            // Get.offAll(const MainPage());
-            // return;
-            Get.offAll(GuidePage());
-          }
+          // } else {
+          //   // Get.offAll(const MainPage());
+          //   // return;
+          //   Get.offAll(GuidePage());
+          // }
         }
       }
     });

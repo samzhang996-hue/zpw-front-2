@@ -12,6 +12,7 @@ import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/log_utils.dart';
 
 class GameplayPage extends StatefulWidget {
   const GameplayPage({Key? key}) : super(key: key);
@@ -32,7 +33,6 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-
     _scrollViewController?.addListener(() {
       double? offset = _scrollViewController?.offset;
       if ((offset! >= kToolbarHeight) == true) {
@@ -51,6 +51,8 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
   void dispose() {
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -230,13 +232,13 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
           }),
           Positioned(
             bottom: ScreenUtil().bottomBarHeight + 20.w,
-            right: 0.w,
+            right: 17.w,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Obx(
                   () => Visibility(
-                    visible: logic.showVip.value,
+                    visible: !logic.showVip.value,
                     child: GestureDetector(
                       onTap: logic.showVip.toggle,
                       child: Container(
@@ -256,7 +258,7 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                 ),
                 Obx(
                   () => Visibility(
-                    visible: logic.showVip.value,
+                    visible: !logic.showVip.value,
                     child: GestureDetector(
                       onTap: () {
                         Get.find<VipLogic>().getVipHome();
@@ -265,8 +267,8 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                       behavior: HitTestBehavior.opaque,
                       child: Image.asset(
                         "gameplay_vip.png".gameplay,
-                        width: 99.w,
-                        height: 82.w,
+                        width: 74.w,
+                        height: 76.w,
                         fit: BoxFit.cover,
                       ),
                     ),

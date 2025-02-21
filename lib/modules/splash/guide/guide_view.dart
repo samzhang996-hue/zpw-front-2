@@ -62,8 +62,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                 : logic.videoPlayerController!.value.isInitialized
                     ? Expanded(
                         child: AspectRatio(
-                          aspectRatio:
-                              logic.videoPlayerController!.value.aspectRatio,
+                          aspectRatio: logic.videoPlayerController!.value.aspectRatio,
                           child: VideoPlayer(logic.videoPlayerController!),
                         ),
                       )
@@ -74,38 +73,34 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       )
           else
             Expanded(
-              child: QdsImage(
-                  state.showImgGif, double.infinity, double.infinity,
-                  fit: BoxFit.cover),
+              child: QdsImage(state.showImgGif, double.infinity, double.infinity, fit: BoxFit.cover),
             ),
           InkWell(
             child: Container(
-              margin: EdgeInsets.only(
-                  top: 17.w, bottom: 44.w, right: 16.w, left: 16.w),
+              margin: EdgeInsets.only(top: 17.w, bottom: 44.w, right: 16.w, left: 16.w),
               width: double.infinity,
               height: 52,
               decoration: BoxDecoration(
-                  color: ColorPlate.themeColor,
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+                  ),
                   borderRadius: BorderRadius.circular(26)),
               child: Center(
                   child: CommText(
                 text: "立即制作",
-                textColor: Colors.white,
+                textColor: Color(0xff191919),
                 fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               )),
             ),
             onTap: () {
-              UmengCommonSdk.onEvent(
-                  'Guide_click_event_make', {'name': '立即制作'});
+              UmengCommonSdk.onEvent('Guide_click_event_make', {'name': '立即制作'});
               Get.bottomSheet(
                 Container(
                   width: double.infinity,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20))),
+                  decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
                   child: Wrap(
                     alignment: WrapAlignment.center,
                     children: [
@@ -159,26 +154,21 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       InkWell(
                         onTap: _uploadImg,
                         child: Container(
-                          margin: EdgeInsets.only(
-                              top: 10.w, left: 16.w, right: 16.w),
+                          margin: EdgeInsets.only(top: 10.w, left: 16.w, right: 16.w),
                           width: double.infinity,
                           height: 52.w,
-                          decoration: BoxDecoration(
-                              color: ColorPlate.themeColor,
-                              borderRadius: BorderRadius.circular(26)),
+                          decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(26)),
                           child: Center(
                               child: CommText(
                             text: "上传照片",
                             fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            textColor: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            textColor: Color(0xff191919),
                           )),
                         ),
                       ),
                       Container(
-                          margin: EdgeInsets.only(
-                              top: 8.w,
-                              bottom: 10.w + ScreenUtil().bottomBarHeight),
+                          margin: EdgeInsets.only(top: 8.w, bottom: 10.w + ScreenUtil().bottomBarHeight),
                           child: CommText(
                             text: "*用户图片数据在每次使用后均会被删除，不会在服务器上保存‌",
                             fontSize: 11.sp,

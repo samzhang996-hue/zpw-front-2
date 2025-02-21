@@ -11,6 +11,7 @@ import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/modules/mine/detail/detail_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
+import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 import 'makewst_logic.dart';
@@ -23,6 +24,7 @@ class MakewstPage extends BaseStatefulWidget {
 class MakewstPageState extends BaseWidgetState {
   final ScrollController _scrollController = ScrollController();
   final _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   final logic = Get.put(MakewstLogic());
   final state = Get.find<MakewstLogic>().state;
 
@@ -31,10 +33,17 @@ class MakewstPageState extends BaseWidgetState {
     super.initState();
     // 监听数据变化，滚动到底部
     ever(state.records, (_) => _scrollToBottom());
+    _controller.text = state.funcValue.value;
+    // 将光标移动到文本末尾
+    _controller.selection = TextSelection.fromPosition(
+      TextPosition(offset: _controller.text.length),
+    );
+    _focusNode.requestFocus();
   }
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _scrollController.dispose();
     _controller.dispose();
     logic.stopPolling();
@@ -59,7 +68,7 @@ class MakewstPageState extends BaseWidgetState {
             alignment: Alignment.bottomCenter,
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 60.w),
+                margin: EdgeInsets.only(bottom: 100.w),
                 child: Column(
                   children: [
                     YAppBar(
@@ -151,6 +160,10 @@ class MakewstPageState extends BaseWidgetState {
                                     Spacer(),
                                     InkWell(
                                       onTap: () {
+                                        if(state.funcValue.value.isEmpty){
+                                          HandleTool.showAppToastText("请输入提示词！");
+                                          return;
+                                        }
                                         logic.addPhotoRecord();
                                       },
                                       child: Container(
@@ -276,9 +289,13 @@ class MakewstPageState extends BaseWidgetState {
   TextField buildTextField() {
     return TextField(
       controller: _controller,
+      focusNode: _focusNode,
+      autofocus: true,
       decoration: InputDecoration(
-        labelText: state.funcValue.value,
+        // labelText: state.funcValue.value,
         // border: OutlineInputBorder(),
+        hintText: "输入生成提示词",
+        hintStyle: TextStyle(fontSize: 14.sp,color: Color(0xffB2B2B2)),
         border: InputBorder.none,
         labelStyle: TextStyle(fontSize: 14.sp, color: Color(0xff191919)),
         contentPadding: const EdgeInsets.only(top: 4.0, bottom: 8.0, left: 8.0, right: 8.0),

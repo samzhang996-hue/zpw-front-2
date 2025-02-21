@@ -101,8 +101,8 @@ class CustomExitVipDialogUtils2 {
                                       ),
                                       gradient: LinearGradient(
                                         colors: [
-                                          Color(0xFFFF2EB8),
-                                          Color(0xFFFF2E2E)
+                                          Color(0xFFFFFF75),
+                                          Color(0xFFFFC243)
                                         ],
                                         begin: Alignment.topLeft,
                                         end: Alignment.topRight,
@@ -114,8 +114,9 @@ class CustomExitVipDialogUtils2 {
                                       child: Center(
                                         child: CommText(
                                           text: rk4,
-                                          fontSize: 12.sp,
-                                          textColor: Colors.white,
+                                          fontSize: 14.sp,
+                                          textColor: Color(0xff191919),
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     )),
@@ -139,16 +140,16 @@ class CustomExitVipDialogUtils2 {
                                               child: CommText(
                                                 text: "¥",
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 27.sp,
-                                                textColor: Color(0xffFF2E7E),
+                                                fontSize: 20.sp,
+                                                textColor: Color(0xffFF7000),
                                               ),
                                               margin: EdgeInsets.only(top: 8.w),
                                             ),
                                             CommText(
                                               text: rk3,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 39.sp,
-                                              textColor: Color(0xffFF2E7E),
+                                              fontSize: 32.sp,
+                                              textColor: Color(0xffFF7000),
                                             ),
                                           ],
                                         ),
@@ -156,7 +157,7 @@ class CustomExitVipDialogUtils2 {
                                           text: rk5,
                                           fontSize: 13.sp,
                                           textColor: Color(0xff999999),
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w400,
                                         )
                                       ],
                                     ),
@@ -168,7 +169,7 @@ class CustomExitVipDialogUtils2 {
                                         CommText(
                                           text: rk1,
                                           fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           textColor: Color(0xff191919),
                                         ),
                                         SizedBox(
@@ -177,7 +178,7 @@ class CustomExitVipDialogUtils2 {
                                         CommText(
                                           text: rk2,
                                           fontSize: 12.sp,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w400,
                                           textColor: Color(0xff818181),
                                         ),
                                       ],
@@ -194,7 +195,7 @@ class CustomExitVipDialogUtils2 {
                                   children: [
                                     CommText(
                                       text: "距优惠结束还有",
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       fontSize: 14.sp,
                                       textColor: Color(0xff191919),
                                     ),
@@ -279,14 +280,18 @@ class CustomExitVipDialogUtils2 {
                                   height: 48.w,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                      color: Color(0xffFF2E7E),
+                                      gradient: LinearGradient(
+                                        colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                      ),
                                       borderRadius: BorderRadius.circular(25)),
                                   child: Center(
                                       child: CommText(
                                     text: rk8,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.sp,
-                                    textColor: Colors.white,
+                                    textColor: Color(0xff191919),
                                   )),
                                 ),
                                 onTap: () {
@@ -323,7 +328,7 @@ class CustomExitVipDialogUtils2 {
                                 text: rk9,
                                 fontSize: 10.sp,
                                 textColor: Color(0xffCECDCD),
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w400,
                               ))
                             ],
                           ),

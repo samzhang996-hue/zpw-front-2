@@ -52,9 +52,13 @@ class _RestorePageState extends BaseWidgetState {
                margin: EdgeInsets.only(left: 16.w,right: 16.w,top: 26.w),
                decoration: BoxDecoration(
                    borderRadius: BorderRadius.circular(25),
-                   color: ColorPlate.themeColor
+                 gradient: LinearGradient(
+                   colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                   begin: Alignment.topLeft,
+                   end: Alignment.topRight,
+                 ),
                ),
-               child: Center(child: CommText(text: "立即恢复",textColor: Colors.white,fontSize: 18.sp,fontWeight: FontWeight.w500,)),
+               child: Center(child: CommText(text: "立即恢复",textColor: Color(0xff191919),fontSize: 18.sp,fontWeight: FontWeight.w500,)),
              ),
            ),
            SizedBox(height: 27.w,),
