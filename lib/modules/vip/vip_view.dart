@@ -138,7 +138,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                             child: CommText(
                               text: "会员无限制作 / 无水印 / 无广告 / 专属客服",
                               fontSize: 15.w,
-                              textColor: Colors.white,
+                              textColor: Color(0xffB2B2B2),
                               fontWeight: FontWeight.w500,
                             ),
                           ).paddingOnly(bottom: 6.w),
@@ -486,7 +486,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           borderRadius: BorderRadius.circular(12.0),
                           color: Color(0xFF141414),
                           border: Border.all(
-                            color: isSelect ? Color(0xFF19CDF2) : Colors.transparent,
+                            color: isSelect ? Color(0xFF7FF9F0) : Colors.transparent,
                             width: isSelect ? 2.0 : 0.0, // 你可以根据需要调整边框宽度
                           )),
                       child: Column(
@@ -497,7 +497,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           CommText(
                             text: vp?.remark2,
                             fontSize: 15.sp,
-                            textColor: Colors.white,
+                            textColor: isSelect ? Colors.white : Color(0xff54FFFFFF),
                             fontWeight: FontWeight.w500,
                           ),
                           Container(
@@ -510,14 +510,14 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                   child: CommText(
                                     text: "¥",
                                     fontSize: 13.sp,
-                                    textColor: isSelect ? Color(0xFF19CDF2) : Colors.white,
+                                    textColor: isSelect ? Color(0xFF7EF7F0) : Color(0xff54FFFFFF),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 CommText(
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
-                                  textColor: isSelect ? Color(0xFF19CDF2) : Colors.white,
+                                  textColor: isSelect ? Color(0xFF7EF7F0) : Color(0xff939393),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
