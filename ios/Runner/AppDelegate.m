@@ -14,27 +14,34 @@
   // Handle method calls from Flutter
   [methodChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
     if ([call.method isEqualToString:@"getChannelInfo"]) {
-      NSDictionary *args = call.arguments;
-      NSNumber *type = args[@"type"];
+           result(@"AIIOS");
+//      NSDictionary *args = call.arguments;
+//      NSNumber *type = args[@"type"];
+//      
+//      if (type) {
+//        if ([type isEqualToNumber:@1]) {
+//          result(@"");
+//        } else if ([type isEqualToNumber:@2]) {
+//          result(@"30");
+//        } else if ([type isEqualToNumber:@3]) {
+//          result(@"AIIOS");
+//        } else {
+//          result([FlutterError errorWithCode:@"INVALID_ARGUMENT"
+//                                     message:@"Invalid argument"
+//                                     details:nil]);
+//        }
+//      } else {
+//        result([FlutterError errorWithCode:@"INVALID_ARGUMENT"
+//                                   message:@"Argument missing"
+//                                   details:nil]);
+//      }
+    }
+    
+    else  if ([call.method isEqualToString:@"projectId"]) {
+        result(@"30");
+    }
       
-      if (type) {
-        if ([type isEqualToNumber:@1]) {
-          result(@"");
-        } else if ([type isEqualToNumber:@2]) {
-          result(@"30");
-        } else if ([type isEqualToNumber:@3]) {
-          result(@"AIIOS");
-        } else {
-          result([FlutterError errorWithCode:@"INVALID_ARGUMENT"
-                                     message:@"Invalid argument"
-                                     details:nil]);
-        }
-      } else {
-        result([FlutterError errorWithCode:@"INVALID_ARGUMENT"
-                                   message:@"Argument missing"
-                                   details:nil]);
-      }
-    } else {
+    else {
       result(FlutterMethodNotImplemented);
     }
   }];

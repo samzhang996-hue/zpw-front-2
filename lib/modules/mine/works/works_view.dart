@@ -101,6 +101,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                   Container(
                     alignment: Alignment.center,
                     color: Colors.white,
+                    width: 1.sw * 0.5,
                     child: TabBar(
                       controller: _tabController,
                       indicatorColor: Colors.transparent,
