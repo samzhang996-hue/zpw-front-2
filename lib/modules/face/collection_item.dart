@@ -199,6 +199,7 @@ class _CollectionItemState extends State<CollectionItem> {
           () => GatherSinglePage(
             id: bean.photoGroupResp?.id ?? 0,
             imgUrlAcross: bean.photoGroupResp?.imgUrlAcross ?? "",
+            title: bean.photoFuncResp?.tags ?? '',
           ),
         );
       },

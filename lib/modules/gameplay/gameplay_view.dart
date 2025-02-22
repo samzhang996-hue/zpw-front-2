@@ -12,7 +12,6 @@ import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
 
 class GameplayPage extends StatefulWidget {
   const GameplayPage({Key? key}) : super(key: key);
@@ -21,12 +20,13 @@ class GameplayPage extends StatefulWidget {
   State<GameplayPage> createState() => _GameplayPageState();
 }
 
-class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderStateMixin {
+class _GameplayPageState extends State<GameplayPage>
+    with SingleTickerProviderStateMixin {
   final logic = Get.put(GameplayLogic());
   final state = Get.find<GameplayLogic>().state;
 
   late ScrollController? _scrollViewController = ScrollController();
-  var outHeight = 20.0.w;
+  var outHeight = 0.0.w;
   late PageController? page = PageController();
   Color _backgroundColor = Colors.transparent;
 
@@ -35,7 +35,8 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
     super.initState();
     _scrollViewController?.addListener(() {
       double? offset = _scrollViewController?.offset;
-      if ((offset! >= kToolbarHeight) == true) {
+
+      if ((offset! >= (kToolbarHeight - 36.w - 6.w - 10.w)) == true) {
         setState(() {
           _backgroundColor = Colors.white;
         });
@@ -51,8 +52,6 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
   void dispose() {
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,17 +72,20 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
 
             return NestedScrollView(
               controller: _scrollViewController,
-              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
                     pinned: true,
                     leading: Container(),
-                    floating: true,
+                    floating: false,
                     systemOverlayStyle: const SystemUiOverlayStyle(
                       systemNavigationBarColor: Colors.white,
                       statusBarColor: Colors.transparent,
                     ),
-                    expandedHeight: 70.w + outHeight + (logic.listPhotoGroupBean.isEmpty ? 0 : 110.w),
+                    expandedHeight: 70.w +
+                        outHeight +
+                        (logic.listPhotoGroupBean.isEmpty ? 0 : 110.w),
                     backgroundColor: _backgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
@@ -93,11 +95,13 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: ScreenUtil().statusBarHeight + 10.w),
+                            SizedBox(
+                                height: ScreenUtil().statusBarHeight + 10.w),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Image.asset(
                                     "gameplay.png".gameplay,
@@ -137,13 +141,15 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                                     itemCount: logic.listPhotoGroupBean.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (c, index) {
-                                      final bean = logic.listPhotoGroupBean[index];
+                                      final bean =
+                                          logic.listPhotoGroupBean[index];
                                       return GestureDetector(
                                         onTap: () {
                                           Get.to(
                                             () => GatherSinglePage(
                                               id: bean.id ?? 0,
-                                              imgUrlAcross: bean.imgUrlAcross ?? "",
+                                              imgUrlAcross:
+                                                  bean.imgUrlAcross ?? "",
                                             ),
                                           );
                                         },
@@ -151,9 +157,12 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                                         child: Container(
                                           width: 182.w,
                                           height: 90.w,
-                                          margin: EdgeInsets.only(left: 16.w, right: index == 2 ? 16.w : 0),
+                                          margin: EdgeInsets.only(
+                                              left: 16.w,
+                                              right: index == 2 ? 16.w : 0),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(8.w),
+                                            borderRadius:
+                                                BorderRadius.circular(8.w),
                                             child: QdsImage(
                                               "${bean.imgUrlAcross}",
                                               182.w,
@@ -177,19 +186,29 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                         padding: EdgeInsets.only(left: 15.w, right: 15.w),
                         child: TabBar(
                           tabAlignment: TabAlignment.center,
-                          tabs: logic.listPhotoGroupBean2.map((e) => Tab(text: "${e.groupName}")).toList(),
+                          tabs: logic.listPhotoGroupBean2
+                              .map((e) => Tab(text: "${e.groupName}"))
+                              .toList(),
                           onTap: (index) {
-                            UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
+                            UmengCommonSdk.onEvent('Gameplay_click_event', {
+                              'Tab':
+                                  '${logic.listPhotoGroupBean2[index].toJson()}'
+                            });
                             page?.jumpToPage(index);
                           },
-                          overlayColor: WidgetStateProperty.all(Colors.transparent),
+                          overlayColor:
+                              WidgetStateProperty.all(Colors.transparent),
                           controller: logic.tabController,
                           indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50.w), // Creates border
-                            gradient: const LinearGradient(colors: [
-                              Color(0xFF7EFAEF),
-                              Color(0xFF7FE1FB),
-                            ], begin: Alignment.centerLeft, end: Alignment.centerRight),
+                            borderRadius:
+                                BorderRadius.circular(50.w), // Creates border
+                            gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF7EFAEF),
+                                  Color(0xFF7FE1FB),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight),
                           ),
                           indicatorSize: TabBarIndicatorSize.tab,
                           labelColor: const Color(0xFF191919),
@@ -223,7 +242,8 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
 
                   if (index == 1) {
                     if (_scrollViewController!.offset > 600) {
-                      _scrollViewController!.jumpTo(_scrollViewController!.offset - 70);
+                      _scrollViewController!
+                          .jumpTo(_scrollViewController!.offset - 70);
                     }
                   }
                 },

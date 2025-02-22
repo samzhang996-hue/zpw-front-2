@@ -9,16 +9,17 @@ import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 class GatherSinglePage extends StatefulWidget {
-  const GatherSinglePage({
-    super.key,
-    required this.id,
-    required this.imgUrlAcross,
-    this.isWF = false,
-  });
+  const GatherSinglePage(
+      {super.key,
+      required this.id,
+      required this.imgUrlAcross,
+      this.isWF = false,
+      this.title = 'title'});
   final int id;
 
   final String imgUrlAcross;
   final bool isWF;
+  final String title;
 
   @override
   State<GatherSinglePage> createState() => _GatherSinglePageState();
@@ -31,7 +32,8 @@ class _GatherSinglePageState extends State<GatherSinglePage>
   // var outHeight = 0.0.w;
   var listPhotoGroupBean = <ListPhotoGroupBean>[];
   late PageController? _pageController = PageController();
-
+  Color _backgroundColor = Colors.transparent;
+  var _showTitle = false;
   void _getData() {
     HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.effectGroupList,
         isShowProgress: true,
@@ -53,7 +55,21 @@ class _GatherSinglePageState extends State<GatherSinglePage>
   @override
   void initState() {
     super.initState();
+    _scrollViewController?.addListener(() {
+      double? offset = _scrollViewController?.offset;
 
+      if ((offset! >= (220.w - 60.w)) == true) {
+        setState(() {
+          _backgroundColor = Colors.white;
+          _showTitle = true;
+        });
+      } else {
+        setState(() {
+          _backgroundColor = Colors.transparent;
+          _showTitle = false;
+        });
+      }
+    });
     if (widget.isWF) {
       _getData();
     }
@@ -83,7 +99,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                     floating: true,
                     expandedHeight: 220.w,
                     scrolledUnderElevation: 0.0,
-                    backgroundColor: Colors.white,
+                    backgroundColor: _backgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
                       background: SizedBox(
@@ -95,10 +111,15 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                         ),
                       ),
                     ),
-                    bottom: (_tabController == null||listPhotoGroupBean.length==1)
-                        ? const PreferredSize(
-                            preferredSize: Size.zero,
-                            child: SizedBox.shrink(),
+                    // bottom: (_tabController == null ||
+                    //         listPhotoGroupBean.length == 1)
+                    bottom: (_tabController == null ||
+                            listPhotoGroupBean.length == 1 ||
+                            _showTitle)
+                        ? PreferredSize(
+                            preferredSize:
+                                Size.fromHeight(ScreenUtil().statusBarHeight),
+                            child: Text(""),
                           )
                         : PreferredSize(
                             preferredSize: Size.fromHeight(56.w),
@@ -321,20 +342,36 @@ class _GatherSinglePageState extends State<GatherSinglePage>
           Positioned(
               top: ScreenUtil().statusBarHeight,
               left: 22.w,
-              // right: 0,
-              child: GestureDetector(
-                onTap: () {
-                  Get.back();
-                },
-                child: Container(
-                  width: 32.w,
-                  height: 32.w,
-                  color: Colors.transparent,
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
+              right: 22.w,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      width: 32.w,
+                      height: 32.w,
+                      color: Colors.transparent,
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: _showTitle ? Colors.black : Colors.white,
+                      ),
+                    ),
                   ),
-                ),
+                  const Spacer(),
+                  Text("$widget.title",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: _showTitle
+                              ? const Color(0xFF191919)
+                              : Colors.transparent,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500)),
+                  const Spacer(),
+                  SizedBox(width: 32.w, height: 32.w)
+                ],
               ))
         ],
       ),
