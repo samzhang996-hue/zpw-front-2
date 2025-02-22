@@ -129,8 +129,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
-    UmengCommonSdk.onEvent(
-        'Make_click_event', {'name': _tags[_currentIndex.value]});
+    UmengCommonSdk.onEvent('Make_click_event', {
+      'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]
+    });
     _canBack = true;
     _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
