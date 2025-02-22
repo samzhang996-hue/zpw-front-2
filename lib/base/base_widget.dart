@@ -44,7 +44,7 @@ Expanded YTitleWidget(String title, {Color navBarTitleColor = Colors.black}) {
               style: TextStyle(
                   color: navBarTitleColor,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold))));
+                  fontWeight: FontWeight.w500))));
 }
 
 Widget wSpace(double w) => SizedBox(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
@@ -66,7 +67,9 @@ class _GatherSinglePageState extends State<GatherSinglePage>
     _scrollViewController?.addListener(() {
       double? offset = _scrollViewController?.offset;
 
-      if ((offset! >= (220.w - 60.w)) == true) {
+      if ((offset! >=
+              (220.w - 60.w + (listPhotoGroupBean.length > 1 ? 20.w : 0.w))) ==
+          true) {
         setState(() {
           _backgroundColor = Colors.white;
           _showTitle = true;
@@ -105,7 +108,11 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                     pinned: true,
                     leading: Container(),
                     floating: true,
-                    expandedHeight: 220.w,
+                    expandedHeight: (_tabController == null ||
+                            listPhotoGroupBean.length == 1 ||
+                            _showTitle)
+                        ? 176.w
+                        : 220.w,
                     scrolledUnderElevation: 0.0,
                     backgroundColor: _backgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
@@ -114,7 +121,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                         height: double.infinity,
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: QdsImage(widget.imgUrlAcross, 1.sw, 280.w,
+                          child: QdsImage(widget.imgUrlAcross, 1.sw, 232.w,
                               fit: BoxFit.cover),
                         ),
                       ),
@@ -125,9 +132,24 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                             listPhotoGroupBean.length == 1 ||
                             _showTitle)
                         ? PreferredSize(
-                            preferredSize:
-                                Size.fromHeight(ScreenUtil().statusBarHeight),
-                            child: const SizedBox.shrink(),
+                            preferredSize: Size.fromHeight(_showTitle
+                                ? ScreenUtil().statusBarHeight + 10.w
+                                : 20.w),
+                            child: Container(
+                              width: double.maxFinite,
+                              alignment: Alignment.topCenter,
+                              // padding: EdgeInsets.only(top: 6.w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(22.w),
+                                  topRight: Radius.circular(22.w),
+                                ),
+                                color: Colors.white,
+                              ),
+                              height: _showTitle
+                                  ? ScreenUtil().statusBarHeight + 10.w
+                                  : 20.w,
+                            ),
                           )
                         : PreferredSize(
                             preferredSize: Size.fromHeight(66.w),
@@ -365,9 +387,17 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                       width: 32.w,
                       height: 32.w,
                       color: Colors.transparent,
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: _showTitle ? Colors.black : Colors.white,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          'arrow_back.png'.comm,
+                          width: 16.w,
+                          height: 16.w,
+                          fit: BoxFit.cover,
+                          // child: Icon(
+                          //   Icons.arrow_back_ios,
+                          color: _showTitle ? Colors.black : Colors.white,
+                        ),
                       ),
                     ),
                   ),

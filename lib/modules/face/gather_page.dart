@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
+import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/face/collection_item.dart';
@@ -173,8 +174,13 @@ class _GatherPageState extends State<GatherPage>
                   width: 32.w,
                   height: 32.w,
                   color: Colors.transparent,
-                  child: const Icon(
-                    Icons.arrow_back_ios,
+                  child: Image.asset(
+                    'arrow_back.png'.comm,
+                    width: 16.w,
+                    height: 16.w,
+                    fit: BoxFit.cover,
+                    // child: const Icon(
+                    //   Icons.arrow_back_ios,
                     color: Colors.white,
                   ),
                 ),

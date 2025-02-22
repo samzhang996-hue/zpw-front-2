@@ -1,8 +1,10 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_widget.dart';
+import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/main.dart';
 
@@ -96,9 +98,20 @@ abstract class BaseWidgetState<T extends BaseStatefulWidget> extends State<T>
                                 color: bgColor ?? Colors.white,
                                 child: left ??
                                     (canBack
-                                        ? Icon(Icons.arrow_back_ios,
-                                            color: navBarTitleColor ??
-                                                Colors.black)
+                                        ? Align(
+                                            alignment: Alignment.center,
+                                            child: Image.asset(
+                                                    'arrow_back.png'.comm,
+                                                    width: 16.w,
+                                                    height: 16.w,
+                                                    fit: BoxFit.cover,
+                                                    color: navBarTitleColor ??
+                                                        Colors.black)
+                                                .paddingOnly(right: 10),
+                                          )
+                                        //  Icon(Icons.arrow_back_ios,
+                                        //     color: navBarTitleColor ??
+                                        //         Colors.black)
                                         : Container(
                                             color: Colors.white,
                                           ))),

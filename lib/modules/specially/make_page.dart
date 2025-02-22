@@ -434,7 +434,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
             right: 0,
             top: 0,
             child: YAppBar(
-              bgColor: Colors.transparent,
+              bgColor: Colors.white,
               widget: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -447,10 +447,9 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                       height: 50,
                       color: Colors.transparent,
                       alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                      ).paddingOnly(left: 10),
+                      child: Image.asset('arrow_back.png'.comm,
+                              width: 16.w, height: 16.w, fit: BoxFit.cover)
+                          .paddingOnly(left: 10),
                     ),
                   ),
                   Container(
@@ -468,7 +467,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                         style: const TextStyle(
                             color: Color(0xFF191919),
                             fontSize: 18,
-                            fontWeight: FontWeight.bold)),
+                            fontWeight: FontWeight.w500)),
                   ),
                   const Spacer(),
                   Container(

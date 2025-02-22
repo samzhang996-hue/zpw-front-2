@@ -86,9 +86,12 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                       height: 50,
                       color: Colors.transparent,
                       alignment: Alignment.center,
-                      child:
-                          const Icon(Icons.arrow_back_ios, color: Colors.black)
-                              .paddingOnly(left: 10),
+                      child: Image.asset('arrow_back.png'.comm,
+                              width: 16.w,
+                              height: 16.w,
+                              fit: BoxFit.cover,
+                              color: Colors.black)
+                          .paddingOnly(left: 10),
                     ),
                   ),
                   Container(

@@ -366,8 +366,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                       height: 50,
                       color: Colors.transparent,
                       alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.arrow_back_ios,
+                      child: Image.asset(
+                        'arrow_back.png'.comm,
+                        width: 16.w,
+                        height: 16.w,
+                        fit: BoxFit.cover,
                         color: Colors.white,
                       ).paddingOnly(left: 10),
                     ),
@@ -392,7 +395,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
-                                fontWeight: FontWeight.bold)),
+                                fontWeight: FontWeight.w500)),
                       )),
                   const Spacer(),
                   Container(
