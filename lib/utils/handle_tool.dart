@@ -114,10 +114,8 @@ class HandleTool {
             gz = configValue;
           } else if (configType == 17) {
             channelAds = configValue == "0";
-            Log.d("configValue------$configValue");
           } else if (configType == 18) {
-            channelLogin = configValue == "0";
-            Log.d("configValue------$configValue");
+            channelLogin = configValue == "1";
           }
         }
       }

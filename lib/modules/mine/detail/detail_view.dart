@@ -172,7 +172,6 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                               onPressed: () {
                                 logic.delete();
                               });
-
                         },
                         child: Container(
                           height: 45.w,
@@ -211,10 +210,10 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                 child: YAppBar(
                     title: state.tags.value,
                     right: Opacity(
-                        opacity: (state.apiType.value == -1 || state.apiType.value == 6) ? 0 : 1,
+                        opacity: (state.apiType.value == -1 || state.apiType.value == 6 || state.apiType.value == 14) ? 0 : 1,
                         child: InkWell(
                             onTap: () {
-                              if (state.apiType.value == -1 || state.apiType.value == 6) return;
+                              if (state.apiType.value == -1 || state.apiType.value == 6 || state.apiType.value == 14) return;
                               _controller.pause();
                               Log.d("pause---${state.returnUrl.value}----");
                               logic.getFuncDetail(state.funcId.value);

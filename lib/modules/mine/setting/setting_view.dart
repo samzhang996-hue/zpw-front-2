@@ -18,9 +18,7 @@ class SettingPage extends BaseStatefulWidget {
 
 class _SettingPageState extends BaseWidgetState<SettingPage> {
   final logic = Get.put(SettingLogic());
-  final state = Get
-      .find<SettingLogic>()
-      .state;
+  final state = Get.find<SettingLogic>().state;
 
   @override
   void dispose() {
@@ -43,6 +41,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
             Obx(() {
               return commItem("检查更新", state.version.value);
             }),
+            Visibility(child: commItem("切换账号", ""),visible: HandleTool.instance.channelLogin,),
             InkWell(
               onTap: () {
                 logic.getChannel();
@@ -74,10 +73,136 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
     });
   }
 
-  Widget commItem(String title,
-      String tag, {
-        bool hideArrow = false,
-      }) {
+  void _showLoginBottomSheet(BuildContext context) {
+    final TextEditingController _usernameController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // 允许弹窗滚动
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          // 添加滚动支持
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom, // 避免键盘遮挡
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommText(
+                  text: "账号",
+                  textColor: Color(0xff1A1A1A),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp,
+                ),
+                SizedBox(height: 12.w),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xffF8F8F8),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: TextField(
+                    controller: _usernameController, // 绑定控制器
+                    decoration: InputDecoration(
+                      hintText: "请输入您的账号",
+                      hintStyle: TextStyle(
+                        fontSize: 12.sp,
+                        color: Color(0xffB3B3B3),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 12.w,
+                      ),
+                      border: InputBorder.none, // 去掉默认边框
+                    ),
+                  ),
+                ),
+                SizedBox(height: 14.w),
+                CommText(
+                  text: "密码",
+                  textColor: Color(0xff1A1A1A),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp,
+                ),
+                SizedBox(height: 12.w),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xffF8F8F8),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: TextField(
+                    obscureText: true,
+                    controller: _passwordController, // 绑定控制器
+                    decoration: InputDecoration(
+                      hintText: "请输入您的密码",
+                      hintStyle: TextStyle(
+                        fontSize: 12.sp,
+                        color: Color(0xffB3B3B3),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 12.w,
+                      ),
+                      border: InputBorder.none, // 去掉默认边框
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.w),
+                InkWell(
+                  onTap: () {
+                    String username = _usernameController.text;
+                    String password = _passwordController.text;
+                    if (username.isEmpty || password.isEmpty) {
+                      HandleTool.showAppToastText("账号或者密码不能为空");
+                      return;
+                    }
+                    logic.accountLogin(username, password);
+                  },
+                  child: Container(
+                    height: 54.w,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(27),
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.topRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: CommText(
+                        text: "登录",
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w500,
+                        textColor: Color(0xff1A1A1A),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget commItem(
+    String title,
+    String tag, {
+    bool hideArrow = false,
+  }) {
     return Column(
       children: [
         const SizedBox(
@@ -98,7 +223,9 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                     onPressed: () {
                       logic.deleteUser();
                     });
-
+                break;
+              case "切换账号":
+                _showLoginBottomSheet(context);
                 break;
             }
           },
@@ -126,9 +253,9 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                 hideArrow
                     ? const SizedBox(width: 21)
                     : Image.asset(
-                  "arrow.png".mine,
-                  width: 21,
-                ),
+                        "arrow.png".mine,
+                        width: 21,
+                      ),
                 SizedBox(
                   width: 16.w,
                 )

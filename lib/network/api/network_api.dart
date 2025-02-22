@@ -4,11 +4,13 @@ class Api {
   //本地
   // static const String API_BASE_URL_DEBUG = "http://8.130.84.131:4001";
   static const String API_BASE_URL_DEBUG = "http://photo.jlhkj168.cn";
+
   // static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001";
   // static const String API_BASE_URL_DEBUG = "http://192.168.1.231:4001/";
 
   ///正式
   static const String API_BASE_URL_RELEASE = "http://photo.jlhkj168.cn";
+
   // static const String API_BASE_URL_RELEASE = "http://192.168.1.231:5000";
 
   /// 更新
@@ -20,6 +22,9 @@ class Api {
   /// 获取用户信息
   static const String sso_getUserInfo = "/getUserInfo";
 
+  ///账号密码登录
+  static const String accountLogin = "/accountLogin";
+
   /// 注销
   static const String deleteUser = "/deleteUser";
 
@@ -27,8 +32,7 @@ class Api {
   static const String photoRecord = "/photoRecord/pageRecord";
 
   ///签约接口
-  static const String payOrder_addUserAgreementOrder =
-      "/center/addUserAgreementOrder";
+  static const String payOrder_addUserAgreementOrder = "/center/addUserAgreementOrder";
 
   /// 下单接口
   static const String payOrder_addOrder = "/center/createOrder";
@@ -56,8 +60,7 @@ class Api {
   static const String sso_bindUserPhone = "/sso/bindUserPhone";
 
   ///新增血糖
-  static const String bloodRecord_addBloodRecord =
-      "/bloodRecord/addBloodRecord";
+  static const String bloodRecord_addBloodRecord = "/bloodRecord/addBloodRecord";
 
   ///血糖记录
   static const String bloodRecord_pageList = "/bloodRecord/pageList";
@@ -86,11 +89,13 @@ class Api {
 
   ///智能扩图
   static const String outPaint = "/photoRecord/outPaint";
+
   ///风格
   static const String defTimbreVO = "/photoRecord/defTimbreVO";
 
   ///添加处理图片
   static const String addPhotoRecord = "/photoRecord/addPhotoRecord";
+
   ///重新制作
   static const String remakePhotoRecord = "/photoRecord/remakePhotoRecord";
 
@@ -125,6 +130,5 @@ class Api {
   static const String imgHaveFace = "/imgHaveFace";
 
   ///Get查询模板所有分类或合集其他的模板
-  static const String getGroupOtherFuncList =
-      "/photoFunc/getGroupOtherFuncList";
+  static const String getGroupOtherFuncList = "/photoFunc/getGroupOtherFuncList";
 }

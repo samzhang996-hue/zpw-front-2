@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/filecache.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -57,8 +59,7 @@ class SettingLogic extends BaseGetxController {
   }
 
   deleteUser() {
-    get(Api.deleteUser, isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
+    get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) async {
       UmengCommonSdk.onProfileSignOff();
       HandleTool.showAppToastText("注销成功");
       await 0.5.delay();
@@ -67,6 +68,21 @@ class SettingLogic extends BaseGetxController {
       // if (isSuccess == true && results.isNotEmpty) {
       //   HandleTool.showAppToastText("注销成功");
       // }
+    });
+  }
+
+  accountLogin(String name,String password) {
+    Map<String, dynamic> dataMap = {
+      "account": name,
+      "password": password,
+    };
+    final MineLogic mineLogic = Get.find<MineLogic>();
+    Post(Api.accountLogin,params: dataMap, isShowProgress: true, success: (isSuccess, code, message, results) async {
+      if (isSuccess == true && results.isNotEmpty) {
+        Navigator.pop(navigator!.context); // 关闭弹窗
+        HandleTool.showAppToastText("登录成功");
+        mineLogic.getUserInfo();
+      }
     });
   }
 }
