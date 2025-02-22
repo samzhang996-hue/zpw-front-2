@@ -67,6 +67,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                     ],
                   ),
                 ),
+                SizedBox(height: 10.w),
                 _item()
               ],
             );
@@ -81,7 +82,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
         child: Container(
       margin: EdgeInsets.only(left: 16.w, right: 16.w),
       child: GridView.builder(
-          padding: EdgeInsets.only(top: 17.w),
+          padding: EdgeInsets.only(top: 7.w),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 8,
@@ -172,6 +173,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                       () => GatherSinglePage(
                         id: data.id ?? 0,
                         imgUrlAcross: imgUrlVertical,
+                        title: data.groupName ?? "",
                         isWF: true,
                       ),
                     );

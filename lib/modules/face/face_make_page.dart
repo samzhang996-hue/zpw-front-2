@@ -436,6 +436,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
             right: 0,
             bottom: 0,
             child: SafeArea(
+              minimum: EdgeInsets.only(bottom: 20.w),
               child: Obx(() => Container(
                     height: _hasAvatar.value ? 162.w : 65.w,
                     width: 1.sw,
@@ -610,7 +611,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                           child: Container(
                             width: 1.sw,
                             height: 100.w,
-                            color: const Color(0xFF191919),
+                            color: _hasAvatar.isTrue
+                                ? const Color(0xFF191919)
+                                : Colors.transparent,
                             child: Column(
                               children: [
                                 const Spacer(flex: 2),

@@ -9,12 +9,14 @@ import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 class GatherSinglePage extends StatefulWidget {
-  const GatherSinglePage(
-      {super.key,
-      required this.id,
-      required this.imgUrlAcross,
-      this.isWF = false,
-      this.title = 'title'});
+  const GatherSinglePage({
+    super.key,
+    required this.id,
+    required this.imgUrlAcross,
+    this.isWF = false,
+    // this.title = 'title',
+    required this.title,
+  });
   final int id;
 
   final String imgUrlAcross;
@@ -34,6 +36,9 @@ class _GatherSinglePageState extends State<GatherSinglePage>
   late PageController? _pageController = PageController();
   Color _backgroundColor = Colors.transparent;
   var _showTitle = false;
+
+  late final _title = widget.title.obs;
+
   void _getData() {
     HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.effectGroupList,
         isShowProgress: true,
@@ -45,6 +50,9 @@ class _GatherSinglePageState extends State<GatherSinglePage>
             listPhotoGroupBean = results;
             _tabController =
                 TabController(length: listPhotoGroupBean.length, vsync: this);
+            if (listPhotoGroupBean.isNotEmpty) {
+              _title.value = listPhotoGroupBean.first.groupName ?? '';
+            }
 
             setState(() {});
           }
@@ -119,14 +127,14 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                         ? PreferredSize(
                             preferredSize:
                                 Size.fromHeight(ScreenUtil().statusBarHeight),
-                            child: Text(""),
+                            child: const SizedBox.shrink(),
                           )
                         : PreferredSize(
-                            preferredSize: Size.fromHeight(56.w),
+                            preferredSize: Size.fromHeight(66.w),
                             child: Container(
                               width: double.maxFinite,
                               alignment: Alignment.topCenter,
-                              padding: EdgeInsets.only(top: 16.w),
+                              padding: EdgeInsets.only(top: 16.w, bottom: 10.w),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(22.w),
@@ -134,13 +142,15 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                                 ),
                                 color: Colors.white,
                               ),
-                              height: 56.w,
+                              height: 66.w,
                               child: TabBar(
                                 tabAlignment: TabAlignment.center,
                                 tabs: listPhotoGroupBean
                                     .map((e) => Tab(text: "${e.groupName}"))
                                     .toList(),
                                 onTap: (index) {
+                                  _title.value =
+                                      listPhotoGroupBean[index].groupName ?? '';
                                   _pageController?.jumpToPage(index);
                                 },
                                 overlayColor:
@@ -330,6 +340,8 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                           // ],
                           onPageChanged: (index) {
                             _tabController?.animateTo(index);
+                            _title.value =
+                                listPhotoGroupBean[index].groupName ?? '';
                             if (index == 1) {
                               if (_scrollViewController!.offset > 600) {
                                 _scrollViewController!
@@ -360,7 +372,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                     ),
                   ),
                   const Spacer(),
-                  Text("$widget.title",
+                  Obx(() => Text(_title.value,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -368,7 +380,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                               ? const Color(0xFF191919)
                               : Colors.transparent,
                           fontSize: 18,
-                          fontWeight: FontWeight.w500)),
+                          fontWeight: FontWeight.w500))),
                   const Spacer(),
                   SizedBox(width: 32.w, height: 32.w)
                 ],

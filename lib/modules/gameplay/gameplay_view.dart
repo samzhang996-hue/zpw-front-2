@@ -89,7 +89,7 @@ class _GameplayPageState extends State<GameplayPage>
                     backgroundColor: _backgroundColor,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
-                      background: Container(
+                      background: SizedBox(
                         width: 1.sw,
                         height: double.infinity,
                         child: Column(
@@ -150,6 +150,7 @@ class _GameplayPageState extends State<GameplayPage>
                                               id: bean.id ?? 0,
                                               imgUrlAcross:
                                                   bean.imgUrlAcross ?? "",
+                                              title: bean.groupName ?? "",
                                             ),
                                           );
                                         },
@@ -179,11 +180,12 @@ class _GameplayPageState extends State<GameplayPage>
                       ),
                     ),
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(36.w),
+                      preferredSize: Size.fromHeight(46.w),
                       child: Container(
                         width: double.maxFinite,
                         height: 36.w,
                         padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                        margin: EdgeInsets.only(bottom: 10.w),
                         child: TabBar(
                           tabAlignment: TabAlignment.center,
                           tabs: logic.listPhotoGroupBean2

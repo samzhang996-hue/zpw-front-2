@@ -199,7 +199,7 @@ class _CollectionItemState extends State<CollectionItem> {
           () => GatherSinglePage(
             id: bean.photoGroupResp?.id ?? 0,
             imgUrlAcross: bean.photoGroupResp?.imgUrlAcross ?? "",
-            title: bean.photoFuncResp?.tags ?? '',
+            title: bean.photoGroupResp?.groupName ?? '',
           ),
         );
       },
@@ -329,9 +329,9 @@ class _CollectionItemState extends State<CollectionItem> {
               Expanded(
                 child: CustomScrollView(
                   slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: 10.w),
-                    ),
+                    // SliverToBoxAdapter(
+                    //   child: SizedBox(height: 10.w),
+                    // ),
                     SliverGrid.builder(
                       itemCount: _records.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

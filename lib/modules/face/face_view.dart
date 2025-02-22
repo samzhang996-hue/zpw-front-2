@@ -27,7 +27,7 @@ class _FacePageState extends State<FacePage>
   final logic = Get.put(FaceLogic());
   final state = Get.find<FaceLogic>().state;
   late ScrollController? _scrollViewController = ScrollController();
-  var outHeight = 20.0.w;
+  var outHeight = 0.0.w;
   late PageController? page = PageController();
   Color _backgroundColor = Colors.transparent; // 初始背景色为透明
   void _preventScreenshotOn() async =>
@@ -63,7 +63,7 @@ class _FacePageState extends State<FacePage>
     _scrollViewController?.addListener(() {
       double? offset = _scrollViewController?.offset;
 
-      if ((offset! >= kToolbarHeight) == true) {
+      if ((offset! >= (kToolbarHeight - 36.w - 6.w - 10.w)) == true) {
         // 滚动到最顶部时，背景色为淡紫色
         setState(() {
           _backgroundColor = Colors.white;
@@ -118,7 +118,7 @@ class _FacePageState extends State<FacePage>
                   SliverAppBar(
                     pinned: true,
                     leading: Container(),
-                    floating: true,
+                    floating: false,
                     systemOverlayStyle: const SystemUiOverlayStyle(
                       systemNavigationBarColor: Colors.white, // Navigation bar
                       statusBarColor: Colors.transparent, // Status bar
@@ -190,6 +190,7 @@ class _FacePageState extends State<FacePage>
                                               id: bean.id ?? 0,
                                               imgUrlAcross:
                                                   bean.imgUrlAcross ?? "",
+                                              title: bean.groupName ?? "",
                                             ),
                                           );
                                         },
@@ -219,11 +220,12 @@ class _FacePageState extends State<FacePage>
                       ),
                     ),
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(36.w),
+                      preferredSize: Size.fromHeight(46.w),
                       child: Container(
                         width: double.maxFinite,
                         height: 36.w,
                         padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                        margin: EdgeInsets.only(bottom: 10.w),
                         child: TabBar(
                           tabAlignment: TabAlignment.center,
                           tabs: logic.listPhotoGroupBean2
