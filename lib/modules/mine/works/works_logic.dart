@@ -13,14 +13,18 @@ class WorksLogic extends BaseGetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    photoRecord(0);
+    photoRecord();
+  }
+  stateIndex(int index){
+    state.index.value=index;
+    update();
   }
 
-  photoRecord(int type) {
+  photoRecord() {
     Map<String, dynamic> dataMap = {
       "pageIndex": 0,
       "pageSize": 100,
-      "worksType": type,
+      "worksType": state.index.value,
     };
     get(Api.photoRecord, isShowProgress: true, params: dataMap,
         success: (isSuccess, code, message, results) {
@@ -66,7 +70,7 @@ class WorksLogic extends BaseGetxController {
       if (isSuccess == true && results.isNotEmpty) {
         // HandleTool.showAppToastText("删除成功");
         // Get.back(result: "123");
-        photoRecord(state.index);
+        photoRecord();
       }
     });
   }

@@ -22,7 +22,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
     with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
-  final List<String> _tabs = ['图片', '视频'];
+  final List<String> _tabs = ['视频', '图片'];
   late TabController _tabController;
 
   int _currentIndex = 0;
@@ -54,7 +54,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
     // 监听 TabController 的 index 变化
     _tabController.addListener(() {
       Log.d("msg----${_tabController.index}");
-      logic.photoRecord(_tabController.index);
+      logic.stateIndex(_tabController.index == 0 ? 1 : 0);
+      logic.photoRecord();
     });
   }
 
@@ -114,7 +115,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                         return _animatedTab(e.key, e.value);
                       }).toList(),
                       onTap: (index) {
-                        logic.photoRecord(index);
+                        logic.stateIndex(index==0?1:0);
+                        logic.photoRecord();
                       },
                     ),
                   ),
@@ -188,8 +190,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             InkWell(
               onTap: () {
                 Get.back();
-                Get.find<MainLogic>()
-                    .changeIndex(_tabController.index == 1 ? 0 : 1);
+                Get.find<MainLogic>().changeIndex(_tabController.index);
               },
               child: Container(
                 width: 122.w,
@@ -341,15 +342,8 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             ),
             onTap: () async {
               if (worksStatus == 3) {
-                final res = await Get.to(() => DetailPage(), arguments: {
-                  "worksType": worksType,
-                  "returnUrl": returnUrl,
-                  "tags": tags,
-                  "id": id,
-                  "funcId": funcId,
-                  "apiType": apiType
-                });
-                logic.photoRecord(_tabController.index);
+                final res = await Get.to(() => DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
+                logic.photoRecord();
                 return;
               }
             },
