@@ -14,8 +14,12 @@ class AuthInterceptor extends Interceptor {
     // String token = await SpUtils.getString("token");
     // Log.d("token--$token");
     String token = await SpUtils.getString("token");
-    String projectId = await getProjectId();
-    String channel = await getChannelInfo();
+    String channel = await SpUtils.getString("channel");
+    String projectId = await SpUtils.getString("projectId");
+    // // String projectId = await getProjectId();
+    // // String channel = await getChannelInfo();
+    // await SpUtils.setString("channel", channel);
+    // await SpUtils.setString("projectId", projectId);
     print("token--$token");
     options.headers["Accept"] = "application/json";
     options.headers["User-Agent"] = "insomnia/6.4.1";
