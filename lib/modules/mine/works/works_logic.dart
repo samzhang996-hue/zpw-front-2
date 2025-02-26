@@ -15,10 +15,12 @@ class WorksLogic extends BaseGetxController {
     super.onInit();
     photoRecord();
   }
-  stateIndex(int index){
-    state.index.value=index;
+
+  stateIndex(int index) {
+    state.index.value = index;
     update();
   }
+
 
   photoRecord() {
     Map<String, dynamic> dataMap = {
@@ -26,20 +28,19 @@ class WorksLogic extends BaseGetxController {
       "pageSize": 100,
       "worksType": state.index.value,
     };
-    get(Api.photoRecord, isShowProgress: true, params: dataMap,
-        success: (isSuccess, code, message, results) {
+    Log.d("map-----------$dataMap");
+    get(Api.photoRecord, isShowProgress: false, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
-        state.records = data["records"];
-        Log.d("get----${state.records}");
+        state.records.value = data["records"];
+        // Log.d("get----${data["records"]}");
         update();
       }
     });
   }
 
   getFuncDetail(int funcId, int id) {
-    get("${Api.getFuncDetail}?id=$funcId", isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
+    get("${Api.getFuncDetail}?id=$funcId", isShowProgress: true, success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         String showImgGif = data["showImgGif"];
@@ -65,8 +66,7 @@ class WorksLogic extends BaseGetxController {
   }
 
   delete(int id) {
-    Post("${Api.delete}/$id", isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
+    Post("${Api.delete}/$id", isShowProgress: true, success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         // HandleTool.showAppToastText("删除成功");
         // Get.back(result: "123");

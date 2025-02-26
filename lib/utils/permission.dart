@@ -25,26 +25,56 @@ class PermissionUtils {
     bool storagePermission = await Permission.storage.isGranted;
     bool manageExternal = await Permission.manageExternalStorage.isGranted;
     String release = androidInfo.version.release;
-    Log.d("relse----$release");
-    if (release.isNotEmpty) {
-      List<String> releaseList = release.split('.');
-      int firstValue = int.parse(releaseList.first);
-      if (firstValue < 10) {
-        manageExternal = true;
-      }
-    }
-    if (!storagePermission || !manageExternal) {
-      if (!storagePermission) {
-        showTopSnackbar();
-        storagePermission = await Permission.storage.request().isGranted;
-        if(storagePermission) Get.back();
-      }
-      if (!manageExternal) {
-        manageExternal = await Permission.manageExternalStorage.request().isGranted;
-      }
-    }
+    int sdkInt = androidInfo.version.sdkInt;
+    if (sdkInt >= 34) {
+      // Android 15 (UpsideDownCake)
+      // Android 15 及以上版本，请求 READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO
+      PermissionStatus imagesStatus = await Permission.photos.status;
+      PermissionStatus videoStatus = await Permission.videos.status;
 
-    return storagePermission && manageExternal;
+      if (!videoStatus.isGranted||!imagesStatus.isGranted) {
+        showTopSnackbar();
+        imagesStatus = await Permission.photos.request();
+        videoStatus = await Permission.videos.request();
+        Get.back();
+      }
+
+      return imagesStatus.isGranted && videoStatus.isGranted;
+    } else if (sdkInt == 33) {
+      // Android 13 (Tiramisu)
+      // Android 13，请求 READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO
+      PermissionStatus imagesStatus = await Permission.photos.status;
+      PermissionStatus videoStatus = await Permission.videos.status;
+
+      if (!imagesStatus.isGranted || !videoStatus.isGranted) {
+        showTopSnackbar();
+        imagesStatus = await Permission.photos.request();
+        videoStatus = await Permission.videos.request();
+        Get.back();
+      }
+
+      return imagesStatus.isGranted && videoStatus.isGranted;
+    } else {
+      Log.d("relse----$release");
+      if (release.isNotEmpty) {
+        List<String> releaseList = release.split('.');
+        int firstValue = int.parse(releaseList.first);
+        if (firstValue < 10) {
+          manageExternal = true;
+        }
+      }
+      if (!storagePermission || !manageExternal) {
+        if (!storagePermission) {
+          showTopSnackbar();
+          storagePermission = await Permission.storage.request().isGranted;
+          if (storagePermission) Get.back();
+        }
+        if (!manageExternal) {
+          manageExternal = await Permission.manageExternalStorage.request().isGranted;
+        }
+      }
+      return storagePermission && manageExternal;
+    }
   }
 
   /// 显示权限提示弹窗

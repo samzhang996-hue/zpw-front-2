@@ -47,11 +47,38 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
         return;
       }
     } else {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      int sdkInt = androidInfo.version.sdkInt;
       bool storagePermission = await Permission.storage.isGranted;
-      if (!storagePermission) {
-        PermissionUtils.showTopSnackbar();
-        storagePermission = await Permission.storage.request().isGranted;
-        if(storagePermission) Get.back();
+      if (sdkInt >= 34) {
+        // Android 15 (UpsideDownCake)
+        // Android 15 及以上版本，请求 READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO
+        PermissionStatus imagesStatus = await Permission.photos.status;
+        PermissionStatus videoStatus = await Permission.videos.status;
+        if (!videoStatus.isGranted || !imagesStatus.isGranted) {
+          PermissionUtils.showTopSnackbar();
+          imagesStatus = await Permission.photos.request();
+          // videoStatus = await Permission.videos.request();
+          Get.back();
+        }
+      } else if (sdkInt == 33) {
+        // Android 13 (Tiramisu)
+        // Android 13，请求 READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO
+        PermissionStatus imagesStatus = await Permission.photos.status;
+        PermissionStatus videoStatus = await Permission.videos.status;
+        if (!imagesStatus.isGranted || !videoStatus.isGranted) {
+          PermissionUtils.showTopSnackbar();
+          imagesStatus = await Permission.photos.request();
+          videoStatus = await Permission.videos.request();
+          Get.back();
+        }
+      } else {
+        if (!storagePermission) {
+          PermissionUtils.showTopSnackbar();
+          storagePermission = await Permission.storage.request().isGranted;
+          if (storagePermission) Get.back();
+        }
       }
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
       Log.d("msg----${ps.hasAccess}");
