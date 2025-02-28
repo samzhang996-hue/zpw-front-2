@@ -66,9 +66,7 @@ dependencies:
   tabbar_gradient_indicator_plus: ^1.0.2
   screen_protector: ^1.4.2+1
   path_provider: ^2.0.15
-  gallery_saver: ^2.3.0
-  image: 
-  
+  gallery_saver: ^2.3.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

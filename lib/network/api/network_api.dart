@@ -89,6 +89,9 @@ class Api {
 
   ///智能扩图
   static const String outPaint = "/photoRecord/outPaint";
+  ///智能消除
+  static const String smartRemove = "/photoRecord/smartRemove";
+
 
   ///风格
   static const String defTimbreVO = "/photoRecord/defTimbreVO";

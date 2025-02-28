@@ -142,21 +142,21 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                               fontWeight: FontWeight.w500,
                             ),
                           ).paddingOnly(bottom: 6.w),
+                          _listViewWidget(),
                           Visibility(
-                            child: _listViewWidget(),
-                            visible: !(rk9 == ""),
-                          ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 16.w),
-                              child: CommText(
-                                text: rk9,
-                                fontSize: 11.sp,
-                                textColor: Color(0xff7E7E7E),
-                                fontWeight: FontWeight.w500,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 16.w),
+                                child: CommText(
+                                  text: rk9,
+                                  fontSize: 11.sp,
+                                  textColor: Color(0xff7E7E7E),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
+                            visible: !(rk9 == ""),
                           ),
                           Visibility(
                             visible: (state.isWx == 1 && state.isZfb == 1),

@@ -13,6 +13,7 @@ import 'package:zpw/modules/mine/sf/sf_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
+import 'package:zpw/modules/wf/znxc/znxc_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 import 'mine_logic.dart';
@@ -265,7 +266,12 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       // commItem("sf.png", "算法公式"),
                     ],
                   ),
-                )
+                ),
+                // CommText(
+                //   text: "蜀ICP备2022002732号-3A",
+                //   fontSize: 14.sp,
+                //   textColor: Color(0xff818181),
+                // ),
               ],
             ),
             // Container(
@@ -289,37 +295,6 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
     });
   }
 
-  showTopSnackBar() {
-    Get.rawSnackbar(
-      title: '相机、相册权限使用说明',
-      message: 'AI照片王正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
-      duration: Duration(seconds: 5),
-      // 弹窗显示时间
-      snackPosition: SnackPosition.TOP,
-      // 弹窗显示在顶部
-      backgroundColor: Colors.blue,
-      // 背景颜色
-      borderRadius: 8,
-      // 圆角
-      margin: EdgeInsets.all(10),
-      // 外边距
-      padding: EdgeInsets.all(16),
-      // 内边距
-      // icon: Icon(Icons.camera_alt, color: Colors.white), // 图标
-      shouldIconPulse: true,
-      // 图标是否闪烁
-      mainButton: TextButton(
-        onPressed: () {
-          Get.back(); // 关闭弹窗
-        },
-        child: Text(
-          '知道了',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
   Widget commItem(String icon, String title) {
     return InkWell(
         onTap: () {
@@ -328,6 +303,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             case "我的作品":
               // HandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
               gotoPushPage(WorksPage());
+            // gotoPushPage(ZnxcPage());
               break;
             case "关于我们":
               gotoPushPage(AboutPage());

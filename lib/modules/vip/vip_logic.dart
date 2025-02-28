@@ -122,9 +122,10 @@ class VipLogic extends BaseGetxController {
     Post<VipBean>(Api.vip_getVipHome,
         isShowProgress: true,
         success: (isSuccess, code, message, results) {
-          Log.d("vip0000----$isSuccess----$results");
+          Log.d("vip0000----$isSuccess----${results.first.vipList?.length}");
           if (isSuccess == true && results.isNotEmpty) {
             state.vipBean = results.first;
+            Log.d("vip111----$isSuccess----${results.first.toJson()}");
             if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
               HandleTool.showAppToastText("暂无会员套餐");
             } else {

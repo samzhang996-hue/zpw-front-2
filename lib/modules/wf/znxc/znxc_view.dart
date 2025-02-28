@@ -1,158 +1,233 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:ui';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zpw/utils/log_utils.dart';
-import 'znxc_logic.dart';
-import 'package:image/image.dart' as img;
-import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img; // 用于图片处理
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:zpw/modules/wf/znxc/znxc_logic.dart'; // 用于保存图片到相册
 
-class ZnxcPage extends BaseStatefulWidget {
+class ZnxcPage extends StatefulWidget {
   @override
-  BaseWidgetState<ZnxcPage> getState() => _ZnxcPageState();
+  _ZnxcPageState createState() => _ZnxcPageState();
 }
 
-class _ZnxcPageState extends BaseWidgetState<ZnxcPage> {
+class _ZnxcPageState extends State<ZnxcPage> {
   final logic = Get.put(ZnxcLogic());
   final state = Get.find<ZnxcLogic>().state;
+  File? _image; // 用户选择的图片
+  ui.Image? _paintImage; // 用于绘制的图片
+  List<Offset> _points = []; // 用户涂抹的点
+  GlobalKey _globalKey = GlobalKey(); // 用于获取绘制的区域
 
-  final List<Offset> _points = [];
-  late String _originalBase64;
-  // img.Image? _image
+  // 选择图片
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-  Uint8List? _base64Image;
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        _points.clear(); // 清空涂抹点
+      });
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // 假设您已经有了原始图片的base64编码
-    _originalBase64 = ""; // 替换为实际的base64编码
-    // _loadImageFromBase64(_originalBase64!);
+      // 加载图片到内存
+      final bytes = await _image!.readAsBytes();
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      setState(() {
+        _paintImage = frame.image;
+      });
+    }
   }
 
-  // Future<void> _loadImageFromBase64(String base64) async {
-  //   Uint8List imageBytes = base64Decode(base64.split(',').last);
-  //   _image = img.decodeImage(imageBytes)!;
-  //   setState(() {
-  //     _base64Image = Uint8List.fromList(imageBytes);
-  //   });
-  // }
+  // 生成 Mask 图
+  Future<Uint8List> _generateMask() async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
 
-  // Future<void> _generateMaskAndSendToApi() async {
-  //   if (_image == null || _points.length < 2) return;
-  //
-  //   img.Image maskImage = img.Image(_image!.width, _image!.height);
-  //   fillImageWithColor(maskImage, img.Color.setRgb(255, 255, 255)); // 白色表示不消除区域
-  //
-  //   // 简化处理：使用简单的线性插值来填充涂抹区域为黑色（表示消除）
-  //   for (int i = 1; i < _points.length; i++) {
-  //     Offset p1 = _points[i - 1];
-  //     Offset p2 = _points[i];
-  //     _drawLine(maskImage, p1, p2, img.Color.setRgb(0, 0, 0));
-  //   }
-  //
-  //   Uint8List maskBytes = Uint8List.fromList(img.encodePng(maskImage));
-  //   String maskBase64 = base64Encode(maskBytes);
-  // }
+    // 绘制透明背景
+    final paint = Paint()
+      ..color = Colors.transparent
+      ..style = PaintingStyle.fill;
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, _paintImage!.width.toDouble(), _paintImage!.height.toDouble()),
+      paint,
+    );
 
-  // void _drawLine(img.Image image, Offset p1, Offset p2, img.Color color) {
-  //   int dx = p2.dx.toInt() - p1.dx.toInt();
-  //   int dy = p2.dy.toInt() - p1.dy.toInt();
-  //   int steps = max(dx.abs(), dy.abs());
-  //   double xIncrement = dx / steps;
-  //   double yIncrement = dy / steps;
-  //
-  //   for (int i = 0; i <= steps; i++) {
-  //     int x = (p1.dx + xIncrement * i).toInt();
-  //     int y = (p1.dy + yIncrement * i).toInt();
-  //     image.setPixel(x, y, color);
-  //   }
-  // }
-  //
-  // void fillImageWithColor(img.Image image, img.Color color) {
-  //   for (int x = 0; x < image.width; x++) {
-  //     for (int y = 0; y < image.height; y++) {
-  //       image.setPixel(x, y, color);
-  //     }
-  //   }
-  // }
+    // 绘制用户涂抹的区域（白色）
+    final maskPaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 40.0
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    for (var i = 0; i < _points.length - 1; i++) {
+      if (_points[i] != Offset(-1, -1) && _points[i + 1] != Offset(-1, -1)) {
+        canvas.drawLine(_points[i], _points[i + 1], maskPaint);
+      }
+    }
+
+    // 生成图片
+    final picture = recorder.endRecording();
+    final maskImage = await picture.toImage(_paintImage!.width, _paintImage!.height);
+    final byteData = await maskImage.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
+  }
+
+  // 消除图片并保存到相册
+  Future<void> _eraseImage() async {
+    if (_image == null || _points.isEmpty) return;
+
+    // 将原图和 Mask 图转换为 Base64
+    final imageBytes = await _image!.readAsBytes();
+    final maskBytes = await _generateMask();
+
+    // 使用 image 包处理图片
+    final img.Image originalImage = img.decodeImage(imageBytes)!;
+    final img.Image maskImage = img.decodeImage(maskBytes)!;
+
+    // 遍历每个像素，根据 Mask 图消除图片
+    for (int y = 0; y < originalImage.height; y++) {
+      for (int x = 0; x < originalImage.width; x++) {
+        final maskPixel = maskImage.getPixel(x, y);
+        if (maskPixel.r == 255 && maskPixel.g == 255 && maskPixel.b == 255) {
+          // 如果 Mask 图的像素为白色，则将原图的像素设置为透明
+          originalImage.setPixel(x, y, img.ColorFloat64.rgba(0, 0, 0, 0));
+        }
+      }
+    }
+
+    // 保存处理后的图片到临时文件
+    final erasedImageBytes = img.encodePng(originalImage);
+    final tempDir = Directory.systemTemp; // 获取系统临时目录
+    final tempFile = File('${tempDir.path}/erased_image_${DateTime.now().millisecondsSinceEpoch}.png');
+    await tempFile.writeAsBytes(erasedImageBytes);
+
+    // 保存图片到相册
+    final result = await GallerySaver.saveImage(
+      tempFile.path, // 传递临时文件路径
+      albumName: 'MyAlbum', // 可选：保存到指定相册
+      toDcim: true, // 可选：保存到 DCIM 文件夹
+    );
+
+    // 显示保存结果
+    if (result == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('图片已保存到相册')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('保存失败，请重试')),
+      );
+    }
+
+    // 删除临时文件
+    tempFile.delete();
+  }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
-    final double imageWidth = 358.w;
-    final double imageHeight = 526.w;
-    img.Image? _image;
-    Uint8List? _base64Image;
-    String? _originalBase64;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        GestureDetector(
-          onPanUpdate: (details) {
-            Log.d("details-------------${details.localPosition}");
-            setState(() {
-              _points.add(details.localPosition);
-            });
-          },
-          onPanEnd: (details) {
-            // 可选：在涂抹结束时执行一些操作，比如清除_points以开始新的涂抹
-            // 但在这个例子中，我们保留所有点以便持续显示涂抹轨迹
-          },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              QdsImage(
-                'https://img2.baidu.com/it/u=559124887,2543760257&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1373',
-                imageWidth,
-                imageHeight,
-                fit: BoxFit.cover,
-              ),
-              // 使用CustomPaint绘制涂抹轨迹
-              // 使用CustomPaint绘制手势点
-              CustomPaint(
-                size: Size(imageWidth, imageHeight),
-                painter: _ScribblePainter(_points),
-              ),
-            ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('图片消除'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: _eraseImage,
+            tooltip: '消除并保存',
           ),
-        ),
-      ],
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: _image == null
+                ? Center(child: Text('请选择一张图片'))
+                : GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  // 将全局坐标转换为相对于图片的局部坐标
+                  RenderBox renderBox = _globalKey.currentContext!.findRenderObject() as RenderBox;
+                  Offset localPosition = renderBox.globalToLocal(details.globalPosition);
+
+                  // 计算图片的实际显示尺寸
+                  final imageWidth = _paintImage!.width.toDouble();
+                  final imageHeight = _paintImage!.height.toDouble();
+                  final containerSize = renderBox.size;
+
+                  // 计算缩放比例
+                  final scaleX = imageWidth / containerSize.width;
+                  final scaleY = imageHeight / containerSize.height;
+
+                  // 转换坐标
+                  final scaledPosition = Offset(
+                    localPosition.dx * scaleX,
+                    localPosition.dy * scaleY,
+                  );
+
+                  _points.add(scaledPosition);
+                });
+              },
+              onPanEnd: (details) {
+                _points.add(Offset(-1, -1)); // 添加一个结束标记
+              },
+              child: Center(
+                child: FittedBox(
+                  key: _globalKey,
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: _paintImage!.width.toDouble(),
+                    height: _paintImage!.height.toDouble(),
+                    child: CustomPaint(
+                      painter: ImagePainter(_paintImage!, _points),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _pickImage,
+            child: Text('选择图片'),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _ScribblePainter extends CustomPainter {
+// 自定义绘制器
+class ImagePainter extends CustomPainter {
+  final ui.Image image;
   final List<Offset> points;
 
-  _ScribblePainter(this.points);
+  ImagePainter(this.image, this.points);
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (points.isEmpty) return;
+    // 绘制原图
+    canvas.drawImage(image, Offset.zero, Paint());
 
-    final Paint paint = Paint()
-      ..color = Color(0xff4909D4BF)
+    // 绘制用户涂抹的区域（白色）
+    final paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 40.0
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 50.0;
+      ..style = PaintingStyle.stroke;
 
-    for (int i = 0; i < points.length - 1; i++) {
-      canvas.drawLine(points[i], points[i + 1], paint);
+    for (var i = 0; i < points.length - 1; i++) {
+      if (points[i] != Offset(-1, -1) && points[i + 1] != Offset(-1, -1)) {
+        canvas.drawLine(points[i], points[i + 1], paint);
+      }
     }
-    // 可选：在最后一个点和第一个点之间绘制一条线以形成闭环（如果需要的话）
-    // canvas.drawLine(points.last, points.first, paint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // 如果points列表发生变化，则应该重绘
-    return oldDelegate != this;
+    return true;
   }
 }
