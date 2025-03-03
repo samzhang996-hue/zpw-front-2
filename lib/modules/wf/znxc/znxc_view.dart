@@ -49,9 +49,9 @@ class _ZnxcPageState extends State<ZnxcPage> {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
 
-    // 绘制透明背景
+    // 绘制黑色背景
     final paint = Paint()
-      ..color = Colors.transparent
+      ..color = Colors.black
       ..style = PaintingStyle.fill;
     canvas.drawRect(
       Rect.fromLTWH(0, 0, _paintImage!.width.toDouble(), _paintImage!.height.toDouble()),
@@ -90,19 +90,22 @@ class _ZnxcPageState extends State<ZnxcPage> {
     final img.Image originalImage = img.decodeImage(imageBytes)!;
     final img.Image maskImage = img.decodeImage(maskBytes)!;
 
+    // 创建一个新的图片，保留背景
+    final img.Image resultImage = img.Image.from(originalImage);
+
     // 遍历每个像素，根据 Mask 图消除图片
     for (int y = 0; y < originalImage.height; y++) {
       for (int x = 0; x < originalImage.width; x++) {
         final maskPixel = maskImage.getPixel(x, y);
         if (maskPixel.r == 255 && maskPixel.g == 255 && maskPixel.b == 255) {
           // 如果 Mask 图的像素为白色，则将原图的像素设置为透明
-          originalImage.setPixel(x, y, img.ColorFloat64.rgba(0, 0, 0, 0));
+          resultImage.setPixel(x, y, img.ColorFloat64.rgba(0, 0, 0, 0));
         }
       }
     }
 
     // 保存处理后的图片到临时文件
-    final erasedImageBytes = img.encodePng(originalImage);
+    final erasedImageBytes = img.encodePng(resultImage);
     final tempDir = Directory.systemTemp; // 获取系统临时目录
     final tempFile = File('${tempDir.path}/erased_image_${DateTime.now().millisecondsSinceEpoch}.png');
     await tempFile.writeAsBytes(erasedImageBytes);

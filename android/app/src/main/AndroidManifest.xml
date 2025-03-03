@@ -42,7 +42,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/app_logo"
-        android:label="AI照片王">
+        android:label="照片AI大师">
         <activity
             android:name="com.photoking.app.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

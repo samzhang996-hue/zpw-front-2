@@ -4,6 +4,7 @@ class Assets {
 
   static const String commAdd = 'images/comm/add.png';
   static const String commAllPhotosClose = 'images/comm/all_photos_close.png';
+  static const String commArrowBack = 'images/comm/arrow_back.png';
   static const String commBack = 'images/comm/back.png';
   static const String commCamera = 'images/comm/camera.png';
   static const String commClean = 'images/comm/clean.png';

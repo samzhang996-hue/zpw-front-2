@@ -30,9 +30,15 @@ Future<void> downloadAndSaveMedia(String videoUrl, DownloadCallback callback) as
     // 将视频保存到相册
     bool? result;
     if(isMp4){
-      result = await GallerySaver.saveVideo(tempPath);
+      result = await GallerySaver.saveVideo(tempPath,
+        albumName: 'MyAlbum', // 可选：保存到指定相册
+        toDcim: true, // 可选：保存到 DCIM 文件夹
+      );
     }else{
-      result = await GallerySaver.saveImage(tempPath);
+      result = await GallerySaver.saveImage(tempPath,
+        albumName: 'MyAlbum', // 可选：保存到指定相册
+        toDcim: true, // 可选：保存到 DCIM 文件夹
+      );
     }
     if (result == true) {
       HandleTool.showAppToastText("已下载到相册");
@@ -51,4 +57,5 @@ Future<void> downloadAndSaveMedia(String videoUrl, DownloadCallback callback) as
   } catch (e) {
     HandleTool.showAppToastText("下载或保存时出错: $e");
   }
+
 }

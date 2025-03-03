@@ -94,12 +94,12 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 break;
             case "getChannelInfo":
                 String _channel = WalleChannelReader.getChannel(activity);
-                _channel = TextUtils.isEmpty(_channel) ? "AIJL300" : _channel;
+                _channel = TextUtils.isEmpty(_channel) ? "ZPAIJL300" : _channel;
                 result.success(_channel);
                 break;
             case "projectId":
                 String projectId2 = WalleChannelReader.get(activity, "projectId");
-                projectId2 = TextUtils.isEmpty(projectId2) ? "30" : projectId2;
+                projectId2 = TextUtils.isEmpty(projectId2) ? "34" : projectId2;
                 result.success(projectId2);
                 break;
             case "setOrderZfb":

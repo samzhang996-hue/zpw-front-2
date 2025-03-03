@@ -34,21 +34,21 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.photoking.app"
+        applicationId = "com.photoai.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
         targetSdkVersion 34
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
-        setProperty("archivesBaseName", "zpw_" + versionName)
+        setProperty("archivesBaseName", "zpaids_" + versionName)
         manifestPlaceholders = [CHANNEL_VALUE: ""]
     }
     signingConfigs {
         release {
-            storeFile file('photoaiking.jks')
+            storeFile file('photoai.jks')
             storePassword '123456'
-            keyAlias 'photoaiking'
+            keyAlias 'photoai'
             keyPassword '123456'
         }
     }
@@ -82,10 +82,10 @@ android {
     }
     flavorDimensions "version"
     productFlavors {
-        AIJL300 {
+        ZPAIJL300 {
             dimension "version"
-            applicationId "com.photoking.app"
-            manifestPlaceholders = [CHANNEL_VALUE: "AIJL300",]
+            applicationId "com.photoai.app"
+            manifestPlaceholders = [CHANNEL_VALUE: "ZPAIJL300",]
             resValue "mipmap", "app_logo", "@mipmap/logo"
         }
     }
@@ -98,7 +98,7 @@ android {
             def buildType = variant.buildType.name // 构建类型
             def applicationId = variant.applicationId
             // 输出文件名格式：渠道名_版本名_版本号_构建类型.apk
-            def fileName = "zpw_${flavorName}_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
+            def fileName = "zpaids_${flavorName}_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
             output.outputFileName = new File(fileName)
         }
     }
