@@ -37,6 +37,7 @@ import com.meituan.android.walle.WalleChannelReader;
 
 import android.content.Intent;
 
+
 public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
     public static final String KEY_SPLASH = "splashId";
     public static final String KEY_BANNER = "bannerId";
@@ -118,6 +119,20 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 break;
         }
     }
+//    private boolean inpaint(String imagePath, String maskPath, String outputPath, int radius) {
+//        try {
+//            Mat image = Imgcodecs.imread(imagePath);
+//            Mat mask = Imgcodecs.imread(maskPath, Imgcodecs.IMREAD_GRAYSCALE);
+//            Mat result = new Mat();
+//
+//            Photo.inpaint(image, mask, result, radius, Photo.INPAINT_TELEA);
+//
+//            return Imgcodecs.imwrite(outputPath, result);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     /**
      * 支付宝小程序

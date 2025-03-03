@@ -102,6 +102,11 @@ android {
             output.outputFileName = new File(fileName)
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/sdk/native/libs']
+        }
+    }
 }
 
 flutter {
