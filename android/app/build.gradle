@@ -32,6 +32,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.photoai.app"
@@ -102,9 +103,14 @@ android {
             output.outputFileName = new File(fileName)
         }
     }
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['src/main/sdk/native/libs']
+//        }
+//    }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['src/main/sdk/native/libs']
+            java.srcDirs = ['src/main/java', 'sdk/java/src'] // 添加 OpenCV 的 Java 源代码目录
         }
     }
 }

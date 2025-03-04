@@ -21,6 +21,7 @@ class Assets {
   static const String commHide = 'images/comm/hide.png';
   static const String commHistory = 'images/comm/history.png';
   static const String commLeftBg = 'images/comm/left_bg.png';
+  static const String commMore = 'images/comm/more.png';
   static const String commPush = 'images/comm/push.png';
   static const String commRightBg = 'images/comm/right_bg.png';
   static const String commRush = 'images/comm/rush.png';
