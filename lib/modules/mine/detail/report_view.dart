@@ -1,11 +1,14 @@
 import 'dart:math';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gradient_borders/input_borders/gradient_outline_input_border.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/multi_image/multi_image.dart';
@@ -23,11 +26,47 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
 
   /// 打开图片选择
   void onAddImage() async {
-    final res = await PermissionUtils.checkFilesAccessPermission();
-
-    if (res != true) {
-      HandleTool.showAppToastText('没有权限,请到设置中打开权限');
-      return;
+    // final res = await PermissionUtils.checkFilesAccessPermission();
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    int sdkInt = androidInfo.version.sdkInt;
+    bool storagePermission = await Permission.storage.isGranted;
+    if (sdkInt >= 34) {
+      // Android 15 (UpsideDownCake)
+      // Android 15 及以上版本，请求 READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO
+      PermissionStatus imagesStatus = await Permission.photos.status;
+      PermissionStatus videoStatus = await Permission.videos.status;
+      if (!videoStatus.isGranted || !imagesStatus.isGranted) {
+        PermissionUtils.showTopSnackbar();
+        imagesStatus = await Permission.photos.request();
+        // videoStatus = await Permission.videos.request();
+        Get.back();
+      }
+    } else if (sdkInt == 33) {
+      // Android 13 (Tiramisu)
+      // Android 13，请求 READ_MEDIA_IMAGES 和 READ_MEDIA_VIDEO
+      PermissionStatus imagesStatus = await Permission.photos.status;
+      PermissionStatus videoStatus = await Permission.videos.status;
+      if (!imagesStatus.isGranted || !videoStatus.isGranted) {
+        PermissionUtils.showTopSnackbar();
+        imagesStatus = await Permission.photos.request();
+        videoStatus = await Permission.videos.request();
+        Get.back();
+      }
+    } else {
+      if (!storagePermission) {
+        PermissionUtils.showTopSnackbar();
+        storagePermission = await Permission.storage.request().isGranted;
+        if (storagePermission) Get.back();
+      }
+    }
+    final PermissionState ps = await PhotoManager.requestPermissionExtend();
+    if (!ps.hasAccess) {
+      final res = await PermissionUtils.checkFilesAccessPermission();
+      if (!res) {
+        HandleTool.showAppToastText('没有权限,请到设置中打开权限');
+        return;
+      }
     }
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -48,7 +87,9 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
   void onSubmit() async {
     FocusScope.of(context).requestFocus(FocusNode());
 
-    if (multiImageController.getValue().length > 3) {
+    if (multiImageController
+        .getValue()
+        .length > 3) {
       HandleTool.showAppToastText('最多选择3张');
       return;
     }
@@ -169,7 +210,10 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
           right: 0,
           left: 0,
           child: Visibility(
-            visible: MediaQuery.of(context).viewInsets.bottom == 0,
+            visible: MediaQuery
+                .of(context)
+                .viewInsets
+                .bottom == 0,
             child: SafeArea(
               child: GestureDetector(
                 onTap: onSubmit,
