@@ -5,11 +5,9 @@ import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/modules/face/face_make_page.dart';
+import 'package:zpw/modules/mine/detail/report_view.dart';
 import 'package:zpw/modules/mine/view/custom_del_dialog_utils.dart';
-import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
 import 'package:zpw/utils/dowload.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -25,6 +23,8 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
   final state = Get.find<DetailLogic>().state;
   late VideoPlayerController _controller;
   bool _isVideoInitialized = false;
+
+  late final _showMoreAction = false.obs;
 
   @override
   void initState() {
@@ -97,6 +97,12 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
   }
 
   @override
+  void yCloseInputMethod() {
+    _showMoreAction.value = false;
+    super.yCloseInputMethod();
+  }
+
+  @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<DetailLogic>(builder: (logic) {
       return Scaffold(
@@ -126,6 +132,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                       InkWell(
                         child: Container(
                           height: 45.w,
+                          width: 202.w,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(22),
                             gradient: LinearGradient(
@@ -137,12 +144,15 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                width: 85.w,
-                              ),
+                              // SizedBox(
+                              //   width: 85.w,
+                              // ),
                               Image.asset(
                                 "down.png".mine,
                                 width: 28.w,
+                              ),
+                              SizedBox(
+                                width: 4.w,
                               ),
                               CommText(
                                 text: "下载",
@@ -150,52 +160,70 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 85.w,
-                              ),
+                              // SizedBox(
+                              //   width: 85.w,
+                              // ),
                             ],
                           ),
                         ),
                         onTap: () {
+                          _showMoreAction.value = false;
                           if (state.returnUrl.value.isNotEmpty) {
-                            downloadAndSaveMedia(state.returnUrl.value, (res) {});
+                            downloadAndSaveMedia(
+                                state.returnUrl.value, (res) {});
                           }
                         },
                       ),
                       SizedBox(
                         width: 8.w,
                       ),
-                      InkWell(
-                        onTap: () {
-                          CustomDelDialogUtils.showCustomDialog(
-                              context: context,
-                              onPressed: () {
-                                logic.delete();
-                              });
-                        },
-                        child: Container(
-                          height: 45.w,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: Color(0xffFFF1F6)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 24.w,
-                              ),
-                              Image.asset(
-                                "lj.png".mine,
-                                width: 28.w,
-                              ),
-                              CommText(
-                                text: "删除",
-                                textColor: Color(0xffFF0707),
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              SizedBox(
-                                width: 24.w,
-                              ),
-                            ],
+                      Visibility(
+                        visible: (state.apiType.value == -1 ||
+                                state.apiType.value == 6 ||
+                                state.apiType.value == 14)
+                            ? false
+                            : true,
+                        child: InkWell(
+                          onTap: () {
+                            _showMoreAction.value = false;
+                            if (state.apiType.value == -1 ||
+                                state.apiType.value == 6 ||
+                                state.apiType.value == 14) return;
+                            _controller.pause();
+                            Log.d("pause---${state.returnUrl.value}----");
+                            logic.getFuncDetail(state.funcId.value);
+                          },
+                          child: Container(
+                            height: 45.w,
+                            width: 146.w,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(22),
+                                color: Colors.white,
+                                border: Border.all(
+                                    width: 1.w,
+                                    color: const Color(0xff191919)
+                                        .withOpacity(0.5))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // SizedBox(
+                                //   width: 24.w,
+                                // ),
+                                Image.asset(
+                                  "zccz.png".mine,
+                                  width: 28.w,
+                                ),
+                                CommText(
+                                  text: "再次创作",
+                                  textColor: Color(0xff191919),
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                // SizedBox(
+                                //   width: 24.w,
+                                // ),
+                              ],
+                            ),
                           ),
                         ),
                       )
@@ -209,29 +237,100 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                 right: 0,
                 child: YAppBar(
                     title: state.tags.value,
-                    right: Opacity(
-                        opacity: (state.apiType.value == -1 || state.apiType.value == 6 || state.apiType.value == 14) ? 0 : 1,
-                        child: InkWell(
-                            onTap: () {
-                              if (state.apiType.value == -1 || state.apiType.value == 6 || state.apiType.value == 14) return;
-                              _controller.pause();
-                              Log.d("pause---${state.returnUrl.value}----");
-                              logic.getFuncDetail(state.funcId.value);
-                              // Get.to(
-                              //   () => FaceMakePage(
-                              //     title: state.tags.value,
-                              //     funcId: state.id.value,
-                              //     imageUrl: "",
-                              //     videoUrl: state.returnUrl.value,
-                              //   ),
-                              // );
-                            },
-                            child: CommText(
-                              text: "再次创作",
-                              textColor: Color(0xff4D4D4D),
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500,
-                            )))),
+                    right: InkWell(
+                      onTap: () {
+                        _showMoreAction.value = true;
+                        // if (state.apiType.value == -1 ||
+                        //     state.apiType.value == 6 ||
+                        //     state.apiType.value == 14) return;
+                        // _controller.pause();
+                        // Log.d("pause---${state.returnUrl.value}----");
+                        // logic.getFuncDetail(state.funcId.value);
+                        // // Get.to(
+                        // //   () => FaceMakePage(
+                        // //     title: state.tags.value,
+                        // //     funcId: state.id.value,
+                        // //     imageUrl: "",
+                        // //     videoUrl: state.returnUrl.value,
+                        // //   ),
+                        // // );
+                      },
+                      child: Image.asset(
+                        "jubao_more.png".mine,
+                        width: 38.w,
+                        height: 38.w,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
+              ),
+              Positioned(
+                top: ScreenUtil().statusBarHeight + 40.w,
+                left: 0,
+                right: 16.w,
+                child: Obx(() => Visibility(
+                      visible: _showMoreAction.isTrue,
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          width: 97.w,
+                          height: 99.w,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(14.w),
+                                  bottomLeft: Radius.circular(14.w),
+                                  bottomRight: Radius.circular(14.w)),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color(0x14000000),
+                                    offset: Offset(0, 3),
+                                    spreadRadius: 0,
+                                    blurRadius: 10)
+                              ]),
+                          child: Column(
+                            children: [
+                              const Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  _showMoreAction.value = false;
+                                  CustomDelDialogUtils.showCustomDialog(
+                                      context: context,
+                                      onPressed: () {
+                                        logic.delete();
+                                      });
+                                },
+                                child: CommText(
+                                  text: "删除",
+                                  textColor: const Color(0xFF1A1A1A),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const Spacer(),
+                              Container(
+                                width: 64.w,
+                                height: 1.w,
+                                color: const Color(0x33979797),
+                              ),
+                              const Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  _showMoreAction.value = false;
+                                  Get.to(() => ReportView());
+                                },
+                                child: CommText(
+                                  text: "举报",
+                                  textColor: const Color(0xFF1A1A1A),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
               )
             ],
           )));

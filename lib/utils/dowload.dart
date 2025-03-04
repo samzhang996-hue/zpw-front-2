@@ -1,23 +1,26 @@
-import 'dart:io';
 import 'dart:core';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/log_utils.dart';
+
 typedef DownloadCallback = void Function(bool success);
-Future<void> downloadAndSaveMedia(String videoUrl, DownloadCallback callback) async {
+Future<void> downloadAndSaveMedia(
+    String videoUrl, DownloadCallback callback) async {
   try {
     Log.d("video----$videoUrl");
-    String endStr="temp_video.mp4";
-    bool isMp4=true;
-    if(videoUrl.toLowerCase().endsWith('.mp4')){
-      endStr="temp_video.mp4";
-      isMp4=true;
-    }else{
-      endStr="temp_photo.png";
-      isMp4=false;
+    String endStr = "temp_video.mp4";
+    bool isMp4 = true;
+    if (videoUrl.toLowerCase().endsWith('.mp4')) {
+      endStr = "temp_video.mp4";
+      isMp4 = true;
+    } else {
+      endStr = "temp_photo.png";
+      isMp4 = false;
     }
     // 获取临时目录路径
     final tempDir = await getTemporaryDirectory();
@@ -29,13 +32,15 @@ Future<void> downloadAndSaveMedia(String videoUrl, DownloadCallback callback) as
     await dio.download(videoUrl, tempPath);
     // 将视频保存到相册
     bool? result;
-    if(isMp4){
-      result = await GallerySaver.saveVideo(tempPath,
+    if (isMp4) {
+      result = await GallerySaver.saveVideo(
+        tempPath,
         albumName: 'MyAlbum', // 可选：保存到指定相册
         toDcim: true, // 可选：保存到 DCIM 文件夹
       );
-    }else{
-      result = await GallerySaver.saveImage(tempPath,
+    } else {
+      result = await GallerySaver.saveImage(
+        tempPath,
         albumName: 'MyAlbum', // 可选：保存到指定相册
         toDcim: true, // 可选：保存到 DCIM 文件夹
       );
@@ -57,5 +62,4 @@ Future<void> downloadAndSaveMedia(String videoUrl, DownloadCallback callback) as
   } catch (e) {
     HandleTool.showAppToastText("下载或保存时出错: $e");
   }
-
 }
