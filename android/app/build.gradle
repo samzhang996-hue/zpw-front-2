@@ -108,11 +108,11 @@ android {
 //            jniLibs.srcDirs = ['src/main/sdk/native/libs']
 //        }
 //    }
-    sourceSets {
-        main {
-            java.srcDirs = ['src/main/java', 'sdk/java/src'] // 添加 OpenCV 的 Java 源代码目录
-        }
-    }
+//    sourceSets {
+//        main {
+//            java.srcDirs = ['src/main/java', 'src/main/sdk/java/src'] // 添加 OpenCV 的 Java 源代码目录
+//        }
+//    }
 }
 
 flutter {

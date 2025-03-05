@@ -37,7 +37,6 @@ import com.meituan.android.walle.WalleChannelReader;
 
 import android.content.Intent;
 
-import org.opencv.core.Mat;
 
 
 public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
@@ -119,22 +118,27 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
             case "startPhoto":
                 startActivity(LJPhotoActivity.class);
                 break;
+
+
         }
     }
-    private boolean inpaint(String imagePath, String maskPath, String outputPath, int radius) {
-        try {
-            Mat image = org.opencv.imgcodecs.Imgcodecs.imread(imagePath);
-            Mat mask = org.opencv.imgcodecs.Imgcodecs.imread(maskPath, org.opencv.imgcodecs.Imgcodecs.IMREAD_GRAYSCALE);
-            Mat result = new Mat();
 
-            org.opencv.photo.Photo.inpaint(image, mask, result, radius, org.opencv.photo.Photo.INPAINT_TELEA);
+//    private boolean inpaint(String imagePath, String maskPath, String outputPath, int radius) {
+//        try {
+//            Mat image = org.opencv.imgcodecs.Imgcodecs.imread(imagePath);
+//            Mat mask = org.opencv.imgcodecs.Imgcodecs.imread(maskPath, org.opencv.imgcodecs.Imgcodecs.IMREAD_GRAYSCALE);
+//            Mat result = new Mat();
+//
+//            // 使用 Navier-Stokes 算法
+//            org.opencv.photo.Photo.inpaint(image, mask, result, radius, org.opencv.photo.Photo.INPAINT_NS);
+//
+//            return org.opencv.imgcodecs.Imgcodecs.imwrite(outputPath, result);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
-            return org.opencv.imgcodecs.Imgcodecs.imwrite(outputPath, result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     /**
      * 支付宝小程序

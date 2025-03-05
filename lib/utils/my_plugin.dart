@@ -34,3 +34,18 @@ Future<String> setOrderZfb(String url) async {
 Future<void> startPhoto() async {
   return await methodChnnel.invokeMethod("startPhoto");
 }
+
+Future<bool> inpaint(String imagePath, String maskPath, String outputPath, int radius) async {
+  try {
+    final bool result = await methodChnnel.invokeMethod('inpaint', {
+      'imagePath': imagePath,
+      'maskPath': maskPath,
+      'outputPath': outputPath,
+      'radius': radius,
+    });
+    return result;
+  } on PlatformException catch (e) {
+    print("Failed to inpaint: '${e.message}'.");
+    return false;
+  }
+}

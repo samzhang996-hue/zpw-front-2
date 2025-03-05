@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img; // 用于图片处理
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:zpw/modules/wf/znxc/znxc_logic.dart'; // 用于保存图片到相册
+import 'package:zpw/modules/wf/znxc/znxc_logic.dart';
+import 'package:zpw/utils/my_plugin.dart'; // 用于保存图片到相册
 
 class ZnxcPage extends StatefulWidget {
   @override
@@ -78,58 +79,101 @@ class _ZnxcPageState extends State<ZnxcPage> {
     return byteData!.buffer.asUint8List();
   }
 
-  // 消除图片并保存到相册
+  // // 消除图片并保存到相册
+  // Future<void> _eraseImage() async {
+  //   if (_image == null || _points.isEmpty) return;
+  //
+  //   // 将原图和 Mask 图转换为 Base64
+  //   final imageBytes = await _image!.readAsBytes();
+  //   final maskBytes = await _generateMask();
+  //
+  //   // 使用 image 包处理图片
+  //   final img.Image originalImage = img.decodeImage(imageBytes)!;
+  //   final img.Image maskImage = img.decodeImage(maskBytes)!;
+  //
+  //   // // 创建一个新的图片，保留背景
+  //   // final img.Image resultImage = img.Image.from(originalImage);
+  //   //
+  //   // // 遍历每个像素，根据 Mask 图消除图片
+  //   // for (int y = 0; y < originalImage.height; y++) {
+  //   //   for (int x = 0; x < originalImage.width; x++) {
+  //   //     final maskPixel = maskImage.getPixel(x, y);
+  //   //     if (maskPixel.r == 255 && maskPixel.g == 255 && maskPixel.b == 255) {
+  //   //       // 如果 Mask 图的像素为白色，则将原图的像素设置为透明
+  //   //       resultImage.setPixel(x, y, img.ColorFloat64.rgba(0, 0, 0, 0));
+  //   //     }
+  //   //   }
+  //   // }
+  //   final success = await inpaint(_image!.path, maskFile.path, outputFile.path, 10);
+  //
+  //   // 保存处理后的图片到临时文件
+  //   final erasedImageBytes = img.encodePng(resultImage);
+  //   final tempDir = Directory.systemTemp; // 获取系统临时目录
+  //   final tempFile = File('${tempDir.path}/erased_image_${DateTime.now().millisecondsSinceEpoch}.png');
+  //   await tempFile.writeAsBytes(erasedImageBytes);
+  //
+  //   // 保存图片到相册
+  //   final result = await GallerySaver.saveImage(
+  //     tempFile.path, // 传递临时文件路径
+  //     albumName: 'MyAlbum', // 可选：保存到指定相册
+  //     toDcim: true, // 可选：保存到 DCIM 文件夹
+  //   );
+  //
+  //   // 显示保存结果
+  //   if (result == true) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('图片已保存到相册')),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('保存失败，请重试')),
+  //     );
+  //   }
+  //
+  //   // 删除临时文件
+  //   tempFile.delete();
+  // }
   Future<void> _eraseImage() async {
     if (_image == null || _points.isEmpty) return;
 
-    // 将原图和 Mask 图转换为 Base64
-    final imageBytes = await _image!.readAsBytes();
+    // 生成 Mask 图
     final maskBytes = await _generateMask();
 
-    // 使用 image 包处理图片
-    final img.Image originalImage = img.decodeImage(imageBytes)!;
-    final img.Image maskImage = img.decodeImage(maskBytes)!;
+    // 保存 Mask 图到临时文件
+    final tempDir = Directory.systemTemp;
+    final maskFile = File('${tempDir.path}/mask_${DateTime.now().millisecondsSinceEpoch}.png');
+    await maskFile.writeAsBytes(maskBytes);
 
-    // 创建一个新的图片，保留背景
-    final img.Image resultImage = img.Image.from(originalImage);
+    // 调用 OpenCV 的 inpaint 函数
+    final outputFile = File('${tempDir.path}/output_${DateTime.now().millisecondsSinceEpoch}.png');
+    final success = await inpaint(_image!.path, maskFile.path, outputFile.path, 10);
 
-    // 遍历每个像素，根据 Mask 图消除图片
-    for (int y = 0; y < originalImage.height; y++) {
-      for (int x = 0; x < originalImage.width; x++) {
-        final maskPixel = maskImage.getPixel(x, y);
-        if (maskPixel.r == 255 && maskPixel.g == 255 && maskPixel.b == 255) {
-          // 如果 Mask 图的像素为白色，则将原图的像素设置为透明
-          resultImage.setPixel(x, y, img.ColorFloat64.rgba(0, 0, 0, 0));
-        }
-      }
-    }
-
-    // 保存处理后的图片到临时文件
-    final erasedImageBytes = img.encodePng(resultImage);
-    final tempDir = Directory.systemTemp; // 获取系统临时目录
-    final tempFile = File('${tempDir.path}/erased_image_${DateTime.now().millisecondsSinceEpoch}.png');
-    await tempFile.writeAsBytes(erasedImageBytes);
-
-    // 保存图片到相册
-    final result = await GallerySaver.saveImage(
-      tempFile.path, // 传递临时文件路径
-      albumName: 'MyAlbum', // 可选：保存到指定相册
-      toDcim: true, // 可选：保存到 DCIM 文件夹
-    );
-
-    // 显示保存结果
-    if (result == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('图片已保存到相册')),
+    if (success) {
+      // 保存图片到相册
+      final result = await GallerySaver.saveImage(
+        outputFile.path,
+        albumName: 'MyAlbum',
+        toDcim: true,
       );
+
+      if (result == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('图片已保存到相册')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('保存失败，请重试')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('保存失败，请重试')),
+        SnackBar(content: Text('图片修复失败')),
       );
     }
 
     // 删除临时文件
-    tempFile.delete();
+    maskFile.delete();
+    outputFile.delete();
   }
 
   @override
