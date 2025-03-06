@@ -2,7 +2,42 @@ PODS:
   - Ads-CN (6.5.0.9):
     - Ads-CN/BUAdSDK (= 6.5.0.9)
   - Ads-CN/BUAdSDK (6.5.0.9)
+  - BDASignalSDK (1.0.3)
   - device_info_plus (0.0.1):
+    - Flutter
+  - DKImagePickerController/Core (4.3.9):
+    - DKImagePickerController/ImageDataManager
+    - DKImagePickerController/Resource
+  - DKImagePickerController/ImageDataManager (4.3.9)
+  - DKImagePickerController/PhotoGallery (4.3.9):
+    - DKImagePickerController/Core
+    - DKPhotoGallery
+  - DKImagePickerController/Resource (4.3.9)
+  - DKPhotoGallery (0.0.19):
+    - DKPhotoGallery/Core (= 0.0.19)
+    - DKPhotoGallery/Model (= 0.0.19)
+    - DKPhotoGallery/Preview (= 0.0.19)
+    - DKPhotoGallery/Resource (= 0.0.19)
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Core (0.0.19):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Preview
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Model (0.0.19):
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Preview (0.0.19):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Resource
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Resource (0.0.19):
+    - SDWebImage
+    - SwiftyGif
+  - file_picker (0.0.1):
+    - DKImagePickerController/PhotoGallery
     - Flutter
   - Flutter (1.0.0)
   - flutter_app_update (0.0.1):
@@ -34,17 +69,22 @@ PODS:
   - photo_manager (2.0.0):
     - Flutter
     - FlutterMacOS
+  - Protobuf (3.29.3)
   - SAMKeychain (1.5.3)
   - screen_protector (1.2.1):
     - Flutter
     - ScreenProtectorKit (~> 1.3.1)
   - ScreenProtectorKit (1.3.1)
+  - SDWebImage (5.20.0):
+    - SDWebImage/Core (= 5.20.0)
+  - SDWebImage/Core (5.20.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
+  - SwiftyGif (5.4.5)
   - tobias (0.0.1):
     - Flutter
     - tobias/normal (= 0.0.1)
@@ -66,7 +106,9 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - BDASignalSDK
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_update (from `.symlinks/plugins/flutter_app_update/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -80,6 +122,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
+  - Protobuf
   - screen_protector (from `.symlinks/plugins/screen_protector/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
@@ -92,14 +135,22 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Ads-CN
+    - BDASignalSDK
+    - DKImagePickerController
+    - DKPhotoGallery
+    - Protobuf
     - SAMKeychain
     - ScreenProtectorKit
+    - SDWebImage
+    - SwiftyGif
     - UMCommon
     - UMDevice
 
 EXTERNAL SOURCES:
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  file_picker:
+    :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
     :path: Flutter
   flutter_app_update:
@@ -145,7 +196,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Ads-CN: 1d65518db43f7da28b47275105d56d74a88a9f1f
+  BDASignalSDK: 5128e64a084bf1b0b74089eac0be8915e97f3b45
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
+  DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
+  DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
+  file_picker: b159e0c068aef54932bb15dc9fd1571818edaf49
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_app_update: 65f61da626cb111d1b24674abc4b01728d7723bc
   flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
@@ -159,11 +214,14 @@ SPEC CHECKSUMS:
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
+  Protobuf: e2de96d939c642ce8da186343ff8929b35223212
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   screen_protector: 6f92086bd2f2f4b54f54913289b9d1310610140b
   ScreenProtectorKit: 83a6281b02c7a5902ee6eac4f5045f674e902ae4
+  SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   tobias: cc3bf3abfe6138bbcac1d013b86b8bd872bbf613
   UMCommon: 9bfb19a2f40c2521901dacb579bccb0b1cdba8da
   UMDevice: dcdf7ec167387837559d149fbc7d793d984faf82
@@ -172,6 +230,6 @@ SPEC CHECKSUMS:
   video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
   webview_flutter_wkwebview: 2a23822e9039b7b1bc52e5add778e5d89ad488d1
 
-PODFILE CHECKSUM: d0fd3ced40638e733f1b547a71c5b68401a880dd
+PODFILE CHECKSUM: ed8c828787efafa481f9eb370561b081dde49885
 
 COCOAPODS: 1.15.2
