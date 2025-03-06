@@ -19,6 +19,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ActivityUtils;
+import com.bytedance.ads.convert.BDConvert;
+import com.bytedance.applog.AppLog;
+import com.bytedance.applog.InitConfig;
+import com.bytedance.applog.util.UriConstants;
 import com.photoking.app.CommActivity;
 import com.photoking.app.LJPhotoActivity;
 import com.umeng.commonsdk.UMConfigure;
@@ -36,7 +40,6 @@ import io.flutter.plugin.common.MethodChannel;
 import com.meituan.android.walle.WalleChannelReader;
 
 import android.content.Intent;
-
 
 
 public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
@@ -118,26 +121,28 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
             case "startPhoto":
                 startActivity(LJPhotoActivity.class);
                 break;
-
-
+            case "RangerInit":
+                RangerInit();
+                break;
         }
     }
 
-//    private boolean inpaint(String imagePath, String maskPath, String outputPath, int radius) {
-//        try {
-//            Mat image = org.opencv.imgcodecs.Imgcodecs.imread(imagePath);
-//            Mat mask = org.opencv.imgcodecs.Imgcodecs.imread(maskPath, org.opencv.imgcodecs.Imgcodecs.IMREAD_GRAYSCALE);
-//            Mat result = new Mat();
-//
-//            // 使用 Navier-Stokes 算法
-//            org.opencv.photo.Photo.inpaint(image, mask, result, radius, org.opencv.photo.Photo.INPAINT_NS);
-//
-//            return org.opencv.imgcodecs.Imgcodecs.imwrite(outputPath, result);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
+    private void RangerInit() {
+        final InitConfig config = new InitConfig("500460", "ZPAIJL300");
+        // 设置数据上送地址
+        config.setUriConfig(UriConstants.DEFAULT);
+        config.setImeiEnable(false);//建议关停获取IMEI（出于合规考虑）
+        config.setAutoTrackEnabled(false); // 全埋点开关，true开启，false关闭
+        config.setLogEnable(true); // true:开启日志，参考4.3节设置logger，false:关闭日志
+        AppLog.setEncryptAndCompress(true); // 加密开关，true开启，false关闭
+        config.setEnablePlay(true); // 配置心跳事件（时长统计）
+
+        //SDK会采集OAID、ANDROID_ID和其他的设备特征字段，请遵循相关合规要求在隐私弹窗后采集
+        BDConvert.getInstance().init(activity, AppLog.getInstance());
+        // 如果在 onCreate 阶段初始化拿不到 XXXActivity 则不需要传递第三个参数
+        AppLog.init(activity, config);
+        /* 初始化SDK结束 */
+    }
 
 
     /**

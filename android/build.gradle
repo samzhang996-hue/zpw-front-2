@@ -7,6 +7,9 @@ buildscript {
 //注意，这里需要加上，否则拉不到walle:library，官方没提示
         maven { url 'https://maven.aliyun.com/repository/google' }
 //注意，这里需要加上，否则拉不到walle:library，官方没提示
+        maven {
+            url 'https://artifact.bytedance.com/repository/Volcengine/'
+        }
     }
 
     dependencies {
@@ -21,6 +24,9 @@ allprojects {
 //注意，这里需要加上，否则拉不到walle:library，官方没提示
         maven { url 'https://maven.aliyun.com/repository/google' }
 //注意，这里需要加上，否则拉不到walle:library，官方没提示
+        maven {
+            url 'https://artifact.bytedance.com/repository/Volcengine/'
+        }
     }
 }
 

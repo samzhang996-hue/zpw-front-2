@@ -161,6 +161,7 @@ class SplashLogic extends BaseGetxController {
           requestUserInfoMax = requestUserInfoMax + 1;
           Log.d("requestUserInfoMax----$requestUserInfoMax");
           if (isSuccess == true && results.isNotEmpty) {
+            rangerInit();
             Log.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
             requestUserInfoMax = 100;
             Log.d("userInfoBean----${results.first.id}");

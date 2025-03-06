@@ -34,6 +34,9 @@ Future<String> setOrderZfb(String url) async {
 Future<void> startPhoto() async {
   return await methodChnnel.invokeMethod("startPhoto");
 }
+Future<void> rangerInit() async {
+  return await methodChnnel.invokeMethod("RangerInit");
+}
 
 Future<bool> inpaint(String imagePath, String maskPath, String outputPath, int radius) async {
   try {

@@ -15,6 +15,7 @@ import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/znxc/znxc_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/my_plugin.dart';
 
 import 'mine_logic.dart';
 
@@ -303,7 +304,8 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             case "我的作品":
               // HandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
               gotoPushPage(WorksPage());
-            // gotoPushPage(ZnxcPage());
+              // gotoPushPage(ZnxcPage());
+
               break;
             case "关于我们":
               gotoPushPage(AboutPage());
