@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04A1E9352D7BE5C800B45329 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A1E9342D7BE5C800B45329 /* AppTrackingTransparency.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		21F4486403430E690B59911A /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15EDD531B87920B17782F0EB /* libPods-Runner.a */; };
 		331C80F4294D02FB00263BE5 /* RunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 331C80F3294D02FB00263BE5 /* RunnerTests.m */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04A1E9342D7BE5C800B45329 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		15EDD531B87920B17782F0EB /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04A1E9352D7BE5C800B45329 /* AppTrackingTransparency.framework in Frameworks */,
 				21F4486403430E690B59911A /* libPods-Runner.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,6 +103,7 @@
 		7F70DCE8F471712D467F0137 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04A1E9342D7BE5C800B45329 /* AppTrackingTransparency.framework */,
 				15EDD531B87920B17782F0EB /* libPods-Runner.a */,
 				374297FE4E22F17C03FEFFD9 /* libPods-RunnerTests.a */,
 			);

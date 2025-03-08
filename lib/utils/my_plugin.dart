@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
-import 'package:zpw/utils/log_utils.dart';
 
 const methodChnnel = MethodChannel("MyPlugin");
 // 事件通道
@@ -34,11 +35,15 @@ Future<String> setOrderZfb(String url) async {
 Future<void> startPhoto() async {
   return await methodChnnel.invokeMethod("startPhoto");
 }
+
 Future<void> rangerInit() async {
-  return await methodChnnel.invokeMethod("RangerInit");
+  if (Platform.isAndroid) {
+    return await methodChnnel.invokeMethod("RangerInit");
+  }
 }
 
-Future<bool> inpaint(String imagePath, String maskPath, String outputPath, int radius) async {
+Future<bool> inpaint(
+    String imagePath, String maskPath, String outputPath, int radius) async {
   try {
     final bool result = await methodChnnel.invokeMethod('inpaint', {
       'imagePath': imagePath,
@@ -50,5 +55,15 @@ Future<bool> inpaint(String imagePath, String maskPath, String outputPath, int r
   } on PlatformException catch (e) {
     print("Failed to inpaint: '${e.message}'.");
     return false;
+  }
+}
+
+Future<String> getIDFA() async {
+  try {
+    final String idfa = await methodChnnel.invokeMethod('getIDFA');
+
+    return idfa;
+  } on PlatformException catch (_) {
+    return "";
   }
 }

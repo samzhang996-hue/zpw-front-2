@@ -2,6 +2,8 @@
 #import "GeneratedPluginRegistrant.h"
 #import "BDASignalManager.h"
 #import "BDASignalDefinitions.h"
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import <AdSupport/ASIdentifierManager.h>
 
 @implementation AppDelegate
 
@@ -17,6 +19,7 @@
     // 上报冷启动事件
     [BDASignalManager didFinishLaunchingWithOptions:launchOptions connectOptions:nil];
     [BDASignalManager enableIdfa:YES];
+    BOOL isok  = [BDASignalManager getIdfaStatus];
     
   // Get the Flutter view controller and create a method channel
   FlutterViewController *controller = (FlutterViewController *)self.window.rootViewController;
@@ -52,6 +55,9 @@
     else  if ([call.method isEqualToString:@"projectId"]) {
         result(@"30");
     }
+      else if([call.method isEqualToString:@"getIDFA"]) {
+       [self getIDFAWithResult:result];
+      }
       
     else {
       result(FlutterMethodNotImplemented);
@@ -66,6 +72,31 @@
     NSString *openUrl = url.absoluteString;
     [BDASignalManager anylyseDeeplinkClickidWithOpenUrl:openUrl];
     return YES;
+}
+
+- (void)getIDFAWithResult:(FlutterResult)result {
+    
+  if (@available(iOS 14, *)) {
+      
+      [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+             // 获取到权限后，依然使用老方法获取idfa
+             if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+                 NSString *idfa = [[ASIdentifierManager sharedManager].advertisingIdentifier UUIDString];
+                 result(idfa);  // 返回 IDFA
+             } else {
+                      NSLog(@"请在设置-隐私-跟踪中允许App请求跟踪");
+                 result([FlutterError errorWithCode:@"UNAUTHORIZED" message:@"User denied tracking authorization" details:nil]);
+             }
+         }];
+
+
+ 
+    
+  } else {
+    // iOS 14 以下版本直接获取 IDFA
+    NSString *idfa = [[ASIdentifierManager sharedManager] advertisingIdentifier].UUIDString;
+    result(idfa);  // 返回 IDFA
+  }
 }
 
 @end
