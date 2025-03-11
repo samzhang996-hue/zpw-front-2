@@ -224,20 +224,13 @@ class _FacePageState extends State<FacePage>
                       child: Container(
                         width: double.maxFinite,
                         height: 36.w,
-                        padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                        // padding: EdgeInsets.only(left: 15.w, right: 15.w),
                         margin: EdgeInsets.only(bottom: 10.w),
                         child: TabBar(
                           tabAlignment: TabAlignment.center,
                           tabs: logic.listPhotoGroupBean2
                               .map((e) => Tab(text: "${e.groupName}"))
                               .toList(),
-                          // tabs: const [
-                          //   Tab(text: "热门推荐"),
-                          //   Tab(text: "经典角色"),
-                          //   Tab(text: "男神专属"),
-                          //   Tab(text: "雪季❄️"),
-                          //   Tab(text: "合照❤️"),
-                          // ],
                           onTap: (index) {
                             // page.animateTo(index, duration: duration, curve: curve)
                             UmengCommonSdk.onEvent('Face_click_event', {
@@ -264,12 +257,12 @@ class _FacePageState extends State<FacePage>
                           labelColor: const Color(0xFF191919),
                           isScrollable: true,
                           labelStyle: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF191919),
                           ),
                           unselectedLabelStyle: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w400,
                             color: const Color(0xFF656565),
                           ),

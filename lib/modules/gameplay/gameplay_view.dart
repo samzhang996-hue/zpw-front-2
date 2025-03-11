@@ -184,7 +184,7 @@ class _GameplayPageState extends State<GameplayPage>
                       child: Container(
                         width: double.maxFinite,
                         height: 36.w,
-                        padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                        // padding: EdgeInsets.only(left: 15.w, right: 15.w),
                         margin: EdgeInsets.only(bottom: 10.w),
                         child: TabBar(
                           tabAlignment: TabAlignment.center,
@@ -216,12 +216,12 @@ class _GameplayPageState extends State<GameplayPage>
                           labelColor: const Color(0xFF191919),
                           isScrollable: true,
                           labelStyle: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF191919),
                           ),
                           unselectedLabelStyle: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.w400,
                             color: const Color(0xFF656565),
                           ),

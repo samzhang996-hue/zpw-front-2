@@ -193,12 +193,12 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                                 labelColor: const Color(0xFF191919),
                                 isScrollable: true,
                                 labelStyle: TextStyle(
-                                  fontSize: 16.sp,
+                                  fontSize: 15.sp,
                                   fontWeight: FontWeight.w500,
                                   color: const Color(0xFF191919),
                                 ),
                                 unselectedLabelStyle: TextStyle(
-                                  fontSize: 14.sp,
+                                  fontSize: 13.sp,
                                   fontWeight: FontWeight.w400,
                                   color: const Color(0xFF656565),
                                 ),
