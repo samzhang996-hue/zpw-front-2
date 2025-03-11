@@ -172,7 +172,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                     Get.to(
                       () => GatherSinglePage(
                         id: data.id ?? 0,
-                        imgUrlAcross: imgUrlVertical,
+                        imgUrlAcross: imgUrlAcross,
                         title: data.groupName ?? "",
                         isWF: true,
                       ),
