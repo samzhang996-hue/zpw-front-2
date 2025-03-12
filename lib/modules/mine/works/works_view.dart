@@ -18,7 +18,8 @@ class WorksPage extends BaseStatefulWidget {
   BaseWidgetState<WorksPage> getState() => _WorksPageState();
 }
 
-class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProviderStateMixin {
+class _WorksPageState extends BaseWidgetState<WorksPage>
+    with SingleTickerProviderStateMixin {
   final logic = Get.put(WorksLogic());
   final state = Get.find<WorksLogic>().state;
   final List<String> _tabs = ['视频', '图片'];
@@ -86,7 +87,12 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                       height: 50,
                       color: Colors.transparent,
                       alignment: Alignment.center,
-                      child: Image.asset('arrow_back.png'.comm, width: 16.w, height: 16.w, fit: BoxFit.cover, color: Colors.black).paddingOnly(left: 10),
+                      child: Image.asset('arrow_back.png'.comm,
+                              width: 16.w,
+                              height: 16.w,
+                              fit: BoxFit.cover,
+                              color: Colors.black)
+                          .paddingOnly(left: 10),
                     ),
                   ),
                   Container(
@@ -138,8 +144,10 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
               child: NotificationListener(
                 onNotification: (ScrollNotification scrollNotification) {
                   if (scrollNotification is ScrollUpdateNotification) {
-                    if (scrollNotification.metrics.axisDirection == AxisDirection.right) {
-                      double progress = scrollNotification.metrics.pixels / scrollNotification.metrics.maxScrollExtent;
+                    if (scrollNotification.metrics.axisDirection ==
+                        AxisDirection.right) {
+                      double progress = scrollNotification.metrics.pixels /
+                          scrollNotification.metrics.maxScrollExtent;
                       double unit = 1.0 / _tabs.length;
                       int index = progress ~/ unit;
                       if (index != _currentIndex && index < _tabs.length) {
@@ -242,7 +250,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
           } else if (worksType == 1) {
             imagUrl = firstFrameUrl.toString().isEmpty ? oldUrl : firstFrameUrl;
           } else {
-            imagUrl = oldUrl;
+            imagUrl = returnUrl.toString().isEmpty ? oldUrl : returnUrl;
           }
           return InkWell(
             child: Container(
@@ -275,11 +283,15 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
                     ),
                   ),
                   Visibility(
-                    visible: (worksStatus == 0 || worksStatus == 1 || worksStatus == 2),
+                    visible: (worksStatus == 0 ||
+                        worksStatus == 1 ||
+                        worksStatus == 2),
                     child: Container(
                       width: 175.w,
                       height: 265.w,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: const Color(0xff99000000)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: const Color(0xff99000000)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -333,7 +345,14 @@ class _WorksPageState extends BaseWidgetState<WorksPage> with SingleTickerProvid
             ),
             onTap: () async {
               if (worksStatus == 3) {
-                final res = await Get.to(() => DetailPage(), arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
+                final res = await Get.to(() => DetailPage(), arguments: {
+                  "worksType": worksType,
+                  "returnUrl": returnUrl,
+                  "tags": tags,
+                  "id": id,
+                  "funcId": funcId,
+                  "apiType": apiType
+                });
                 logic.photoRecord();
                 return;
               }
