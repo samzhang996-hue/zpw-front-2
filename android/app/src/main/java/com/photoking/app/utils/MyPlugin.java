@@ -133,7 +133,7 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
         config.setUriConfig(UriConstants.DEFAULT);
         config.setImeiEnable(false);//建议关停获取IMEI（出于合规考虑）
         config.setAutoTrackEnabled(false); // 全埋点开关，true开启，false关闭
-        config.setLogEnable(true); // true:开启日志，参考4.3节设置logger，false:关闭日志
+        config.setLogEnable(false); // true:开启日志，参考4.3节设置logger，false:关闭日志
         AppLog.setEncryptAndCompress(true); // 加密开关，true开启，false关闭
         config.setEnablePlay(true); // 配置心跳事件（时长统计）
 

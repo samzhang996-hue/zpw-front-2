@@ -187,34 +187,29 @@ class SplashLogic extends BaseGetxController {
               isFirst = true;
             }
             HandleTool.instance.headImg = userInfoBean.headImg ?? '';
-            // Get.offAll(const MainPage());
-            // return;
-            // return;
-            // if (isFirst) {
-            //   Get.offAll(const MainPage());
-            // } else {
-            //   Get.offAll(GuidePage());
-            // }
-            // return;
             if (!_showAd || HandleTool.instance.channelAds) {
               progress.value = 1.0;
-              // if (isFirst) {
               Get.offAll(const MainPage());
-              // } else {
-              //   // Get.offAll(const MainPage());
-              //   // return;
-              //   Get.offAll(GuidePage());
-              // }
               return;
             }
-            AdsUtils.init().then((value) {
+            try {
+              bool value = await AdsUtils.init().timeout(Duration(seconds: 5));
+              Log.d("ads2----$value");
               progress.value = 1.0;
               if (value) {
                 AdsUtils.showSplashAd();
-              }else{
+              } else {
                 Get.offAll(const MainPage());
               }
-            });
+            } on TimeoutException catch (_) {
+              Log.e("AdsUtils.init() timed out");
+              Get.offAll(const MainPage()); // 超时，直接进入主页
+            } catch (error) {
+              Log.e("AdsUtils.init() failed: $error");
+              Get.offAll(const MainPage()); // 发生异常，直接进入主页
+            }
+
+
           } else {
             if (code == -2222) {
               _showAd = false;
