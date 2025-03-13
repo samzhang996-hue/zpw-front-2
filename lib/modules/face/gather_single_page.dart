@@ -364,12 +364,12 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                             _tabController?.animateTo(index);
                             _title.value =
                                 listPhotoGroupBean[index].groupName ?? '';
-                            if (index == 1) {
-                              if (_scrollViewController!.offset > 600) {
-                                _scrollViewController!
-                                    .jumpTo(_scrollViewController!.offset);
-                              }
-                            }
+                            // if (index == 1) {
+                            //   if (_scrollViewController!.offset > 600) {
+                            //     _scrollViewController!
+                            //         .jumpTo(_scrollViewController!.offset);
+                            //   }
+                            // }
                           },
                         )
                   : CollectionItem(id: widget.id)),
