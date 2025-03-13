@@ -183,6 +183,20 @@ class VipLogic extends BaseGetxController {
   }
 
   addOrder() async {
+    // String msg="alipays://platformapi/startApp?appId=60000157&orderStr=app_id%3D2021004196632496%26method%3Dalipay.trade.app.pay%26charset%3DUTF-8%26version%3D1.0%26sign_type%3DRSA2%26notify_url%3Dhttp%253A%252F%252Fpayapi.changfu0591.top%252Fpayapi%252FzftNotify%252Fnotify%26biz_content%3D%257B%2522sub_merchant%2522%253A%257B%2522merchant_id%2522%253A%25222088460567345897%2522%257D%252C%2522out_trade_no%2522%253A%252220250306171034985132110%2522%252C%2522total_amount%2522%253A%25220.11%2522%252C%2522subject%2522%253A%2522%255Cu7528%255Cu6237%255Cu53f7%253A279516079%255Cuff0c%255Cu82e5%255Cu9700%255Cu9000%255Cu6b3e%255Cu6253%255Cu5ba2%255Cu670d%255Cu7535%255Cu8bdd%253A4000732899%2522%252C%2522product_code%2522%253A%2522GENERAL_WITHHOLDING%2522%252C%2522extend_params%2522%253A%257B%2522sys_service_provider_id%2522%253A%25222088941700930254%2522%257D%252C%2522disable_pay_channels%2522%253A%2522%2522%252C%2522settle_info%2522%253A%257B%2522settle_detail_infos%2522%253A%255B%257B%2522trans_in_type%2522%253A%2522defaultSettle%2522%252C%2522amount%2522%253A%25220.11%2522%257D%255D%257D%252C%2522time_expire%2522%253A%25222025-03-06%2B17%253A15%253A34%2522%252C%2522agreement_sign_params%2522%253A%257B%2522product_code%2522%253A%2522GENERAL_WITHHOLDING%2522%252C%2522personal_product_code%2522%253A%2522CYCLE_PAY_AUTH_P%2522%252C%2522sign_scene%2522%253A%2522INDUSTRY%257CDEFAULT_SCENE%2522%252C%2522access_params%2522%253A%257B%2522channel%2522%253A%2522ALIPAYAPP%2522%257D%252C%2522period_rule_params%2522%253A%257B%2522period_type%2522%253A%2522DAY%2522%252C%2522period%2522%253A%252230%2522%252C%2522execute_time%2522%253A%25222025-03-06%2522%252C%2522single_amount%2522%253A%252210.0%2522%257D%252C%2522sub_merchant%2522%253A%257B%2522sub_merchant_id%2522%253A%25222088460567345897%2522%252C%2522sub_merchant_name%2522%253A%2522%255Cu56db%255Cu5ddd%255Cu4e59%255Cu8212%255Cu79d1%255Cu6280%255Cu6709%255Cu9650%255Cu516c%255Cu53f8%2522%252C%2522sub_merchant_service_name%2522%253A%2522%255Cu4f1a%255Cu5458%255Cu7eed%255Cu8d39%2522%257D%252C%2522external_agreement_no%2522%253A%2522202503061710340011659663%2522%252C%2522sign_notify_url%2522%253A%2522http%253A%255C%252F%255C%252Fpayapi.changfu0591.top%255C%252Fpayapi%255C%252FzftNotify%255C%252FsignNotify%2522%257D%257D%26timestamp%3D2025-03-06%2B17%253A10%253A34%26app_cert_sn%3D8085ea6a9ea55f81f9441c947936d1c2%26alipay_root_cert_sn%3D687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6%26sign%3DUMA5fUg%252BMZC4d0KLMLOvxrC5nAZ2hG0rSrM9UyfMnXlPWAEwsdn%252B8oFhgTTrU1Dv%252Fumymao8hGgsiSXFYtiAVC69SrdAntZ8H6z2RjdKjcb5sEC3fsGPTNEeJHS8Eo8aUyFVuTsQmBxlKAK9dk10qofX21UoXmla9QaNQhyufqPJKDjdCO3Anc91dspXtZ2StZQ0fVv36SU4qQIdFI8F2Z7Os4kIm7OTVCAdlMRTfFCfK2dpKyC4BhzSK6T2sgRq8L2RR3QND5eUbWbElAmuC8h5aJAo5dtoHMa%252FhvkdZk8rxe3mzZuIDi%252FdU%252Bo95b5hNfAUWC%252BSm6SYPNYp1Fnrww%253D%253D";
+    // toUrl2(msg);
+    // Tobias tobias = Tobias();
+    // tobias.pay(msg).then((value) {
+    //   if ("${value["resultStatus"]}" == "9000") {
+    //     HandleTool.instance.isMember = true;
+    //     HandleTool.showAppToastText("支付成功");
+    //     // _startPolling();
+    //   } else {
+    //     HandleTool.showAppToastText("支付失败");
+    //   }
+    // });
+
+
     // String channel = await getChannelInfo(3);
     Map<String, dynamic> dataMap = {
       // "channel": channel,
