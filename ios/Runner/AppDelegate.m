@@ -4,6 +4,7 @@
 #import "BDASignalDefinitions.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <AdSupport/ASIdentifierManager.h>
+#import <UIKit/UIKit.h>
 
 @implementation AppDelegate
 
@@ -58,7 +59,9 @@
       else if([call.method isEqualToString:@"getIDFA"]) {
        [self getIDFAWithResult:result];
       }
-      
+      else if([call.method isEqualToString:@"getIDFV"]) {
+       [self getIDFVWithResult:result];
+      }
     else {
       result(FlutterMethodNotImplemented);
     }
@@ -72,6 +75,11 @@
     NSString *openUrl = url.absoluteString;
     [BDASignalManager anylyseDeeplinkClickidWithOpenUrl:openUrl];
     return YES;
+}
+
+- (void)getIDFVWithResult:(FlutterResult)result {
+NSString *idfv = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+   result(idfv);  // 返回 IDFV
 }
 
 - (void)getIDFAWithResult:(FlutterResult)result {

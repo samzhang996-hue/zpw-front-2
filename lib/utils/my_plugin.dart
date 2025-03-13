@@ -67,3 +67,13 @@ Future<String> getIDFA() async {
     return "";
   }
 }
+
+Future<String> getIDFV() async {
+  try {
+    final String idfv = await methodChnnel.invokeMethod('getIDFV');
+
+    return idfv;
+  } on PlatformException catch (_) {
+    return "";
+  }
+}

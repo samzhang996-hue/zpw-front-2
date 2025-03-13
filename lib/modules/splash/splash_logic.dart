@@ -103,9 +103,11 @@ class SplashLogic extends BaseGetxController {
 
   _onLogin(String channel, String deviceId, String oaid,
       {bool isShowProgress = false}) async {
-    String uuid = "";
+    String idfa = "";
+    String idfv = "";
     if (Platform.isIOS) {
-      uuid = await getIDFA();
+      idfa = await getIDFA();
+      idfv = await getIDFV();
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
@@ -113,7 +115,8 @@ class SplashLogic extends BaseGetxController {
         "deviceCode": deviceId,
         "systemDevice": Platform.isAndroid ? "android" : "ios",
         "oaid": oaid,
-        "idfa": uuid
+        "idfa": idfa,
+        "idfv": idfv
       },
     };
     Log.i("requestMax====>${dataMap}");
