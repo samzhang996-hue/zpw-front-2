@@ -24,7 +24,7 @@ class MainLogic extends BaseGetxController {
   @override
   void onReady() {
     super.onReady();
-    // HandleTool.instance.packagesGetForcePackage();
+    HandleTool.instance.packagesGetForcePackage();
     if (!HandleTool.instance.isMember) {
       Get.to(() => VipPage());
     }

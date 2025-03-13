@@ -67,6 +67,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
   void dispose() {
     _controller.dispose();
     logic.canBack = false;
+    logic.showToast = false;
     // Get.delete<VipPage>();
     super.dispose();
     WidgetsBinding.instance.removeObserver(this); // 移除监听器

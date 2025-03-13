@@ -17,13 +17,14 @@ import 'setting_state.dart';
 
 class SettingLogic extends BaseGetxController {
   final SettingState state = SettingState();
-
+  late final isUpdate = false.obs;
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
     version();
     _showCacheSize();
+    HandleTool.instance.packagesGetForcePackage(isSetting: true);
   }
 
   getChannel() async {

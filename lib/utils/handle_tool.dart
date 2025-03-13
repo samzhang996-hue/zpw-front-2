@@ -8,19 +8,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_update/azhon_app_update.dart';
 import 'package:flutter_app_update/update_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:zpw/common/style.dart';
-import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/main.dart';
 import 'package:zpw/model/upload_bean.dart';
+import 'package:zpw/modules/mine/setting/setting_logic.dart';
 import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/network/network_util.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
+import 'package:zpw/utils/upgrade.dart';
 
 class HandleTool {
   static final HandleTool _singleInstance = HandleTool._internal();
@@ -45,7 +46,7 @@ class HandleTool {
 
   /// 是否购买30天会员
   bool isSignTask = false;
-  bool isShow = false;
+  // bool isShow = false;
   int failCount = 0;
   bool isArCore = false;
 
@@ -247,7 +248,7 @@ class HandleTool {
   }
 
   /// 查询版本更新
-  packagesGetForcePackage({bool isShowProgress = false}) async {
+  packagesGetForcePackage({bool isShowProgress = false, bool isSetting = false}) async {
     String channel = await SpUtils.getString("channel");
     if (Platform.isAndroid) {
       channel = channel.isEmpty ? await getChannelInfo() : channel;
@@ -266,7 +267,7 @@ class HandleTool {
       Log.i("版本=====>$results $channel");
       if (isSuccess && results.isNotEmpty) {
         /// 获取本地版本
-        isCheckUpdateAction(results.first as Map);
+        isCheckUpdateAction(results.first as Map,isShowProgress,isSetting);
       }
     });
   }
@@ -327,12 +328,11 @@ class HandleTool {
   }
 
   /// 检查是否更新
-  isCheckUpdateAction(Map map) async {
+  isCheckUpdateAction(Map map,bool isShowProgress,bool isSetting) async {
     if (map["versionCode"] == null) {
       Log.i("===== 没有更新信息=======");
-      HandleTool.showAppToastText("当前已是最新版本");
-      if (isShow) {
-        isShow = false;
+      if (isShowProgress) {
+         HandleTool.showAppToastText("当前已是最新版本");
       }
       return;
     }
@@ -353,12 +353,17 @@ class HandleTool {
     int serviceNum = int.parse("${version.replaceAll(".", "").replaceAll(" ", "")}");
     if (serviceNum > localNum) {
       // Log.i("22233111");
+      if(isSetting){
+        final g = Get.find<SettingLogic>();
+        g.isUpdate.value = true;
+        return;
+      }
       /// 需要更新
       showUpdateDialog(isForce == "1" ? true : false, versionCode, appendInformation, fileUrl);
     } else {
-      if (isShow) {
+      if (isShowProgress) {
         HandleTool.showAppToastText("当前已是最新版本");
-        isShow = false;
+       
       }
 
       Log.i("===== 1没有更新信息 $localVersion $localBuildnumber=======");
@@ -368,62 +373,71 @@ class HandleTool {
   ///Flutter侧处理升级对话框
   ///[forcedUpgrade] 是否强制升级
   showUpdateDialog(bool forcedUpgrade, String newVersion, String appendInformation, String fileUrl) {
-    showDialog(
-      context: navigatorKey.currentContext!,
-      barrierDismissible: !forcedUpgrade,
-      builder: (BuildContext context) {
-        return PopScope(
-          canPop: !forcedUpgrade,
-          child: AlertDialog(
-            title: CommText(
-              text: "发现新版本 $newVersion",
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-            content: CommText(fontSize: 15, textColor: ColorPlate.sixThreeColor, text: appendInformation),
-            actions: <Widget>[
-              if (!forcedUpgrade)
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 80,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        // color: ColorPlate.themeColor,
-                        border: Border.all(color: const Color(0xffA2AAAE)),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: CommText(
-                      text: "取消",
-                      fontSize: 14,
-                      textColor: const Color(0xffA2AAAE),
-                    ),
-                  ),
-                ),
-              InkWell(
-                onTap: () {
-                  _appUpdate(fileUrl);
-                },
-                child: Container(
-                  height: 30,
-                  width: 80,
-                  margin: const EdgeInsets.only(left: 15),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(15)),
-                  child: CommText(
-                    text: "升级",
-                    fontSize: 14,
-                    textColor: Colors.white,
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
+        Get.dialog(
+      Upgrade(
+        forcedUpgrade: forcedUpgrade,
+        newVersion: newVersion,
+        appendInformation: appendInformation,
+        fileUrl: fileUrl,
+      ),
+      barrierDismissible: forcedUpgrade,
     );
+    // showDialog(
+    //   context: navigatorKey.currentContext!,
+    //   barrierDismissible: !forcedUpgrade,
+    //   builder: (BuildContext context) {
+    //     return PopScope(
+    //       canPop: !forcedUpgrade,
+    //       child: AlertDialog(
+    //         title: CommText(
+    //           text: "发现新版本 $newVersion",
+    //           fontSize: 16,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //         content: CommText(fontSize: 15, textColor: ColorPlate.sixThreeColor, text: appendInformation),
+    //         actions: <Widget>[
+    //           if (!forcedUpgrade)
+    //             InkWell(
+    //               onTap: () {
+    //                 Navigator.pop(context);
+    //               },
+    //               child: Container(
+    //                 height: 30,
+    //                 width: 80,
+    //                 alignment: Alignment.center,
+    //                 decoration: BoxDecoration(
+    //                     // color: ColorPlate.themeColor,
+    //                     border: Border.all(color: const Color(0xffA2AAAE)),
+    //                     borderRadius: BorderRadius.circular(15)),
+    //                 child: CommText(
+    //                   text: "取消",
+    //                   fontSize: 14,
+    //                   textColor: const Color(0xffA2AAAE),
+    //                 ),
+    //               ),
+    //             ),
+    //           InkWell(
+    //             onTap: () {
+    //               _appUpdate(fileUrl);
+    //             },
+    //             child: Container(
+    //               height: 30,
+    //               width: 80,
+    //               margin: const EdgeInsets.only(left: 15),
+    //               alignment: Alignment.center,
+    //               decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(15)),
+    //               child: CommText(
+    //                 text: "升级",
+    //                 fontSize: 14,
+    //                 textColor: Colors.white,
+    //               ),
+    //             ),
+    //           )
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   _appUpdate(String url) {

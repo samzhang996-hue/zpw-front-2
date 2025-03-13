@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
-import 'package:zpw/utils/filecache.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+
 import 'setting_logic.dart';
 
 class SettingPage extends BaseStatefulWidget {
@@ -39,9 +39,12 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
             }),
             commItem("注销账号", ""),
             Obx(() {
-              return commItem("检查更新", state.version.value);
+              return commItem("检查更新", state.version.value, showUpdate: true);
             }),
-            Visibility(child: commItem("切换账号", ""),visible: HandleTool.instance.channelLogin,),
+            Visibility(
+              child: commItem("切换账号", ""),
+              visible: HandleTool.instance.channelLogin,
+            ),
             InkWell(
               onTap: () {
                 logic.getChannel();
@@ -56,7 +59,8 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
             Container(
               margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
               width: double.infinity,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AdBannerWidget(
@@ -202,6 +206,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
     String title,
     String tag, {
     bool hideArrow = false,
+    bool showUpdate = false,
   }) {
     return Column(
       children: [
@@ -215,7 +220,8 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                 logic.clearCache();
                 break;
               case "检查更新":
-                HandleTool.instance.packagesGetForcePackage();
+                HandleTool.instance
+                    .packagesGetForcePackage(isShowProgress: true);
                 break;
               case "注销账号":
                 CustomExitDialogUtils.showCustomDialog(
@@ -245,6 +251,18 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                   fontWeight: FontWeight.w500,
                 ),
                 const Spacer(),
+                Obx(() => Visibility(
+                      visible: logic.isUpdate.isTrue && showUpdate,
+                      child: Container(
+                        width: 6.w,
+                        height: 6.w,
+                        margin: EdgeInsets.only(right: 4.w),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                      ),
+                    )),
                 CommText(
                   text: tag,
                   textColor: const Color(0xff7E8293),
