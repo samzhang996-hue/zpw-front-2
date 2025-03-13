@@ -83,6 +83,7 @@ class Assets {
   static const String mineDefaultAvatar = 'images/mine/default_avatar.png';
   static const String mineDown = 'images/mine/down.png';
   static const String mineIconDefaultPlaceholder = 'images/mine/icon_default_placeholder.png';
+  static const String mineJubaoMore = 'images/mine/jubao_more.png';
   static const String mineKf = 'images/mine/kf.png';
   static const String mineKfBanner = 'images/mine/kf_banner.png';
   static const String mineLj = 'images/mine/lj.png';
@@ -90,9 +91,11 @@ class Assets {
   static const String mineMineBg = 'images/mine/mine_bg.png';
   static const String mineMineVipBg = 'images/mine/mine_vip_bg.png';
   static const String mineOnline = 'images/mine/online.png';
+  static const String mineReportPicture = 'images/mine/report_picture.png';
   static const String mineSetting = 'images/mine/setting.png';
   static const String mineSf = 'images/mine/sf.png';
   static const String mineVipLogo = 'images/mine/vip_logo.png';
+  static const String mineZccz = 'images/mine/zccz.png';
   static const String mineZp = 'images/mine/zp.png';
   static const String specially030 = 'images/specially/03_0.jpg';
   static const String specially031 = 'images/specially/03_1.jpg';

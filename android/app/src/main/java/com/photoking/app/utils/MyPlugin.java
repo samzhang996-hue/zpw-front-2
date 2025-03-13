@@ -99,7 +99,7 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 break;
             case "getChannelInfo":
                 String _channel = WalleChannelReader.getChannel(activity);
-                _channel = TextUtils.isEmpty(_channel) ? "ZPAIJL300" : _channel;
+                _channel = TextUtils.isEmpty(_channel) ? "AIJL300" : _channel;
                 result.success(_channel);
                 break;
             case "projectId":
@@ -128,7 +128,7 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
     }
 
     private void RangerInit() {
-        final InitConfig config = new InitConfig("500460", "ZPAIJL300");
+        final InitConfig config = new InitConfig("507185", "AIJL300");
         // 设置数据上送地址
         config.setUriConfig(UriConstants.DEFAULT);
         config.setImeiEnable(false);//建议关停获取IMEI（出于合规考虑）

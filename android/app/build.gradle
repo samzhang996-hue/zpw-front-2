@@ -32,24 +32,23 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.photoai.app"
+        applicationId = "com.photoking.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
         targetSdkVersion 34
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
-        setProperty("archivesBaseName", "zpaids_" + versionName)
+        setProperty("archivesBaseName", "zpw_" + versionName)
         manifestPlaceholders = [CHANNEL_VALUE: ""]
     }
     signingConfigs {
         release {
-            storeFile file('photoai.jks')
+            storeFile file('photoaiking.jks')
             storePassword '123456'
-            keyAlias 'photoai'
+            keyAlias 'photoaiking'
             keyPassword '123456'
         }
     }
@@ -83,10 +82,10 @@ android {
     }
     flavorDimensions "version"
     productFlavors {
-        ZPAIJL300 {
+        AIJL300 {
             dimension "version"
-            applicationId "com.photoai.app"
-            manifestPlaceholders = [CHANNEL_VALUE: "ZPAIJL300",]
+            applicationId "com.photoking.app"
+            manifestPlaceholders = [CHANNEL_VALUE: "AIJL300",]
             resValue "mipmap", "app_logo", "@mipmap/logo"
         }
     }
@@ -99,20 +98,10 @@ android {
             def buildType = variant.buildType.name // 构建类型
             def applicationId = variant.applicationId
             // 输出文件名格式：渠道名_版本名_版本号_构建类型.apk
-            def fileName = "zpaids_${flavorName}_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
+            def fileName = "zpw_${flavorName}_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
             output.outputFileName = new File(fileName)
         }
     }
-//    sourceSets {
-//        main {
-//            jniLibs.srcDirs = ['src/main/sdk/native/libs']
-//        }
-//    }
-//    sourceSets {
-//        main {
-//            java.srcDirs = ['src/main/java', 'src/main/sdk/java/src'] // 添加 OpenCV 的 Java 源代码目录
-//        }
-//    }
 }
 
 flutter {
