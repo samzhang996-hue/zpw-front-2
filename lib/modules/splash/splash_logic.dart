@@ -211,6 +211,8 @@ class SplashLogic extends BaseGetxController {
               progress.value = 1.0;
               if (value) {
                 AdsUtils.showSplashAd();
+              }else{
+                Get.offAll(const MainPage());
               }
             });
           } else {
