@@ -197,7 +197,6 @@ class VipLogic extends BaseGetxController {
     //   }
     // });
 
-
     // String channel = await getChannelInfo(3);
     Map<String, dynamic> dataMap = {
       // "channel": channel,
@@ -262,10 +261,9 @@ class VipLogic extends BaseGetxController {
               _conditionMet = true;
               if (_success == false) {
                 if (click) {
-                  if(showToast){
+                  if (showToast) {
                     HandleTool.showAppToastText("您已成为会员");
                   }
-                 
                 }
                 if (canBack) {
                   Get.back();

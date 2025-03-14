@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app_update/azhon_app_update.dart';
-import 'package:flutter_app_update/update_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:install_plugin/install_plugin.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -28,38 +30,111 @@ class Upgrade extends StatefulWidget {
 }
 
 class _UpgradeState extends State<Upgrade> {
-  // late final _list = [
-  //   '通过APP扫描即可快速下载',
-  //   '优化已知问题，使用体验更流畅',
-  //   '新版本支持一键上传，体验飞速度',
-  // ];
+  bool _isUpdating = false; // 是否正在更新
+  double _progress = 0.0; // 下载进度
+  String msg="版本更新中，请耐心等待";
+  @override
+  void initState() {
+    super.initState();
+    // 提前请求安装权限
+    _requestInstallPermission();
+  }
 
-  // late final _list = widget.appendInformation.split('');
-  _appUpdate() async {
-    if (Platform.isIOS) {
-      // const appStoreUrl =
-      //     'https://apps.apple.com/cn/app/%E9%97%AA%E7%98%A6%E8%BD%BB%E6%96%AD%E9%A3%9F/id6477259144';
-
-      // if (await canLaunch(appStoreUrl)) {
-      //   await launch(appStoreUrl);
-      // } else {
-      //   HandleTool.showAppToastText('无法打开App Store链接,请联系客服');
-      // }
-      return;
+  // 请求安装权限
+  Future<void> _requestInstallPermission() async {
+    if (Platform.isAndroid) {
+      await Permission.requestInstallPackages.request();
     }
+  }
 
-    if (widget.fileUrl.isEmpty) {
-      Log.i("===== 无下载链接= ====");
-      return;
+  // 开始下载
+  Future<void> _startDownload() async {
+    if (Platform.isAndroid) {
+      // 请求存储权限
+      if (await Permission.storage.request().isGranted) {
+        setState(() {
+          _isUpdating = true;
+        });
+
+        // 获取下载目录
+        final directory = await getExternalStorageDirectory();
+        final path = directory?.path;
+
+        if (path == null) {
+          Log.e("无法获取下载目录");
+          return;
+        }
+
+        // APK 文件路径
+        final filePath = '$path/zpwApp.apk';
+
+        // 使用 Dio 下载文件
+        final dio = Dio();
+        try {
+          await dio.download(
+            widget.fileUrl,
+            filePath,
+            onReceiveProgress: (received, total) {
+              if (total != -1) {
+                setState(() {
+                  _progress = received / total; // 更新下载进度
+                  msg = "版本更新中，请耐心等待";
+                });
+              }
+            },
+          );
+          if(_progress==1.0){
+            setState(() {
+              msg = "下载完成,等待安装中"; // 更新下载进度
+            });
+          }
+
+          // 下载完成后安装 APK
+          await _installApk(filePath);
+        } catch (e) {
+          Log.e("下载或安装失败: $e");
+          setState(() {
+            _isUpdating = false;
+            msg = "安装失败"; // 更新下载进度
+          });
+        }
+      } else {
+        Log.e("存储权限被拒绝");
+      }
+    } else if (Platform.isIOS) {
+      // iOS 不支持直接下载 APK
+      Log.i("iOS 不支持直接下载 APK，请跳转到 App Store");
     }
+  }
 
-    UpdateModel model = UpdateModel(
-      widget.fileUrl,
-      "zpwApp.apk",
-      "ic_launcher",
-      'https://itunes.apple.com/cn/app/id${6477259144}?mt=8',
-    );
-    AzhonAppUpdate.update(model).then((value) => debugPrint('$value'));
+  // 安装 APK 文件
+  Future<void> _installApk(String filePath) async {
+    Log.i("apk--------------11$filePath");
+    if (Platform.isAndroid) {
+      // 请求安装未知来源应用的权限
+      if (await Permission.requestInstallPackages.request().isGranted) {
+        Log.i("apk--------------$filePath");
+
+        // 确保文件完全写入
+        await Future.delayed(Duration(seconds: 1));
+
+        // 检查文件是否存在
+        final file = File(filePath);
+        if (await file.exists()) {
+          // 使用 install_plugin 安装 APK
+          try {
+            await InstallPlugin.installApk(filePath);
+            Log.i("APK 安装成功");
+          } catch (e) {
+            Log.e("APK 安装失败: $e");
+          }
+        } else {
+          Log.e("文件不存在: $filePath");
+        }
+      } else {
+        Log.e("安装未知来源应用的权限被拒绝");
+      }
+    }
   }
 
   @override
@@ -89,12 +164,11 @@ class _UpgradeState extends State<Upgrade> {
                           width: 295.w,
                           height: 231.w,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10.w),
-                              bottomRight: Radius.circular(10.w),
-                            )
-                          ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10.w),
+                                bottomRight: Radius.circular(10.w),
+                              )),
                         )
                       ],
                     ),
@@ -112,24 +186,9 @@ class _UpgradeState extends State<Upgrade> {
                               Center(
                                 child: Text(
                                   '${widget.newVersion}更新通知',
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: const Color(0xFF333333),
-                                      fontWeight: FontWeight.w600),
+                                  style: TextStyle(fontSize: 18.sp, color: const Color(0xFF333333), fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              // SizedBox(height: 10.w),
-                              // Center(
-                              //   child: RichText(
-                              //       text: TextSpan(children: [
-                              //     TextSpan(
-                              //         text: widget.newVersion,
-                              //         style: TextStyle(
-                              //           fontSize: 13.sp,
-                              //           color: const Color(0xFF666666),
-                              //         ))
-                              //   ])),
-                              // ),
                               SizedBox(height: 8.w),
                               Container(
                                 height: 130.w,
@@ -137,19 +196,14 @@ class _UpgradeState extends State<Upgrade> {
                                 padding: EdgeInsets.only(left: 6.w),
                                 child: WebViewWidget(
                                     controller: WebViewController()
-                                      ..setJavaScriptMode(
-                                          JavaScriptMode.unrestricted)
+                                      ..setJavaScriptMode(JavaScriptMode.unrestricted)
                                       ..setNavigationDelegate(
                                         NavigationDelegate(
-                                          onProgress: (int progress) {
-                                            // Update loading bar.
-                                          },
+                                          onProgress: (int progress) {},
                                           onPageStarted: (String url) {},
                                           onPageFinished: (String url) {},
-                                          onWebResourceError:
-                                              (WebResourceError error) {},
-                                          onNavigationRequest:
-                                              (NavigationRequest request) {
+                                          onWebResourceError: (WebResourceError error) {},
+                                          onNavigationRequest: (NavigationRequest request) {
                                             return NavigationDecision.navigate;
                                           },
                                         ),
@@ -165,105 +219,84 @@ class _UpgradeState extends State<Upgrade> {
     ${widget.appendInformation}
 </body>
 </html>""")),
-
-                                //       Padding(
-                                //         padding: EdgeInsets.only(bottom: 8.w),
-                                //         child: InAppWebView(
-                                //           initialData: InAppWebViewInitialData(
-                                //               data: """<!DOCTYPE html>
-                                // <html lang="en">
-                                // <head>
-                                //     <meta charset="UTF-8">
-                                //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                //     <title></title>
-                                // </head>
-                                // <body style="background-color:transparent;">
-                                //     <p>1.新增支付和圈子文化</p><p>2.加油加油</p>
-                                // </body>
-                                // </html>"""),
-                                //         ),
-                                //       ),
                               ),
                               SizedBox(height: 8.w),
-                              Row(
-                                children: [
-                                  if (!widget.forcedUpgrade)
+                              if (!_isUpdating) // 如果不在更新中，显示按钮
+                                Row(
+                                  children: [
+                                    if (!widget.forcedUpgrade)
+                                      Expanded(
+                                          child: GestureDetector(
+                                            onTap: Get.back,
+                                            child: Container(
+                                              height: 48.w,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(30.w),
+                                                border: Border.all(width: 1.w, color: const Color(0xFF191919)),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "下次再说",
+                                                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, color: const Color(0xFF191919)),
+                                              ),
+                                            ),
+                                          )),
+                                    if (!widget.forcedUpgrade) SizedBox(width: 22.w),
                                     Expanded(
-                                        child: GestureDetector(
-                                      onTap: Get.back,
-                                      child: Container(
-                                        height: 48.w,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(30.w),
-                                          border: Border.all(width: 1.w,color: const Color(0xFF191919)),
-                                          // color: const Color(0xFFF4F5F9),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "下次再说",
-                                          style: TextStyle(
-                                              fontSize: 18.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: const Color(0xFF191919)),
-                                        ),
-                                      ),
-                                    )),
-                                  SizedBox(width: 22.w),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.back();
-                                        _appUpdate();
-                                      },
-                                      child: Container(
-                                        height: 48.w,
-                                        decoration: BoxDecoration(
-                                          gradient: const LinearGradient(colors: [
-                                            Color(0xFF7EFAEF),
-                                            Color(0xFF7FE1FB),
-                                          ],
-                                          begin: Alignment.centerLeft,
-                                          end:  Alignment.centerRight,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Log.d("sj----------${widget.forcedUpgrade}");
+                                          _startDownload(); // 开始下载
+                                        },
+                                        child: Container(
+                                          height: 48.w,
+                                          decoration: BoxDecoration(
+                                            gradient: const LinearGradient(
+                                              colors: [
+                                                Color(0xFF7EFAEF),
+                                                Color(0xFF7FE1FB),
+                                              ],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                            ),
+                                            borderRadius: BorderRadius.circular(30.w),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(30.w),
-                                         
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "立即更新",
-                                          style: TextStyle(
-                                            fontSize:  18.sp,
-                                            color: const Color(0xFF191919),
-                                            fontWeight: 
-                                                FontWeight.w600
-                                               ,
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "立即更新",
+                                            style: TextStyle(
+                                              fontSize: 18.sp,
+                                              color: const Color(0xFF191919),
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              if (_isUpdating) // 如果在更新中，显示进度条
+                                Column(
+                                  children: [
+                                    Text(
+                                      '${(_progress * 100).toStringAsFixed(0)}%',
+                                      style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                                    ),
+                                    LinearProgressIndicator(
+                                      value: _progress,
+                                      backgroundColor: Color(0xffDEDEDE),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xff7EE8F7)),
+                                      minHeight: 10.w,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    SizedBox(height: 8.w),
+                                    Text(
+                                      msg,
+                                      style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               const Spacer(),
-                              //   Center(
-                              //     child: CommButton(
-                              //       title: '下次再说',
-                              //       type: CommButtonType.cancel,
-                              //       onTap: Get.back,
-                              //     ),
-                              //   )
-                              // else
-                              //   Center(
-                              //     child: CommButton(
-                              //       title: '立即更新',
-                              //       onTap: () {
-                              //         Get.back();
-                              //         _appUpdate();
-                              //       },
-                              //     ),
-                              //   ),
                             ],
                           ),
                         ),

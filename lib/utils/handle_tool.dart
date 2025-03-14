@@ -342,7 +342,7 @@ class HandleTool {
     String version = map["version"].toString();
     String isForce = map["isForce"].toString();
     String fileUrl = map["fileUrl"] ?? "";
-    String appendInformation = map["appendInformation"] ?? "";
+    String appendInformation = map["notice"] ?? "";
 
     /// 本地
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
