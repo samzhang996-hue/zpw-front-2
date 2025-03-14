@@ -266,6 +266,7 @@ class HandleTool {
     QDSGet(Api.appPackage_latestPackage, isShowProgress: isShowProgress, params: map, success: (isSuccess, code, message, results) {
       Log.i("版本=====>$results $channel");
       if (isSuccess && results.isNotEmpty) {
+        Log.d("app-------------${results.first}");
         /// 获取本地版本
         isCheckUpdateAction(results.first as Map,isShowProgress,isSetting);
       }
@@ -328,11 +329,11 @@ class HandleTool {
   }
 
   /// 检查是否更新
-  isCheckUpdateAction(Map map,bool isShowProgress,bool isSetting) async {
+  isCheckUpdateAction(Map map, bool isShowProgress, bool isSetting) async {
     if (map["versionCode"] == null) {
       Log.i("===== 没有更新信息=======");
       if (isShowProgress) {
-         HandleTool.showAppToastText("当前已是最新版本");
+        HandleTool.showAppToastText("当前已是最新版本");
       }
       return;
     }
@@ -348,12 +349,35 @@ class HandleTool {
     String localVersion = packageInfo.version;
     String localBuildnumber = packageInfo.buildNumber;
 
-    /// 比对
-    int localNum = int.parse("${localVersion.replaceAll(".", "")}");
-    int serviceNum = int.parse("${version.replaceAll(".", "").replaceAll(" ", "")}");
-    if (serviceNum > localNum) {
-      // Log.i("22233111");
-      if(isSetting){
+    // 去掉版本号中的 "V"（不区分大小写）并按小数点拆分
+    List<String> localVersionParts = localVersion.split(".");
+    List<String> serviceVersionParts = versionCode.toUpperCase().replaceAll("V", "").split(".");
+
+    // 将每个部分转换为整数
+    List<int> localVersionNumbers = localVersionParts.map((part) => int.parse(part)).toList();
+    List<int> serviceVersionNumbers = serviceVersionParts.map((part) => int.parse(part)).toList();
+
+    // 对比每个部分
+    bool needUpdate = false;
+    for (int i = 0; i < serviceVersionNumbers.length; i++) {
+      if (i >= localVersionNumbers.length) {
+        // 如果服务端版本号部分多于本地，则需要更新
+        needUpdate = true;
+        break;
+      }
+      if (serviceVersionNumbers[i] > localVersionNumbers[i]) {
+        // 如果服务端当前部分大于本地，则需要更新
+        needUpdate = true;
+        break;
+      } else if (serviceVersionNumbers[i] < localVersionNumbers[i]) {
+        // 如果服务端当前部分小于本地，则不需要更新
+        break;
+      }
+      // 如果相等，则继续对比下一部分
+    }
+
+    if (needUpdate) {
+      if (isSetting) {
         final g = Get.find<SettingLogic>();
         g.isUpdate.value = true;
         return;
@@ -363,7 +387,6 @@ class HandleTool {
     } else {
       if (isShowProgress) {
         HandleTool.showAppToastText("当前已是最新版本");
-       
       }
 
       Log.i("===== 1没有更新信息 $localVersion $localBuildnumber=======");
