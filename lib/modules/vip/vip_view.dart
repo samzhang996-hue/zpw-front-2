@@ -360,7 +360,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                     gotoPushPage(
                                       MyWebViewPage(
                                         titleStr: "会员协议",
-                                        htmlUrl: HandleTool.instance.yHxy,
+                                        htmlUrl: HandleTool.instance.hYxy,
                                       ),
                                     );
                                   },

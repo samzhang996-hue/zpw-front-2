@@ -109,6 +109,15 @@ class SplashLogic extends BaseGetxController {
       idfa = await getIDFA();
       idfv = await getIDFV();
     }
+    var androidID = '';
+    if (Platform.isIOS) {
+      androidID = deviceId;
+    }else {
+      androidID = await getAndroidID();
+      if(androidID.isEmpty){
+        androidID = deviceId;
+      }
+    }
     Map<String, dynamic> dataMap = {
       "channel": channel,
       "userDeviceInfo": {

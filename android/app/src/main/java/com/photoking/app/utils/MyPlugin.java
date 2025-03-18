@@ -38,7 +38,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 import com.meituan.android.walle.WalleChannelReader;
-
+import android.provider.Settings;
 import android.content.Intent;
 
 
@@ -120,6 +120,9 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 break;
             case "startPhoto":
                 startActivity(LJPhotoActivity.class);
+                break;
+            case "getAndroidID":
+                 result.success(Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID));
                 break;
             case "RangerInit":
                 RangerInit();
