@@ -122,7 +122,7 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 startActivity(LJPhotoActivity.class);
                 break;
             case "getAndroidID":
-                 result.success(Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID));
+                 result.success(Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID));
                 break;
             case "RangerInit":
                 RangerInit();

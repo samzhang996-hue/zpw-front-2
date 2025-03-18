@@ -81,7 +81,6 @@ Future<String> getIDFV() async {
 Future<String> getAndroidID() async {
   try {
     final String androidID = await methodChnnel.invokeMethod('getAndroidID');
-
     return androidID;
   } on PlatformException catch (_) {
     return "";
