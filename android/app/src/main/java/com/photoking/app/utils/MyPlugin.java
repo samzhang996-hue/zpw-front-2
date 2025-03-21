@@ -40,7 +40,7 @@ import io.flutter.plugin.common.MethodChannel;
 import com.meituan.android.walle.WalleChannelReader;
 import android.provider.Settings;
 import android.content.Intent;
-
+import android.provider.Settings;
 
 public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
     public static final String KEY_SPLASH = "splashId";
@@ -122,7 +122,7 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
                 startActivity(LJPhotoActivity.class);
                 break;
             case "getAndroidID":
-                 result.success(Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID));
+                result.success(Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID));
                 break;
             case "RangerInit":
                 RangerInit();
