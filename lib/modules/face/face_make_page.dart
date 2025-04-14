@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
+import 'package:zpw/common/bottom_sheet/face_photo_bottom_sheet.dart';
+import 'package:zpw/common/bottom_sheet/whole_body_photo_bottom_sheet.dart';
 import 'package:zpw/common/comm_error.dart';
 import 'package:zpw/common/comm_images_widget.dart';
 import 'package:zpw/common/comm_success.dart';
@@ -19,6 +22,8 @@ import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
+
+import '../../utils/sp_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
@@ -43,14 +48,8 @@ class FaceMakePage extends BaseStatefulWidget {
 }
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
-  late final _hasAvatar = (widget.apiType == 10 ||
-          widget.apiType == 2 ||
-          widget.apiType == 9 ||
-          widget.apiType == 3 ||
-          widget.apiType == 1 ||
-          widget.apiType == 0
-      ? true.obs
-      : false.obs);
+  // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
+  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 ? true.obs : false.obs);
   var _canBack = true;
   late final _autoPlay = true.obs;
   late final _initialPage = 0.obs;
@@ -71,7 +70,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   var _showDialog = false;
   late final _list = <String>[].obs;
   VideoPlayerController? _videoPlayerController;
-
+  late int _apiType = widget.apiType;
   void _toHistory() async {
     _canBack = false;
     _autoPlay.value = false;
@@ -114,12 +113,9 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       return;
     }
     var apiType = _apiTypes[_currentIndex.value];
-    if (apiType == 10 ||
-        apiType == 2 ||
-        apiType == 9 ||
-        apiType == 3 ||
-        apiType == 1 ||
-        apiType == 0) {
+    _apiType = apiType;
+    // if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 0) {
+    if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1) {
       _hasAvatar.value = true;
     } else {
       _hasAvatar.value = false;
@@ -128,10 +124,40 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // Log.e("_hasAvatar:${_hasAvatar.value}");
   }
 
+  // 检查并显示弹窗
+  Future<bool> _checkFaceAndShowDialog() async {
+    String lastShownDate = await SpUtils.getString('lastFaceShownDate');
+    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    // 如果当天没有弹过窗，或者日期不同，则显示弹窗
+    if (lastShownDate != todayDate) {
+      await SpUtils.setString('lastFaceShownDate', todayDate); // 更新为今天的日期
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> _checkWholeBodyAndShowDialog() async {
+    String lastShownDate = await SpUtils.getString('lastWholeBodyShownDate');
+    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    // 如果当天没有弹过窗，或者日期不同，则显示弹窗
+    if (lastShownDate != todayDate) {
+      await SpUtils.setString('lastWholeBodyShownDate', todayDate); // 更新为今天的日期
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   void _make() async {
-    UmengCommonSdk.onEvent('Make_click_event', {
-      'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]
-    });
+    UmengCommonSdk.onEvent('Make_click_event', {'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]});
+    if (_myHeadImg.isEmpty && (_hasAvatar.isTrue)) {
+      _uploadNewHeadImg();
+      return;
+    }
+
     _canBack = true;
     _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
@@ -146,11 +172,14 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
       return;
     }
 
-    if (!_hasAvatar.value || _myHeadImg.value.isEmpty) {
-      final res = await Get.to<String>(
-          () => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+    if (_apiType == 0) {
+      final result = await _checkWholeBodyAndShowDialog();
+      if (result == false) {
+        await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
+      }
+      final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
       _videoPlayerController?.play();
-      Log.e("res:$res");
+
       if (res == null) {
         return;
       }
@@ -188,14 +217,12 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // return;
 
     final params = {
-      "funcId":
-          widget.groupId == -1 ? widget.funcId : _funcIds[_currentIndex.value],
+      "funcId": widget.groupId == -1 ? widget.funcId : _funcIds[_currentIndex.value],
       "imgUrls": [_myHeadImg.value],
       // "prompt": "",
     };
 
-    HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params,
-        success: (isSuccess, code, message, results) {
+    HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         _showSuccess();
       } else {
@@ -206,6 +233,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _uploadNewHeadImg() async {
+    final result = await _checkFaceAndShowDialog();
+    if (result == false) {
+      await Get.bottomSheet<bool?>(const FacePhotoBottomSheet(), isDismissible: false);
+    }
+
     _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
       _videoPlayerController?.pause();
@@ -292,7 +324,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // _checkImage();
     UmengCommonSdk.onPageStart("FaceMakePage");
     _getData();
-    Log.e("params:${widget.funcId},params:${widget.groupId}");
+    Log.e("params:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
   }
 
   @override
@@ -392,10 +424,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                     : _tags[_currentIndex.value],
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500)),
+                            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
                       )),
                   const Spacer(),
                   Container(
@@ -460,8 +489,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                       width: 1.sw,
                                       height: 52.w,
                                       decoration: BoxDecoration(
-                                          color: const Color(0xFF051B38)
-                                              .withOpacity(0.87),
+                                          color: const Color(0xFF051B38).withOpacity(0.87),
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(16.w),
                                             topRight: Radius.circular(16.w),
@@ -503,36 +531,28 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                                     Container(
                                                       width: 72.w,
                                                       height: 72.w,
-                                                      decoration:
-                                                          const BoxDecoration(
+                                                      decoration: const BoxDecoration(
                                                         color: Colors.grey,
                                                         shape: BoxShape.circle,
-                                                        gradient:
-                                                            LinearGradient(
+                                                        gradient: LinearGradient(
                                                           colors: [
                                                             Color(0xFF7EFAEF),
                                                             Color(0xFF7FE1FB),
                                                           ],
-                                                          begin: Alignment
-                                                              .centerLeft, // 渐变的起始点
-                                                          end: Alignment
-                                                              .centerRight, // 渐变的结束点
+                                                          begin: Alignment.centerLeft, // 渐变的起始点
+                                                          end: Alignment.centerRight, // 渐变的结束点
                                                         ),
                                                       ),
                                                     ),
                                                     ClipOval(
-                                                      child: QdsImage(
-                                                          _myHeadImg.value,
-                                                          68.w,
-                                                          68.w),
+                                                      child: QdsImage(_myHeadImg.value, 68.w, 68.w),
                                                     ),
                                                   ],
                                                 )
                                               else
                                                 GestureDetector(
                                                   onTap: _uploadNewHeadImg,
-                                                  behavior:
-                                                      HitTestBehavior.opaque,
+                                                  behavior: HitTestBehavior.opaque,
                                                   child: Image.asset(
                                                     "no_head_img.png".make,
                                                     width: 76.w,
@@ -545,16 +565,10 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                                                   top: 0,
                                                   right: 0,
                                                   child: Visibility(
-                                                    visible:
-                                                        _showHeadImg.isTrue &&
-                                                            HandleTool
-                                                                .instance
-                                                                .headImg
-                                                                .isNotEmpty,
+                                                    visible: _showHeadImg.isTrue && HandleTool.instance.headImg.isNotEmpty,
                                                     child: GestureDetector(
                                                       onTap: _closeHeadImg,
-                                                      behavior: HitTestBehavior
-                                                          .opaque,
+                                                      behavior: HitTestBehavior.opaque,
                                                       child: Image.asset(
                                                         "make_close.png".make,
                                                         width: 18.w,
@@ -614,9 +628,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                           child: Container(
                             width: 1.sw,
                             height: 100.w,
-                            color: _hasAvatar.isTrue
-                                ? const Color(0xFF191919)
-                                : Colors.transparent,
+                            color: _hasAvatar.isTrue ? const Color(0xFF191919) : Colors.transparent,
                             child: Column(
                               children: [
                                 const Spacer(flex: 2),

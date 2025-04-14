@@ -14,6 +14,18 @@
       ]
     },
     {
+      "name": "ZPAIJL300",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_development.dart",
+      "args": [
+        "--flavor",
+        "ZPAIJL300",
+        "--target",
+        "lib/main.dart"
+      ]
+    },
+    {
       "name": "AIJL001-ios",
       "request": "launch",
       "type": "dart",
