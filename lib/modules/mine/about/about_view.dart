@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/modules/mine/sf/sf_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'about_logic.dart';
-import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
-class AboutPage extends BaseStatefulWidget {
-  final logic = Get.put(AboutLogic());
-  final state = Get.find<AboutLogic>().state;
 
+import 'about_logic.dart';
+
+class AboutPage extends BaseStatefulWidget {
   @override
   BaseWidgetState<AboutPage> getState() => _AboutPageState();
 }
 
 class _AboutPageState extends BaseWidgetState<AboutPage> {
+  final logic = Get.put(AboutLogic());
+  final state = Get.find<AboutLogic>().state;
   @override
   void dispose() {
     Get.delete<AboutPage>();
     super.dispose();
   }
+
   @override
   Widget initDefaultBuild(BuildContext context) {
     return Container(
@@ -35,6 +37,12 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
           commItem("隐私政策", ""),
           commItem("会员协议", ""),
           commItem("算法公示", ""),
+          Obx(() {
+            return commItem("清理缓存", state.size.value);
+          }),
+          Obx(() {
+            return commItem("检查更新", state.version.value, showUpdate: true);
+          }),
           Container(
             margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
             width: double.infinity,
@@ -58,6 +66,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
     String title,
     String tag, {
     bool hideArrow = false,
+    bool showUpdate = false,
   }) {
     return Column(
       children: [
@@ -68,8 +77,8 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
           onTap: () {
             switch (title) {
               case "用户协议":
-                String htmlStr=HandleTool.instance.yHxy;
-                if(htmlStr.isEmpty){
+                String htmlStr = HandleTool.instance.yHxy;
+                if (htmlStr.isEmpty) {
                   return;
                 }
                 gotoPushPage(
@@ -80,8 +89,8 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                 );
                 break;
               case "隐私政策":
-                String htmlStr=HandleTool.instance.ySxy;
-                if(htmlStr.isEmpty){
+                String htmlStr = HandleTool.instance.ySxy;
+                if (htmlStr.isEmpty) {
                   return;
                 }
                 gotoPushPage(
@@ -92,8 +101,8 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                 );
                 break;
               case "会员协议":
-                String htmlStr=HandleTool.instance.hYxy;
-                if(htmlStr.isEmpty){
+                String htmlStr = HandleTool.instance.hYxy;
+                if (htmlStr.isEmpty) {
                   return;
                 }
                 gotoPushPage(
@@ -105,6 +114,12 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                 break;
               case "算法公示":
                 gotoPushPage(SfPage());
+                break;
+              case "清理缓存":
+                logic.clearCache();
+                break;
+              case "检查更新":
+                HandleTool.instance.packagesGetForcePackage(isShowProgress: true);
                 break;
             }
           },
@@ -124,6 +139,18 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                   fontWeight: FontWeight.w500,
                 ),
                 const Spacer(),
+                Obx(() => Visibility(
+                      visible: logic.isUpdate.isTrue && showUpdate,
+                      child: Container(
+                        width: 6.w,
+                        height: 6.w,
+                        margin: EdgeInsets.only(right: 4.w),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                      ),
+                    )),
                 CommText(
                   text: tag,
                   textColor: const Color(0xff7E8293),

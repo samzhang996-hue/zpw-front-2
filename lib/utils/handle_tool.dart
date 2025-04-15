@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:zpw/main.dart';
 import 'package:zpw/model/upload_bean.dart';
-import 'package:zpw/modules/mine/setting/setting_logic.dart';
+import 'package:zpw/modules/mine/about/about_logic.dart';
 import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/network/network_util.dart';
@@ -267,20 +267,14 @@ class HandleTool {
       Log.i("版本=====>$results $channel");
       if (isSuccess && results.isNotEmpty) {
         Log.d("app-------------${results.first}");
+
         /// 获取本地版本
-        isCheckUpdateAction(results.first as Map,isShowProgress,isSetting);
+        isCheckUpdateAction(results.first as Map, isShowProgress, isSetting);
       }
     });
   }
 
-  SMWPost<T>(String url,
-      {Function(bool isSuccess, int code, String message, List<T> results)? success,
-      Function(int totalCount)? totalCount,
-      Map<String, dynamic>? params,
-      onModel,
-      bool isShowError = true,
-      bool isShowProgress = true,
-      bool isCancleToken = false}) {
+  SMWPost<T>(String url, {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? totalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
     DioUtils.instance.post<T>(url, success: (isSuccess, code, message, resulsts) {
@@ -295,14 +289,7 @@ class HandleTool {
   }
 
   /// get
-  QDSGet<T>(String url,
-      {Function(bool isSuccess, int code, String message, List<T> results)? success,
-      Function(int totalCount)? totalCount,
-      Map<String, dynamic>? params,
-      onModel,
-      bool isShowError = true,
-      bool isShowProgress = true,
-      bool isCancleToken = false}) {
+  QDSGet<T>(String url, {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? totalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
     DioUtils.instance.get<T>(url, success: (isSuccess, code, message, results) {
@@ -378,10 +365,11 @@ class HandleTool {
 
     if (needUpdate) {
       if (isSetting) {
-        final g = Get.find<SettingLogic>();
+        final g = Get.find<AboutLogic>();
         g.isUpdate.value = true;
         return;
       }
+
       /// 需要更新
       showUpdateDialog(isForce == "1" ? true : false, versionCode, appendInformation, fileUrl);
     } else {
@@ -396,7 +384,7 @@ class HandleTool {
   ///Flutter侧处理升级对话框
   ///[forcedUpgrade] 是否强制升级
   showUpdateDialog(bool forcedUpgrade, String newVersion, String appendInformation, String fileUrl) {
-        Get.dialog(
+    Get.dialog(
       Upgrade(
         forcedUpgrade: forcedUpgrade,
         newVersion: newVersion,

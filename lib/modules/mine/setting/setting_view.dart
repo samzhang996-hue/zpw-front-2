@@ -29,48 +29,88 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
   @override
   Widget initDefaultBuild(BuildContext context) {
     return GetBuilder<SettingLogic>(builder: (logic) {
+      final userInfoBean = logic.mineLogic.state.userInfoBean;
       return Container(
         color: Colors.white,
-        child: Column(
+        child: Stack(
           children: [
-            YAppBar(title: "设置"),
-            Obx(() {
-              return commItem("清理缓存", state.size.value);
-            }),
-            commItem("注销账号", ""),
-            Obx(() {
-              return commItem("检查更新", state.version.value, showUpdate: true);
-            }),
-            Visibility(
-              child: commItem("切换账号", ""),
-              visible: HandleTool.instance.channelLogin,
+            Column(
+              children: [
+                Column(
+                  children: [
+                    YAppBar(title: "设置"),
+                    commItem("ID", '${userInfoBean.id}', hideArrow: true),
+                    commItem("昵称", '${userInfoBean.nickName}', hideArrow: true),
+                    commItem("手机号", userInfoBean.userPhone ?? '去绑定', hideArrow: true),
+                    commItem("微信", "", hideArrow: true),
+                    commItem("注销账号", ""),
+
+                    Visibility(
+                      visible: HandleTool.instance.channelLogin,
+                      child: commItem("切换账号", ""),
+                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     logic.getChannel();
+                    //   },
+                    //   child: Obx(() {
+                    //     return CommText(
+                    //       text: "V${state.version.value}    ${state.channel.value}",
+                    //       textColor: Color(0xffcccccc),
+                    //     );
+                    //   }),
+                    // ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AdBannerWidget(
+                          posId: AdsConfig.bannerId,
+                          width: 345,
+                          interval: 5,
+                          show: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            InkWell(
-              onTap: () {
-                logic.getChannel();
-              },
-              child: Obx(() {
-                return CommText(
-                  text: "V${state.version.value}    ${state.channel.value}",
-                  textColor: Color(0xffcccccc),
-                );
-              }),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AdBannerWidget(
-                  posId: AdsConfig.bannerId,
-                  width: 345,
-                  interval: 5,
-                  show: true,
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                minimum: EdgeInsets.symmetric(vertical: 10.w),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: logic.onExit,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Color(0x12999999),
+                            borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                          ),
+                          height: 52.w,
+                          alignment: Alignment.center,
+                          child: Text(
+                            '退出登录',
+                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: const Color(0xFF999999)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+            )
           ],
         ),
       );
@@ -206,7 +246,6 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
     String title,
     String tag, {
     bool hideArrow = false,
-    bool showUpdate = false,
   }) {
     return Column(
       children: [
@@ -216,13 +255,6 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
         InkWell(
           onTap: () {
             switch (title) {
-              case "清理缓存":
-                logic.clearCache();
-                break;
-              case "检查更新":
-                HandleTool.instance
-                    .packagesGetForcePackage(isShowProgress: true);
-                break;
               case "注销账号":
                 CustomExitDialogUtils.showCustomDialog(
                     context: context,
@@ -251,18 +283,6 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                   fontWeight: FontWeight.w500,
                 ),
                 const Spacer(),
-                Obx(() => Visibility(
-                      visible: logic.isUpdate.isTrue && showUpdate,
-                      child: Container(
-                        width: 6.w,
-                        height: 6.w,
-                        margin: EdgeInsets.only(right: 4.w),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red,
-                        ),
-                      ),
-                    )),
                 CommText(
                   text: tag,
                   textColor: const Color(0xff7E8293),
