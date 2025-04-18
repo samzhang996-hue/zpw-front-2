@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
@@ -101,7 +100,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(21),
-                    border: const GradientBoxBorder( gradient: const LinearGradient(colors: [Color(0xff7EFAEF), Color(0xff7FE1FB)]), width: 3),
+                    border: const GradientBoxBorder(gradient: const LinearGradient(colors: [Color(0xff7EFAEF), Color(0xff7FE1FB)]), width: 3),
                   ),
                   height: 20,
                   alignment: Alignment.centerLeft,
@@ -229,8 +228,7 @@ class UserAgreementDialog extends GetWidget {
                         },
                     ),
                     const TextSpan(
-                      text:
-                          "为了给你提供更好的服务，我们将会向您申请一下权限和信息：\n1.为了帮您统计设备维度数据分析、保障软件服务的正常运行，我们需要申请获取设备信息，日志信息。\n2.我们可能会申请读取设写入手机存储权限，用于下载及缓存相关文件；相机与录音权限，用于拍摄功能。\n3.以上权限以及社戏爱你个头。相册、存储空间等敏感权限均不会默认或强制开启收集信息。\n4.我们尊重你的选择权，同时我们也为你提供注销、投诉渠道。",
+                      text: "为了给你提供更好的服务，我们将会向您申请一下权限和信息：\n1.为了帮您统计设备维度数据分析、保障软件服务的正常运行，我们需要申请获取设备信息，日志信息。\n2.我们可能会申请读取设写入手机存储权限，用于下载及缓存相关文件；相机与录音权限，用于拍摄功能。\n3.以上权限以及社戏爱你个头。相册、存储空间等敏感权限均不会默认或强制开启收集信息。\n4.我们尊重你的选择权，同时我们也为你提供注销、投诉渠道。",
                       style: TextStyle(fontSize: 13, color: Color(0xff818181), fontWeight: FontWeight.w500, height: 1.8),
                     ),
                   ],

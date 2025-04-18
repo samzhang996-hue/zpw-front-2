@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_xy"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#191919"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".heat.AcquiredActivity">
+
+    <include layout="@layout/base_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/ll_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="64dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1.请按住屏幕"
+            android:textColor="#ffffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.将手指放在后置摄像头"
+            android:textColor="#ffffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tv_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="64dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2.将手指放在后置摄像头"
+            android:textColor="#ffffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在采集数据..."
+            android:textColor="#ffffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+           />
+    </LinearLayout>
+
+
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp">
+
+        <SurfaceView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/fl_sf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.saomiaomax.app.heat.CircularProgressBar
+                    android:id="@+id/circular_progress_bar_left"
+                    android:layout_width="136dp"
+                    android:layout_height="136dp"
+                    app:backgroundColor="#fff"
+                    app:progressColor="#4CAF50"
+                    app:strokeWidth="16dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:textColor="#ffffffff"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="高压/mmHg"
+                        android:textColor="#99ffffff"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.saomiaomax.app.heat.CircularProgressBar
+                    android:id="@+id/circular_progress_bar_right"
+                    android:layout_width="136dp"
+                    android:layout_height="136dp"
+                    app:backgroundColor="#fff"
+                    app:progressColor="#4CAF50"
+                    app:strokeWidth="16dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:textColor="#ffffffff"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="低压/mmHg"
+                        android:textColor="#99ffffff"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <!--    <TextView-->
+    <!--        android:layout_width="336dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:gravity="center"-->
+    <!--        android:textColor="#fff"-->
+    <!--        android:text="将您的食指在如图所示的主摄像头和闪光灯上面可以开始测算"-->
+    <!--        android:textSize="18sp"-->
+    <!--        android:textStyle="bold" />-->
+
+
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:text="注释：蓝色路径一直转圈加载到检测完成"-->
+    <!--        android:textColor="#ffdd0000"-->
+    <!--        android:textSize="15sp"-->
+    <!--        />-->
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="本产品检测结果仅供参考，不可用于医疗诊断"
+        android:textColor="#80ffffff" />
+</LinearLayout>

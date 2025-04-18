@@ -1,16 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:sprintf/sprintf.dart';
+import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
-import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
 
 import 'exception/error_status.dart';
-import 'package:sprintf/sprintf.dart';
 
 ///头部管理拦截器
 class AuthInterceptor extends Interceptor {
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     // String token = await SpUtils.getString("token");
     // Log.d("token--$token");
     String token = await SpUtils.getString("token");
@@ -26,6 +25,8 @@ class AuthInterceptor extends Interceptor {
     options.headers["Authorization"] = token;
     options.headers["projectId"] = projectId;
     options.headers["channel"] = channel;
+    options.headers["version"] = HandleTool.instance.localVersion;
+    print("options.headers--${options.headers}");
     super.onRequest(options, handler);
   }
 }
@@ -49,8 +50,7 @@ class LoggingInterceptor extends Interceptor {
       }
     } else {
       ///如果queryParameters 不为空则拼接成完整的URl
-      Log.i(
-          "RequestUrl:${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}");
+      Log.i("RequestUrl:${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}");
     }
     // Log.d("RequestMethod:" + options.method);
     // Log.d("RequestHeaders:" + options.headers.toString());
@@ -87,8 +87,7 @@ class AdapterInterceptor extends Interceptor {
   static const String NOT_FOUND = "未查询到信息";
 
   static const String FAILURE_FORMAT = "{\"code\":%d,\"message\":\"%s\"}";
-  static const String SUCCESS_FORMAT =
-      "{\"code\":0,\"data\":%s,\"message\":\"\"}";
+  static const String SUCCESS_FORMAT = "{\"code\":0,\"data\":%s,\"message\":\"\"}";
 
   Function(String)? errHandler;
   AdapterInterceptor({this.errHandler});

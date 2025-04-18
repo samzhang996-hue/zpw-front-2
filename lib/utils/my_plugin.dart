@@ -42,8 +42,7 @@ Future<void> rangerInit() async {
   }
 }
 
-Future<bool> inpaint(
-    String imagePath, String maskPath, String outputPath, int radius) async {
+Future<bool> inpaint(String imagePath, String maskPath, String outputPath, int radius) async {
   try {
     final bool result = await methodChnnel.invokeMethod('inpaint', {
       'imagePath': imagePath,
@@ -73,6 +72,16 @@ Future<String> getIDFV() async {
     final String idfv = await methodChnnel.invokeMethod('getIDFV');
 
     return idfv;
+  } on PlatformException catch (_) {
+    return "";
+  }
+}
+
+Future<String> getUA() async {
+  try {
+    final String ua = await methodChnnel.invokeMethod('getUA');
+
+    return ua;
   } on PlatformException catch (_) {
     return "";
   }

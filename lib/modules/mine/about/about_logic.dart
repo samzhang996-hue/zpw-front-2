@@ -1,12 +1,15 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zpw/modules/mine/mine_logic.dart';
 
+import '../../../network/api/network_api.dart';
 import '../../../utils/filecache.dart';
 import '../../../utils/handle_tool.dart';
 import '../../../utils/my_plugin.dart';
+import '../../../utils/sp_utils.dart';
 import 'about_state.dart';
 
 class AboutLogic extends GetxController {
@@ -46,9 +49,27 @@ class AboutLogic extends GetxController {
     HandleTool.showAppToastText('清除缓存成功');
   }
 
-  void version() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String localVersion = packageInfo.version;
-    state.version.value = localVersion;
+  void version() {
+    state.version.value = HandleTool.instance.localVersion;
+  }
+
+  accountLogin(String name, String password) {
+    Map<String, dynamic> dataMap = {
+      "account": name,
+      "password": password,
+    };
+
+    final MineLogic mineLogic = Get.find<MineLogic>();
+    HandleTool.instance.SMWPost(Api.accountLogin, params: dataMap, isShowProgress: true, success: (isSuccess, code, message, results) async {
+      if (isSuccess == true && results.isNotEmpty) {
+        final map = results.first as Map;
+        Navigator.pop(navigator!.context); // 关闭弹窗
+        HandleTool.showAppToastText("切换成功");
+        // mineLogic.getUserInfo();
+        await SpUtils.setString("token", "${map["token"]}");
+        mineLogic.getUserInfo();
+        Get.back();
+      }
+    });
   }
 }

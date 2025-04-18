@@ -7,11 +7,13 @@ import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
 import 'package:flutter_app_update/azhon_app_update.dart';
 import 'package:flutter_app_update/update_model.dart';
+import 'package:flutter_udid/flutter_udid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/main.dart';
 import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/mine/about/about_logic.dart';
@@ -70,6 +72,83 @@ class HandleTool {
   bool channelAds = false;
   bool channelLogin = false;
 
+  String localVersion = '';
+
+  Future<Map<String, dynamic>> getMap() async {
+    String idfa = "";
+    String idfv = "";
+    String ua = '';
+    String imei = '';
+    String deviceId = '';
+    String channel = "AIJL300";
+    String oaid = "";
+    if (Platform.isAndroid) {
+      String oaidStr = await SpUtils.getString("oaid");
+      String deviceIdStr = await SpUtils.getString("deviceId");
+      String channelStr = await SpUtils.getString("channel");
+      oaid = oaidStr.isEmpty ? await getOAID() : oaidStr;
+      deviceId = deviceIdStr.isEmpty ? await getDeviceId() : deviceIdStr;
+      channel = channelStr.isEmpty ? await getChannelInfo() : channelStr;
+
+      await SpUtils.setString("oaid", oaid);
+      await SpUtils.setString("deviceId", deviceId);
+      await SpUtils.setString("channel", channel);
+    } else if (Platform.isIOS) {
+      String deviceIdStr = await SpUtils.getString("deviceId");
+      deviceId = deviceIdStr.isEmpty ? await FlutterUdid.udid : deviceIdStr;
+      // deviceId = deviceIdStr.isEmpty ? "59245b9e42a7a51e1212" : deviceIdStr;
+      SpUtils.setString("deviceId", deviceId);
+      channel = "AIIOS";
+    }
+    HandleTool.instance.channel = channel;
+
+    UmengCommonSdk.initCommon('', '67aeea638f232a05f113c1be', channel);
+    UmengCommonSdk.setPageCollectionModeManual();
+    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    if (Platform.isIOS) {
+      idfa = await getIDFA();
+      idfv = await getIDFV();
+    }
+    var androidID = '';
+    if (Platform.isIOS) {
+      androidID = deviceId;
+    } else {
+      androidID = await getAndroidID();
+      if (androidID.isEmpty) {
+        androidID = deviceId;
+      }
+      ua = await getUA();
+    }
+
+    Map<String, dynamic> dataMap = {
+      "systemDevice": Platform.isAndroid ? "android" : "ios",
+      "deviceCode": androidID,
+      'oaid': oaid,
+      'idfa': idfa,
+      'imei': imei,
+      'modelInfo': ua,
+      "idfv": idfv,
+    };
+    return dataMap;
+  }
+
+  /// 判断为null 或者空字符串
+  bool isEmpty(dynamic data) {
+    switch (data) {
+      case int _:
+        return data == 0;
+      case String _:
+        return data.isEmpty;
+      default:
+        return true;
+    }
+  }
+
+  /// 判断为null 或者空字符串
+  bool isNotEmpty(dynamic data) {
+    return !isEmpty(data);
+  }
+
   Future<bool> compareTimesWithServer(String serverTimeString) async {
     // 获取当前设备时间
     DateTime currentTime = DateTime.now();
@@ -89,8 +168,8 @@ class HandleTool {
     return result;
   }
 
-  getProtocolConfig() {
-    SMWPost(Api.center_getProtocolConfig, isShowProgress: false, success: (isSuccess, code, message, results) {
+  getProtocolConfig({bool isShowProgress = false}) {
+    SMWPost(Api.center_getProtocolConfig, isShowProgress: isShowProgress, success: (isSuccess, code, message, results) {
       Log.d("config---$isSuccess----$results");
       if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
         // 遍历 results 列表,提取 configType 和 configValue

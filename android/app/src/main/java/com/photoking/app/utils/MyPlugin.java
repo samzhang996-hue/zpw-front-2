@@ -127,6 +127,11 @@ public class MyPlugin implements MethodChannel.MethodCallHandler, EventChannel.S
             case "RangerInit":
                 RangerInit();
                 break;
+            case "getUA": {
+                result.success(System.getProperty("http.agent"));
+                break;
+            }
+
         }
     }
 

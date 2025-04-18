@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/setting/setting_view.dart';
-import 'package:zpw/modules/mine/sf/sf_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/modules/wf/znxc/znxc_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/my_plugin.dart';
 
 import 'mine_logic.dart';
 
@@ -24,7 +22,7 @@ class MinePage extends BaseStatefulWidget {
   BaseWidgetState<MinePage> getState() => _MinePageState();
 }
 
-class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserver {
+class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserver, AppMixin {
   final logic = Get.put(MineLogic());
   final state = Get.find<MineLogic>().state;
 
@@ -47,7 +45,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
       case AppLifecycleState.paused:
         break;
       case AppLifecycleState.resumed:
-        logic.getUserInfo();
+        // logic.getUserInfo();
         break;
       case AppLifecycleState.hidden:
       default:
@@ -56,12 +54,16 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
   }
 
   Widget image() {
-    return state.userInfoBean.headImg == ""
-        ? Image.asset(
-            "default_avatar.png".mine,
-            width: 56.w,
-          )
-        : QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w, isLocal: true);
+    return Image.asset(
+      "default_avatar.png".mine,
+      width: 56.w,
+    );
+    // return state.userInfoBean.headImg == ""
+    //     ? Image.asset(
+    //         "default_avatar.png".mine,
+    //         width: 56.w,
+    //       )
+    //     : QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w, isLocal: true);
   }
 
   @override
@@ -102,11 +104,22 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CommText(
-                                    text: state.userInfoBean.nickName,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  TapDebouncer(onTap: () async {
+                                    wxLogin();
+                                  }, builder: (context, onTT) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        onTT?.call();
+                                      },
+                                      behavior: HitTestBehavior.opaque,
+                                      child: CommText(
+                                        // text: "登录/注册",
+                                        text: HandleTool.instance.isEmpty(state.userInfoBean.nickName) ? "登录/注册" : state.userInfoBean.nickName,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  }),
                                   SizedBox(
                                     height: 4.w,
                                   ),
@@ -114,25 +127,27 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                     text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "永久会员" : "到期时间:${state.userInfoBean.vipExpireTime}") : "未开通会员",
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w500,
-                                    textColor: Color(0xff818181),
+                                    textColor: const Color(0xff818181),
                                   ),
                                 ],
                               ),
                             ),
-                            Spacer(),
-                            InkWell(
-                              onTap: () {
-                                UmengCommonSdk.onEvent('Mine_click_event_setting', {'name': 'setting.png'});
-                                gotoPushPage(SettingPage());
-                              },
-                              child: Container(
+                            const Spacer(),
+                            if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
+                              InkWell(
+                                onTap: () {
+                                  UmengCommonSdk.onEvent('Mine_click_event_setting', {'name': 'setting.png'});
+                                  gotoPushPage(SettingPage());
+                                },
+                                child: SizedBox(
                                   width: 60.w,
                                   child: Image.asset(
                                     "setting.png".mine,
                                     width: 30.w,
                                     height: 30.w,
-                                  )),
-                            )
+                                  ),
+                                ),
+                              )
                           ],
                         ),
                       ),
@@ -298,12 +313,14 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
 
   Widget commItem(String icon, String title) {
     return InkWell(
-        onTap: () {
+        onTap: () async {
           UmengCommonSdk.onEvent('Mine_click_event', {'name': title});
           switch (title) {
             case "我的作品":
               // HandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
-              gotoPushPage(WorksPage());
+              if ((await wxLogin() == true)) {
+                gotoPushPage(WorksPage());
+              }
               // gotoPushPage(ZnxcPage());
 
               break;

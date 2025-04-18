@@ -5,6 +5,7 @@ import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 // import 'package:flutter_udid/flutter_udid.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/common/ads_config.dart';
@@ -79,13 +80,74 @@ class SplashLogic extends BaseGetxController {
 
     UmengCommonSdk.initCommon('', '67aeea638f232a05f113c1be', channel);
     UmengCommonSdk.setPageCollectionModeManual();
-    Log.i(
-        'Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
+    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
+  void _noTokenLogin() async {
+    ////
+
+    ////
+
+    ////
+
+    ////
+    Get.put(VipLogic());
+    if (!_showAd || HandleTool.instance.channelAds) {
+      progress.value = 1.0;
+      Get.offAll(const MainPage());
+      return;
+    }
+    try {
+      bool value = await AdsUtils.init().timeout(const Duration(seconds: 5));
+      progress.value = 1.0;
+      if (value) {
+        AdsUtils.showSplashAd();
+      } else {
+        Get.offAll(const MainPage());
+      }
+    } on TimeoutException catch (_) {
+      Log.e("AdsUtils.init() timed out");
+      Get.offAll(const MainPage()); // 超时，直接进入主页
+    } catch (error) {
+      Log.e("AdsUtils.init() failed: $error");
+      Get.offAll(const MainPage()); // 发生异常，直接进入主页
+    }
+    return;
+  }
+
+  void _tokenLogin() {
+    get(
+      Api.authByToken,
+      success: (isSuccess, code, message, results) async {
+        if (isSuccess == true && results.isNotEmpty) {
+          requestMax = 100;
+          Map data = results.first as Map;
+          SpUtils.setString("token", data['token'] ?? "");
+          SpUtils.setBool("isAgreed", true);
+          Log.d("res----${data}");
+          Get.put(VipLogic());
+          getUserInfo();
+        }
+      },
+    );
+  }
+
   loginWithDeviceInfo() async {
-    Log.i('Device channel: ----123');
+    SpUtils.setBool("isAgreed", true);
+    String token = await SpUtils.getString("token");
+
+    PackageInfo.fromPlatform().then((v) {
+      HandleTool.instance.localVersion = v.version;
+    });
+
+    if (token.isEmpty) {
+      rangerInit();
+      _noTokenLogin();
+    } else {
+      _tokenLogin();
+    }
+    return;
     printDeviceInfo();
   }
 
@@ -101,8 +163,7 @@ class SplashLogic extends BaseGetxController {
 
   bool _showAd = true;
 
-  _onLogin(String channel, String deviceId, String oaid,
-      {bool isShowProgress = false}) async {
+  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = false}) async {
     String idfa = "";
     String idfv = "";
     if (Platform.isIOS) {
@@ -112,28 +173,20 @@ class SplashLogic extends BaseGetxController {
     var androidID = '';
     if (Platform.isIOS) {
       androidID = deviceId;
-    }else {
+    } else {
       androidID = await getAndroidID();
-      if(androidID.isEmpty){
+      if (androidID.isEmpty) {
         androidID = deviceId;
       }
     }
     Map<String, dynamic> dataMap = {
       "channel": channel,
-      "userDeviceInfo": {
-        "deviceCode": deviceId,
-        "systemDevice": Platform.isAndroid ? "android" : "ios",
-        "oaid": oaid,
-        "idfa": idfa,
-        "idfv": idfv
-      },
+      "userDeviceInfo": {"deviceCode": androidID, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": idfa, "idfv": idfv},
     };
     Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap,
-        success: (isSuccess, code, message, results) async {
+    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
       requestMax = requestMax + 1;
-      Log.i(
-          "isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
+      Log.i("isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
       if (isSuccess == true && results.isNotEmpty) {
         requestMax = 100;
         Map data = results.first as Map;
@@ -181,14 +234,12 @@ class SplashLogic extends BaseGetxController {
           Log.d("requestUserInfoMax----$requestUserInfoMax");
           if (isSuccess == true && results.isNotEmpty) {
             rangerInit();
-            Log.d(
-                "requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
+            Log.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
             requestUserInfoMax = 100;
             Log.d("userInfoBean----${results.first.id}");
             UserInfoBean userInfoBean = results.first;
             HandleTool.instance.isMember = userInfoBean.vipFlag == 1;
-            Log.d(
-                "userInfoBean----${HandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
+            Log.d("userInfoBean----${HandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
             UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
             // Get.offAll(const MainPage());
             // return;
@@ -217,8 +268,6 @@ class SplashLogic extends BaseGetxController {
               Log.e("AdsUtils.init() failed: $error");
               Get.offAll(const MainPage()); // 发生异常，直接进入主页
             }
-
-
           } else {
             if (code == -2222) {
               _showAd = false;
@@ -239,8 +288,7 @@ class SplashLogic extends BaseGetxController {
   test() {
     FlutterPangleAds.onEventListener((event) {
       if (event.adId == AdsConfig.splashId) {
-        if (event.action == AdEventAction.onAdError ||
-            event.action == AdEventAction.onAdLoaded) {
+        if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
           // if (isFirst) {
           Get.offAll(const MainPage());
           // } else {

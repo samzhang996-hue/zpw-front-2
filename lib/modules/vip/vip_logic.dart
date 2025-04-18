@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:tobias/tobias.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/model/payBean.dart';
@@ -18,7 +19,7 @@ import 'package:zpw/utils/my_plugin.dart';
 
 import 'vip_state.dart';
 
-class VipLogic extends BaseGetxController {
+class VipLogic extends BaseGetxController with AppMixin {
   final VipState state = VipState();
   Timer? _timer;
   int _elapsedSeconds = 0;
@@ -164,23 +165,25 @@ class VipLogic extends BaseGetxController {
     });
   }
 
-  addUserAgreementOrder() {
-    Map<String, dynamic> dataMap = {
-      "goodsId": state.goodsId,
-      "payKeyType": state.payKeyType,
-    };
-    Post(Api.payOrder_addUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-      Log.i("------${results.first} ");
-      if (isSuccess == true && results.isNotEmpty) {
-        var result = results[0];
-        if (Platform.isAndroid) {
-          isAt = true;
-          test(result.toString());
-        } else {
-          //ios
+  addUserAgreementOrder() async {
+    if ((await wxLogin() == true)) {
+      Map<String, dynamic> dataMap = {
+        "goodsId": state.goodsId,
+        "payKeyType": state.payKeyType,
+      };
+      Post(Api.payOrder_addUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
+        Log.i("------${results.first} ");
+        if (isSuccess == true && results.isNotEmpty) {
+          var result = results[0];
+          if (Platform.isAndroid) {
+            isAt = true;
+            test(result.toString());
+          } else {
+            //ios
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   addOrder() async {
@@ -198,48 +201,51 @@ class VipLogic extends BaseGetxController {
     // });
 
     // String channel = await getChannelInfo(3);
-    Map<String, dynamic> dataMap = {
-      // "channel": channel,
-      "goodsId": state.goodsId,
-      "payKeyType": state.payKeyType,
-    };
-    Log.d("map----$dataMap");
-    Post<PayBean>(Api.payOrder_addOrder,
-        isShowProgress: true,
-        params: dataMap,
-        success: (isSuccess, code, message, results) {
-          Log.i("------${results.first.toJson()} $isSuccess=========");
-          if (isSuccess == true && results.isNotEmpty) {
-            state.payBean = results.first;
-            Tobias tobias = Tobias();
-            if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
-              tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
-                if ("${value["resultStatus"]}" == "9000") {
-                  HandleTool.instance.isMember = true;
-                  HandleTool.showAppToastText("支付成功");
-                  // _startPolling();
-                } else {
-                  HandleTool.showAppToastText("支付失败");
-                }
-              });
-            } else if (state.payBean.payKeyType == 3) {
-              // ZfbServerPayOrderVo? zfbServerPayOrderVo =
-              //     state.payBean.zfbServerPayOrderVo;
-              // if (zfbServerPayOrderVo != null) {
-              //   htmlFlutter(
-              //       zfbServerPayOrderVo.appId ?? "",
-              //       zfbServerPayOrderVo.jumpUrl ?? "",
-              //       zfbServerPayOrderVo.outTradeNo ?? "");
-              //   _startPolling();
-              // }
-            } else if (state.payBean.payKeyType == 5) {
-              onH5(state.payBean.zfbPayOrderVo!.trademsg.toString());
-            } else if (state.payBean.payKeyType == 6) {
-              toUrl2(state.payBean.zfbPayOrderVo!.trademsg.toString());
+
+    if ((await wxLogin() == true)) {
+      Map<String, dynamic> dataMap = {
+        // "channel": channel,
+        "goodsId": state.goodsId,
+        "payKeyType": state.payKeyType,
+      };
+      Log.d("map----$dataMap");
+      Post<PayBean>(Api.payOrder_addOrder,
+          isShowProgress: true,
+          params: dataMap,
+          success: (isSuccess, code, message, results) {
+            Log.i("------${results.first.toJson()} $isSuccess=========");
+            if (isSuccess == true && results.isNotEmpty) {
+              state.payBean = results.first;
+              Tobias tobias = Tobias();
+              if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
+                tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
+                  if ("${value["resultStatus"]}" == "9000") {
+                    HandleTool.instance.isMember = true;
+                    HandleTool.showAppToastText("支付成功");
+                    // _startPolling();
+                  } else {
+                    HandleTool.showAppToastText("支付失败");
+                  }
+                });
+              } else if (state.payBean.payKeyType == 3) {
+                // ZfbServerPayOrderVo? zfbServerPayOrderVo =
+                //     state.payBean.zfbServerPayOrderVo;
+                // if (zfbServerPayOrderVo != null) {
+                //   htmlFlutter(
+                //       zfbServerPayOrderVo.appId ?? "",
+                //       zfbServerPayOrderVo.jumpUrl ?? "",
+                //       zfbServerPayOrderVo.outTradeNo ?? "");
+                //   _startPolling();
+                // }
+              } else if (state.payBean.payKeyType == 5) {
+                onH5(state.payBean.zfbPayOrderVo!.trademsg.toString());
+              } else if (state.payBean.payKeyType == 6) {
+                toUrl2(state.payBean.zfbPayOrderVo!.trademsg.toString());
+              }
             }
-          }
-        },
-        onModel: (m) => PayBean.fromJson(m));
+          },
+          onModel: (m) => PayBean.fromJson(m));
+    }
   }
 
   Future<void> toUrl2(String url) async {

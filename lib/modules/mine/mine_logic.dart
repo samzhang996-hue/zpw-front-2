@@ -13,15 +13,14 @@ class MineLogic extends BaseGetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     getUserInfo();
   }
 
-  getUserInfo() {
+  getUserInfo({bool isShowProgress = false}) {
     final logic = Get.put(GameplayLogic());
     Post<UserInfoBean>(Api.sso_getUserInfo,
-        isShowProgress: false,
+        isShowProgress: isShowProgress,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
             Log.d("userInfoBean----${results.first}");

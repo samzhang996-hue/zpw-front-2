@@ -16,9 +16,6 @@ class Api {
   /// 更新
   static const String getForcePackage = "/packge/getForcePackage";
 
-  ///登录
-  static const String sso_login = "/authenticate";
-
   /// 获取用户信息
   static const String sso_getUserInfo = "/getUserInfo";
 
@@ -89,9 +86,9 @@ class Api {
 
   ///智能扩图
   static const String outPaint = "/photoRecord/outPaint";
+
   ///智能消除
   static const String smartRemove = "/photoRecord/smartRemove";
-
 
   ///风格
   static const String defTimbreVO = "/photoRecord/defTimbreVO";
@@ -134,4 +131,16 @@ class Api {
 
   ///Get查询模板所有分类或合集其他的模板
   static const String getGroupOtherFuncList = "/photoFunc/getGroupOtherFuncList";
+
+  ///登录
+  static const String sso_login = "/authenticate";
+
+  ///退出登录
+  static const String logout = "/logout";
+
+  ///微信登陆
+  static const String authorizeByWx = "/authorizeByWx";
+
+  ///token登陆
+  static const String authByToken = "/authByToken";
 }

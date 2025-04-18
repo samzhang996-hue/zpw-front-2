@@ -49,18 +49,12 @@ class CommSuccess extends StatelessWidget {
                     ),
                     const TextSpan(
                       children: [
-                        TextSpan(
-                            text: '制作完成可在',
-                            style: TextStyle(color: Color(0xffB2B2B2))),
+                        TextSpan(text: '制作完成可在', style: TextStyle(color: Color(0xffB2B2B2))),
                         TextSpan(
                           text: '我的作品',
-                          style: TextStyle(
-                              color: Color(0xff4D4D4D),
-                              fontWeight: FontWeight.w500),
+                          style: TextStyle(color: Color(0xff4D4D4D), fontWeight: FontWeight.w500),
                         ),
-                        TextSpan(
-                            text: '中查看',
-                            style: TextStyle(color: Color(0xffB2B2B2))),
+                        TextSpan(text: '中查看', style: TextStyle(color: Color(0xffB2B2B2))),
                       ],
                     ),
                   ),

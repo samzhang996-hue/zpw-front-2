@@ -5,10 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/aikt/view/my_slider.dart';
@@ -22,11 +21,9 @@ class AiktPage extends BaseStatefulWidget {
   BaseWidgetState<BaseStatefulWidget> getState() => _AiktPageState();
 }
 
-class _AiktPageState extends BaseWidgetState {
+class _AiktPageState extends BaseWidgetState with AppMixin {
   final logic = Get.put(AiktLogic());
-  final state = Get
-      .find<AiktLogic>()
-      .state;
+  final state = Get.find<AiktLogic>().state;
 
   @override
   Widget initDefaultBuild(BuildContext context) {
@@ -34,96 +31,99 @@ class _AiktPageState extends BaseWidgetState {
       color: Colors.white,
       child: Column(
         children: [
-        YAppBar(
-        title: "扩图",
-        right: InkWell(
-            onTap: () {
-              gotoPushPage(WorksPage());
-            },
-            child: CommText(
-              text: "我的作品",
-              fontSize: 13.sp,
-              textColor: Color(0xff191919),
-              fontWeight: FontWeight.bold,
-            )
-        )),
-        Obx(() {
-          return state.text.value == "保存图片"
-              ? QdsImage(state.path.value, 358.w, 531.w)
-              : Image.file(
-            File(state.path.value),
-            width: 358.w,
-            height: 531.w,
-          );
-        }),
-        Obx(() {
-          return Opacity(
-            opacity: state.text.value == "保存图片" ? 0 : 1,
-            child: Container(
-              margin: EdgeInsets.only(top: 20.w, left: 16.w),
-              child: Align(
-                  alignment: Alignment.centerLeft,
+          YAppBar(
+              title: "扩图",
+              right: InkWell(
+                  onTap: () async {
+                    if ((await wxLogin() == true)) {
+                      gotoPushPage(WorksPage());
+                    }
+                  },
                   child: CommText(
-                    text: "比例",
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
+                    text: "我的作品",
+                    fontSize: 13.sp,
                     textColor: Color(0xff191919),
-                  )),
-            ),
-          );
-        }),
-        SizedBox(
-          height: 10.w,
-        ),
-        Obx(() {
-          return Opacity(
-            opacity: state.text.value == "保存图片" ? 0 : 1,
-            child: MySlider(
-              onValueChanged: (value) {
-                state.outPaintRatio.value = value;
-              },
-            ),
-          );
-        }),
-        InkWell(
-          onTap: () {
-            UmengCommonSdk.onEvent('Aikt_click_event', {'name': ''});
-            if (!HandleTool.instance.isMember) {
-              gotoPushPage(VipPage());
-              return;
-            }
-            if (state.text.value == "保存图片") {
-              downloadAndSaveMedia(state.path.value, (res) {
-                if (res) {
-                  Get.back();
-                }
-              });
-            } else {
-              logic.outPaint(state.outPaintRatio.value);
-            }
-          },
-          child: Container(
-            margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 26.w),
-            height: 51.w,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              gradient: LinearGradient(
-                colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
+                    fontWeight: FontWeight.bold,
+                  ))),
+          Obx(() {
+            return state.text.value == "保存图片"
+                ? QdsImage(state.path.value, 358.w, 531.w)
+                : Image.file(
+                    File(state.path.value),
+                    width: 358.w,
+                    height: 531.w,
+                  );
+          }),
+          Obx(() {
+            return Opacity(
+              opacity: state.text.value == "保存图片" ? 0 : 1,
+              child: Container(
+                margin: EdgeInsets.only(top: 20.w, left: 16.w),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CommText(
+                      text: "比例",
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.bold,
+                      textColor: Color(0xff191919),
+                    )),
               ),
-            ),
-            child: Center(child: Obx(() {
-              return CommText(
-                text: state.text.value,
-                fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
-                textColor: Color(0xff191919),
-              );
-            })),
+            );
+          }),
+          SizedBox(
+            height: 10.w,
           ),
-        )
+          Obx(() {
+            return Opacity(
+              opacity: state.text.value == "保存图片" ? 0 : 1,
+              child: MySlider(
+                onValueChanged: (value) {
+                  state.outPaintRatio.value = value;
+                },
+              ),
+            );
+          }),
+          InkWell(
+            onTap: () async {
+              UmengCommonSdk.onEvent('Aikt_click_event', {'name': ''});
+              if ((await wxLogin() == true)) {
+                if (!HandleTool.instance.isMember) {
+                  gotoPushPage(VipPage());
+                  return;
+                }
+                if (state.text.value == "保存图片") {
+                  downloadAndSaveMedia(state.path.value, (res) {
+                    if (res) {
+                      Get.back();
+                    }
+                  });
+                } else {
+                  logic.outPaint(state.outPaintRatio.value);
+                }
+              }
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 26.w),
+              height: 51.w,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: LinearGradient(
+                  colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.topRight,
+                ),
+              ),
+              child: Center(child: Obx(() {
+                return CommText(
+                  text: state.text.value,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.sp,
+                  textColor: Color(0xff191919),
+                );
+              })),
+            ),
+          )
         ],
       ),
     );

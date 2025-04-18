@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -21,7 +21,7 @@ class SettingLogic extends BaseGetxController {
       UmengCommonSdk.onProfileSignOff();
       HandleTool.showAppToastText("注销成功");
       await 0.5.delay();
-      SpUtils.clear();
+      SpUtils.setString("token", "");
       exit(-1);
       // if (isSuccess == true && results.isNotEmpty) {
       //   HandleTool.showAppToastText("注销成功");
@@ -29,22 +29,34 @@ class SettingLogic extends BaseGetxController {
     });
   }
 
-  void onExit() {
-    Log.e("msg");
+  void bindPhone() {
+    if (mineLogic.state.userInfoBean.userPhone?.isNotEmpty == true) {
+      return;
+    }
+    Log.e("bindPhone");
   }
 
-  accountLogin(String name, String password) {
-    Map<String, dynamic> dataMap = {
-      "account": name,
-      "password": password,
-    };
-    final MineLogic mineLogic = Get.find<MineLogic>();
-    Post(Api.accountLogin, params: dataMap, isShowProgress: true, success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        Navigator.pop(navigator!.context); // 关闭弹窗
-        HandleTool.showAppToastText("登录成功");
-        mineLogic.getUserInfo();
-      }
+  void bindWx() {
+    return;
+    if (mineLogic.state.userInfoBean.userPhone?.isNotEmpty == true) {
+      return;
+    }
+    Log.e("bindWx");
+  }
+
+  void onExit() {
+    get(Api.logout, isShowProgress: true, success: (isSuccess, code, message, results) async {
+      HandleTool.showAppToastText("退出成功");
+      await 0.15.delay();
+      SpUtils.setString("token", "");
+      final mineLogic = Get.find<MineLogic>();
+      mineLogic.state.userInfoBean = UserInfoBean();
+      HandleTool.instance.isMember = false;
+      mineLogic.update();
+      Get.back();
+      // if (isSuccess == true && results.isNotEmpty) {
+      //   HandleTool.showAppToastText("注销成功");
+      // }
     });
   }
 }

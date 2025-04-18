@@ -14,6 +14,7 @@ import 'package:zpw/modules/wf/restore/restore_view.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 // import 'package:zpw/modules/wf/wf_page.dart';
+import '../../mixin/app_mixin.dart';
 import 'wf_logic.dart';
 
 class WfPage extends BaseStatefulWidget {
@@ -21,7 +22,7 @@ class WfPage extends BaseStatefulWidget {
   BaseWidgetState<WfPage> getState() => _WfPageState();
 }
 
-class _WfPageState extends BaseWidgetState<WfPage> {
+class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
   final logic = Get.put(WfLogic());
   final state = Get.find<WfLogic>().state;
 
@@ -41,10 +42,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
             return Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
-                      top: ScreenUtil().statusBarHeight + 10.w,
-                      left: 16.w,
-                      right: 16.w),
+                  margin: EdgeInsets.only(top: ScreenUtil().statusBarHeight + 10.w, left: 16.w, right: 16.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,8 +59,10 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                           fontWeight: FontWeight.w500,
                           textColor: const Color(0xFF656565),
                         ),
-                        onTap: () {
-                          gotoPushPage(WorksPage());
+                        onTap: () async {
+                          if ((await wxLogin() == true)) {
+                            gotoPushPage(WorksPage());
+                          }
                         },
                       ),
                     ],
@@ -168,8 +168,7 @@ class _WfPageState extends BaseWidgetState<WfPage> {
                       gotoPushPage(RestorePage());
                       break;
                     case "AIKT":
-                      gotoPushPage(Photo_listPage(isNew: false),
-                          arguments: {"type": 1});
+                      gotoPushPage(Photo_listPage(isNew: false), arguments: {"type": 1});
                       break;
                     case "WST":
                     default:

@@ -6,7 +6,6 @@ import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/bottom_sheet/face_photo_bottom_sheet.dart';
-import 'package:zpw/common/bottom_sheet/whole_body_photo_bottom_sheet.dart';
 import 'package:zpw/common/comm_error.dart';
 import 'package:zpw/common/comm_images_widget.dart';
 import 'package:zpw/common/comm_success.dart';
@@ -14,6 +13,7 @@ import 'package:zpw/common/comm_video_player_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/model/group_other_func_list_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
@@ -23,6 +23,7 @@ import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
+import '../../common/bottom_sheet/whole_body_photo_bottom_sheet.dart';
 import '../../utils/sp_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
@@ -47,7 +48,7 @@ class FaceMakePage extends BaseStatefulWidget {
   BaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
 }
 
-class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
+class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
   late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 ? true.obs : false.obs);
   var _canBack = true;
@@ -152,6 +153,8 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
   }
 
   void _make() async {
+    // Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
+    // return;
     UmengCommonSdk.onEvent('Make_click_event', {'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]});
     if (_myHeadImg.isEmpty && (_hasAvatar.isTrue)) {
       _uploadNewHeadImg();
@@ -160,76 +163,83 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
 
     _canBack = true;
     _autoPlay.value = false;
-    if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.pause();
-    }
-    if (!HandleTool.instance.isMember) {
-      Get.find<VipLogic>().getVipHome();
-      await Get.to(() => VipPage());
+
+    if ((await wxLogin() == true)) {
       if (_isNotEmptyVideoUrl) {
-        _videoPlayerController?.play();
+        _videoPlayerController?.pause();
       }
+      if (!HandleTool.instance.isMember) {
+        Get.find<VipLogic>().getVipHome();
+        await Get.to(() => VipPage());
+        if (_isNotEmptyVideoUrl) {
+          _videoPlayerController?.play();
+        }
+        return;
+      }
+
+      if (_apiType == 0) {
+        final result = await _checkWholeBodyAndShowDialog();
+        if (result == false) {
+          await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
+        }
+        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+        _videoPlayerController?.play();
+
+        if (res == null) {
+          return;
+        }
+
+        if (res.isNotEmpty == true) {
+          _myHeadImg.value = res;
+        } else {
+          return;
+        }
+      }
+
+      // return;
+
+      // if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
+      //   final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+      //   if (res?.isNotEmpty == true) {
+      //     _myHeadImg.value = res!;
+      //     if (_myHeadImg.isNotEmpty) {
+      //       _showHeadImg.value = true;
+      //     }
+      //     return;
+      //   } else {
+      //     return;
+      //   }
+      // }
+
+      // final formData = ffff.FormData.fromMap({
+      //   "file": await ffff.MultipartFile.fromFile(_myHeadImg.value),
+      // });
+      // final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
+      //     params: formData, onModel: (v) => UploadBean.fromJson(v));
+      // if (bean == null) return;
+      // Log.e("bean:${bean.url}");
+      // Log.e("_myHeadImg.value:${_myHeadImg.value}");
+      // return;
+
+      final params = {
+        "funcId": widget.groupId == -1
+            ? widget.funcId
+            : _currentIndex.value == 0
+                ? widget.funcId
+                : _funcIds[_currentIndex.value],
+        "imgUrls": [_myHeadImg.value],
+        // "prompt": "",
+      };
+
+      HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params, success: (isSuccess, code, message, results) {
+        if (isSuccess == true && results.isNotEmpty) {
+          _showSuccess();
+        } else {
+          _showError();
+        }
+      });
       return;
     }
-
-    if (_apiType == 0) {
-      final result = await _checkWholeBodyAndShowDialog();
-      if (result == false) {
-        await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
-      }
-      final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
-      _videoPlayerController?.play();
-
-      if (res == null) {
-        return;
-      }
-
-      if (res.isNotEmpty == true) {
-        _myHeadImg.value = res;
-      } else {
-        return;
-      }
-    }
-
-    // return;
-
-    // if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
-    //   final res = await Get.to<String>(() => Photo_listPage(isNew: false));
-    //   if (res?.isNotEmpty == true) {
-    //     _myHeadImg.value = res!;
-    //     if (_myHeadImg.isNotEmpty) {
-    //       _showHeadImg.value = true;
-    //     }
-    //     return;
-    //   } else {
-    //     return;
-    //   }
-    // }
-
-    // final formData = ffff.FormData.fromMap({
-    //   "file": await ffff.MultipartFile.fromFile(_myHeadImg.value),
-    // });
-    // final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
-    //     params: formData, onModel: (v) => UploadBean.fromJson(v));
-    // if (bean == null) return;
-    // Log.e("bean:${bean.url}");
-    // Log.e("_myHeadImg.value:${_myHeadImg.value}");
-    // return;
-
-    final params = {
-      "funcId": widget.groupId == -1 ? widget.funcId : _funcIds[_currentIndex.value],
-      "imgUrls": [_myHeadImg.value],
-      // "prompt": "",
-    };
-
-    HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        _showSuccess();
-      } else {
-        _showError();
-      }
-    });
-    return;
   }
 
   void _uploadNewHeadImg() async {
@@ -239,33 +249,37 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     }
 
     _autoPlay.value = false;
-    if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.pause();
-    }
-    if (!HandleTool.instance.isMember) {
-      Get.find<VipLogic>().getVipHome();
-      await Get.to(() => VipPage());
+
+    if ((await wxLogin() == true)) {
+      if (_isNotEmptyVideoUrl) {
+        _videoPlayerController?.pause();
+      }
+      if (!HandleTool.instance.isMember) {
+        Get.find<VipLogic>().getVipHome();
+        await Get.to(() => VipPage());
+        if (_isNotEmptyVideoUrl) {
+          _videoPlayerController?.play();
+        }
+        return;
+      }
+      if (_isNotEmptyVideoUrl) {
+        _videoPlayerController?.pause();
+      }
+      final res = await Get.to<String>(() => Photo_listPage(isNew: false));
       if (_isNotEmptyVideoUrl) {
         _videoPlayerController?.play();
       }
-      return;
-    }
-    if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.pause();
-    }
-    final res = await Get.to<String>(() => Photo_listPage(isNew: false));
-    if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.play();
-    }
-    Log.e("res:$res");
-    if (res?.isNotEmpty == true) {
-      _myHeadImg.value = res ?? '';
-      if (_myHeadImg.isNotEmpty) {
-        _showHeadImg.value = true;
+      Log.e("res:$res");
+      if (res?.isNotEmpty == true) {
+        _myHeadImg.value = res ?? '';
+        if (_myHeadImg.isNotEmpty) {
+          _showHeadImg.value = true;
+        }
+        // setState(() {});
+        return;
       }
-      // setState(() {});
-      return;
     }
+
     // _myHeadImg.value = HandleTool.instance.headImg;
   }
 
@@ -324,7 +338,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
     // _checkImage();
     UmengCommonSdk.onPageStart("FaceMakePage");
     _getData();
-    Log.e("params:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
+    Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
   }
 
   @override
@@ -434,7 +448,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> {
                     padding: EdgeInsets.only(top: 2),
                     color: Colors.transparent,
                     child: GestureDetector(
-                      onTap: _toHistory,
+                      onTap: () async {
+                        if ((await wxLogin() == true)) {
+                          _toHistory();
+                        }
+                      },
                       behavior: HitTestBehavior.opaque,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,

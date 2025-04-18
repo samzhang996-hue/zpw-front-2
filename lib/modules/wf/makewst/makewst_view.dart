@@ -9,6 +9,7 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/mine/detail/detail_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -21,7 +22,7 @@ class MakewstPage extends BaseStatefulWidget {
   BaseWidgetState<BaseStatefulWidget> getState() => MakewstPageState();
 }
 
-class MakewstPageState extends BaseWidgetState {
+class MakewstPageState extends BaseWidgetState with AppMixin {
   final ScrollController _scrollController = ScrollController();
   final _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -74,8 +75,10 @@ class MakewstPageState extends BaseWidgetState {
                     YAppBar(
                         title: "文生图",
                         right: InkWell(
-                            onTap: () {
-                              gotoPushPage(WorksPage());
+                            onTap: () async {
+                              if ((await wxLogin() == true)) {
+                                gotoPushPage(WorksPage());
+                              }
                             },
                             child: CommText(
                               text: "我的作品",
@@ -160,7 +163,7 @@ class MakewstPageState extends BaseWidgetState {
                                     Spacer(),
                                     InkWell(
                                       onTap: () {
-                                        if(state.funcValue.value.isEmpty){
+                                        if (state.funcValue.value.isEmpty) {
                                           HandleTool.showAppToastText("请输入提示词！");
                                           return;
                                         }
@@ -243,8 +246,7 @@ class MakewstPageState extends BaseWidgetState {
                                           child: Container(
                                             margin: EdgeInsets.only(right: 8.w),
                                             width: 80.w,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(color: isSelect ? Color(0xff191919) : Colors.transparent, width: isSelect ? 2.w : 0), borderRadius: BorderRadius.circular(10)),
+                                            decoration: BoxDecoration(border: Border.all(color: isSelect ? Color(0xff191919) : Colors.transparent, width: isSelect ? 2.w : 0), borderRadius: BorderRadius.circular(10)),
                                             child: Stack(
                                               alignment: Alignment.bottomCenter,
                                               children: [
@@ -295,7 +297,7 @@ class MakewstPageState extends BaseWidgetState {
         // labelText: state.funcValue.value,
         // border: OutlineInputBorder(),
         hintText: "输入生成提示词",
-        hintStyle: TextStyle(fontSize: 14.sp,color: Color(0xffB2B2B2)),
+        hintStyle: TextStyle(fontSize: 14.sp, color: Color(0xffB2B2B2)),
         border: InputBorder.none,
         labelStyle: TextStyle(fontSize: 14.sp, color: Color(0xff191919)),
         contentPadding: const EdgeInsets.only(top: 4.0, bottom: 8.0, left: 8.0, right: 8.0),

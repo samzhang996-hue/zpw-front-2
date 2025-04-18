@@ -7,6 +7,7 @@ import 'package:zpw/common/comm_error.dart';
 import 'package:zpw/common/comm_success.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/specially/model/comm_enum_bean.dart';
 import 'package:zpw/network/api/network_api.dart';
@@ -21,7 +22,7 @@ class MakePage extends BaseStatefulWidget {
   BaseWidgetState<MakePage> getState() => _MakePageState();
 }
 
-class _MakePageState extends BaseWidgetState<MakePage> {
+class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
   late final _nicknameEditingController = TextEditingController();
   late final _tipsEditingController = TextEditingController();
 
@@ -59,15 +60,12 @@ class _MakePageState extends BaseWidgetState<MakePage> {
   }
 
   String findKeyByPartialIcon(String partialKey) {
-    var foundKeys =
-        animalsIcon.keys.where((key) => key.contains(partialKey)).toList();
+    var foundKeys = animalsIcon.keys.where((key) => key.contains(partialKey)).toList();
     return foundKeys.isNotEmpty ? foundKeys.first : '鼠';
   }
 
   String findKeyByPartialNormalIcon(String partialKey) {
-    var foundKeys = animalsNormalIcon.keys
-        .where((key) => key.contains(partialKey))
-        .toList();
+    var foundKeys = animalsNormalIcon.keys.where((key) => key.contains(partialKey)).toList();
     return foundKeys.isNotEmpty ? foundKeys.first : '鼠';
   }
 
@@ -83,10 +81,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
       return;
     }
 
-    final params = <String, Object?>{
-      "content": _nicknameEditingController.text,
-      "useMethod": widget.map["useMethod"]
-    };
+    final params = <String, Object?>{"content": _nicknameEditingController.text, "useMethod": widget.map["useMethod"]};
 
     if (widget.map["useMethod"] == "03") {
       params["dart03"] = {
@@ -151,8 +146,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
     // _showError();
     // _showSuccess();
     // return;
-    HandleTool.instance.SMWPost(Api.addTask, params: params,
-        success: (isSuccess, code, message, results) {
+    HandleTool.instance.SMWPost(Api.addTask, params: params, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         _showSuccess();
       } else {
@@ -255,9 +249,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                         child: Container(
                           height: 49.w,
                           // color: Colors.grey,
-                          decoration: BoxDecoration(
-                              color: const Color(0xFFF8F8F8),
-                              borderRadius: BorderRadius.circular(8.w)),
+                          decoration: BoxDecoration(color: const Color(0xFFF8F8F8), borderRadius: BorderRadius.circular(8.w)),
                           child: Row(
                             children: [
                               SizedBox(width: 14.w),
@@ -271,23 +263,14 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                                     border: InputBorder.none,
                                     contentPadding: EdgeInsets.zero,
                                     hintText: "周少",
-                                    hintStyle: TextStyle(
-                                        color: const Color(0xFF999999),
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.w500),
-                                    labelStyle: TextStyle(
-                                        color: const Color(0xFF1A1A1A),
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w500),
+                                    hintStyle: TextStyle(color: const Color(0xFF999999), fontSize: 15.sp, fontWeight: FontWeight.w500),
+                                    labelStyle: TextStyle(color: const Color(0xFF1A1A1A), fontSize: 16.sp, fontWeight: FontWeight.w500),
                                   ),
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(_max)
-                                  ],
+                                  inputFormatters: [LengthLimitingTextInputFormatter(_max)],
                                 ),
                               ),
                               Obx(() => CommText(
-                                    text:
-                                        "${_count.value == 0 ? "" : _count.value}",
+                                    text: "${_count.value == 0 ? "" : _count.value}",
                                     textColor: const Color(0xFF999999),
                                     fontSize: 13.sp,
                                   )),
@@ -311,8 +294,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                             child: GridView.builder(
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 6,
                                 mainAxisSpacing: 8.w,
                                 crossAxisSpacing: 17.w,
@@ -330,20 +312,14 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                                     () => Column(
                                       children: [
                                         Image.asset(
-                                          _currentZodiac.value == index
-                                              ? "${animalsIcon[findKeyByPartialIcon(_commEnumBean[index].name ?? '')]}"
-                                              : "${animalsNormalIcon[findKeyByPartialNormalIcon(_commEnumBean[index].name ?? '')]}",
+                                          _currentZodiac.value == index ? "${animalsIcon[findKeyByPartialIcon(_commEnumBean[index].name ?? '')]}" : "${animalsNormalIcon[findKeyByPartialNormalIcon(_commEnumBean[index].name ?? '')]}",
                                           width: 45.w,
                                           height: 44.w,
                                           fit: BoxFit.cover,
                                         ),
                                         CommText(
-                                          text: findKeyByPartialIcon(
-                                              _commEnumBean[index].name ?? ''),
-                                          textColor:
-                                              _currentZodiac.value == index
-                                                  ? const Color(0xFF191919)
-                                                  : const Color(0xFFB2B2B2),
+                                          text: findKeyByPartialIcon(_commEnumBean[index].name ?? ''),
+                                          textColor: _currentZodiac.value == index ? const Color(0xFF191919) : const Color(0xFFB2B2B2),
                                           fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
                                         )
@@ -357,9 +333,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                         ),
                         SizedBox(height: 44.w),
                       ],
-                      if (widget.map["useMethod"] == "09" ||
-                          widget.map["useMethod"] == "10" ||
-                          widget.map["useMethod"] == "11") ...[
+                      if (widget.map["useMethod"] == "09" || widget.map["useMethod"] == "10" || widget.map["useMethod"] == "11") ...[
                         SizedBox(height: 20.w),
                         CommText(
                           text: "宣言：",
@@ -373,9 +347,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                           child: Container(
                             height: 49.w,
                             // color: Colors.grey,
-                            decoration: BoxDecoration(
-                                color: const Color(0xFFF8F8F8),
-                                borderRadius: BorderRadius.circular(8.w)),
+                            decoration: BoxDecoration(color: const Color(0xFFF8F8F8), borderRadius: BorderRadius.circular(8.w)),
                             child: Row(
                               children: [
                                 SizedBox(width: 14.w),
@@ -389,23 +361,14 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.zero,
                                       hintText: "生活甜甜 好运连连",
-                                      hintStyle: TextStyle(
-                                          color: const Color(0xFF999999),
-                                          fontSize: 15.sp,
-                                          fontWeight: FontWeight.w500),
-                                      labelStyle: TextStyle(
-                                          color: const Color(0xFF1A1A1A),
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w500),
+                                      hintStyle: TextStyle(color: const Color(0xFF999999), fontSize: 15.sp, fontWeight: FontWeight.w500),
+                                      labelStyle: TextStyle(color: const Color(0xFF1A1A1A), fontSize: 16.sp, fontWeight: FontWeight.w500),
                                     ),
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(_maxTips)
-                                    ],
+                                    inputFormatters: [LengthLimitingTextInputFormatter(_maxTips)],
                                   ),
                                 ),
                                 Obx(() => CommText(
-                                      text:
-                                          "${_countTips.value == 0 ? "" : _countTips.value}",
+                                      text: "${_countTips.value == 0 ? "" : _countTips.value}",
                                       textColor: const Color(0xFF999999),
                                       fontSize: 13.sp,
                                     )),
@@ -447,9 +410,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                       height: 50,
                       color: Colors.transparent,
                       alignment: Alignment.center,
-                      child: Image.asset('arrow_back.png'.comm,
-                              width: 16.w, height: 16.w, fit: BoxFit.cover)
-                          .paddingOnly(left: 10),
+                      child: Image.asset('arrow_back.png'.comm, width: 16.w, height: 16.w, fit: BoxFit.cover).paddingOnly(left: 10),
                     ),
                   ),
                   Container(
@@ -461,13 +422,7 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                   const Spacer(),
                   SizedBox(
                     width: 1.sw * 0.4,
-                    child: Text("${widget.map["name"]}",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: Color(0xFF191919),
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500)),
+                    child: Text("${widget.map["name"]}", overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFF191919), fontSize: 18, fontWeight: FontWeight.w500)),
                   ),
                   const Spacer(),
                   Container(
@@ -477,7 +432,11 @@ class _MakePageState extends BaseWidgetState<MakePage> {
                     padding: EdgeInsets.only(top: 2),
                     color: Colors.transparent,
                     child: GestureDetector(
-                      onTap: _toHistory,
+                      onTap: () async {
+                        if ((await wxLogin() == true)) {
+                          _toHistory();
+                        }
+                      },
                       behavior: HitTestBehavior.opaque,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,

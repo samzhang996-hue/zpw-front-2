@@ -71,6 +71,10 @@ dependencies:
   open_file: ^3.2.1 # 打开 APK 文件
   install_plugin: ^2.1.0 # 安装 APK 文件
   intl: ^0.20.2
+  fluwx: ^5.5.1
+  tap_debouncer: ^2.2.0
+  # device_infos:
+  #   path: ./plugins/device_infos
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 

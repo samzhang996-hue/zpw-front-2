@@ -23,6 +23,7 @@ class UserInfoBean {
   num? permanentFlag;
   String? userPhone;
   num? weight;
+  String? wxNickName;
 
   UserInfoBean({
     this.age,
@@ -47,6 +48,7 @@ class UserInfoBean {
     this.initWeight,
     this.userPhone,
     this.weight,
+    this.wxNickName,
   });
 
   factory UserInfoBean.fromRawJson(String str) => UserInfoBean.fromJson(json.decode(str));
@@ -76,6 +78,7 @@ class UserInfoBean {
         userPhone: json["userPhone"],
         weight: json["weight"]?.toDouble(),
         initWeight: json["initWeight"]?.toDouble(),
+        wxNickName: json["wxNickName"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -101,5 +104,6 @@ class UserInfoBean {
         "userPhone": userPhone,
         "weight": weight,
         "initWeight": initWeight,
+        "wxNickName": wxNickName,
       };
 }

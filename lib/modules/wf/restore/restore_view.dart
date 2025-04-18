@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zpw/common/style.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/permission.dart';
+
 import 'restore_logic.dart';
 
 class RestorePage extends BaseStatefulWidget {
@@ -16,90 +17,164 @@ class RestorePage extends BaseStatefulWidget {
   BaseWidgetState<BaseStatefulWidget> getState() => _RestorePageState();
 }
 
-class _RestorePageState extends BaseWidgetState {
+class _RestorePageState extends BaseWidgetState with AppMixin {
   final logic = Get.put(RestoreLogic());
   @override
   Widget initDefaultBuild(BuildContext context) {
-     return Container(
-       color: Colors.white,
-       child: Column(
-         children: [
-           YAppBar(title: "数据恢复"),
-           Image.asset("hf.png".comm,width: double.infinity,height: 297.w,),
-           Row(
-             mainAxisAlignment: MainAxisAlignment.center,
-             children: [
-               Image.asset("left_bg.png".comm,width: 27.w,height: 2.w,),
-               SizedBox(width: 2.w,),
-               CommText(text: "数据恢复 安全可靠",fontWeight: FontWeight.bold,textColor: Color(0xff191919),fontSize: 19.sp,),
-               SizedBox(width: 2.w,),
-               Image.asset("right_bg.png".comm,width: 27.w,height: 2.w,),
-             ],
-           ),
-           CommText(text: "数据不会在服务器上保存‌，仅存于本地设备",textColor: Color(0xff999999),fontSize: 13.sp,),
-           InkWell(
-             onTap: (){
-               if(HandleTool.instance.isMember){
-                 onStartPhoto();
-               }else{
-                 gotoPushPage(VipPage());
-               }
-
-             },
-             child: Container(
-               height: 51.w,
-               width: double.infinity,
-               margin: EdgeInsets.only(left: 16.w,right: 16.w,top: 26.w),
-               decoration: BoxDecoration(
-                   borderRadius: BorderRadius.circular(25),
-                 gradient: LinearGradient(
-                   colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
-                   begin: Alignment.topLeft,
-                   end: Alignment.topRight,
-                 ),
-               ),
-               child: Center(child: CommText(text: "立即恢复",textColor: Color(0xff191919),fontSize: 18.sp,fontWeight: FontWeight.w500,)),
-             ),
-           ),
-           SizedBox(height: 27.w,),
-           Row(
-             mainAxisAlignment: MainAxisAlignment.spaceAround,
-             children: [
-               Column(
-                 children: [
-                   Image.asset("del.png".comm,width:56.w,height: 56.w,),
-                   SizedBox(height: 4.w,),
-                   CommText(text: "误删",fontSize: 14.sp,textColor: Color(0xff191919),)
-                 ],
-               ),
-               Column(
-                 children: [
-                   Image.asset("clean.png".comm,width:56.w,height: 56.w,),
-                   SizedBox(height: 4.w,),
-                   CommText(text: "回收站清空",fontSize: 14.sp,textColor: Color(0xff191919),)
-                 ],
-               ),
-
-               Column(
-                 children: [
-                   Image.asset("data.png".comm,width:56.w,height: 56.w,),
-                   SizedBox(height: 4.w,),
-                   CommText(text: "数据丢失",fontSize: 14.sp,textColor: Color(0xff191919),)
-                 ],
-               ),
-               Column(
-                 children: [
-                   Image.asset("dir.png".comm,width:56.w,height: 56.w,),
-                   SizedBox(height: 4.w,),
-                   CommText(text: "目录损坏",fontSize: 14.sp,textColor: Color(0xff191919),)
-                 ],
-               ),
-             ],
-           )
-         ],
-       ),
-     );
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          YAppBar(title: "数据恢复"),
+          Image.asset(
+            "hf.png".comm,
+            width: double.infinity,
+            height: 297.w,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "left_bg.png".comm,
+                width: 27.w,
+                height: 2.w,
+              ),
+              SizedBox(
+                width: 2.w,
+              ),
+              CommText(
+                text: "数据恢复 安全可靠",
+                fontWeight: FontWeight.bold,
+                textColor: Color(0xff191919),
+                fontSize: 19.sp,
+              ),
+              SizedBox(
+                width: 2.w,
+              ),
+              Image.asset(
+                "right_bg.png".comm,
+                width: 27.w,
+                height: 2.w,
+              ),
+            ],
+          ),
+          CommText(
+            text: "数据不会在服务器上保存‌，仅存于本地设备",
+            textColor: Color(0xff999999),
+            fontSize: 13.sp,
+          ),
+          InkWell(
+            onTap: () async {
+              if ((await wxLogin() == true)) {
+                if (HandleTool.instance.isMember) {
+                  onStartPhoto();
+                } else {
+                  gotoPushPage(VipPage());
+                }
+              }
+            },
+            child: Container(
+              height: 51.w,
+              width: double.infinity,
+              margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 26.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: LinearGradient(
+                  colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.topRight,
+                ),
+              ),
+              child: Center(
+                  child: CommText(
+                text: "立即恢复",
+                textColor: Color(0xff191919),
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+              )),
+            ),
+          ),
+          SizedBox(
+            height: 27.w,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Image.asset(
+                    "del.png".comm,
+                    width: 56.w,
+                    height: 56.w,
+                  ),
+                  SizedBox(
+                    height: 4.w,
+                  ),
+                  CommText(
+                    text: "误删",
+                    fontSize: 14.sp,
+                    textColor: Color(0xff191919),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Image.asset(
+                    "clean.png".comm,
+                    width: 56.w,
+                    height: 56.w,
+                  ),
+                  SizedBox(
+                    height: 4.w,
+                  ),
+                  CommText(
+                    text: "回收站清空",
+                    fontSize: 14.sp,
+                    textColor: Color(0xff191919),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Image.asset(
+                    "data.png".comm,
+                    width: 56.w,
+                    height: 56.w,
+                  ),
+                  SizedBox(
+                    height: 4.w,
+                  ),
+                  CommText(
+                    text: "数据丢失",
+                    fontSize: 14.sp,
+                    textColor: Color(0xff191919),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Image.asset(
+                    "dir.png".comm,
+                    width: 56.w,
+                    height: 56.w,
+                  ),
+                  SizedBox(
+                    height: 4.w,
+                  ),
+                  CommText(
+                    text: "目录损坏",
+                    fontSize: 14.sp,
+                    textColor: Color(0xff191919),
+                  )
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
+
   onStartPhoto() async {
     await PermissionUtils.checkFilesAccessPermission();
     startPhoto();

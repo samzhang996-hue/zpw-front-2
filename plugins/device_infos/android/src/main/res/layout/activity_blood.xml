@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F8FC"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".BloodActivity">
+
+    <include layout="@layout/base_toolbar2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:src="@mipmap/blood" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="46dp"
+        android:lineHeight="20dp"
+        android:text="1.请用手指按着屏幕.\n2.轻轻地把食指轻轻放在手机背面的摄像头上.\n3.保持住这个姿势知道测试完成.\n4.手指不必按着闪光灯，按着闪光灯手指可能会发烫."
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:src="@mipmap/start" />
+</LinearLayout>

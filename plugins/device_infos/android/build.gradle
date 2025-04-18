@@ -1,0 +1,107 @@
+group = "com.muka.device_infos"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = "1.8.22"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.1.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+
+        //  flatDir {
+        //     dirs 'libs'  // Ensure this is relative to the module where the AAR is located
+        // }
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "com.muka.device_infos"
+    }
+
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    dependencies {
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+        implementation 'com.meituan.android.walle:library:1.1.7'
+        implementation 'com.umeng.umsdk:common:9.4.7'// 必选
+        implementation 'com.umeng.umsdk:asms:1.4.0'// 必选
+        testImplementation 'junit:junit:4.12'
+
+
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+
+        constraints {
+            implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+                because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+            }
+            implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+                because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+            }
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+}
+
+
+// rootProject.allprojects {
+//     repositories {
+//         flatDir {
+//             dirs project(':device_infos').file('libs')
+//         }
+//     }
+// }
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.blankj:utilcodex:1.29.0'
+
+
+    // implementation(name: 'auth_number_product-2.14.6-log-online-standard-cuum-release', ext: 'aar')
+    // implementation(name: 'logger-2.2.2-release', ext: 'aar')
+    // implementation(name: 'main-2.2.3-release', ext: 'aar')
+}

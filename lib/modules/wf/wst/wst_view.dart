@@ -5,6 +5,7 @@ import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/makewst/makewst_view.dart';
@@ -17,7 +18,7 @@ class WstPage extends BaseStatefulWidget {
   BaseWidgetState<BaseStatefulWidget> getState() => WstPageState();
 }
 
-class WstPageState extends BaseWidgetState {
+class WstPageState extends BaseWidgetState with AppMixin {
   final logic = Get.put(WstLogic());
   final state = Get.find<WstLogic>().state;
 
@@ -33,8 +34,10 @@ class WstPageState extends BaseWidgetState {
                 YAppBar(
                     title: "文生图",
                     right: InkWell(
-                        onTap: () {
-                          gotoPushPage(WorksPage());
+                        onTap: () async {
+                          if ((await wxLogin() == true)) {
+                            gotoPushPage(WorksPage());
+                          }
                         },
                         child: Row(
                           children: [
@@ -55,23 +58,16 @@ class WstPageState extends BaseWidgetState {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
-                            margin: EdgeInsets.all(10.w),
-                            child: QdsImageCorner(state.showImgGif.value,
-                                double.infinity, 458.w, 16.w,
-                                fit: BoxFit.cover)),
+                        Container(margin: EdgeInsets.all(10.w), child: QdsImageCorner(state.showImgGif.value, double.infinity, 458.w, 16.w, fit: BoxFit.cover)),
                         Container(
                           margin: EdgeInsets.all(10.w),
                           width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Color(0xffF9F9F9),
-                              borderRadius: BorderRadius.circular(16.w)),
+                          decoration: BoxDecoration(color: Color(0xffF9F9F9), borderRadius: BorderRadius.circular(16.w)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  margin:
-                                      EdgeInsets.only(left: 13.w, top: 15.w),
+                                  margin: EdgeInsets.only(left: 13.w, top: 15.w),
                                   child: CommText(
                                     text: "提示词Prom",
                                     fontWeight: FontWeight.bold,
@@ -79,11 +75,7 @@ class WstPageState extends BaseWidgetState {
                                     textColor: Colors.black,
                                   )),
                               Container(
-                                  margin: EdgeInsets.only(
-                                      top: 8.w,
-                                      left: 13.w,
-                                      right: 13.w,
-                                      bottom: 16.w),
+                                  margin: EdgeInsets.only(top: 8.w, left: 13.w, right: 13.w, bottom: 16.w),
                                   child: CommText(
                                     text: state.funcValue.value,
                                     fontSize: 14.sp,
@@ -105,14 +97,13 @@ class WstPageState extends BaseWidgetState {
                 left: 0,
                 right: 0,
                 child: InkWell(
-                    onTap: () {
-                      if (HandleTool.instance.isMember) {
-                        gotoPushPage(MakewstPage(), arguments: {
-                          "funcValue": state.funcValue.value,
-                          "funcId": state.funcId.value
-                        });
-                      } else {
-                        gotoPushPage(VipPage());
+                    onTap: () async {
+                      if ((await wxLogin() == true)) {
+                        if (HandleTool.instance.isMember) {
+                          gotoPushPage(MakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
+                        } else {
+                          gotoPushPage(VipPage());
+                        }
                       }
                     },
                     child: Container(
