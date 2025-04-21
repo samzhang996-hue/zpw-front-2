@@ -67,9 +67,14 @@ class AboutLogic extends GetxController {
         HandleTool.showAppToastText("切换成功");
         // mineLogic.getUserInfo();
         await SpUtils.setString("token", "${map["token"]}");
+        HandleTool.instance.token = "${map["token"]}";
         mineLogic.getUserInfo();
         Get.back();
       }
     });
+  }
+
+  void onDoubleTap() {
+    HandleTool.showAppToastText('当前渠道：${HandleTool.instance.channel}');
   }
 }

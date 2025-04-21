@@ -3,10 +3,14 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart' as gggg;
 import 'package:zpw/utils/aesUtil.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/sp_utils.dart';
 
+import '../modules/main/model/user_info_bean.dart';
+import '../modules/mine/mine_logic.dart';
 import 'api/network_api.dart';
 import 'exception/error_status.dart';
 import 'exception/exception_handle.dart';
@@ -74,21 +78,12 @@ class DioUtils {
   List<CancelToken> tokenList = [];
 
   Future get<T>(String url,
-      {Function(bool isSuccess, int code, String message, List<T> results)?
-          success,
-      Function(int totalCount)? successTotalCount,
-      Map<String, dynamic>? params,
-      onModel,
-      bool isShowError = true,
-      bool isShowProgress = true,
-      CancelToken? cancelToken,
-      bool isCancleToken = false}) async {
+      {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? successTotalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, CancelToken? cancelToken, bool isCancleToken = false}) async {
     Log.d("net-----------$url");
     // if (url == Api.appPackage_latestPackage) {
     //   _dio?.options.baseUrl = Api.API_COMM;
     // } else {
-    _dio?.options.baseUrl =
-        kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
+    _dio?.options.baseUrl = kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
     // }
 
     if (isShowProgress) {
@@ -104,8 +99,7 @@ class DioUtils {
     _dio?.options = _options!;
     // _dio?.options.headers["Authorization"] =
     //     await HandleTool.getDataWithKey("token");
-    _dio?.options.headers["systemDevice"] =
-        HandleTool.instance.getCurrentSystem();
+    _dio?.options.headers["systemDevice"] = HandleTool.instance.getCurrentSystem();
     String token = _dio?.options.headers["Authorization"] ?? "";
     params ??= {};
     var response;
@@ -139,6 +133,7 @@ class DioUtils {
             }
           }
         } else {
+          _tokenExpired(code);
           if (success != null) {
             success(false, 1, message, result as List<T>);
           }
@@ -161,20 +156,11 @@ class DioUtils {
   }
 
   Future post<T>(String url,
-      {Function(bool isSuccess, int code, String message, List<T> results)?
-          success,
-      Function(int totalCount)? successTotalCount,
-      Map<String, dynamic>? params,
-      onModel,
-      bool isShowError = true,
-      bool isShowProgress = true,
-      CancelToken? cancelToken,
-      bool isCancleToken = false}) async {
+      {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? successTotalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, CancelToken? cancelToken, bool isCancleToken = false}) async {
     // if (url == Api.appPackage_latestPackage) {
     //   _dio?.options.baseUrl = Api.API_COMM;
     // } else {
-    _dio?.options.baseUrl =
-        kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
+    _dio?.options.baseUrl = kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
     // }
     Log.d("url---$url");
     if (isShowProgress) {
@@ -202,10 +188,8 @@ class DioUtils {
       }
       EasyLoading.dismiss();
     };
-    _dio?.options.headers["Authorization"] =
-        await HandleTool.getDataWithKey("token");
-    _dio?.options.headers["systemDevice"] =
-        HandleTool.instance.getCurrentSystem();
+    _dio?.options.headers["Authorization"] = await HandleTool.getDataWithKey("token");
+    _dio?.options.headers["systemDevice"] = HandleTool.instance.getCurrentSystem();
     _dio?.options = _options!;
     String token = _dio?.options.headers["Authorization"] ?? "";
     params ??= {};
@@ -257,6 +241,7 @@ class DioUtils {
               }
             }
           } else {
+            _tokenExpired(code);
             if (isShowProgress == true) {
               HandleTool.showAppToastText(resData["message"]);
             }
@@ -309,16 +294,25 @@ class DioUtils {
     }
   }
 
+  void _tokenExpired(int code) {
+    if (code == 1001) {
+      SpUtils.setString("token", "");
+      HandleTool.instance.token = "";
+      final logic = gggg.Get.find<MineLogic>();
+      logic.state.userInfoBean = UserInfoBean();
+      HandleTool.instance.isMember = false;
+      logic.update();
+    }
+  }
+
   Future<T?> upload<T>(
     String url, {
     Object? params,
     onModel,
   }) async {
-    _dio?.options.baseUrl =
-        kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
+    _dio?.options.baseUrl = kReleaseMode ? Api.API_BASE_URL_RELEASE : Api.API_BASE_URL_DEBUG;
     EasyLoading.show();
-    _dio?.options.headers["Authorization"] =
-        await HandleTool.getDataWithKey("token");
+    _dio?.options.headers["Authorization"] = await HandleTool.getDataWithKey("token");
     _dio?.options = _options!;
     params ??= {};
 
@@ -345,6 +339,7 @@ class DioUtils {
             var data = resData['data'];
             return onModel(data);
           }
+          _tokenExpired(code);
         }
       } catch (e) {
         EasyLoading.dismiss();
@@ -358,11 +353,7 @@ class DioUtils {
   }
 
   ///将返回的数据进行统一处理并解析成对应的Bean
-  Future<BaseResponse<T>> _request<T>(String method, String url,
-      {Map<String, dynamic>? data,
-      Map<String, dynamic>? queryParameters,
-      CancelToken? cancelToken,
-      Options? options}) async {
+  Future<BaseResponse<T>> _request<T>(String method, String url, {Map<String, dynamic>? data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options}) async {
     String dataJson = "";
     if (data != null) {
       dataJson = jsonEncode(data);
@@ -375,40 +366,22 @@ class DioUtils {
     print("=====hex======$hex");
     _dio?.options = _options!;
     var r = await _dio?.get(url + "?a=$hex");
-    var response = await _dio?.request(url,
-        data: {"a": hex},
-        queryParameters: queryParameters,
-        options: _setOptions(method, options!),
-        cancelToken: cancelToken);
+    var response = await _dio?.request(url, data: {"a": hex}, queryParameters: queryParameters, options: _setOptions(method, options!), cancelToken: cancelToken);
     try {
       // String keyDe = token.split("-").last.substring(0,16);
       // Uint8List u8s = HexUtil.createUint8ListFromHex(response.data ?? "");
       // String responseJson = AESUtil.tkAesDecrypt(base64Encode(u8s) ,keyDe);
       // print("===rsponse=====$responseJson");
-      return BaseResponse(
-          ErrorStatus.REQUEST_DATA_OK, "success", response?.data);
+      return BaseResponse(ErrorStatus.REQUEST_DATA_OK, "success", response?.data);
     } catch (e) {
       return BaseResponse(ErrorStatus.PARSE_ERROR, "数据解析异常", []);
     }
   }
 
-  Future requestDataFuture<T>(Method method, String url,
-      {Function(T t)? onSuccess,
-      Function(List<T> list)? onSuccessList,
-      Function(int code, String msg)? onError,
-      dynamic params,
-      Map<String, dynamic>? queryParameters,
-      CancelToken? cancelToken,
-      Options? options,
-      bool isList = false}) async {
+  Future requestDataFuture<T>(Method method, String url, {Function(T t)? onSuccess, Function(List<T> list)? onSuccessList, Function(int code, String msg)? onError, dynamic params, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options, bool isList = false}) async {
     String requestMethod = _getMethod(method);
 
-    return await _request<T>(requestMethod, url,
-            data: params,
-            queryParameters: queryParameters,
-            options: options,
-            cancelToken: cancelToken)
-        .then((BaseResponse<T> result) {
+    return await _request<T>(requestMethod, url, data: params, queryParameters: queryParameters, options: options, cancelToken: cancelToken).then((BaseResponse<T> result) {
       if (result.code == ErrorStatus.REQUEST_DATA_OK) {
         if (isList) {
           if (onSuccessList != null) {
@@ -444,35 +417,15 @@ class DioUtils {
   }
 
   ///请求单个对象的操作
-  Future<BaseResponse<T>> request<T>(String method, String url,
-      {Map<String, dynamic>? params,
-      Map<String, dynamic>? queryParameters,
-      CancelToken? cancelToken,
-      Options? options}) async {
-    var response = await _request<T>(method, url,
-        data: params,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken);
+  Future<BaseResponse<T>> request<T>(String method, String url, {Map<String, dynamic>? params, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options}) async {
+    var response = await _request<T>(method, url, data: params, queryParameters: queryParameters, options: options, cancelToken: cancelToken);
     return response;
   }
 
-  requestData<T>(Method method, String url,
-      {Function(T t)? onSuccess,
-      Function(List<T> t)? onSuccessList,
-      Function(int code, String msg)? onError,
-      Map<String, dynamic>? params,
-      Map<String, dynamic>? queryParameters,
-      CancelToken? cancelToken,
-      Options? options,
-      bool isList = false}) async {
+  requestData<T>(Method method, String url, {Function(T t)? onSuccess, Function(List<T> t)? onSuccessList, Function(int code, String msg)? onError, Map<String, dynamic>? params, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Options? options, bool isList = false}) async {
     String requestMethod = _getMethod(method);
     try {
-      var result = await _request<T>(requestMethod, url,
-          data: params,
-          queryParameters: queryParameters,
-          options: options,
-          cancelToken: cancelToken);
+      var result = await _request<T>(requestMethod, url, data: params, queryParameters: queryParameters, options: options, cancelToken: cancelToken);
       if (result.code == ErrorStatus.REQUEST_DATA_OK) {
         if (isList) {
           if (onSuccessList != null) {

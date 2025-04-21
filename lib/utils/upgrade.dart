@@ -1,13 +1,15 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart';
-import 'package:install_plugin/install_plugin.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -32,7 +34,7 @@ class Upgrade extends StatefulWidget {
 class _UpgradeState extends State<Upgrade> {
   bool _isUpdating = false; // 是否正在更新
   double _progress = 0.0; // 下载进度
-  String msg="版本更新中，请耐心等待";
+  String msg = "版本更新中，请耐心等待";
   @override
   void initState() {
     super.initState();
@@ -83,12 +85,11 @@ class _UpgradeState extends State<Upgrade> {
               }
             },
           );
-          if(_progress==1.0){
+          if (_progress == 1.0) {
             setState(() {
               msg = "下载完成,等待安装中"; // 更新下载进度
             });
           }
-
           // 下载完成后安装 APK
           await _installApk(filePath);
         } catch (e) {
@@ -112,25 +113,32 @@ class _UpgradeState extends State<Upgrade> {
     Log.i("apk--------------11$filePath");
     if (Platform.isAndroid) {
       // 请求安装未知来源应用的权限
-      if (await Permission.requestInstallPackages.request().isGranted) {
-        Log.i("apk--------------$filePath");
+      final result = await Permission.requestInstallPackages.request();
+      if (result.isGranted) {
+        const types = {
+          '.apk': 'application/vnd.android.package-archive',
+          '.exe': 'application/octet-stream',
+        };
+        final extension = p.extension(filePath);
+        await OpenFile.open(filePath, type: types[extension]);
+        // Log.i("apk--------------$filePath");
 
-        // 确保文件完全写入
-        await Future.delayed(Duration(seconds: 1));
+        // // 确保文件完全写入
+        // await Future.delayed(Duration(seconds: 1));
 
-        // 检查文件是否存在
-        final file = File(filePath);
-        if (await file.exists()) {
-          // 使用 install_plugin 安装 APK
-          try {
-            await InstallPlugin.installApk(filePath);
-            Log.i("APK 安装成功");
-          } catch (e) {
-            Log.e("APK 安装失败: $e");
-          }
-        } else {
-          Log.e("文件不存在: $filePath");
-        }
+        // // 检查文件是否存在
+        // final file = File(filePath);
+        // if (await file.exists()) {
+        //   // 使用 install_plugin 安装 APK
+        //   try {
+        //     await InstallPlugin.installApk(filePath);
+        //     Log.i("APK 安装成功");
+        //   } catch (e) {
+        //     Log.e("APK 安装失败: $e");
+        //   }
+        // } else {
+        //   Log.e("文件不存在: $filePath");
+        // }
       } else {
         Log.e("安装未知来源应用的权限被拒绝");
       }
@@ -194,31 +202,42 @@ class _UpgradeState extends State<Upgrade> {
                                 height: 130.w,
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.only(left: 6.w),
-                                child: WebViewWidget(
-                                    controller: WebViewController()
-                                      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                                      ..setNavigationDelegate(
-                                        NavigationDelegate(
-                                          onProgress: (int progress) {},
-                                          onPageStarted: (String url) {},
-                                          onPageFinished: (String url) {},
-                                          onWebResourceError: (WebResourceError error) {},
-                                          onNavigationRequest: (NavigationRequest request) {
-                                            return NavigationDecision.navigate;
-                                          },
-                                        ),
-                                      )
-                                      ..loadHtmlString("""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-</head>
-<body style="background-color:transparent;">
-    ${widget.appendInformation}
-</body>
-</html>""")),
+                                child: Html(
+                                  data: widget.appendInformation,
+                                  onLinkTap: (url, attributes, element) async {
+                                    if (url != null) {
+                                      final Uri uri = Uri.parse(url);
+                                      if (await canLaunchUrl(uri)) {
+                                        await launchUrl(uri);
+                                      }
+                                    }
+                                  },
+                                ),
+//                                 WebViewWidget(
+//                                     controller: WebViewController()
+//                                       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+//                                       ..setNavigationDelegate(
+//                                         NavigationDelegate(
+//                                           onProgress: (int progress) {},
+//                                           onPageStarted: (String url) {},
+//                                           onPageFinished: (String url) {},
+//                                           onWebResourceError: (WebResourceError error) {},
+//                                           onNavigationRequest: (NavigationRequest request) {
+//                                             return NavigationDecision.navigate;
+//                                           },
+//                                         ),
+//                                       )
+//                                       ..loadHtmlString("""<!DOCTYPE html>
+// <html lang="en">
+// <head>
+//     <meta charset="UTF-8">
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//     <title></title>
+// </head>
+// <body style="background-color:transparent;">
+//     ${widget.appendInformation}
+// </body>
+// </html>""")),
                               ),
                               SizedBox(height: 8.w),
                               if (!_isUpdating) // 如果不在更新中，显示按钮
@@ -227,20 +246,20 @@ class _UpgradeState extends State<Upgrade> {
                                     if (!widget.forcedUpgrade)
                                       Expanded(
                                           child: GestureDetector(
-                                            onTap: Get.back,
-                                            child: Container(
-                                              height: 48.w,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(30.w),
-                                                border: Border.all(width: 1.w, color: const Color(0xFF191919)),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                "下次再说",
-                                                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, color: const Color(0xFF191919)),
-                                              ),
-                                            ),
-                                          )),
+                                        onTap: Get.back,
+                                        child: Container(
+                                          height: 48.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30.w),
+                                            border: Border.all(width: 1.w, color: const Color(0xFF191919)),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "下次再说",
+                                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, color: const Color(0xFF191919)),
+                                          ),
+                                        ),
+                                      )),
                                     if (!widget.forcedUpgrade) SizedBox(width: 22.w),
                                     Expanded(
                                       child: GestureDetector(

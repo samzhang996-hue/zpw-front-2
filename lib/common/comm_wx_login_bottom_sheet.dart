@@ -19,10 +19,120 @@ class CommWxLoginBottomSheet extends StatefulWidget {
 class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with WxMixin {
   late final _isCheck = false.obs;
 
+  Widget _noCheckBottomSheet() {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 30.w),
+            child: Center(
+              child: CommText(
+                text: "服务协议与隐私保护",
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+                textColor: Colors.black,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 12.w),
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: '我已阅读并同意', style: TextStyle(color: const Color(0xFFB3B3B3), fontSize: 11.sp)),
+                            TextSpan(
+                              text: '《会员协议》',
+                              style: TextStyle(color: const Color(0xff676767), fontSize: 11.sp),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  String htmlStr = HandleTool.instance.hYxy;
+                                  if (htmlStr.isNotEmpty) {
+                                    Get.to(
+                                      MyWebViewPage(
+                                        titleStr: "会员协议",
+                                        htmlUrl: htmlStr,
+                                      ),
+                                    );
+                                  }
+                                },
+                            ),
+                            TextSpan(text: '与', style: TextStyle(color: const Color(0xFFB3B3B3), fontSize: 11.sp)),
+                            TextSpan(
+                              text: '《隐私政策》',
+                              style: TextStyle(color: const Color(0xff676767), fontSize: 11.sp),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  String htmlStr = HandleTool.instance.ySxy;
+                                  if (htmlStr.isNotEmpty) {
+                                    Get.to(
+                                      MyWebViewPage(
+                                        titleStr: "隐私政策",
+                                        htmlUrl: htmlStr,
+                                      ),
+                                    );
+                                  }
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          TapDebouncer(onTap: () async {
+            Get.back(result: true);
+          }, builder: (context, onTT) {
+            return InkWell(
+              onTap: () {
+                onTT?.call();
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 22.w, left: 16.w, right: 16.w, bottom: 20.w + ScreenUtil().bottomBarHeight),
+                width: double.infinity,
+                height: 52.w,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [
+                    Color(0xFF7EFAEF),
+                    Color(0xFF7FE1FB),
+                  ], begin: Alignment.centerLeft, end: Alignment.centerRight),
+                  borderRadius: BorderRadius.circular(26),
+                ),
+                child: Center(
+                  child: CommText(
+                    text: "同意并继续",
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    textColor: const Color(0xff191919),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
   void _onWx() async {
     if (_isCheck.value == false) {
-      HandleTool.showAppToastText("请勾选并同意用户、隐私协议");
-      return;
+      final result = await Get.bottomSheet<bool?>(_noCheckBottomSheet());
+      if (result != true) {
+        return;
+      }
+      _isCheck.value = true;
     }
     Wx();
     completer?.future.then((v) {
@@ -45,7 +155,7 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
         alignment: WrapAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 29.w),
+            margin: EdgeInsets.only(top: 39.w),
             child: Image.asset(
               "logo.png".comm,
               width: 60.w,
@@ -53,7 +163,7 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 10.w),
+            margin: EdgeInsets.only(top: 28.w),
             child: Center(
               child: CommText(
                 text: "欢迎使用Ai照片王",
@@ -71,7 +181,7 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
                 onTT?.call();
               },
               child: Container(
-                margin: EdgeInsets.only(top: 12.w, left: 16.w, right: 16.w),
+                margin: EdgeInsets.only(top: 22.w, left: 16.w, right: 16.w),
                 width: double.infinity,
                 height: 52.w,
                 decoration: BoxDecoration(
@@ -103,7 +213,7 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
             );
           }),
           Container(
-            margin: EdgeInsets.only(top: 12.w, bottom: 20.w + ScreenUtil().bottomBarHeight),
+            margin: EdgeInsets.only(top: 22.w, bottom: 20.w + ScreenUtil().bottomBarHeight),
             child: Align(
               alignment: Alignment.center,
               child: Column(

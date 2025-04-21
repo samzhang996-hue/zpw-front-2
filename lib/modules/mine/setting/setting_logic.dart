@@ -20,8 +20,10 @@ class SettingLogic extends BaseGetxController {
     get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) async {
       UmengCommonSdk.onProfileSignOff();
       HandleTool.showAppToastText("注销成功");
+      SpUtils.clear();
       await 0.5.delay();
-      SpUtils.setString("token", "");
+      // SpUtils.setString("token", "");
+
       exit(-1);
       // if (isSuccess == true && results.isNotEmpty) {
       //   HandleTool.showAppToastText("注销成功");
@@ -49,6 +51,7 @@ class SettingLogic extends BaseGetxController {
       HandleTool.showAppToastText("退出成功");
       await 0.15.delay();
       SpUtils.setString("token", "");
+      HandleTool.instance.token = "";
       final mineLogic = Get.find<MineLogic>();
       mineLogic.state.userInfoBean = UserInfoBean();
       HandleTool.instance.isMember = false;

@@ -45,7 +45,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
       case AppLifecycleState.paused:
         break;
       case AppLifecycleState.resumed:
-        // logic.getUserInfo();
+        logic.getUserInfo();
         break;
       case AppLifecycleState.hidden:
       default:
@@ -120,15 +120,17 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                       ),
                                     );
                                   }),
-                                  SizedBox(
-                                    height: 4.w,
-                                  ),
-                                  CommText(
-                                    text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "永久会员" : "到期时间:${state.userInfoBean.vipExpireTime}") : "未开通会员",
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: const Color(0xff818181),
-                                  ),
+                                  if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
+                                    SizedBox(
+                                      height: 4.w,
+                                    ),
+                                  if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
+                                    CommText(
+                                      text: "ID：${state.userInfoBean.id}",
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: const Color(0xff818181),
+                                    ),
                                 ],
                               ),
                             ),
@@ -165,6 +167,16 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                               fit: BoxFit.cover,
                             ),
                             Positioned(
+                              top: 86.w,
+                              left: 18.w,
+                              child: CommText(
+                                text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "终身有效" : "到期时间:${state.userInfoBean.vipExpireTime}") : "",
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                textColor: const Color(0xFF977630),
+                              ),
+                            ),
+                            Positioned(
                               bottom: 20.w,
                               right: 2.w,
                               child: Container(
@@ -174,7 +186,11 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                 decoration: BoxDecoration(color: const Color(0xFF4C3504), borderRadius: BorderRadius.circular(16.w)),
                                 child: Center(
                                     child: CommText(
-                                  text: HandleTool.instance.isMember ? "已开通" : "立即开通",
+                                  text: state.userInfoBean.permanentFlag == 1
+                                      ? "已开通"
+                                      : HandleTool.instance.isMember
+                                          ? "立即续费"
+                                          : "立即开通",
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
                                   textColor: const Color(0xFFFFFFFF),

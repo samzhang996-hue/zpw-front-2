@@ -6,6 +6,7 @@ import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
+import '../../utils/sp_utils.dart';
 import 'mine_state.dart';
 
 class MineLogic extends BaseGetxController {
@@ -17,7 +18,14 @@ class MineLogic extends BaseGetxController {
     getUserInfo();
   }
 
-  getUserInfo({bool isShowProgress = false}) {
+  getUserInfo({bool isShowProgress = false}) async {
+    final isEmpty = HandleTool.instance.isEmpty(await SpUtils.getString("token"));
+    if (isEmpty) {
+      state.userInfoBean = UserInfoBean();
+      HandleTool.instance.isMember = false;
+      update();
+      return;
+    }
     final logic = Get.put(GameplayLogic());
     Post<UserInfoBean>(Api.sso_getUserInfo,
         isShowProgress: isShowProgress,

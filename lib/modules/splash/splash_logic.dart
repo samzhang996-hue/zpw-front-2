@@ -34,9 +34,10 @@ class SplashLogic extends BaseGetxController {
     super.onInit();
     String projectId = await getProjectId();
     String channel = await getChannelInfo();
+    HandleTool.instance.channel = channel;
     await SpUtils.setString("channel", channel);
     await SpUtils.setString("projectId", projectId);
-    HandleTool.instance.getProtocolConfig();
+    await HandleTool.instance.getProtocolConfig();
     // handleNetWork();
     test();
     startProgress();
@@ -93,7 +94,8 @@ class SplashLogic extends BaseGetxController {
 
     ////
     Get.put(VipLogic());
-    if (!_showAd || HandleTool.instance.channelAds) {
+
+    if (HandleTool.instance.channelAds) {
       progress.value = 1.0;
       Get.offAll(const MainPage());
       return;
@@ -124,6 +126,7 @@ class SplashLogic extends BaseGetxController {
           requestMax = 100;
           Map data = results.first as Map;
           SpUtils.setString("token", data['token'] ?? "");
+          HandleTool.instance.token = data['token'] ?? "";
           SpUtils.setBool("isAgreed", true);
           Log.d("res----${data}");
           Get.put(VipLogic());
@@ -134,9 +137,14 @@ class SplashLogic extends BaseGetxController {
   }
 
   loginWithDeviceInfo() async {
+    final isAgreed = await SpUtils.getBool("isAgreed");
+    if (isAgreed) {
+      await HandleTool.instance.getProtocolConfig();
+    }
+
     SpUtils.setBool("isAgreed", true);
     String token = await SpUtils.getString("token");
-
+    HandleTool.instance.token = token;
     PackageInfo.fromPlatform().then((v) {
       HandleTool.instance.localVersion = v.version;
     });
@@ -191,6 +199,7 @@ class SplashLogic extends BaseGetxController {
         requestMax = 100;
         Map data = results.first as Map;
         SpUtils.setString("token", data['token'] ?? "");
+        HandleTool.instance.token = data['token'] ?? "";
         SpUtils.setBool("isAgreed", true);
         Log.d("res----${data}");
         Get.put(VipLogic());

@@ -15,8 +15,9 @@ import '../utils/sp_utils.dart';
 mixin AppMixin {
   Future<bool?> wxLogin() async {
     final mineLogic = Get.find<MineLogic>();
-    final isEmpty = HandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName);
-    Log.e('isEmpty:$isEmpty');
+    // final isEmpty = HandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName);
+    // Log.e('isEmpty:$isEmpty');
+    final isEmpty = HandleTool.instance.isEmpty(await SpUtils.getString("token"));
     if (isEmpty) {
       final result = await Get.bottomSheet<String?>(const CommWxLoginBottomSheet());
       final tempCom = Completer<bool>();
@@ -30,6 +31,7 @@ mixin AppMixin {
               HandleTool.showAppToastText('登录成功');
               Map data = results.first as Map;
               SpUtils.setString("token", data['token'] ?? "");
+              HandleTool.instance.token = data['token'] ?? "";
               HandleTool.instance.SMWPost<UserInfoBean>(Api.sso_getUserInfo,
                   isShowProgress: true,
                   success: (isSuccess, code, message, results) {

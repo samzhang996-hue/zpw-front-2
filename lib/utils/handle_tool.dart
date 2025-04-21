@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -57,6 +58,7 @@ class HandleTool {
 
   String channel = "android";
   String headImg = "";
+  String token = "";
 
   // Map<String, dynamic> configData = <String, dynamic>{
   //   "QWYHXY": "",
@@ -168,7 +170,8 @@ class HandleTool {
     return result;
   }
 
-  getProtocolConfig({bool isShowProgress = false}) {
+  Future<void> getProtocolConfig({bool isShowProgress = false}) {
+    final tempComplete = Completer<void>();
     SMWPost(Api.center_getProtocolConfig, isShowProgress: isShowProgress, success: (isSuccess, code, message, results) {
       Log.d("config---$isSuccess----$results");
       if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
@@ -198,8 +201,11 @@ class HandleTool {
             channelLogin = configValue == "1";
           }
         }
+        // Log.e("HandleTool.instance.channelAds----1----:${HandleTool.instance.channelAds}");
+        return tempComplete.complete();
       }
     });
+    return tempComplete.future;
   }
 
   static showAppToastText(String message, {ToastGravity gravity = ToastGravity.CENTER}) {

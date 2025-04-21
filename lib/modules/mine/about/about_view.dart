@@ -34,7 +34,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
       color: Colors.white,
       child: Column(
         children: [
-          YAppBar(title: "关于我们"),
+          GestureDetector(onDoubleTap: logic.onDoubleTap, child: YAppBar(title: "关于我们")),
           commItem("用户协议", ""),
           commItem("隐私政策", ""),
           commItem("会员协议", ""),
