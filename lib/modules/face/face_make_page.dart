@@ -187,7 +187,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
         return;
       }
 
-      if (_apiType == 0) {
+      if (_apiType == 0 || _apiType == 5 || _apiType == 8 || _apiType == 4) {
         final result = await _checkWholeBodyAndShowDialog();
         if (result == false) {
           await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
