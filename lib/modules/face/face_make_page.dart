@@ -72,6 +72,15 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   late final _list = <String>[].obs;
   VideoPlayerController? _videoPlayerController;
   late int _apiType = widget.apiType;
+  var _isScroller = false;
+  int get _funcID => widget.groupId == -1
+      ? widget.funcId
+      : _isScroller
+          ? _funcIds[_currentIndex.value]
+          : _currentIndex.value == 0
+              ? widget.funcId
+              : _funcIds[_currentIndex.value];
+
   void _toHistory() async {
     _canBack = false;
     _autoPlay.value = false;
@@ -113,6 +122,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     if (widget.groupId == -1) {
       return;
     }
+    _isScroller = true;
     var apiType = _apiTypes[_currentIndex.value];
     _apiType = apiType;
     // if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 0) {
@@ -222,11 +232,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       // return;
 
       final params = {
-        "funcId": widget.groupId == -1
-            ? widget.funcId
-            : _currentIndex.value == 0
-                ? widget.funcId
-                : _funcIds[_currentIndex.value],
+        "funcId": _funcID,
         "imgUrls": [_myHeadImg.value],
         // "prompt": "",
       };

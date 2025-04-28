@@ -6,8 +6,7 @@ class CommVideoPlayerWidget extends StatefulWidget {
   final int initialPage;
   final bool autoPlay;
   final int groupId;
-  final void Function(int index, VideoPlayerController? videoPlayerController)?
-      onPageChanged;
+  final void Function(int index, VideoPlayerController? videoPlayerController)? onPageChanged;
 
   const CommVideoPlayerWidget({
     super.key,
@@ -26,6 +25,8 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
   late PageController _pageController;
   // late final _currentIndex = 0.obs;
   List<VideoPlayerController?> _controllers = [];
+  var _isPageChanged = false;
+  late var _validIndex = widget.initialPage;
   void _initializeControllers() {
     // var temp = widget.videoUrls.length > 5 ? 5 : widget.videoUrls.length;
     if (widget.groupId == -1) {
@@ -44,9 +45,7 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
     _controllers = List.generate(widget.videoUrls.length, (index) => null);
 
     final tempFirst = getClosestValues(widget.videoUrls, widget.initialPage);
-    for (int i = tempFirst.first;
-        i < tempFirst.last && i < widget.videoUrls.length;
-        i++) {
+    for (int i = tempFirst.first; i < tempFirst.last && i < widget.videoUrls.length; i++) {
       _initVideoController(index: i);
     }
   }
@@ -76,29 +75,39 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
   }
 
   void _initVideoController({required int index, isZero = false}) {
-    if (_controllers[index] != null) return;
-    var controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.videoUrls[index]));
-    controller.initialize().then((_) {
-      if (mounted) {
-        controller.setLooping(true);
+    if (index < 0 || index >= widget.videoUrls.length || _controllers[index] != null) {
+      return;
+    }
 
-        if (index == widget.initialPage || isZero == true) {
+    var controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrls[index]));
+    _controllers[index] = controller;
+    controller.initialize().then((_) {
+      if (mounted && _controllers[index] == controller) {
+        controller.setLooping(true);
+        setState(() {});
+        if (index == _validIndex || isZero == true) {
           if (widget.autoPlay) {
             controller.play();
           }
-          widget.onPageChanged?.call(index, controller);
+          if (_isPageChanged == false) {
+            widget.onPageChanged?.call(index, controller);
+          }
         }
-        setState(() {});
+      } else if (!mounted) {
+        controller.dispose();
+        if (_controllers[index] == controller) {
+          _controllers[index] = null;
+        }
+      } else {
+        controller.dispose();
       }
     });
-
-    _controllers[index] = controller;
   }
 
   void _onPageChanged(int newIndex) {
     int validIndex = newIndex % widget.videoUrls.length;
-
+    _validIndex = validIndex;
+    _isPageChanged = true;
     widget.onPageChanged?.call(validIndex, _controllers[validIndex]);
 
     for (int i = 0; i < _controllers.length; i++) {
