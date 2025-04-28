@@ -50,7 +50,7 @@ class FaceMakePage extends BaseStatefulWidget {
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
-  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 ? true.obs : false.obs);
+  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 ? true.obs : false.obs);
   var _canBack = true;
   late final _autoPlay = true.obs;
   late final _initialPage = 0.obs;
@@ -126,7 +126,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     var apiType = _apiTypes[_currentIndex.value];
     _apiType = apiType;
     // if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 0) {
-    if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1) {
+    if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 16) {
       _hasAvatar.value = true;
     } else {
       _hasAvatar.value = false;
