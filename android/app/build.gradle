@@ -102,7 +102,8 @@ android {
             def buildType = variant.buildType.name // 构建类型
             def applicationId = variant.applicationId
             // 输出文件名格式：渠道名_版本名_版本号_构建类型.apk
-            def fileName = "zpw_${flavorName}_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
+            def fileName = "zpw_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
+            // def fileName = "zpw_${flavorName}_(${versionName})_[${applicationId}]_${versionCode}_${buildType}.apk"
             output.outputFileName = new File(fileName)
         }
     }

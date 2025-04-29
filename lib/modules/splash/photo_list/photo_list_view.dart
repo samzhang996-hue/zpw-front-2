@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +18,7 @@ import 'package:zpw/modules/wf/aikt/aikt_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/permission.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+
 import 'photo_list_logic.dart';
 
 class Photo_listPage extends BaseStatefulWidget {
@@ -98,9 +100,12 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     // 假设我们只获取第一个相册的照片
     if (resultList.isNotEmpty) {
       final AssetPathEntity firstAlbum = resultList.first;
+      EasyLoading.show();
+      final count = await firstAlbum.assetCountAsync;
+      EasyLoading.dismiss();
       final List<AssetEntity> assetList = await firstAlbum.getAssetListRange(
         start: 0,
-        end: 100, // 这里可以指定你想要加载的照片数量
+        end: count, // 这里可以指定你想要加载的照片数量
       );
       setState(() {
         _photos = assetList;

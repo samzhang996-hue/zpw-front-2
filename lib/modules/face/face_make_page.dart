@@ -50,7 +50,7 @@ class FaceMakePage extends BaseStatefulWidget {
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
-  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 ? true.obs : false.obs);
+  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 || widget.apiType == 4 ? true.obs : false.obs);
   var _canBack = true;
   late final _autoPlay = true.obs;
   late final _initialPage = 0.obs;
@@ -126,7 +126,12 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     var apiType = _apiTypes[_currentIndex.value];
     _apiType = apiType;
     // if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 0) {
-    if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 16) {
+    /// apiType: 9  异性的你
+    /// apiType: 10  变老变年轻
+    /// apiType: 4  卡通动漫
+    /// apiType: 16  图片
+    /// apiType: 2  视频
+    if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 16 || apiType == 4) {
       _hasAvatar.value = true;
     } else {
       _hasAvatar.value = false;
@@ -137,13 +142,17 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
 
   // 检查并显示弹窗
   Future<bool> _checkFaceAndShowDialog() async {
-    String lastShownDate = await SpUtils.getString('lastFaceShownDate');
-    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    if (_apiType == 9 || _apiType == 10 || _apiType == 4 || _apiType == 16 || _apiType == 2) {
+      String lastShownDate = await SpUtils.getString('lastFaceShownDate_$_apiType');
+      String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    // 如果当天没有弹过窗，或者日期不同，则显示弹窗
-    if (lastShownDate != todayDate) {
-      await SpUtils.setString('lastFaceShownDate', todayDate); // 更新为今天的日期
-      return false;
+      // 如果当天没有弹过窗，或者日期不同，则显示弹窗
+      if (lastShownDate != todayDate) {
+        await SpUtils.setString('lastFaceShownDate_$_apiType', todayDate); // 更新为今天的日期
+        return false;
+      } else {
+        return true;
+      }
     } else {
       return true;
     }
@@ -187,11 +196,26 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
         return;
       }
 
-      if (_apiType == 0 || _apiType == 5 || _apiType == 8 || _apiType == 4) {
+      if (_apiType == 0) {
         final result = await _checkWholeBodyAndShowDialog();
         if (result == false) {
           await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
         }
+        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+        _videoPlayerController?.play();
+
+        if (res == null) {
+          return;
+        }
+
+        if (res.isNotEmpty == true) {
+          _myHeadImg.value = res;
+        } else {
+          return;
+        }
+      }
+
+      if (_apiType == 5 || _apiType == 8) {
         final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
         _videoPlayerController?.play();
 
