@@ -11,6 +11,8 @@ import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
+import '../../common/chat_items/chat_items.dart';
+
 class GameplayPage extends StatefulWidget {
   const GameplayPage({Key? key}) : super(key: key);
 
@@ -175,7 +177,7 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                     controller: page,
                     children: logic.list
                         // .map((e) => FaceItem(id: e.id ?? 0))
-                        .map((e) => e == "Ai对话" ? Text("Ai对话") : Text("e")) // CollectionItem(id: e.id ?? 0))
+                        .map((e) => e == "Ai对话" ? const ChatItems() : Text("e")) // CollectionItem(id: e.id ?? 0))
                         .toList(),
                     onPageChanged: (index) {
                       logic.tabController?.animateTo(index);

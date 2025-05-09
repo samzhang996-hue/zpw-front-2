@@ -2,15 +2,24 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/mixin/wx_mixin.dart';
+import 'package:zpw/model/auth_model.dart';
 import 'package:zpw/utils/handle_tool.dart';
+
+import '../modules/gameplay/gameplay_logic.dart';
+import '../modules/main/model/user_info_bean.dart';
+import '../modules/mine/mine_logic.dart';
+import '../network/api/network_api.dart';
+import '../utils/sp_utils.dart';
 
 class CommWxLoginBottomSheet extends StatefulWidget {
   const CommWxLoginBottomSheet({super.key});
@@ -151,17 +160,52 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
       }
       _isCheck.value = true;
     }
-
-    final credential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
-    if (credential.identityToken == null) {
-      Get.back();
-    } else {
-      Get.back();
+    EasyLoading.show();
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      if (credential.identityToken == null) {
+        EasyLoading.dismiss();
+        Get.back();
+      } else {
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        HandleTool.instance.SMWPost(Api.authorizeByIos, isShowProgress: true, params: {
+          'identityToken': credential.identityToken,
+          'aud': packageInfo.packageName,
+          'userDeviceInfo': HandleTool.instance.getMap(),
+        }, success: (isSuccess, code, message, results) {
+          if (isSuccess == true && results.isNotEmpty) {
+            HandleTool.showAppToastText('登录成功');
+            Map data = results.first as Map;
+            SpUtils.setString("token", data['token'] ?? "");
+            HandleTool.instance.token = data['token'] ?? "";
+            HandleTool.instance.SMWPost<UserInfoBean>(Api.sso_getUserInfo,
+                isShowProgress: true,
+                success: (isSuccess, code, message, results) {
+                  if (isSuccess == true && results.isNotEmpty) {
+                    final mineLogic = Get.find<MineLogic>();
+                    mineLogic.state.userInfoBean = results.first;
+                    HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
+                    final logic = Get.find<GameplayLogic>();
+                    logic.stateShowVip(HandleTool.instance.isMember);
+                    mineLogic.update();
+                    EasyLoading.dismiss();
+                    Get.back();
+                  } else {
+                    EasyLoading.dismiss();
+                    Get.back();
+                  }
+                },
+                onModel: (m) => UserInfoBean.fromJson(m));
+          }
+        });
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
     }
   }
 

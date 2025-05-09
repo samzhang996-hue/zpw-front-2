@@ -75,6 +75,10 @@ dependencies:
   tap_debouncer: ^2.2.0
   flutter_html: ^3.0.0
   sign_in_with_apple:
+  shimmer:
+  keyboard_height_plugin:
+  openai_dart:
+    path: ./plugins/openai_dart
   # device_infos:
   #   path: ./plugins/device_infos
   # The following adds the Cupertino Icons font to your application.

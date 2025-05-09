@@ -143,4 +143,9 @@ class Api {
 
   ///token登陆
   static const String authByToken = "/authByToken";
+
+  /// 获取智能体
+  static const String getSmartModel = "/configSmartModel/listAll";
+
+  static const String authorizeByIos = '/authorizeByIos';
 }
