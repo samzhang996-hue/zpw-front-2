@@ -12,7 +12,6 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/mixin/wx_mixin.dart';
-import 'package:zpw/model/auth_model.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 import '../modules/gameplay/gameplay_logic.dart';
@@ -176,7 +175,7 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
         HandleTool.instance.SMWPost(Api.authorizeByIos, isShowProgress: true, params: {
           'identityToken': credential.identityToken,
           'aud': packageInfo.packageName,
-          'userDeviceInfo': HandleTool.instance.getMap(),
+          'userDeviceInfo': await HandleTool.instance.getMap(),
         }, success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
             HandleTool.showAppToastText('登录成功');

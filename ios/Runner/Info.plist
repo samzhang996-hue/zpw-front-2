@@ -28,40 +28,27 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>CFBundleURLName</key>
-        <string>weixin</string>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>wx5bdeda6fcfb891c8</string>
-        </array>
-       </dict>
-    </array>
-    <key>LSApplicationQueriesSchemes</key>
-        <array>
-            <string>wechat</string>
-            <string>weixin</string>
-            <string>weixinULAPI</string>
-        </array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.photoking.app</string>
+			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.photoking.app</string>
+				<string>wx5bdeda6fcfb891c8</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>wechat</string>
+		<string>weixin</string>
+		<string>weixinULAPI</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -75,6 +62,8 @@
 	<string>"AI照片王"需要您的同意，才能访问相册以选择图片进行AI制作。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>"AI照片王"需要您的同意，才能访问相册以选择图片进行AI制作。</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>此标识符将用于向您推荐个性化广告。</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -94,7 +83,5 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
-	<key>NSUserTrackingUsageDescription</key>
-    <string>此标识符将用于向您推荐个性化广告。</string>
 </dict>
 </plist>

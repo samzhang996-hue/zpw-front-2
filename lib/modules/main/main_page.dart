@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
                       width: 36,
                       height: 36,
                     ),
-                    label: "视频",
+                    label: "首页",
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(

@@ -148,4 +148,6 @@ class Api {
   static const String getSmartModel = "/configSmartModel/listAll";
 
   static const String authorizeByIos = '/authorizeByIos';
+
+  static const String getConfigByKey = '/sysConfig/getConfigByKey?key=IOS_OPEN_FLAG ';
 }

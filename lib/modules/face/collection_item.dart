@@ -14,9 +14,11 @@ import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 class CollectionItem extends StatefulWidget {
-  const CollectionItem({super.key, required this.id});
+  const CollectionItem({super.key, required this.id, this.isHome = false});
 
   final int id;
+
+  final bool isHome;
 
   @override
   State<CollectionItem> createState() => _CollectionItemState();
@@ -30,6 +32,8 @@ class _CollectionItemState extends State<CollectionItem> {
 
   var _isLoading = false;
   late final _showNoMoreContent = false.obs;
+
+  double get _itemHeight => widget.isHome ? 295.w : 265.w;
 
   void _getData() {
     final params = {
@@ -99,14 +103,9 @@ class _CollectionItemState extends State<CollectionItem> {
   Widget _getBindType0(Records bean) {
     return GestureDetector(
       onTap: () {
-        UmengCommonSdk.onEvent(
-            'Muban_click_event', {'Records': '${bean.toJson()}'});
+        UmengCommonSdk.onEvent('Muban_click_event', {'Records': '${bean.toJson()}'});
         if (bean.photoFuncResp?.apiType == 6) {
-          Get.to(WstPage(), arguments: {
-            "funcValue": bean.photoFuncResp?.funcValue ?? "",
-            "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
-            "funcId": bean.photoFuncResp?.id ?? 0
-          });
+          Get.to(WstPage(), arguments: {"funcValue": bean.photoFuncResp?.funcValue ?? "", "showImgGif": bean.photoFuncResp?.showImgGif ?? "", "funcId": bean.photoFuncResp?.id ?? 0});
           return;
         }
         Get.to(
@@ -120,63 +119,91 @@ class _CollectionItemState extends State<CollectionItem> {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          // color: index.isOdd ? Colors.amber : Colors.red,
-          color: const Color(0xFFF3F3F3),
-          borderRadius: BorderRadius.circular(8.w),
-        ),
-        child: Stack(
-          children: [
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.w),
-                child: QdsImage(
-                  "${bean.photoFuncResp?.showImgGif}",
-                  175.w,
-                  265.w,
-                ),
-              ),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              // color: index.isOdd ? Colors.amber : Colors.red,
+              color: const Color(0xFFF3F3F3),
+              borderRadius: BorderRadius.circular(8.w),
             ),
-            if (bean.photoFuncResp?.tags?.isNotEmpty == true)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: 55.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8.w),
-                      bottomRight: Radius.circular(8.w),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0x00141414),
-                        Color(0xBA000000),
-                      ],
-                    ),
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 10.w, top: 10.w),
-                      child: Text(
-                        "${bean.photoFuncResp?.tags ?? bean.photoFuncResp?.funcName}",
-                        style: TextStyle(
-                          color: const Color(0xFFFFFFFF),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+            child: Stack(
+              children: [
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.w),
+                    child: QdsImage(
+                      "${bean.photoFuncResp?.showImgGif}",
+                      175.w,
+                      265.w,
                     ),
                   ),
                 ),
-              )
-          ],
-        ),
+                // if (bean.photoFuncResp?.tags?.isNotEmpty == true)
+                //   Positioned(
+                //     left: 0,
+                //     right: 0,
+                //     bottom: 0,
+                //     child: Container(
+                //       height: 55.w,
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.only(
+                //           bottomLeft: Radius.circular(8.w),
+                //           bottomRight: Radius.circular(8.w),
+                //         ),
+                //         gradient: const LinearGradient(
+                //           begin: Alignment.topCenter,
+                //           end: Alignment.bottomCenter,
+                //           colors: [
+                //             Color(0x00141414),
+                //             Color(0xBA000000),
+                //           ],
+                //         ),
+                //       ),
+                //       child: Align(
+                //         alignment: Alignment.centerLeft,
+                //         child: Padding(
+                //           padding: EdgeInsets.only(left: 10.w, top: 10.w),
+                //           child: Text(
+                //             "${bean.photoFuncResp?.tags ?? bean.photoFuncResp?.funcName}",
+                //             style: TextStyle(
+                //               color: const Color(0xFFFFFFFF),
+                //               fontSize: 14.sp,
+                //               fontWeight: FontWeight.w400,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   )
+              ],
+            ),
+          ),
+          if (widget.isHome)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${bean.photoFuncResp?.tags ?? bean.photoFuncResp?.funcName}",
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: const Color(0xFF191919),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                // Text(
+                //   "2.5w",
+                //   maxLines: 1,
+                //   style: TextStyle(
+                //     color: const Color(0xFF191919),
+                //     fontSize: 14.sp,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                // ),
+              ],
+            ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
+        ],
       ),
     );
   }
@@ -262,43 +289,43 @@ class _CollectionItemState extends State<CollectionItem> {
             //     ],
             //   ),
             // ),
-            if (bean.photoGroupResp?.tips?.isNotEmpty == true)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: 55.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8.w),
-                      bottomRight: Radius.circular(8.w),
-                    ),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0x00141414),
-                        Color(0xBA000000),
-                      ],
-                    ),
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 10.w),
-                      child: Text(
-                        "${bean.photoGroupResp?.tips}",
-                        style: TextStyle(
-                          color: const Color(0xFFFFFFFF),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
+            // if (bean.photoGroupResp?.tips?.isNotEmpty == true)
+            //   Positioned(
+            //     left: 0,
+            //     right: 0,
+            //     bottom: 0,
+            //     child: Container(
+            //       height: 55.w,
+            //       decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.only(
+            //           bottomLeft: Radius.circular(8.w),
+            //           bottomRight: Radius.circular(8.w),
+            //         ),
+            //         gradient: const LinearGradient(
+            //           begin: Alignment.topCenter,
+            //           end: Alignment.bottomCenter,
+            //           colors: [
+            //             Color(0x00141414),
+            //             Color(0xBA000000),
+            //           ],
+            //         ),
+            //       ),
+            //       child: Align(
+            //         alignment: Alignment.centerLeft,
+            //         child: Padding(
+            //           padding: EdgeInsets.only(left: 10.w),
+            //           child: Text(
+            //             "${bean.photoGroupResp?.tips}",
+            //             style: TextStyle(
+            //               color: const Color(0xFFFFFFFF),
+            //               fontSize: 14.sp,
+            //               fontWeight: FontWeight.w400,
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   )
           ],
         ),
       ),
@@ -338,13 +365,11 @@ class _CollectionItemState extends State<CollectionItem> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 8.w,
                         crossAxisSpacing: 8.w,
-                        childAspectRatio: 175.w / 265.w,
+                        childAspectRatio: 175.w / _itemHeight,
                       ),
                       itemBuilder: (c, index) {
                         final bean = _records[index];
-                        return bean.bindType == 0
-                            ? _getBindType0(bean)
-                            : _getBindType1(bean);
+                        return bean.bindType == 0 ? _getBindType0(bean) : _getBindType1(bean);
                       },
                     ),
                     SliverToBoxAdapter(

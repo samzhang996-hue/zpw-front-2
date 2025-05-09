@@ -160,7 +160,7 @@ class ListItem extends StatelessWidget {
                               child: Icon(
                                 Icons.arrow_forward_ios,
                                 size: 13,
-                                color: iconColor ?? Theme.of(context).hintColor.withValues(alpha: 0.2),
+                                color: iconColor ?? Theme.of(context).hintColor.withOpacity(0.2),
                               ),
                             ),
                           )

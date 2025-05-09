@@ -12,7 +12,7 @@ import 'package:zpw/utils/ads_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main()   {
+void main() {
   Get.lazyPut(() => MainState());
   // 绑定引擎
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,8 +39,7 @@ class _MyAppState extends State<MyApp> {
         failedText: '',
         messageText: '',
         pullIconBuilder: (context, state, value) {
-          if (state.mode == IndicatorMode.processing ||
-              state.mode == IndicatorMode.ready) {
+          if (state.mode == IndicatorMode.processing || state.mode == IndicatorMode.ready) {
             return SizedBox(
               width: 20.w,
               height: 20.w,
@@ -70,8 +69,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       systemNavigationBarColor: Colors.white,
@@ -104,8 +102,7 @@ class _MyAppState extends State<MyApp> {
             builder: (context, widget) {
               widget = easyLoad(context, widget);
               widget = MediaQuery(
-                data: MediaQuery.of(context)
-                    .copyWith(textScaler: const TextScaler.linear(1)),
+                data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1)),
                 child: widget,
               );
               return widget;

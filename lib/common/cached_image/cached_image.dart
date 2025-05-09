@@ -28,8 +28,8 @@ Widget _errorBuilder(BuildContext context, String url, Object error, {double? wi
     );
 
 Widget _cachePlaceholder(BuildContext context, String url, {double? width, double? height}) => Shimmer.fromColors(
-      baseColor: Colors.white.withValues(alpha: 0.03),
-      highlightColor: Colors.white.withValues(alpha: 0.06),
+      baseColor: Colors.white.withOpacity(0.03),
+      highlightColor: Colors.white.withOpacity(0.06),
       child: Container(width: width, height: height, color: const Color.fromRGBO(31, 34, 39, 1)),
     );
 
@@ -163,8 +163,8 @@ class CachedImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: Shimmer.fromColors(
-        baseColor: Colors.white.withValues(alpha: 0.03),
-        highlightColor: Colors.white.withValues(alpha: 0.06),
+        baseColor: Colors.white.withOpacity(0.03),
+        highlightColor: Colors.white.withOpacity(0.06),
         child: Container(width: width, height: height, color: const Color.fromRGBO(31, 34, 39, 1)),
       ),
     );

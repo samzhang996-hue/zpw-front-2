@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:zpw/common/constant.dart';
+
 import '../../common/cached_image/cached_image.dart';
 import '../../common/view/comm_text.dart';
 import '../../model/smart_model.dart';
@@ -30,7 +31,7 @@ class ChatView extends StatelessWidget {
           actions: [
             PopupMenuButton(
               padding: EdgeInsets.zero,
-              menuPadding: EdgeInsets.zero,
+              // menuPadding: EdgeInsets.zero,
               splashRadius: 14.r,
               offset: Offset(-20.w, 40.h),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14.r)).copyWith(topRight: Radius.zero)),
