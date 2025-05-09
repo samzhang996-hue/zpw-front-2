@@ -69,7 +69,7 @@ dependencies:
   gallery_saver: ^2.3.2
   file_picker: ^9.0.2
   open_file: ^3.2.1 # 打开 APK 文件
-  install_plugin: ^2.1.0 # 安装 APK 文件
+  # install_plugin: ^2.1.0 # 安装 APK 文件
   intl: ^0.20.2
   fluwx: ^5.5.1
   tap_debouncer: ^2.2.0
