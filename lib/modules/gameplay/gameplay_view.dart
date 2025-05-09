@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
@@ -19,8 +18,7 @@ class GameplayPage extends StatefulWidget {
   State<GameplayPage> createState() => _GameplayPageState();
 }
 
-class _GameplayPageState extends State<GameplayPage>
-    with SingleTickerProviderStateMixin {
+class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderStateMixin {
   final logic = Get.put(GameplayLogic());
   final state = Get.find<GameplayLogic>().state;
 
@@ -114,9 +112,7 @@ class _GameplayPageState extends State<GameplayPage>
                                   child: Container(
                                     width: 182.w,
                                     height: 90.w,
-                                    margin: EdgeInsets.only(
-                                        left: 16.w,
-                                        right: index == 2 ? 16.w : 0),
+                                    margin: EdgeInsets.only(left: 16.w, right: index == 2 ? 16.w : 0),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8.w),
                                       child: QdsImage(
@@ -139,29 +135,19 @@ class _GameplayPageState extends State<GameplayPage>
                           margin: EdgeInsets.only(bottom: 10.w),
                           child: TabBar(
                             tabAlignment: TabAlignment.center,
-                            tabs: logic.listPhotoGroupBean2
-                                .map((e) => Tab(text: "${e.groupName}"))
-                                .toList(),
+                            tabs: logic.list.map((e) => Tab(text: e)).toList(),
                             onTap: (index) {
-                              UmengCommonSdk.onEvent('Gameplay_click_event', {
-                                'Tab':
-                                    '${logic.listPhotoGroupBean2[index].toJson()}'
-                              });
+                              UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
                               page?.jumpToPage(index);
                             },
-                            overlayColor:
-                                WidgetStateProperty.all(Colors.transparent),
+                            overlayColor: WidgetStateProperty.all(Colors.transparent),
                             controller: logic.tabController,
                             indicator: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(50.w), // Creates border
-                              gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFF7EFAEF),
-                                    Color(0xFF7FE1FB),
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight),
+                              borderRadius: BorderRadius.circular(50.w), // Creates border
+                              gradient: const LinearGradient(colors: [
+                                Color(0xFF7EFAEF),
+                                Color(0xFF7FE1FB),
+                              ], begin: Alignment.centerLeft, end: Alignment.centerRight),
                             ),
                             indicatorSize: TabBarIndicatorSize.tab,
                             labelColor: const Color(0xFF191919),
@@ -187,9 +173,9 @@ class _GameplayPageState extends State<GameplayPage>
                 Expanded(
                   child: PageView(
                     controller: page,
-                    children: logic.listPhotoGroupBean2
+                    children: logic.list
                         // .map((e) => FaceItem(id: e.id ?? 0))
-                        .map((e) => CollectionItem(id: e.id ?? 0))
+                        .map((e) => e == "Ai对话" ? Text("Ai对话") : Text("e")) // CollectionItem(id: e.id ?? 0))
                         .toList(),
                     onPageChanged: (index) {
                       logic.tabController?.animateTo(index);
