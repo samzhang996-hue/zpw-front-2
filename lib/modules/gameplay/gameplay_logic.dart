@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/gameplay/gameplay_state.dart';
-import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -15,7 +14,7 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
   var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
   late final isOk = false.obs;
   late final showVip = false.obs;
-
+  late final list = ["Ai对话", "文生图", "全民舞王"];
   @override
   void onInit() {
     super.onInit();
@@ -65,9 +64,10 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
   @override
   void onReady() {
     super.onReady();
-
-    _getData();
-    _getData2();
+    tabController = TabController(length: list.length, vsync: this);
+    update();
+    // _getData();
+    // _getData2();
   }
 
   @override
