@@ -74,6 +74,7 @@ dependencies:
   fluwx: ^5.5.1
   tap_debouncer: ^2.2.0
   flutter_html: ^3.0.0
+  sign_in_with_apple:
   # device_infos:
   #   path: ./plugins/device_infos
   # The following adds the Cupertino Icons font to your application.

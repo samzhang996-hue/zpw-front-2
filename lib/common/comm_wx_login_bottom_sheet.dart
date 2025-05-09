@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/view/comm_text.dart';
@@ -140,6 +143,28 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
     }).catchError((e) {});
   }
 
+  Future<void> _onIos() async {
+    if (_isCheck.value == false) {
+      final result = await Get.bottomSheet<bool?>(_noCheckBottomSheet());
+      if (result != true) {
+        return;
+      }
+      _isCheck.value = true;
+    }
+
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+    if (credential.identityToken == null) {
+      Get.back();
+    } else {
+      Get.back();
+    }
+  }
+
   @override
   void dispose() {
     completer = null;
@@ -212,6 +237,43 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
               ),
             );
           }),
+          if (Platform.isIOS)
+            TapDebouncer(onTap: () async {
+              await _onIos();
+            }, builder: (context, onTT) {
+              return InkWell(
+                onTap: () {
+                  onTT?.call();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(top: 22.w, left: 16.w, right: 16.w),
+                  width: double.infinity,
+                  height: 52.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(26),
+                    border: Border.all(color: Colors.black, width: 1.w),
+                  ),
+                  child: Center(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "ios.png".comm,
+                        width: 32.w,
+                        height: 32.w,
+                      ),
+                      SizedBox(width: 2.w),
+                      CommText(
+                        text: "苹果登录",
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        textColor: const Color(0xff191919),
+                      ),
+                    ],
+                  )),
+                ),
+              );
+            }),
           Container(
             margin: EdgeInsets.only(top: 22.w, bottom: 20.w + ScreenUtil().bottomBarHeight),
             child: Align(
