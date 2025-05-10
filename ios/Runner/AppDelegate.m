@@ -12,16 +12,6 @@
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [GeneratedPluginRegistrant registerWithRegistry:self];
     
-    
-    // 注册可选参数
-    [BDASignalManager registerWithOptionalData:@{
-        kBDADSignalSDKUserUniqueId : @""  // 业务用户id，非必传
-    }];
-    // 上报冷启动事件
-    [BDASignalManager didFinishLaunchingWithOptions:launchOptions connectOptions:nil];
-    [BDASignalManager enableIdfa:YES];
-    BOOL isok  = [BDASignalManager getIdfaStatus];
-    
   // Get the Flutter view controller and create a method channel
   FlutterViewController *controller = (FlutterViewController *)self.window.rootViewController;
   FlutterMethodChannel *methodChannel = [FlutterMethodChannel methodChannelWithName:@"MyPlugin"
@@ -52,7 +42,9 @@
 //                                   details:nil]);
 //      }
     }
-    
+    else  if ([call.method isEqualToString:@"RangerInit"]) {
+        [self rangerInit:launchOptions];
+    }
     else  if ([call.method isEqualToString:@"projectId"]) {
         result(@"30");
     }
@@ -75,6 +67,17 @@
     NSString *openUrl = url.absoluteString;
     [BDASignalManager anylyseDeeplinkClickidWithOpenUrl:openUrl];
     return YES;
+}
+
+- (void) rangerInit:(NSDictionary *)launchOptions {
+    // 注册可选参数
+    [BDASignalManager registerWithOptionalData:@{
+        kBDADSignalSDKUserUniqueId : @""  // 业务用户id，非必传
+    }];
+    // 上报冷启动事件
+    [BDASignalManager didFinishLaunchingWithOptions:launchOptions connectOptions:nil];
+    [BDASignalManager enableIdfa:YES];
+    BOOL isok  = [BDASignalManager getIdfaStatus];
 }
 
 - (void)getIDFVWithResult:(FlutterResult)result {

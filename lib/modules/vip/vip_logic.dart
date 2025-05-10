@@ -72,21 +72,21 @@ class VipLogic extends BaseGetxController with AppMixin {
 
   restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) {
     Log.i("------click : $click=========");
-    Post(Api.payOrder_restoreIosPay, isShowProgress: true, params: {
-      "receiptData": receiptData,
-      "transactionId": transactionId,
-      "isRestore": true,
-      "orderId": "",
-    }, success: (isSuccess, code, message, results) {
-      // Log.i("------${results.first} ${isSuccess}=========");
-      if (isSuccess == true && results.isNotEmpty) {
-        // HandleTool.showAppToastText("恢复成功");
+    // Post(Api.payOrder_restoreIosPay, isShowProgress: true, params: {
+    //   "receiptData": receiptData,
+    //   "transactionId": transactionId,
+    //   "isRestore": true,
+    //   "orderId": "",
+    // }, success: (isSuccess, code, message, results) {
+    //   // Log.i("------${results.first} ${isSuccess}=========");
+    //   if (isSuccess == true && results.isNotEmpty) {
+    //     // HandleTool.showAppToastText("恢复成功");
 
-        if (click) {
-          getUserInfo();
-        }
-      }
-    });
+    //     if (click) {
+    //       getUserInfo();
+    //     }
+    //   }
+    // });
   }
 
   iosPay(dynamic receiptData, String transactionId) {
@@ -250,6 +250,12 @@ class VipLogic extends BaseGetxController with AppMixin {
 
   Future<void> toUrl2(String url) async {
     await launch(url);
+  }
+
+  void resumePurchase() async {
+    if ((await wxLogin() == true)) {
+      getUserInfo();
+    }
   }
 
   getUserInfo() {

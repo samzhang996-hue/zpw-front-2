@@ -11,7 +11,9 @@ import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
-class BuyEngin {
+import '../mixin/app_mixin.dart';
+
+class BuyEngin with AppMixin {
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   late InAppPurchase _inAppPurchase;
   late List<ProductDetails> _products; //内购的商品对象集合
@@ -27,8 +29,7 @@ class BuyEngin {
     _inAppPurchase = InAppPurchase.instance;
 
     //监听购买的事件
-    final Stream<List<PurchaseDetails>> purchaseUpdated =
-        _inAppPurchase.purchaseStream;
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
     _subscription = purchaseUpdated.listen((purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
@@ -80,64 +81,65 @@ class BuyEngin {
 
   /// 加载全部的商品
   void buyProduct(String productId) async {
-    await clearPendingPurchases();
-    isPay = true;
-    EasyLoading.show();
-    print("请求商品id___:" + productId);
-    // if (Platform.isIOS) {
-    //   final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition =
-    //   _inAppPurchase
-    //       .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
-    //   await iosPlatformAddition.setDelegate(ExamplePaymentQueueDelegate());
-    // }
-    List<String> _outProducts = [productId];
+    if ((await wxLogin()) == true) {
+      await clearPendingPurchases();
+      isPay = true;
+      EasyLoading.show();
+      print("请求商品id___:" + productId);
+      // if (Platform.isIOS) {
+      //   final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition =
+      //   _inAppPurchase
+      //       .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
+      //   await iosPlatformAddition.setDelegate(ExamplePaymentQueueDelegate());
+      // }
+      List<String> _outProducts = [productId];
 
-    final bool available = await _inAppPurchase.isAvailable();
-    if (!available) {
-      if (_vipLogic.click) {
-        HandleTool.showAppToastText("无法连接到商店");
+      final bool available = await _inAppPurchase.isAvailable();
+      if (!available) {
+        if (_vipLogic.click) {
+          HandleTool.showAppToastText("无法连接到商店");
+        }
+
+        EasyLoading.dismiss();
+        print("无法连接到商店");
+        return;
       }
 
-      EasyLoading.dismiss();
-      print("无法连接到商店");
-      return;
-    }
+      //开始购买
+      // ToastUtil.showToast("连接成功-开始查询全部商品");
+      print("连接成功-开始查询全部商品");
+      List<String> _kIds = _outProducts;
 
-    //开始购买
-    // ToastUtil.showToast("连接成功-开始查询全部商品");
-    print("连接成功-开始查询全部商品");
-    List<String> _kIds = _outProducts;
+      final ProductDetailsResponse response = await _inAppPurchase.queryProductDetails(_kIds.toSet());
+      // AppStoreProductDetails productDetails = response.productDetails as AppStoreProductDetails;
+      // print("商品获取结果  " + productDetails.toString());
+      if (response.notFoundIDs.isNotEmpty) {
+        EasyLoading.dismiss();
+        if (_vipLogic.click) {
+          HandleTool.showAppToastText("未查询到商品订单");
+        }
+        //
+        // print("无法找到指定的商品");
+        // ToastUtil.showToast("无法找到指定的商品 数量 " + response.productDetails.length.toString());
 
-    final ProductDetailsResponse response =
-        await _inAppPurchase.queryProductDetails(_kIds.toSet());
-    // AppStoreProductDetails productDetails = response.productDetails as AppStoreProductDetails;
-    // print("商品获取结果  " + productDetails.toString());
-    if (response.notFoundIDs.isNotEmpty) {
-      EasyLoading.dismiss();
-      if (_vipLogic.click) {
-        HandleTool.showAppToastText("未查询到商品订单");
+        return;
       }
-      //
-      // print("无法找到指定的商品");
-      // ToastUtil.showToast("无法找到指定的商品 数量 " + response.productDetails.length.toString());
 
-      return;
+      // 处理查询到的商品列表
+      List<ProductDetails> products = response.productDetails;
+      print("products ==== " + products.length.toString());
+      if (products.isNotEmpty) {
+        //赋值内购商品集合
+        _products = products;
+      }
+
+      // print("全部商品加载完成了，可以启动购买了,总共商品数量为：${products.length}");
+
+      //先恢复可重复购买
+      // await _inAppPurchase. ();
+
+      startPurchase(productId);
     }
-
-    // 处理查询到的商品列表
-    List<ProductDetails> products = response.productDetails;
-    print("products ==== " + products.length.toString());
-    if (products.isNotEmpty) {
-      //赋值内购商品集合
-      _products = products;
-    }
-
-    // print("全部商品加载完成了，可以启动购买了,总共商品数量为：${products.length}");
-
-    //先恢复可重复购买
-    // await _inAppPurchase. ();
-
-    startPurchase(productId);
   }
 
   // 调用此函数以启动购买过程
@@ -150,8 +152,7 @@ class BuyEngin {
         // print(
         //     "一切正常，开始购买,信息如下：title: ${productDetails.title}  desc:${productDetails.description} "
         //     "price:${productDetails.price}  currencyCode:${productDetails.currencyCode}  currencySymbol:${productDetails.currencySymbol}");
-        _inAppPurchase.buyConsumable(
-            purchaseParam: PurchaseParam(productDetails: productDetails));
+        _inAppPurchase.buyConsumable(purchaseParam: PurchaseParam(productDetails: productDetails));
       } catch (e) {
         EasyLoading.dismiss();
         // print("购买失败了");
@@ -171,8 +172,7 @@ class BuyEngin {
   String reData = "";
 
   /// 内购的购买更新监听
-  void _listenToPurchaseUpdated(
-      List<PurchaseDetails> purchaseDetailsList) async {
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) async {
     if (purchaseDetailsList.isEmpty) {
       EasyLoading.dismiss();
       if (_vipLogic.click) {
@@ -198,8 +198,7 @@ class BuyEngin {
         // 购买失败
         var error = purchase.error;
         _handleError(error!);
-      } else if (purchase.status == PurchaseStatus.purchased ||
-          purchase.status == PurchaseStatus.restored) {
+      } else if (purchase.status == PurchaseStatus.purchased || purchase.status == PurchaseStatus.restored) {
         // EasyLoading.dismiss();
         //完成购买, 到服务器验证
         if (Platform.isAndroid) {
@@ -208,13 +207,9 @@ class BuyEngin {
         } else if (Platform.isIOS) {
           var appstoreDetail = purchase as AppStorePurchaseDetails;
           Log.d("sta----rl--${purchase.pendingCompletePurchase}");
-          if (!("${appstoreDetail.purchaseID}" == id &&
-              reData ==
-                  appstoreDetail.verificationData.serverVerificationData)) {
+          if (!("${appstoreDetail.purchaseID}" == id && reData == appstoreDetail.verificationData.serverVerificationData)) {
             if (isPay == false) {
-              _vipLogic.restoreIosPay(
-                  appstoreDetail.verificationData.serverVerificationData,
-                  "${appstoreDetail.purchaseID}");
+              _vipLogic.restoreIosPay(appstoreDetail.verificationData.serverVerificationData, "${appstoreDetail.purchaseID}");
               id = "${appstoreDetail.purchaseID}";
               reData = appstoreDetail.verificationData.serverVerificationData;
               if (purchase.pendingCompletePurchase) {
@@ -222,9 +217,7 @@ class BuyEngin {
               }
               break;
             } else {
-              _vipLogic.iosPay(
-                  appstoreDetail.verificationData.serverVerificationData,
-                  "${appstoreDetail.purchaseID}");
+              _vipLogic.iosPay(appstoreDetail.verificationData.serverVerificationData, "${appstoreDetail.purchaseID}");
             }
           }
           id = "${appstoreDetail.purchaseID}";
@@ -265,17 +258,14 @@ class BuyEngin {
 
     /// 完成支付
     print("Apple支付交易ID为${appstoreDetail.purchaseID}");
-    print("Apple支付验证收据为" +
-        appstoreDetail.verificationData.serverVerificationData);
+    print("Apple支付验证收据为" + appstoreDetail.verificationData.serverVerificationData);
   }
 
   void onCloseIos() {
     EasyLoading.dismiss();
     Log.d("close----");
     if (Platform.isIOS) {
-      final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition =
-          _inAppPurchase
-              .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
+      final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition = _inAppPurchase.getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
       iosPlatformAddition.setDelegate(null);
     }
     _subscription.cancel();

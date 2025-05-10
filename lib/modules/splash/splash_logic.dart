@@ -19,6 +19,7 @@ import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
 
+import '../../controller/config_by_key_controller.dart';
 import 'splash_state.dart';
 
 class SplashLogic extends BaseGetxController {
@@ -137,6 +138,13 @@ class SplashLogic extends BaseGetxController {
   }
 
   loginWithDeviceInfo() async {
+    if (Platform.isIOS) {
+      progress.value = 0.5;
+      await HandleTool.instance.getProtocolConfig();
+      progress.value = 1.0;
+    }
+    final c = Get.put(ConfigByKeyController());
+    c.getConfigByKey();
     final isAgreed = await SpUtils.getBool("isAgreed");
     if (isAgreed) {
       await HandleTool.instance.getProtocolConfig();
@@ -166,7 +174,7 @@ class SplashLogic extends BaseGetxController {
 
   /// 执行请求任务
   startRequestAction() {
-    HandleTool.instance.getProtocolConfig();
+    // HandleTool.instance.getProtocolConfig();
   }
 
   bool _showAd = true;

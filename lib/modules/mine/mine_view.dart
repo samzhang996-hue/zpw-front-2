@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
-import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
@@ -14,8 +13,6 @@ import 'package:zpw/modules/main/main_logic.dart';
 import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/detail/detail_view.dart';
-import 'package:zpw/modules/mine/setting/setting_view.dart';
-import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
@@ -97,7 +94,6 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
       "default_avatar.png".mine,
       width: 84.w,
     );
-
   }
 
   @override
@@ -123,25 +119,46 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                           children: [
                             image(),
                             6.verticalSpace,
-                            TapDebouncer(onTap: () async {
-                              wxLogin();
-                            }, builder: (context, onTT) {
-                              return GestureDetector(
-                                onTap: () {
-                                  onTT?.call();
-                                },
-                                behavior: HitTestBehavior.opaque,
-                                child: CommText(
-                                  // text: "登录/注册",
-                                  text: HandleTool.instance.isEmpty(state.userInfoBean.nickName) ? "登录/注册" : state.userInfoBean.nickName,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.bold,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: HandleTool.instance.isNotEmpty(state.userInfoBean.nickName),
+                                  child: SizedBox(
+                                    width: 16.w,
+                                    height: 16.w,
+                                  ).paddingOnly(right: 3.w),
                                 ),
-                              );
-                            }),
+                                TapDebouncer(onTap: () async {
+                                  wxLogin();
+                                }, builder: (context, onTT) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onTT?.call();
+                                    },
+                                    behavior: HitTestBehavior.opaque,
+                                    child: CommText(
+                                      // text: "登录/注册",
+                                      text: HandleTool.instance.isEmpty(state.userInfoBean.nickName) ? "登录/注册" : state.userInfoBean.nickName,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }),
+                                Visibility(
+                                  visible: HandleTool.instance.isNotEmpty(state.userInfoBean.nickName),
+                                  child: Image.asset(
+                                    HandleTool.instance.isMember ? "vip_logo.png".mine : "vip_no_logo.png".mine,
+                                    width: 16.w,
+                                    height: 16.w,
+                                    fit: BoxFit.cover,
+                                  ).paddingOnly(left: 3.w),
+                                )
+                              ],
+                            ),
                             if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
                               CommText(
-                                text: "ID：${state.userInfoBean.id}",
+                                text: "ID:${state.userInfoBean.id}",
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500,
                                 textColor: const Color(0xff666666),
@@ -196,21 +213,20 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                 decoration: BoxDecoration(color: const Color(0xFF4C3504), borderRadius: BorderRadius.circular(16.w)),
                                 child: Center(
                                     child: CommText(
-                                      text: state.userInfoBean.permanentFlag == 1
-                                          ? "已开通"
-                                          : HandleTool.instance.isMember
+                                  text: state.userInfoBean.permanentFlag == 1
+                                      ? "已开通"
+                                      : HandleTool.instance.isMember
                                           ? "立即续费"
                                           : "立即开通",
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold,
-                                      textColor: const Color(0xFFFFFFFF),
-                                    )),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  textColor: const Color(0xFFFFFFFF),
+                                )),
                               ),
                             ],
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -248,11 +264,11 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin:EdgeInsets.only(left: 8.w),
+                        // margin: EdgeInsets.only(left: 8.w),
                         alignment: Alignment.center,
-                        width: 1.sw * 0.4,
+                        width: 1.sw * 0.3,
                         child: TabBar(
-                          isScrollable:true,
+                          isScrollable: true,
                           controller: _tabController,
                           indicatorColor: Colors.transparent,
                           tabAlignment: TabAlignment.start,
@@ -278,13 +294,11 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                           alignment: Alignment.centerLeft,
                         ),
                       ),
-
                     ],
                   ),
                 ),
               ],
             ),
-
             Expanded(
               child: NotificationListener(
                 onNotification: (ScrollNotification scrollNotification) {

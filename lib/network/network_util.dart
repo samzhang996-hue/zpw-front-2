@@ -274,9 +274,16 @@ class DioUtils {
         tokenList.remove(cancelToken);
         EasyLoading.dismiss();
         if (isShowError) {
-          HandleTool.showAppToastText(e.toString());
+          if (e.toString().contains("Bad state: Future already completed")) {
+          } else {
+            HandleTool.showAppToastText(e.toString());
+          }
         }
-        Log.i("=response==error=====${e.toString()} $url");
+        if (e.toString().contains("Bad state: Future already completed")) {
+        } else {
+          Log.i("=response==error=====${e.toString()} $url");
+        }
+
         if (success != null) {
           success(false, 0, e.toString(), []);
         }

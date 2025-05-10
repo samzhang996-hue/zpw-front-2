@@ -121,7 +121,7 @@ class Api {
   static const String apiTypeList = "/enum/apiTypeList";
 
   ///ios恢复订单
-  static const String payOrder_restoreIosPay = "/center/handleIosOrder";
+  static const String payOrder_restoreIosPay = "/center/handleIosOrder/asasa";
 
   ///ios内购回调
   static const String payOrder_iosPay = "/center/handleIosOrder";
@@ -149,5 +149,5 @@ class Api {
 
   static const String authorizeByIos = '/authorizeByIos';
 
-  static const String getConfigByKey = '/sysConfig/getConfigByKey?key=IOS_OPEN_FLAG ';
+  static const String getConfigByKey = '/sysConfig/getConfigByKey?key=IOS_OPEN_FLAG';
 }

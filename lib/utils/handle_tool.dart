@@ -8,6 +8,7 @@ import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
 import 'package:flutter_app_update/azhon_app_update.dart';
 import 'package:flutter_app_update/update_model.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -59,6 +60,8 @@ class HandleTool {
   String channel = "android";
   String headImg = "";
   String token = "";
+
+  int _requestMax = 0;
 
   // Map<String, dynamic> configData = <String, dynamic>{
   //   "QWYHXY": "",
@@ -170,11 +173,13 @@ class HandleTool {
     return result;
   }
 
+  final tempComplete = Completer<void>();
   Future<void> getProtocolConfig({bool isShowProgress = false}) {
-    final tempComplete = Completer<void>();
     SMWPost(Api.center_getProtocolConfig, isShowProgress: isShowProgress, success: (isSuccess, code, message, results) {
-      Log.d("config---$isSuccess----$results");
+      _requestMax = _requestMax + 1;
+      Log.d("config---$isSuccess----$results,code : $code,_requestMax : $_requestMax");
       if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
+        _requestMax = 100;
         // 遍历 results 列表,提取 configType 和 configValue
         for (Map<String, dynamic> item in results) {
           int configType = item['configType'];
@@ -203,6 +208,19 @@ class HandleTool {
         }
         // Log.e("HandleTool.instance.channelAds----1----:${HandleTool.instance.channelAds}");
         return tempComplete.complete();
+      } else {
+        /// ------->  这里单独处理已选
+        if (code == -1111) {
+          if (_requestMax > 50) {
+            ///请求最大限制
+            EasyLoading.showToast("请检查网络连接或者网络授权", toastPosition: EasyLoadingToastPosition.bottom, duration: const Duration(days: 100));
+            // HandleTool.showAppToastText("请检查网络连接或者网络授权");
+          } else {
+            Future.delayed(const Duration(seconds: 1), () {
+              getProtocolConfig();
+            });
+          }
+        }
       }
     });
     return tempComplete.future;

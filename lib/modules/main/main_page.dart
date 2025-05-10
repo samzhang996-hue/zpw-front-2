@@ -5,6 +5,12 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
 import 'package:zpw/modules/main/main_logic.dart';
 
+import '../face/face_view.dart';
+import '../gameplay/gameplay_view.dart';
+import '../mine/mine_view.dart';
+import '../specially/specially_view.dart';
+import '../wf/wf_view.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -27,14 +33,22 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return GetBuilder<MainLogic>(builder: (logic) {
       return Scaffold(
-          backgroundColor: ColorPlate.themeBgColor,
-          body: IndexedStack(
-            index: state.currentIndex.value,
-            children: state.pages,
-          ),
-          bottomNavigationBar: GetBuilder<MainLogic>(
-            builder: (logic) {
-              return BottomNavigationBar(
+        backgroundColor: ColorPlate.themeBgColor,
+        body: Obx(() => IndexedStack(
+              index: state.currentIndex.value,
+              children: [
+                // HomePage(),
+                GameplayPage(),
+                if (logic.configByKeyController.showPicture.isTrue) FacePage(),
+                SpeciallyPage(),
+                WfPage(),
+                MinePage(),
+              ],
+            )),
+        bottomNavigationBar: GetBuilder<MainLogic>(
+          builder: (logic) {
+            return Obx(
+              () => BottomNavigationBar(
                 // 当前菜单下标
                 currentIndex: state.currentIndex.value,
                 // 点击事件,获取当前点击的标签下标
@@ -63,19 +77,20 @@ class _MainPageState extends State<MainPage> {
                     ),
                     label: "首页",
                   ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'un_pic.png'.tabbar,
-                      width: 36,
-                      height: 36,
+                  if (logic.configByKeyController.showPicture.isTrue)
+                    BottomNavigationBarItem(
+                      icon: Image.asset(
+                        'un_pic.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      activeIcon: Image.asset(
+                        'pic.png'.tabbar,
+                        width: 36,
+                        height: 36,
+                      ),
+                      label: "图片",
                     ),
-                    activeIcon: Image.asset(
-                      'pic.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    label: "图片",
-                  ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'un_tx.png'.tabbar,
@@ -116,9 +131,11 @@ class _MainPageState extends State<MainPage> {
                     label: "我的",
                   ),
                 ],
-              );
-            },
-          ));
+              ),
+            );
+          },
+        ),
+      );
     });
   }
 }

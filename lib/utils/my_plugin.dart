@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/services.dart';
 
 const methodChnnel = MethodChannel("MyPlugin");
@@ -37,9 +35,7 @@ Future<void> startPhoto() async {
 }
 
 Future<void> rangerInit() async {
-  if (Platform.isAndroid) {
-    return await methodChnnel.invokeMethod("RangerInit");
-  }
+  return await methodChnnel.invokeMethod("RangerInit");
 }
 
 Future<bool> inpaint(String imagePath, String maskPath, String outputPath, int radius) async {

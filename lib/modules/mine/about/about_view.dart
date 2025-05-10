@@ -9,6 +9,7 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/mine/sf/sf_view.dart';
+import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
 import 'about_logic.dart';
@@ -32,41 +33,95 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
   Widget initDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(
+      child: Stack(
         children: [
-          GestureDetector(onDoubleTap: logic.onDoubleTap, child: YAppBar(title: "关于我们")),
-          commItem("用户协议", ""),
-          commItem("隐私政策", ""),
-          commItem("会员协议", ""),
-          commItem("算法公示", ""),
-          Obx(() {
-            return commItem("清理缓存", state.size.value);
-          }),
-          Obx(() {
-            return commItem("检查更新", state.version.value, showUpdate: true);
-          }),
-          GetBuilder<MineLogic>(
-            builder: (mineLogic) {
-              return Visibility(
-                visible: HandleTool.instance.channelLogin && HandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName),
-                child: commItem("切换账号", ""),
-              );
-            },
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
-            width: double.infinity,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AdBannerWidget(
-                posId: AdsConfig.bannerId,
-                width: 345,
-                interval: 5,
-                show: true,
+          Column(
+            children: [
+              // GestureDetector(onDoubleTap: logic.onDoubleTap, child: YAppBar(title: "关于我们")),
+              GestureDetector(onDoubleTap: logic.onDoubleTap, child: YAppBar(title: "设置")),
+              commItem("用户协议", ""),
+              commItem("隐私政策", ""),
+              commItem("会员协议", ""),
+              commItem("算法公示", ""),
+              Obx(() {
+                return commItem("清理缓存", state.size.value);
+              }),
+              Obx(() {
+                return commItem("检查更新", state.version.value, showUpdate: true);
+              }),
+              GetBuilder<MineLogic>(
+                builder: (mineLogic) {
+                  return Visibility(
+                    visible: HandleTool.instance.channelLogin && HandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName),
+                    child: commItem("切换账号", ""),
+                  );
+                },
               ),
-            ),
+              GetBuilder<MineLogic>(
+                builder: (mineLogic) {
+                  return Visibility(
+                    visible: HandleTool.instance.isNotEmpty(mineLogic.state.userInfoBean.nickName),
+                    child: commItem("注销账号", ""),
+                  );
+                },
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16, top: 20.h),
+                width: double.infinity,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AdBannerWidget(
+                    posId: AdsConfig.bannerId,
+                    width: 345,
+                    interval: 5,
+                    show: true,
+                  ),
+                ),
+              ),
+            ],
           ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: GetBuilder<MineLogic>(
+              builder: (mineLogic) {
+                return Visibility(
+                  visible: HandleTool.instance.isNotEmpty(mineLogic.state.userInfoBean.nickName),
+                  child: SafeArea(
+                    minimum: EdgeInsets.only(bottom: 16.w),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: logic.onExit,
+                            child: Container(
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: Color(0x12999999),
+                                borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                              ),
+                              height: 52.w,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '退出登录',
+                                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: const Color(0xFF999999)),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.w),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
         ],
       ),
     );
@@ -258,6 +313,13 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                 break;
               case "检查更新":
                 HandleTool.instance.packagesGetForcePackage(isShowProgress: true);
+                break;
+              case "注销账号":
+                CustomExitDialogUtils.showCustomDialog(
+                    context: context,
+                    onPressed: () {
+                      logic.deleteUser();
+                    });
                 break;
             }
           },
