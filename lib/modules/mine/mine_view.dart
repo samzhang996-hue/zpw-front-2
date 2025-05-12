@@ -90,10 +90,19 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
   }
 
   Widget image() {
-    return Image.asset(
-      "default_avatar.png".mine,
-      width: 84.w,
-    );
+    return TapDebouncer(onTap: () async {
+      wxLogin();
+    }, builder: (context, onTT) {
+      return GestureDetector(
+          onTap: () {
+            onTT?.call();
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Image.asset(
+            "default_avatar.png".mine,
+            width: 84.w,
+          ));
+    });
   }
 
   @override
@@ -345,7 +354,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             ),
             CommText(
               text: "暂无作品~",
-              textColor: Color(0xff7C7C7C),
+              textColor: const Color(0xff7C7C7C),
               fontSize: 14.sp,
             ),
             SizedBox(
@@ -353,8 +362,8 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             ),
             InkWell(
               onTap: () {
-                Get.back();
-                Get.find<MainLogic>().changeIndex(_tabController.index);
+                // Get.back();
+                Get.find<MainLogic>().changeIndex(_tabController.index == 0 ? 1 : 0);
               },
               child: Container(
                 width: 122.w,

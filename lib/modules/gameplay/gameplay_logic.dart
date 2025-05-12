@@ -14,7 +14,7 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
   var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
   late final isOk = false.obs;
   late final showVip = false.obs;
-  late final list = ["Ai对话", "文生图", "全民舞王"];
+
   @override
   void onInit() {
     super.onInit();
@@ -64,10 +64,9 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
   @override
   void onReady() {
     super.onReady();
-    tabController = TabController(length: list.length, vsync: this);
-    update();
-    // _getData();
-    // _getData2();
+
+    _getData();
+    _getData2();
   }
 
   @override

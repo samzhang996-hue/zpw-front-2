@@ -33,7 +33,8 @@ class _CollectionItemState extends State<CollectionItem> {
   var _isLoading = false;
   late final _showNoMoreContent = false.obs;
 
-  double get _itemHeight => widget.isHome ? 295.w : 265.w;
+  // double get _itemHeight => widget.isHome == false ? 295.w : 265.w;
+  double get _itemHeight => 295.w;
 
   void _getData() {
     final params = {
@@ -179,30 +180,33 @@ class _CollectionItemState extends State<CollectionItem> {
               ],
             ),
           ),
-          if (widget.isHome)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+          // if (widget.isHome == false)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
                   "${bean.photoFuncResp?.tags ?? bean.photoFuncResp?.funcName}",
                   maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: const Color(0xFF191919),
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                // Text(
-                //   "2.5w",
-                //   maxLines: 1,
-                //   style: TextStyle(
-                //     color: const Color(0xFF191919),
-                //     fontSize: 14.sp,
-                //     fontWeight: FontWeight.w400,
-                //   ),
-                // ),
-              ],
-            ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
+              ),
+              // Text(
+              //   "2.5w",
+              //   maxLines: 1,
+              //   style: TextStyle(
+              //     color: const Color(0xFF191919),
+              //     fontSize: 14.sp,
+              //     fontWeight: FontWeight.w400,
+              //   ),
+              // ),
+            ],
+          ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
         ],
       ),
     );
@@ -230,104 +234,135 @@ class _CollectionItemState extends State<CollectionItem> {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          // color: index.isOdd ? Colors.amber : Colors.red,
-          // color: Colors.red,
-          borderRadius: BorderRadius.circular(8.w),
-        ),
-        child: Stack(
-          children: [
-            // Image.asset(
-            //   // index.isEven ? "face_item_2.png".face : "face_item_1.png".face,
-            //   "face_item_1.png".face,
-            //   width: 175.w,
-            //   height: 265.w,
-            //   fit: BoxFit.cover,
-            // ),
-
-            ClipRRect(
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              // color: index.isOdd ? Colors.amber : Colors.red,
+              // color: Colors.red,
               borderRadius: BorderRadius.circular(8.w),
-              child: QdsImage(
-                "${bean.photoGroupResp?.imgUrlVertical}",
-                175.w,
-                265.w,
-                fit: BoxFit.cover,
-              ),
             ),
-            // Center(
-            //   child: Column(
-            //     children: [
-            //       SizedBox(height: 10.w),
-            //       Text(
-            //         "${bean.photoGroupResp?.groupName}",
-            //         style: TextStyle(
-            //           color: const Color(0xFF191919),
-            //           fontSize: 22.sp,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       SizedBox(height: 3.w),
-            //       if (bean.photoGroupResp?.remark?.isNotEmpty == true)
-            //         Text(
-            //           "-${bean.photoGroupResp?.remark ?? ''}-",
-            //           style: TextStyle(
-            //             color: const Color(0xFF191919),
-            //             fontSize: 11.sp,
-            //             fontWeight: FontWeight.w500,
-            //           ),
-            //         ),
-            //       SizedBox(height: 14.w),
-            //       // ClipRRect(
-            //       //   borderRadius: BorderRadius.circular(8.w),
-            //       //   child: QdsImage(
-            //       //     "${bean.photoGroupResp?.imgUrlAcross}",
-            //       //     144.w,
-            //       //     175.w,
-            //       //   ),
-            //       // )
-            //     ],
-            //   ),
-            // ),
-            // if (bean.photoGroupResp?.tips?.isNotEmpty == true)
-            //   Positioned(
-            //     left: 0,
-            //     right: 0,
-            //     bottom: 0,
-            //     child: Container(
-            //       height: 55.w,
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.only(
-            //           bottomLeft: Radius.circular(8.w),
-            //           bottomRight: Radius.circular(8.w),
-            //         ),
-            //         gradient: const LinearGradient(
-            //           begin: Alignment.topCenter,
-            //           end: Alignment.bottomCenter,
-            //           colors: [
-            //             Color(0x00141414),
-            //             Color(0xBA000000),
-            //           ],
-            //         ),
-            //       ),
-            //       child: Align(
-            //         alignment: Alignment.centerLeft,
-            //         child: Padding(
-            //           padding: EdgeInsets.only(left: 10.w),
-            //           child: Text(
-            //             "${bean.photoGroupResp?.tips}",
-            //             style: TextStyle(
-            //               color: const Color(0xFFFFFFFF),
-            //               fontSize: 14.sp,
-            //               fontWeight: FontWeight.w400,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   )
-          ],
-        ),
+            child: Stack(
+              children: [
+                // Image.asset(
+                //   // index.isEven ? "face_item_2.png".face : "face_item_1.png".face,
+                //   "face_item_1.png".face,
+                //   width: 175.w,
+                //   height: 265.w,
+                //   fit: BoxFit.cover,
+                // ),
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.w),
+                  child: QdsImage(
+                    "${bean.photoGroupResp?.imgUrlVertical}",
+                    175.w,
+                    265.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                // Center(
+                //   child: Column(
+                //     children: [
+                //       SizedBox(height: 10.w),
+                //       Text(
+                //         "${bean.photoGroupResp?.groupName}",
+                //         style: TextStyle(
+                //           color: const Color(0xFF191919),
+                //           fontSize: 22.sp,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //       SizedBox(height: 3.w),
+                //       if (bean.photoGroupResp?.remark?.isNotEmpty == true)
+                //         Text(
+                //           "-${bean.photoGroupResp?.remark ?? ''}-",
+                //           style: TextStyle(
+                //             color: const Color(0xFF191919),
+                //             fontSize: 11.sp,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //       SizedBox(height: 14.w),
+                //       // ClipRRect(
+                //       //   borderRadius: BorderRadius.circular(8.w),
+                //       //   child: QdsImage(
+                //       //     "${bean.photoGroupResp?.imgUrlAcross}",
+                //       //     144.w,
+                //       //     175.w,
+                //       //   ),
+                //       // )
+                //     ],
+                //   ),
+                // ),
+                // if (bean.photoGroupResp?.tips?.isNotEmpty == true)
+                //   Positioned(
+                //     left: 0,
+                //     right: 0,
+                //     bottom: 0,
+                //     child: Container(
+                //       height: 55.w,
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.only(
+                //           bottomLeft: Radius.circular(8.w),
+                //           bottomRight: Radius.circular(8.w),
+                //         ),
+                //         gradient: const LinearGradient(
+                //           begin: Alignment.topCenter,
+                //           end: Alignment.bottomCenter,
+                //           colors: [
+                //             Color(0x00141414),
+                //             Color(0xBA000000),
+                //           ],
+                //         ),
+                //       ),
+                //       child: Align(
+                //         alignment: Alignment.centerLeft,
+                //         child: Padding(
+                //           padding: EdgeInsets.only(left: 10.w),
+                //           child: Text(
+                //             "${bean.photoGroupResp?.tips}",
+                //             style: TextStyle(
+                //               color: const Color(0xFFFFFFFF),
+                //               fontSize: 14.sp,
+                //               fontWeight: FontWeight.w400,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   )
+              ],
+            ),
+          ),
+          // if (widget.isHome == false)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  "${bean.photoGroupResp?.groupName}",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: const Color(0xFF191919),
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              // Text(
+              //   "2.5w",
+              //   maxLines: 1,
+              //   style: TextStyle(
+              //     color: const Color(0xFF191919),
+              //     fontSize: 14.sp,
+              //     fontWeight: FontWeight.w400,
+              //   ),
+              // ),
+            ],
+          ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
+        ],
       ),
     );
   }

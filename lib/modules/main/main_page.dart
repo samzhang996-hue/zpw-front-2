@@ -3,13 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/style.dart';
+import 'package:zpw/modules/home/home_view.dart';
 import 'package:zpw/modules/main/main_logic.dart';
 
 import '../face/face_view.dart';
 import '../gameplay/gameplay_view.dart';
 import '../mine/mine_view.dart';
-import '../specially/specially_view.dart';
-import '../wf/wf_view.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -37,11 +36,11 @@ class _MainPageState extends State<MainPage> {
         body: Obx(() => IndexedStack(
               index: state.currentIndex.value,
               children: [
-                // HomePage(),
-                GameplayPage(),
-                if (logic.configByKeyController.showPicture.isTrue) FacePage(),
-                SpeciallyPage(),
-                WfPage(),
+                const HomePage(),
+                const GameplayPage(),
+                if (logic.configByKeyController.showPicture.isTrue) const FacePage(),
+                // SpeciallyPage(),
+                // WfPage(),
                 MinePage(),
               ],
             )),
@@ -77,6 +76,19 @@ class _MainPageState extends State<MainPage> {
                     ),
                     label: "首页",
                   ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'un_gameplay.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    activeIcon: Image.asset(
+                      'gameplay.png'.tabbar,
+                      width: 36,
+                      height: 36,
+                    ),
+                    label: "视频",
+                  ),
                   if (logic.configByKeyController.showPicture.isTrue)
                     BottomNavigationBarItem(
                       icon: Image.asset(
@@ -91,32 +103,6 @@ class _MainPageState extends State<MainPage> {
                       ),
                       label: "图片",
                     ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'un_tx.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    activeIcon: Image.asset(
-                      'tx.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    label: "特效",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'un_wf.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    activeIcon: Image.asset(
-                      'wf.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    label: "玩法",
-                  ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'un_mine.png'.tabbar,

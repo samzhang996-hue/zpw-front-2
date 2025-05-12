@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/constant.dart';
+import 'package:zpw/common/qds_Image.dart';
+import 'package:zpw/modules/face/collection_item.dart';
+import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
-
-import '../../common/chat_items/chat_items.dart';
-import '../../common/gameplay_banner.dart';
-import '../face/collection_item.dart';
-import '../splash/photo_list/photo_list_view.dart';
 
 class GameplayPage extends StatefulWidget {
   const GameplayPage({Key? key}) : super(key: key);
@@ -21,7 +20,7 @@ class GameplayPage extends StatefulWidget {
 }
 
 class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderStateMixin {
-  final logic = Get.put(GameplayLogic());
+  final logic = Get.find<GameplayLogic>();
   final state = Get.find<GameplayLogic>().state;
 
   var outHeight = 0.0.w;
@@ -63,7 +62,7 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                           children: [
                             Image.asset(
                               "gameplay.png".gameplay,
-                              width: 42.w,
+                              width: 50.w,
                               height: 25.w,
                               fit: BoxFit.cover,
                             ),
@@ -90,52 +89,44 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                           ],
                         ),
                       ),
-                      SizedBox(height: 22.w),
-                      GameplayBanner(
-                        onTap: (index) {
-                          if (index == 1) {
-                            Get.to(Photo_listPage(isNew: false), transition: Transition.rightToLeft, arguments: {"type": 1});
-                          }
-                        },
-                      ),
-                      // if (logic.listPhotoGroupBean.isNotEmpty)
-                      //   SizedBox(
-                      //     height: 90.w,
-                      //     child: ListView.builder(
-                      //         padding: EdgeInsets.zero,
-                      //         itemCount: logic.listPhotoGroupBean.length,
-                      //         scrollDirection: Axis.horizontal,
-                      //         itemBuilder: (c, index) {
-                      //           final bean = logic.listPhotoGroupBean[index];
-                      //           return GestureDetector(
-                      //             onTap: () {
-                      //               Get.to(
-                      //                 () => GatherSinglePage(
-                      //                   id: bean.id ?? 0,
-                      //                   imgUrlAcross: bean.imgUrlAcross ?? "",
-                      //                   title: bean.groupName ?? "",
-                      //                 ),
-                      //               );
-                      //             },
-                      //             behavior: HitTestBehavior.opaque,
-                      //             child: Container(
-                      //               width: 182.w,
-                      //               height: 90.w,
-                      //               margin: EdgeInsets.only(left: 16.w, right: index == 2 ? 16.w : 0),
-                      //               child: ClipRRect(
-                      //                 borderRadius: BorderRadius.circular(8.w),
-                      //                 child: QdsImage(
-                      //                   "${bean.imgUrlAcross}",
-                      //                   182.w,
-                      //                   90.w,
-                      //                   fit: BoxFit.contain,
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           );
-                      //         }),
-                      //   ),
-                      SizedBox(height: 12.w),
+                      SizedBox(height: 20.w),
+                      if (logic.listPhotoGroupBean.isNotEmpty)
+                        SizedBox(
+                          height: 90.w,
+                          child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              itemCount: logic.listPhotoGroupBean.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (c, index) {
+                                final bean = logic.listPhotoGroupBean[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      () => GatherSinglePage(
+                                        id: bean.id ?? 0,
+                                        imgUrlAcross: bean.imgUrlAcross ?? "",
+                                        title: bean.groupName ?? "",
+                                      ),
+                                    );
+                                  },
+                                  behavior: HitTestBehavior.opaque,
+                                  child: Container(
+                                    width: 182.w,
+                                    height: 90.w,
+                                    margin: EdgeInsets.only(left: 16.w, right: index == 2 ? 16.w : 0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.w),
+                                      child: QdsImage(
+                                        "${bean.imgUrlAcross}",
+                                        182.w,
+                                        90.w,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
                       PreferredSize(
                         preferredSize: Size.fromHeight(46.w),
                         child: Container(
@@ -145,9 +136,9 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                           margin: EdgeInsets.only(bottom: 10.w),
                           child: TabBar(
                             tabAlignment: TabAlignment.center,
-                            tabs: logic.list.map((e) => Tab(text: e)).toList(),
+                            tabs: logic.listPhotoGroupBean2.map((e) => Tab(text: "${e.groupName}")).toList(),
                             onTap: (index) {
-                              // UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
+                              UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
                               page?.jumpToPage(index);
                             },
                             overlayColor: WidgetStateProperty.all(Colors.transparent),
@@ -183,15 +174,9 @@ class _GameplayPageState extends State<GameplayPage> with SingleTickerProviderSt
                 Expanded(
                   child: PageView(
                     controller: page,
-                    children: logic.list
+                    children: logic.listPhotoGroupBean2
                         // .map((e) => FaceItem(id: e.id ?? 0))
-                        .map((e) => e == "Ai对话"
-                            ? const ChatItems()
-                            : e == "文生图"
-                                ? const CollectionItem(id: 188, isHome: true)
-                                : e == "全民舞王"
-                                    ? const CollectionItem(id: 187, isHome: true)
-                                    : const Text("Ai 照片王")) // CollectionItem(id: e.id ?? 0))
+                        .map((e) => CollectionItem(id: e.id ?? 0))
                         .toList(),
                     onPageChanged: (index) {
                       logic.tabController?.animateTo(index);
