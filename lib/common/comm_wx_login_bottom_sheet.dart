@@ -241,45 +241,48 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
               ),
             ),
           ),
-          TapDebouncer(onTap: () async {
-            _onWx();
-          }, builder: (context, onTT) {
-            return InkWell(
-              onTap: () {
-                onTT?.call();
-              },
-              child: Container(
-                margin: EdgeInsets.only(top: 22.w, left: 16.w, right: 16.w),
-                width: double.infinity,
-                height: 52.w,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [
-                    Color(0xFF7EFAEF),
-                    Color(0xFF7FE1FB),
-                  ], begin: Alignment.centerLeft, end: Alignment.centerRight),
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                child: Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "wx.png".comm,
-                      width: 32.w,
-                      height: 32.w,
+          Obx(() => Visibility(
+                visible: isInstalled.isTrue,
+                child: TapDebouncer(onTap: () async {
+                  _onWx();
+                }, builder: (context, onTT) {
+                  return InkWell(
+                    onTap: () {
+                      onTT?.call();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 22.w, left: 16.w, right: 16.w),
+                      width: double.infinity,
+                      height: 52.w,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [
+                          Color(0xFF7EFAEF),
+                          Color(0xFF7FE1FB),
+                        ], begin: Alignment.centerLeft, end: Alignment.centerRight),
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                      child: Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "wx.png".comm,
+                            width: 32.w,
+                            height: 32.w,
+                          ),
+                          SizedBox(width: 2.w),
+                          CommText(
+                            text: "微信登录",
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w500,
+                            textColor: const Color(0xff191919),
+                          ),
+                        ],
+                      )),
                     ),
-                    SizedBox(width: 2.w),
-                    CommText(
-                      text: "微信登录",
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500,
-                      textColor: const Color(0xff191919),
-                    ),
-                  ],
-                )),
-              ),
-            );
-          }),
+                  );
+                }),
+              )),
           if (Platform.isIOS)
             TapDebouncer(onTap: () async {
               await _onIos();

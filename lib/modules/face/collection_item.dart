@@ -1,6 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/common/qds_Image.dart';
@@ -34,7 +35,7 @@ class _CollectionItemState extends State<CollectionItem> {
   late final _showNoMoreContent = false.obs;
 
   // double get _itemHeight => widget.isHome == false ? 295.w : 265.w;
-  double get _itemHeight => 295.w;
+  double get _itemHeight => 335.w;
 
   void _getData() {
     final params = {
@@ -101,7 +102,7 @@ class _CollectionItemState extends State<CollectionItem> {
   }
 
   /// 模板
-  Widget _getBindType0(Records bean) {
+  Widget _getBindType0(Records bean, double height) {
     return GestureDetector(
       onTap: () {
         UmengCommonSdk.onEvent('Muban_click_event', {'Records': '${bean.toJson()}'});
@@ -136,7 +137,7 @@ class _CollectionItemState extends State<CollectionItem> {
                     child: QdsImage(
                       "${bean.photoFuncResp?.showImgGif}",
                       175.w,
-                      265.w,
+                      height.w,
                     ),
                   ),
                 ),
@@ -207,13 +208,35 @@ class _CollectionItemState extends State<CollectionItem> {
               // ),
             ],
           ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
+          5.verticalSpace,
+          Container(
+            height: 37.w,
+            decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(21.5.w),
+                gradient: const LinearGradient(colors: [
+                  Color(0xFF7EFAEF),
+                  Color(0xFF7FE1FB),
+                ])),
+            child: Center(
+              child: Text(
+                "一键同款",
+                maxLines: 1,
+                style: TextStyle(
+                  color: const Color(0xFF191919),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   /// 合集
-  Widget _getBindType1(Records bean) {
+  Widget _getBindType1(Records bean, double height) {
     return GestureDetector(
       onTap: () {
         // Log.e('bean:${bean.toJson()}');
@@ -257,7 +280,7 @@ class _CollectionItemState extends State<CollectionItem> {
                   child: QdsImage(
                     "${bean.photoGroupResp?.imgUrlVertical}",
                     175.w,
-                    265.w,
+                    height.w,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -362,6 +385,28 @@ class _CollectionItemState extends State<CollectionItem> {
               // ),
             ],
           ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
+          5.verticalSpace,
+          Container(
+            height: 37.w,
+            decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(21.5.w),
+                gradient: const LinearGradient(colors: [
+                  Color(0xFF7EFAEF),
+                  Color(0xFF7FE1FB),
+                ])),
+            child: Center(
+              child: Text(
+                "一键同款",
+                maxLines: 1,
+                style: TextStyle(
+                  color: const Color(0xFF191919),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -394,19 +439,30 @@ class _CollectionItemState extends State<CollectionItem> {
                     // SliverToBoxAdapter(
                     //   child: SizedBox(height: 10.w),
                     // ),
-                    SliverGrid.builder(
-                      itemCount: _records.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 8.w,
-                        crossAxisSpacing: 8.w,
-                        childAspectRatio: 175.w / _itemHeight,
-                      ),
-                      itemBuilder: (c, index) {
+                    SliverMasonryGrid.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12.w,
+                      crossAxisSpacing: 8.w,
+                      childCount: _records.length,
+                      itemBuilder: (context, index) {
                         final bean = _records[index];
-                        return bean.bindType == 0 ? _getBindType0(bean) : _getBindType1(bean);
+                        final height = index.isOdd ? 265.w : 325.w;
+                        return bean.bindType == 0 ? _getBindType0(bean, height) : _getBindType1(bean, height);
                       },
                     ),
+                    // SliverGrid.builder(
+                    //   itemCount: _records.length,
+                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: 2,
+                    //     mainAxisSpacing: 8.w,
+                    //     crossAxisSpacing: 8.w,
+                    //     childAspectRatio: 175.w / _itemHeight,
+                    //   ),
+                    //   itemBuilder: (c, index) {
+                    //     final bean = _records[index];
+                    //     return bean.bindType == 0 ? _getBindType0(bean) : _getBindType1(bean);
+                    //   },
+                    // ),
                     SliverToBoxAdapter(
                       child: Obx(
                         () => Visibility(

@@ -1,28 +1,31 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluwx/fluwx.dart';
+import 'package:get/get.dart';
 import 'package:zpw/config/config.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
+var isinitFluwx = false;
+
 mixin WxMixin<T extends StatefulWidget> on State<T> {
   late Fluwx fluwx = Fluwx();
   Completer<String>? completer;
+  late final isInstalled = false.obs;
   void Wx() async {
     if (completer != null && !completer!.isCompleted) {
       completer = null;
     }
-    EasyLoading.show(maskType: EasyLoadingMaskType.none, dismissOnTap: true);
+    // EasyLoading.show(maskType: EasyLoadingMaskType.none, dismissOnTap: true);
     completer = Completer<String>();
-    var isInstalled = await fluwx.isWeChatInstalled;
-    EasyLoading.dismiss();
-    if (!isInstalled) {
-      HandleTool.showAppToastText('未安装微信');
-      completer?.completeError('未安装微信');
-      return;
-    }
+    // var isInstalled = await fluwx.isWeChatInstalled;
+    // EasyLoading.dismiss();
+    // if (!isInstalled) {
+    //   HandleTool.showAppToastText('未安装微信');
+    //   completer?.completeError('未安装微信');
+    //   return;
+    // }
 
     fluwx
         .authBy(
@@ -87,18 +90,31 @@ mixin WxMixin<T extends StatefulWidget> on State<T> {
   }
 
   void _initFluwx() async {
-    await fluwx.registerApi(
+    if (isinitFluwx) {
+      return;
+    }
+    final isOK = await fluwx.registerApi(
       appId: Config.kWechatAppID,
       doOnAndroid: true,
       doOnIOS: true,
       universalLink: Config.kWechatUniversalLink,
     );
+    if (isOK) {
+      isinitFluwx = true;
+    }
+  }
+
+  void checkWxInstall() {
+    fluwx.isWeChatInstalled.then((value) {
+      isInstalled.value = value;
+    });
   }
 
   @override
   void initState() {
     super.initState();
     _initFluwx();
+    checkWxInstall();
     fluwx.clearSubscribers();
     fluwx.addSubscriber(_listenResp);
     // _respSubs = WechatKitPlatform.instance.respStream().listen(_listenLogin);
