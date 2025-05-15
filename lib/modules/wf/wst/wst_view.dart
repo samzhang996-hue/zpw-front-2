@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
+import 'package:zpw/common/comm_bottom_tips.dart';
 import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
@@ -96,45 +97,51 @@ class WstPageState extends BaseWidgetState with AppMixin {
                 bottom: 16.w,
                 left: 0,
                 right: 0,
-                child: InkWell(
-                    onTap: () async {
-                      if ((await wxLogin() == true)) {
-                        if (HandleTool.instance.isMember) {
-                          gotoPushPage(MakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
-                        } else {
-                          gotoPushPage(VipPage());
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        if ((await wxLogin() == true)) {
+                          if (HandleTool.instance.isMember) {
+                            gotoPushPage(MakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
+                          } else {
+                            gotoPushPage(VipPage());
+                          }
                         }
-                      }
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 10.w, right: 10.w),
-                      width: double.infinity,
-                      height: 52.w,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
-                          borderRadius: BorderRadius.circular(26)),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "tk.png".comm,
-                            width: 26.w,
-                            height: 26.w,
-                          ),
-                          CommText(
-                            text: "做同款",
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                            textColor: Color(0xff191919),
-                          )
-                        ],
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                        width: double.infinity,
+                        height: 52.w,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF7EFAEF), Color(0xFF7FE1FB)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.topRight,
+                            ),
+                            borderRadius: BorderRadius.circular(26)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "tk.png".comm,
+                              width: 26.w,
+                              height: 26.w,
+                            ),
+                            CommText(
+                              text: "做同款",
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                              textColor: Color(0xff191919),
+                            )
+                          ],
+                        ),
                       ),
-                    )),
+                    ),
+                    const CommBottomTips()
+                  ],
+                ),
               )
             ],
           ),

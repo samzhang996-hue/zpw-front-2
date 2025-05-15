@@ -1,18 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/cached_image/cached_image.dart';
 import 'package:zpw/common/constant.dart';
+import 'package:zpw/modules/home/components/home_item.dart';
 import 'package:zpw/modules/home/home_logic.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/utils/handle_tool.dart';
 
-import '../../common/chat_items/chat_items.dart';
 import '../../common/gameplay_banner.dart';
-import '../face/collection_item.dart';
 import '../gameplay/gameplay_logic.dart';
 
 class HomePage extends StatefulWidget {
@@ -66,8 +63,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           children: [
                             Image.asset(
                               "home.png".home,
-                              width: 42.w,
-                              height: 25.w,
+                              width: 95.w,
+                              height: 24.w,
                               fit: BoxFit.cover,
                             ),
                             GetBuilder<MineLogic>(
@@ -135,72 +132,110 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       //         }),
                       //   ),
                       SizedBox(height: 12.w),
-                      // PreferredSize(
-                      //   preferredSize: Size.fromHeight(46.w),
-                      //   child: Container(
-                      //     width: double.maxFinite,
-                      //     height: 36.w,
-                      //     // padding: EdgeInsets.only(left: 15.w, right: 15.w),
-                      //     margin: EdgeInsets.only(bottom: 10.w),
-                      //     child: TabBar(
-                      //       tabAlignment: TabAlignment.center,
-                      //       tabs: logic.listPhotoGroupBean2.map((e) => Tab(text: "${e.groupName}")).toList(),
-                      //       onTap: (index) {
-                      //         // UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
-                      //         page?.jumpToPage(index);
-                      //       },
-                      //       overlayColor: WidgetStateProperty.all(Colors.transparent),
-                      //       controller: logic.tabController,
-                      //       indicator: BoxDecoration(
-                      //         borderRadius: BorderRadius.circular(50.w), // Creates border
-                      //         gradient: const LinearGradient(colors: [
-                      //           Color(0xFF7EFAEF),
-                      //           Color(0xFF7FE1FB),
-                      //         ], begin: Alignment.centerLeft, end: Alignment.centerRight),
-                      //       ),
-                      //       indicatorSize: TabBarIndicatorSize.tab,
-                      //       labelColor: const Color(0xFF191919),
-                      //       isScrollable: true,
-                      //       labelStyle: TextStyle(
-                      //         fontSize: 15.sp,
-                      //         fontWeight: FontWeight.w500,
-                      //         color: const Color(0xFF191919),
-                      //       ),
-                      //       unselectedLabelStyle: TextStyle(
-                      //         fontSize: 13.sp,
-                      //         fontWeight: FontWeight.w400,
-                      //         color: const Color(0xFF656565),
-                      //       ),
-                      //       dividerColor: Colors.transparent,
-                      //       unselectedLabelColor: const Color(0xFF656565),
-                      //     ),
+                      // SizedBox(
+                      //   width: 280.w,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: List.generate(logic.list.length, (index) {
+                      //       return Column(
+                      //         children: [
+                      //           Image.asset(
+                      //             "home_$index.png".home,
+                      //             width: 42.w,
+                      //             height: 42.w,
+                      //           ),
+                      //           5.verticalSpace,
+                      //           CommText(
+                      //             text: logic.list[index],
+                      //             textColor: const Color(0xFF191919),
+                      //             fontSize: 15.sp,
+                      //             fontWeight: FontWeight.w500,
+                      //           )
+                      //         ],
+                      //       );
+                      //     }),
                       //   ),
                       // ),
+                      // SizedBox(height: 12.w),
+                      PreferredSize(
+                        preferredSize: Size.fromHeight(46.w),
+                        child: Container(
+                          width: double.maxFinite,
+                          height: 70.w,
+                          // padding: EdgeInsets.only(left: 15.w, right: 15.w),
+                          margin: EdgeInsets.only(bottom: 10.w),
+                          child: TabBar(
+                            tabAlignment: TabAlignment.center,
+                            tabs: List.generate(logic.list.length, (index) {
+                              return Tab(
+                                icon: Image.asset(
+                                  "home_$index.png".home,
+                                  width: 42.w,
+                                  height: 42.w,
+                                ),
+                                text: logic.list[index],
+                              );
+                            }),
+                            onTap: (index) {
+                              // UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
+                              page?.jumpToPage(index);
+                            },
+                            overlayColor: WidgetStateProperty.all(Colors.transparent),
+                            controller: logic.tabController,
+                            indicator: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.w), // Creates border
+                              // gradient: const LinearGradient(
+                              //   colors: [
+                              //     Color(0xFF7EFAEF),
+                              //     Color(0xFF7FE1FB),
+                              //   ],
+                              //   begin: Alignment.centerLeft,
+                              //   end: Alignment.centerRight,
+                              // ),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelColor: const Color(0xFF191919),
+                            isScrollable: true,
+                            labelStyle: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF191919),
+                            ),
+                            unselectedLabelStyle: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w400,
+                              color: const Color(0xFF656565),
+                            ),
+                            dividerColor: Colors.transparent,
+                            unselectedLabelColor: const Color(0xFF656565),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                // Expanded(
-                //   child: PageView(
-                //     controller: page,
-                //     children: logic.listPhotoGroupBean2
-                //         // .map((e) => FaceItem(id: e.id ?? 0))
-                //         .map((e) => e.groupName == "Ai对话" ? const ChatItems() : CollectionItem(id: e.id ?? 0, isHome: true))
-                //         .toList(),
-                //     onPageChanged: (index) {
-                //       logic.tabController?.animateTo(index);
-                //     },
-                //   ),
-                // ),
                 Expanded(
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0),
-                    separatorBuilder: (context, index) => 15.verticalSpace,
-                    itemBuilder: (context, index) {
-                      return buildCard(index);
+                  child: PageView(
+                    controller: page,
+                    children: logic.list
+                        // .map((e) => FaceItem(id: e.id ?? 0))
+                        .map((e) => HomeItem(title: e))
+                        .toList(),
+                    onPageChanged: (index) {
+                      logic.tabController?.animateTo(index);
                     },
-                    itemCount: (logic.listPhotoGroupBean2.length / 12).ceil(),
                   ),
                 ),
+                // Expanded(
+                //   child: ListView.separated(
+                //     padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 0),
+                //     separatorBuilder: (context, index) => 15.verticalSpace,
+                //     itemBuilder: (context, index) {
+                //       return buildCard(index);
+                //     },
+                //     itemCount: (logic.listPhotoGroupBean2.length / 12).ceil(),
+                //   ),
+                // ),
               ],
             );
           }),
@@ -273,145 +308,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           )
         ],
       ),
-    );
-  }
-
-  Widget buildCard(int index) {
-    return Column(
-      children: [
-        Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Column(
-                  children: [
-                    if (logic.listPhotoGroupBean2.length > index)
-                      CachedImage(
-                        width: 114.w,
-                        height: 114.w,
-                        borderRadius: BorderRadius.circular(12.r),
-                        imageUrl: logic.listPhotoGroupBean2[index].imgUrlAcross,
-                      ),
-                    9.verticalSpace,
-                    if (logic.listPhotoGroupBean2.length > index + 1)
-                      CachedImage(
-                        width: 114.w,
-                        height: 114.w,
-                        borderRadius: BorderRadius.circular(12.r),
-                        imageUrl: logic.listPhotoGroupBean2[index + 1].imgUrlAcross,
-                      ),
-                  ],
-                ),
-                9.horizontalSpace,
-                if (logic.listPhotoGroupBean2.length > index + 2)
-                  CachedImage(
-                    width: 236.w,
-                    height: 236.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 2].imgUrlAcross,
-                  ),
-              ],
-            ),
-            9.verticalSpace,
-            Row(
-              children: [
-                if (logic.listPhotoGroupBean2.length > index + 3)
-                  CachedImage(
-                    width: 114.w,
-                    height: 114.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 3].imgUrlAcross,
-                  ),
-                9.horizontalSpace,
-                if (logic.listPhotoGroupBean2.length > index + 4)
-                  CachedImage(
-                    width: 114.w,
-                    height: 114.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 4].imgUrlAcross,
-                  ),
-                9.horizontalSpace,
-                if (logic.listPhotoGroupBean2.length > index + 5)
-                  CachedImage(
-                    width: 114.w,
-                    height: 114.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 5].imgUrlAcross,
-                  ),
-              ],
-            )
-          ],
-        ),
-        9.verticalSpace,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                if (logic.listPhotoGroupBean2.length > index + 6)
-                  CachedImage(
-                    width: 236.w,
-                    height: 236.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 6].imgUrlAcross,
-                  ),
-                9.horizontalSpace,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (logic.listPhotoGroupBean2.length > index + 7)
-                      CachedImage(
-                        width: 114.w,
-                        height: 114.w,
-                        borderRadius: BorderRadius.circular(12.r),
-                        imageUrl: logic.listPhotoGroupBean2[index + 7].imgUrlAcross,
-                      ),
-                    9.verticalSpace,
-                    if (logic.listPhotoGroupBean2.length > index + 8)
-                      CachedImage(
-                        width: 114.w,
-                        height: 114.w,
-                        borderRadius: BorderRadius.circular(12.r),
-                        imageUrl: logic.listPhotoGroupBean2[index + 8].imgUrlAcross,
-                      ),
-                  ],
-                ),
-              ],
-            ),
-            9.verticalSpace,
-            Row(
-              children: [
-                if (logic.listPhotoGroupBean2.length > index + 9)
-                  CachedImage(
-                    width: 114.w,
-                    height: 114.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 9].imgUrlAcross,
-                  ),
-                9.horizontalSpace,
-                if (logic.listPhotoGroupBean2.length > index + 10)
-                  CachedImage(
-                    width: 114.w,
-                    height: 114.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 10].imgUrlAcross,
-                  ),
-                9.horizontalSpace,
-                if (logic.listPhotoGroupBean2.length > index + 11)
-                  CachedImage(
-                    width: 114.w,
-                    height: 114.w,
-                    borderRadius: BorderRadius.circular(12.r),
-                    imageUrl: logic.listPhotoGroupBean2[index + 11].imgUrlAcross,
-                  ),
-              ],
-            )
-          ],
-        ),
-      ],
     );
   }
 }

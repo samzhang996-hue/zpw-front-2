@@ -18,7 +18,7 @@ class HomeLogic extends BaseGetxController with GetSingleTickerProviderStateMixi
   var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
   late final isOk = false.obs;
 
-  // late final list = ["Ai对话", "文生图", "全民舞王"];
+  late final list = ["全部", "视频", "图片", "特效"];
   @override
   void onInit() {
     super.onInit();
@@ -57,7 +57,7 @@ class HomeLogic extends BaseGetxController with GetSingleTickerProviderStateMixi
             final chatListPhotoGroupBean = ListPhotoGroupBean(groupName: "Ai对话");
             listPhotoGroupBean2.add(chatListPhotoGroupBean);
             listPhotoGroupBean2.addAll(results);
-            tabController = TabController(length: listPhotoGroupBean2.length, vsync: this);
+            tabController = TabController(length: list.length, vsync: this);
             update();
           }
         },

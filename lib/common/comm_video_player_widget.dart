@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 
 class CommVideoPlayerWidget extends StatefulWidget {
@@ -173,15 +174,20 @@ class _CommVideoPlayerWidgetState extends State<CommVideoPlayerWidget> {
       itemCount: widget.groupId == -1 ? widget.videoUrls.length : null,
       onPageChanged: _onPageChanged,
       scrollDirection: Axis.vertical,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         int validIndex = index % widget.videoUrls.length;
 
         var controller = _controllers[validIndex];
         return controller != null && controller.value.isInitialized
-            ? Center(
-                child: AspectRatio(
-                  aspectRatio: controller.value.aspectRatio,
-                  child: VideoPlayer(controller),
+            ? Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 78.w),
+                  child: AspectRatio(
+                    aspectRatio: controller.value.aspectRatio,
+                    child: VideoPlayer(controller),
+                  ),
                 ),
               )
             : const Center(child: CircularProgressIndicator());

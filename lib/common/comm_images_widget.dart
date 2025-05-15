@@ -70,7 +70,8 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
       controller: _pageController,
       scrollDirection: Axis.vertical,
       itemCount: widget.groupId == -1 ? widget.images.length : null,
-      physics: const BouncingScrollPhysics(),
+      // physics: const BouncingScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       onPageChanged: _onPageChanged,
       itemBuilder: (context, index) {
         int validIndex = index % widget.images.length;
@@ -79,8 +80,7 @@ class _CommImagesWidgetState extends State<CommImagesWidget> {
           color: Colors.black,
           width: 1.sw,
           height: 1.sh,
-          child: QdsImage(widget.images[validIndex], 1.sw, 1.sh,
-              fit: BoxFit.contain),
+          child: QdsImage(widget.images[validIndex], 1.sw, 1.sh, fit: BoxFit.contain),
         );
       },
     );

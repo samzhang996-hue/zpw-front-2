@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/bottom_sheet/face_photo_bottom_sheet.dart';
+import 'package:zpw/common/comm_bottom_tips.dart';
 import 'package:zpw/common/comm_error.dart';
 import 'package:zpw/common/comm_images_widget.dart';
 import 'package:zpw/common/comm_success.dart';
 import 'package:zpw/common/comm_video_player_widget.dart';
 import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/model/group_other_func_list_bean.dart';
@@ -22,9 +20,6 @@ import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
-
-import '../../common/bottom_sheet/whole_body_photo_bottom_sheet.dart';
-import '../../utils/sp_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
@@ -50,7 +45,12 @@ class FaceMakePage extends BaseStatefulWidget {
 
 class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
-  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 || widget.apiType == 4 ? true.obs : false.obs);
+  /// _hasAvatar: 0 表示人脸，1 表示全身照， 2表示其它
+  late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 || widget.apiType == 4
+      ? 0.obs
+      : widget.apiType == 0
+          ? 1.obs
+          : 2.obs);
   var _canBack = true;
   late final _autoPlay = true.obs;
   late final _initialPage = 0.obs;
@@ -132,50 +132,52 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     /// apiType: 16  图片
     /// apiType: 2  视频
     if (apiType == 10 || apiType == 2 || apiType == 9 || apiType == 3 || apiType == 1 || apiType == 16 || apiType == 4) {
-      _hasAvatar.value = true;
+      _hasAvatar.value = 0;
+    } else if (apiType == 0) {
+      _hasAvatar.value = 1;
     } else {
-      _hasAvatar.value = false;
+      _hasAvatar.value = 2;
     }
 
     // Log.e("_hasAvatar:${_hasAvatar.value}");
   }
 
-  // 检查并显示弹窗
-  Future<bool> _checkFaceAndShowDialog() async {
-    if (_apiType == 9 || _apiType == 10 || _apiType == 4 || _apiType == 16 || _apiType == 2) {
-      String lastShownDate = await SpUtils.getString('lastFaceShownDate_$_apiType');
-      String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  // // 检查并显示弹窗
+  // Future<bool> _checkFaceAndShowDialog() async {
+  //   if (_apiType == 9 || _apiType == 10 || _apiType == 4 || _apiType == 16 || _apiType == 2) {
+  //     String lastShownDate = await SpUtils.getString('lastFaceShownDate_$_apiType');
+  //     String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-      // 如果当天没有弹过窗，或者日期不同，则显示弹窗
-      if (lastShownDate != todayDate) {
-        await SpUtils.setString('lastFaceShownDate_$_apiType', todayDate); // 更新为今天的日期
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  }
+  //     // 如果当天没有弹过窗，或者日期不同，则显示弹窗
+  //     if (lastShownDate != todayDate) {
+  //       await SpUtils.setString('lastFaceShownDate_$_apiType', todayDate); // 更新为今天的日期
+  //       return false;
+  //     } else {
+  //       return true;
+  //     }
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
-  Future<bool> _checkWholeBodyAndShowDialog() async {
-    String lastShownDate = await SpUtils.getString('lastWholeBodyShownDate');
-    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  // Future<bool> _checkWholeBodyAndShowDialog() async {
+  //   String lastShownDate = await SpUtils.getString('lastWholeBodyShownDate');
+  //   String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    // 如果当天没有弹过窗，或者日期不同，则显示弹窗
-    if (lastShownDate != todayDate) {
-      await SpUtils.setString('lastWholeBodyShownDate', todayDate); // 更新为今天的日期
-      return false;
-    } else {
-      return true;
-    }
-  }
+  //   // 如果当天没有弹过窗，或者日期不同，则显示弹窗
+  //   if (lastShownDate != todayDate) {
+  //     await SpUtils.setString('lastWholeBodyShownDate', todayDate); // 更新为今天的日期
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   void _make() async {
     // Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
     // return;
     UmengCommonSdk.onEvent('Make_click_event', {'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]});
-    if (_myHeadImg.isEmpty && (_hasAvatar.isTrue)) {
+    if (_myHeadImg.isEmpty && (_hasAvatar.value == 0)) {
       _uploadNewHeadImg();
       return;
     }
@@ -197,11 +199,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       }
 
       if (_apiType == 0) {
-        final result = await _checkWholeBodyAndShowDialog();
-        if (result == false) {
-          await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
-        }
-        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+        // final result = await _checkWholeBodyAndShowDialog();
+        // if (result == false) {
+        //   await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
+        // }
+        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value == 0));
         _videoPlayerController?.play();
 
         if (res == null) {
@@ -216,7 +218,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       }
 
       if (_apiType == 5 || _apiType == 8) {
-        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value == 0));
         _videoPlayerController?.play();
 
         if (res == null) {
@@ -273,10 +275,10 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   }
 
   void _uploadNewHeadImg() async {
-    final result = await _checkFaceAndShowDialog();
-    if (result == false) {
-      await Get.bottomSheet<bool?>(const FacePhotoBottomSheet(), isDismissible: false);
-    }
+    // final result = await _checkFaceAndShowDialog();
+    // if (result == false) {
+    //   await Get.bottomSheet<bool?>(const FacePhotoBottomSheet(), isDismissible: false);
+    // }
 
     _autoPlay.value = false;
 
@@ -383,344 +385,228 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
 
   @override
   Widget initDefaultBuild(BuildContext context) {
-    return Container(
-      color: const Color(0xFF191919),
-      child: Stack(
-        // alignment: Alignment.center,
-        children: [
-          Container(
-            margin: widget.videoUrl.isEmpty
-                ? EdgeInsets.zero
-                : EdgeInsets.only(
-                    top: ScreenUtil().statusBarHeight,
+    return Stack(
+      // alignment: Alignment.center,
+      children: [
+        Container(
+          color: Colors.white,
+          // margin: widget.videoUrl.isEmpty
+          //     ? EdgeInsets.zero
+          //     : EdgeInsets.only(
+          //         top: ScreenUtil().statusBarHeight,
+          //       ),
+          child: widget.videoUrl.isEmpty
+              ? Obx(
+                  () => _list.isEmpty
+                      ? const SizedBox.shrink()
+                      : CommImagesWidget(
+                          images: _list,
+                          initialPage: _initialPage.value,
+                          groupId: widget.groupId,
+                          onPageChanged: (index) {
+                            _currentIndex.value = index;
+                            _getNewHasAvatar();
+                          },
+                        ),
+                )
+              : Obx(
+                  () => _videoUrls.isEmpty
+                      ? const SizedBox.shrink()
+                      : CommVideoPlayerWidget(
+                          autoPlay: _autoPlay.value,
+                          initialPage: _initialPage.value,
+                          videoUrls: _videoUrls,
+                          groupId: widget.groupId,
+                          onPageChanged: (index, videoPlayerController) {
+                            _currentIndex.value = index;
+                            _videoPlayerController = videoPlayerController;
+                            _getNewHasAvatar();
+                          },
+                        ),
+                ),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: YAppBar(
+            bgColor: Colors.white,
+            widget: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.white,
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'arrow_back.png'.comm,
+                      width: 16.w,
+                      height: 16.w,
+                      fit: BoxFit.cover,
+                      color: Colors.black,
+                    ).paddingOnly(left: 10),
                   ),
-            child: widget.videoUrl.isEmpty
-                ? Obx(
-                    () => _list.isEmpty
-                        ? const SizedBox.shrink()
-                        : CommImagesWidget(
-                            images: _list,
-                            initialPage: _initialPage.value,
-                            groupId: widget.groupId,
-                            onPageChanged: (index) {
-                              _currentIndex.value = index;
-                              _getNewHasAvatar();
-                            },
-                          ),
-                  )
-                : Obx(
-                    () => _videoUrls.isEmpty
-                        ? const SizedBox.shrink()
-                        : CommVideoPlayerWidget(
-                            autoPlay: _autoPlay.value,
-                            initialPage: _initialPage.value,
-                            videoUrls: _videoUrls,
-                            groupId: widget.groupId,
-                            onPageChanged: (index, videoPlayerController) {
-                              _currentIndex.value = index;
-                              _videoPlayerController = videoPlayerController;
-                              _getNewHasAvatar();
-                            },
-                          ),
-                  ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: YAppBar(
-              bgColor: Colors.transparent,
-              widget: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.back();
+                ),
+                Container(
+                  width: 44,
+                  height: 50,
+                  color: Colors.white,
+                  alignment: Alignment.center,
+                ),
+                const Spacer(),
+                Obx(() => SizedBox(
+                      width: 1.sw * 0.4,
+                      child: Text(
+                          widget.groupId == -1
+                              ? _title.value
+                              : _tags.isEmpty
+                                  ? ""
+                                  : _tags[_currentIndex.value],
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Color(0xFF191919), fontSize: 18, fontWeight: FontWeight.w500)),
+                    )),
+                const Spacer(),
+                Container(
+                  width: 94,
+                  height: 50,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(top: 2),
+                  color: Colors.white,
+                  child: GestureDetector(
+                    onTap: () async {
+                      if ((await wxLogin() == true)) {
+                        _toHistory();
+                      }
                     },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.transparent,
-                      alignment: Alignment.center,
-                      child: Image.asset(
-                        'arrow_back.png'.comm,
-                        width: 16.w,
-                        height: 16.w,
-                        fit: BoxFit.cover,
-                        color: Colors.white,
-                      ).paddingOnly(left: 10),
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Image.asset(
+                        //   "my_work_ic.png".make,
+                        //   width: 22.w,
+                        //   height: 22.w,
+                        // ),
+                        Text(
+                          "我的作品",
+                          style: TextStyle(
+                            color: const Color(0xFF656565),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                        SizedBox(width: 16.w)
+                      ],
                     ),
                   ),
-                  Container(
-                    width: 44,
-                    height: 50,
-                    color: Colors.transparent,
-                    alignment: Alignment.center,
-                  ),
-                  const Spacer(),
-                  Obx(() => SizedBox(
-                        width: 1.sw * 0.4,
-                        child: Text(
-                            widget.groupId == -1
-                                ? _title.value
-                                : _tags.isEmpty
-                                    ? ""
-                                    : _tags[_currentIndex.value],
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
-                      )),
-                  const Spacer(),
-                  Container(
-                    width: 94,
-                    height: 50,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(top: 2),
-                    color: Colors.transparent,
-                    child: GestureDetector(
-                      onTap: () async {
-                        if ((await wxLogin() == true)) {
-                          _toHistory();
-                        }
-                      },
-                      behavior: HitTestBehavior.opaque,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // Image.asset(
-                          //   "my_work_ic.png".make,
-                          //   width: 22.w,
-                          //   height: 22.w,
-                          // ),
-                          Text(
-                            "我的作品",
-                            style: TextStyle(
-                              color: Color(0xffB2B2B2),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
+                )
+              ],
+            ),
+            isMake: true,
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: SafeArea(
+            // minimum: EdgeInsets.only(bottom: 10.w),
+            child: Container(
+              // height: 88.w,
+              width: 1.sw,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 1.sw,
+                    // height: 180.w,
+
+                    child: Column(
+                      children: [
+                        SizedBox(height: 8.w),
+                        Obx(
+                          () => _hasAvatar.value == 0
+                              ? Image.asset(
+                                  "has_avatar.png".make,
+                                  width: 335.w,
+                                  height: 140.w,
+                                )
+                              : _hasAvatar.value == 1
+                                  ? Image.asset(
+                                      "has_body.png".make,
+                                      width: 335.w,
+                                      height: 140.w,
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          CommText(
+                                            text: "温馨提示：",
+                                            textColor: const Color(0xFF191919),
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          SizedBox(height: 4.w),
+                                          CommText(
+                                            text: """1.图片内容必须遵守法律法规，不得包含违法、色情、暴力、恐怖主义、赌博、诈骗等信息。\n2.禁止上传侵犯他人版权或含有侮辱、诽谤、恶意攻击等不当内容的图片。\n3.不得上传含有广告、虚假宣传等不良信息的图片。\n4.图片在每次使用后均会被删除，不会在服务器上保存‌。""",
+                                            textColor: const Color(0xFFA5A5A5),
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                            textAlign: TextAlign.left,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                        ),
+                        SizedBox(height: 8.w),
+                        GestureDetector(
+                          onTap: _make,
+                          behavior: HitTestBehavior.opaque,
+                          child: Container(
+                            width: 357.w,
+                            height: 52.w,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF7EFAEF),
+                                  Color(0xFF7FE1FB),
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                              // color: const Color(0xFFFF2E7E),
+                              borderRadius: BorderRadius.circular(26.w),
+                            ),
+                            child: Center(
+                              child: CommText(
+                                text: "一键制作",
+                                textColor: const Color(0xFF191919),
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                          SizedBox(width: 16.w)
-                        ],
-                      ),
+                        ),
+                        const CommBottomTips(),
+                        SizedBox(height: 10.w),
+                      ],
                     ),
                   )
                 ],
               ),
-              isMake: true,
             ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: SafeArea(
-              minimum: EdgeInsets.only(bottom: 20.w),
-              child: Obx(() => Container(
-                    height: _hasAvatar.value ? 162.w : 65.w,
-                    width: 1.sw,
-                    color: Colors.transparent,
-                    child: Column(
-                      children: [
-                        // const Spacer(),
-
-                        if (_hasAvatar.value)
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  Opacity(
-                                    opacity: 0,
-                                    child: Container(
-                                      width: 1.sw,
-                                      height: 52.w,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xFF051B38).withOpacity(0.87),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16.w),
-                                            topRight: Radius.circular(16.w),
-                                          )),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 1.sw,
-                                    height: 52.w,
-                                    color: const Color(0xFF191919),
-                                  ),
-                                ],
-                              ),
-                              Obx(
-                                () => SizedBox(
-                                  width: 1.sw,
-                                  height: 76.w,
-                                  child: _showHeadImg.isFalse
-                                      ? Center(
-                                          child: GestureDetector(
-                                            onTap: _uploadNewHeadImg,
-                                            behavior: HitTestBehavior.opaque,
-                                            child: Image.asset(
-                                              "no_head_img.png".make,
-                                              width: 76.w,
-                                              height: 76.w,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              if (_myHeadImg.isNotEmpty)
-                                                Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    Container(
-                                                      width: 72.w,
-                                                      height: 72.w,
-                                                      decoration: const BoxDecoration(
-                                                        color: Colors.grey,
-                                                        shape: BoxShape.circle,
-                                                        gradient: LinearGradient(
-                                                          colors: [
-                                                            Color(0xFF7EFAEF),
-                                                            Color(0xFF7FE1FB),
-                                                          ],
-                                                          begin: Alignment.centerLeft, // 渐变的起始点
-                                                          end: Alignment.centerRight, // 渐变的结束点
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ClipOval(
-                                                      child: QdsImage(_myHeadImg.value, 68.w, 68.w),
-                                                    ),
-                                                  ],
-                                                )
-                                              else
-                                                GestureDetector(
-                                                  onTap: _uploadNewHeadImg,
-                                                  behavior: HitTestBehavior.opaque,
-                                                  child: Image.asset(
-                                                    "no_head_img.png".make,
-                                                    width: 76.w,
-                                                    height: 76.w,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              Obx(
-                                                () => Positioned(
-                                                  top: 0,
-                                                  right: 0,
-                                                  child: Visibility(
-                                                    visible: _showHeadImg.isTrue && HandleTool.instance.headImg.isNotEmpty,
-                                                    child: GestureDetector(
-                                                      onTap: _closeHeadImg,
-                                                      behavior: HitTestBehavior.opaque,
-                                                      child: Image.asset(
-                                                        "make_close.png".make,
-                                                        width: 18.w,
-                                                        height: 18.w,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              // Positioned(
-                                              //   bottom: -5.w,
-                                              //   right: 0,
-                                              //   child: GestureDetector(
-                                              //     onTap: _uploadNewHeadImg,
-                                              //     behavior: HitTestBehavior.opaque,
-                                              //     child: Container(
-                                              //       width: 76.w,
-                                              //       height: 21.w,
-                                              //       decoration: BoxDecoration(
-                                              //         borderRadius:
-                                              //             BorderRadius.circular(
-                                              //                 12.w),
-                                              //         gradient:
-                                              //             const LinearGradient(
-                                              //           colors: [
-                                              //             Color(0xFFFF2EB8),
-                                              //             Color(0xFFFF2E2E)
-                                              //           ],
-                                              //           begin: Alignment
-                                              //               .centerLeft, // 渐变的起始点
-                                              //           end: Alignment
-                                              //               .centerRight, // 渐变的结束点
-                                              //         ),
-                                              //       ),
-                                              //       child: Center(
-                                              //         child: CommText(
-                                              //           text: "上传新头像",
-                                              //           textColor:
-                                              //               const Color(0xFFFFFFFF),
-                                              //           fontSize: 12.sp,
-                                              //           fontWeight: FontWeight.w500,
-                                              //         ),
-                                              //       ),
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ],
-                                          ),
-                                        ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                        // if (_hasAvatar.value) SizedBox(height: 12.w),
-                        Expanded(
-                          child: Container(
-                            width: 1.sw,
-                            height: 100.w,
-                            color: _hasAvatar.isTrue ? const Color(0xFF191919) : Colors.transparent,
-                            child: Column(
-                              children: [
-                                const Spacer(flex: 2),
-                                GestureDetector(
-                                  onTap: _make,
-                                  behavior: HitTestBehavior.opaque,
-                                  child: Container(
-                                    width: 357.w,
-                                    height: 52.w,
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF7EFAEF),
-                                          Color(0xFF7FE1FB),
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      // color: const Color(0xFFFF2E7E),
-                                      borderRadius: BorderRadius.circular(26.w),
-                                    ),
-                                    child: Center(
-                                      child: CommText(
-                                        text: "一键制作",
-                                        textColor: const Color(0xFF191919),
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Spacer(flex: 3),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // SizedBox(height: 10.w),
-                      ],
-                    ),
-                  )),
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 }
