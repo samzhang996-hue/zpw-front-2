@@ -174,7 +174,13 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   // }
 
   void _make() async {
-    // Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
+    // final params = {
+    //   "funcId": _funcID,
+    //   "imgUrls": [_myHeadImg.value],
+    //   // "prompt": "",
+    // };
+
+    // Log.e("params------:$params");
     // return;
     UmengCommonSdk.onEvent('Make_click_event', {'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]});
     if (_myHeadImg.isEmpty && (_hasAvatar.value == 0)) {

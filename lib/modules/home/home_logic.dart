@@ -9,6 +9,7 @@ import 'package:zpw/utils/log_utils.dart';
 
 import '../main/main_logic.dart';
 import '../splash/photo_list/photo_list_view.dart';
+import 'home_detail.dart';
 
 class HomeLogic extends BaseGetxController with GetSingleTickerProviderStateMixin {
   final GameplayState state = GameplayState();
@@ -19,6 +20,7 @@ class HomeLogic extends BaseGetxController with GetSingleTickerProviderStateMixi
   late final isOk = false.obs;
 
   late final list = ["全部", "视频", "图片", "特效"];
+  late RxInt currentIndex = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -66,7 +68,7 @@ class HomeLogic extends BaseGetxController with GetSingleTickerProviderStateMixi
 
   void bannerClick(int index) {
     if (index == 0) {
-      mainLogic.changeIndex(1);
+      Get.to(HomeDetail(title: '换发型', id: 28), transition: Transition.rightToLeft);
     }
     if (index == 1) {
       Get.to(Photo_listPage(isNew: false), transition: Transition.rightToLeft, arguments: {"type": 1});

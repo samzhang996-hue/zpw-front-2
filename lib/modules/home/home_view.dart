@@ -164,51 +164,52 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           height: 70.w,
                           // padding: EdgeInsets.only(left: 15.w, right: 15.w),
                           margin: EdgeInsets.only(bottom: 10.w),
-                          child: TabBar(
-                            tabAlignment: TabAlignment.center,
-                            tabs: List.generate(logic.list.length, (index) {
-                              return Tab(
-                                icon: Image.asset(
-                                  "home_$index.png".home,
-                                  width: 42.w,
-                                  height: 42.w,
+                          child: Obx(() => TabBar(
+                                tabAlignment: TabAlignment.center,
+                                tabs: List.generate(logic.list.length, (index) {
+                                  return Tab(
+                                    icon: Image.asset(
+                                      logic.currentIndex.value == index ? "home_$index.png".home : "home_${index}_no.png".home,
+                                      width: 42.w,
+                                      height: 42.w,
+                                    ),
+                                    text: logic.list[index],
+                                  );
+                                }),
+                                onTap: (index) {
+                                  // UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
+                                  logic.currentIndex.value = index;
+                                  page?.jumpToPage(index);
+                                },
+                                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                                controller: logic.tabController,
+                                indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50.w), // Creates border
+                                  // gradient: const LinearGradient(
+                                  //   colors: [
+                                  //     Color(0xFF7EFAEF),
+                                  //     Color(0xFF7FE1FB),
+                                  //   ],
+                                  //   begin: Alignment.centerLeft,
+                                  //   end: Alignment.centerRight,
+                                  // ),
                                 ),
-                                text: logic.list[index],
-                              );
-                            }),
-                            onTap: (index) {
-                              // UmengCommonSdk.onEvent('Gameplay_click_event', {'Tab': '${logic.listPhotoGroupBean2[index].toJson()}'});
-                              page?.jumpToPage(index);
-                            },
-                            overlayColor: WidgetStateProperty.all(Colors.transparent),
-                            controller: logic.tabController,
-                            indicator: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50.w), // Creates border
-                              // gradient: const LinearGradient(
-                              //   colors: [
-                              //     Color(0xFF7EFAEF),
-                              //     Color(0xFF7FE1FB),
-                              //   ],
-                              //   begin: Alignment.centerLeft,
-                              //   end: Alignment.centerRight,
-                              // ),
-                            ),
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            labelColor: const Color(0xFF191919),
-                            isScrollable: true,
-                            labelStyle: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF191919),
-                            ),
-                            unselectedLabelStyle: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w400,
-                              color: const Color(0xFF656565),
-                            ),
-                            dividerColor: Colors.transparent,
-                            unselectedLabelColor: const Color(0xFF656565),
-                          ),
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                labelColor: const Color(0xFF191919),
+                                isScrollable: true,
+                                labelStyle: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF191919),
+                                ),
+                                unselectedLabelStyle: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xFF656565),
+                                ),
+                                dividerColor: Colors.transparent,
+                                unselectedLabelColor: const Color(0xFF656565),
+                              )),
                         ),
                       ),
                     ],
@@ -222,6 +223,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         .map((e) => HomeItem(title: e))
                         .toList(),
                     onPageChanged: (index) {
+                      logic.currentIndex.value = index;
                       logic.tabController?.animateTo(index);
                     },
                   ),

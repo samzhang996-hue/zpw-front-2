@@ -428,7 +428,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                         child: GestureDetector(
                           onTap: () {
                             logic.click = true;
-                            // logic.buyEngin.resumePurchase();
+
                             logic.resumePurchase();
                           },
                           child: Padding(

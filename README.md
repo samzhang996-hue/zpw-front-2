@@ -19,6 +19,8 @@ dart run flutter_launcher_icons
 
 dart run flutter_native_splash:create
 
+flutter build apk --flavor AIJL300 --no-shrink --obfuscate --split-debug-info="flutter_build"
+
 flutter build ios --release --obfuscate --split-debug-info=./symbols
 
 flutter build apk --no-shrink --obfuscate --split-debug-info="flutter_build"

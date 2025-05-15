@@ -7,7 +7,6 @@ import 'package:zpw/modules/home/home_view.dart';
 import 'package:zpw/modules/main/main_logic.dart';
 
 import '../face/face_view.dart';
-import '../gameplay/gameplay_view.dart';
 import '../mine/mine_view.dart';
 
 class MainPage extends StatefulWidget {
@@ -37,7 +36,7 @@ class _MainPageState extends State<MainPage> {
               index: state.currentIndex.value,
               children: [
                 const HomePage(),
-                const GameplayPage(),
+                // const GameplayPage(),
                 if (logic.configByKeyController.showPicture.isTrue) const FacePage(),
                 // SpeciallyPage(),
                 // WfPage(),
@@ -76,19 +75,19 @@ class _MainPageState extends State<MainPage> {
                     ),
                     label: "首页",
                   ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      'un_gameplay.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    activeIcon: Image.asset(
-                      'gameplay.png'.tabbar,
-                      width: 36,
-                      height: 36,
-                    ),
-                    label: "视频",
-                  ),
+                  // BottomNavigationBarItem(
+                  //   icon: Image.asset(
+                  //     'un_gameplay.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   activeIcon: Image.asset(
+                  //     'gameplay.png'.tabbar,
+                  //     width: 36,
+                  //     height: 36,
+                  //   ),
+                  //   label: "视频",
+                  // ),
                   if (logic.configByKeyController.showPicture.isTrue)
                     BottomNavigationBarItem(
                       icon: Image.asset(

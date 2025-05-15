@@ -121,7 +121,7 @@ class Api {
   static const String apiTypeList = "/enum/apiTypeList";
 
   ///ios恢复订单
-  static const String payOrder_restoreIosPay = "/center/handleIosOrder/asasa";
+  static const String payOrder_restoreIosPay = "/center/handleIosOrder";
 
   ///ios内购回调
   static const String payOrder_iosPay = "/center/handleIosOrder";

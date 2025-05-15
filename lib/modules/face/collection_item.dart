@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
+import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
@@ -197,15 +198,21 @@ class _CollectionItemState extends State<CollectionItem> {
                   ),
                 ),
               ),
-              // Text(
-              //   "2.5w",
-              //   maxLines: 1,
-              //   style: TextStyle(
-              //     color: const Color(0xFF191919),
-              //     fontSize: 14.sp,
-              //     fontWeight: FontWeight.w400,
-              //   ),
-              // ),
+              Image.asset(
+                "hot.png".face,
+                width: 16.w,
+                height: 16.w,
+              ),
+              SizedBox(width: 2.w),
+              Text(
+                "${bean.photoFuncResp?.hot ?? 3000}",
+                maxLines: 1,
+                style: TextStyle(
+                  color: const Color(0xFF666666),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ).paddingOnly(top: 5.w, left: 5.w, right: 5.w),
           5.verticalSpace,
@@ -219,14 +226,28 @@ class _CollectionItemState extends State<CollectionItem> {
                   Color(0xFF7FE1FB),
                 ])),
             child: Center(
-              child: Text(
-                "一键同款",
-                maxLines: 1,
-                style: TextStyle(
-                  color: const Color(0xFF191919),
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "一键同款",
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: const Color(0xFF191919),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  Text(
+                    "${bean.photoFuncResp?.hotW ?? 2.2}W",
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: const Color(0xA6191919),
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -374,6 +395,21 @@ class _CollectionItemState extends State<CollectionItem> {
                   ),
                 ),
               ),
+              Image.asset(
+                "hot.png".face,
+                width: 16.w,
+                height: 16.w,
+              ),
+              SizedBox(width: 2.w),
+              Text(
+                "${bean.photoGroupResp?.hot ?? 3000}",
+                maxLines: 1,
+                style: TextStyle(
+                  color: const Color(0xFF666666),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               // Text(
               //   "2.5w",
               //   maxLines: 1,
@@ -396,14 +432,28 @@ class _CollectionItemState extends State<CollectionItem> {
                   Color(0xFF7FE1FB),
                 ])),
             child: Center(
-              child: Text(
-                "一键同款",
-                maxLines: 1,
-                style: TextStyle(
-                  color: const Color(0xFF191919),
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "一键同款",
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: const Color(0xFF191919),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  Text(
+                    "${bean.photoGroupResp?.hotW ?? 2.2}W",
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: const Color(0xA6191919),
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -446,7 +496,7 @@ class _CollectionItemState extends State<CollectionItem> {
                       childCount: _records.length,
                       itemBuilder: (context, index) {
                         final bean = _records[index];
-                        final height = index.isOdd ? 265.w : 325.w;
+                        final height = index % 2 == 0 ? 265.w : 325.w;
                         return bean.bindType == 0 ? _getBindType0(bean, height) : _getBindType1(bean, height);
                       },
                     ),

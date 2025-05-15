@@ -1,12 +1,12 @@
+import 'dart:math';
+
 class PagePhotoGroupBind {
   PagePhotoGroupBindBean? data;
 
   PagePhotoGroupBind({this.data});
 
   PagePhotoGroupBind.fromJson(Map<String, dynamic> json) {
-    data = json["data"] == null
-        ? null
-        : PagePhotoGroupBindBean.fromJson(json["data"]);
+    data = json["data"] == null ? null : PagePhotoGroupBindBean.fromJson(json["data"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -25,15 +25,12 @@ class PagePhotoGroupBindBean {
   int? size;
   int? total;
 
-  PagePhotoGroupBindBean(
-      {this.current, this.pages, this.records, this.size, this.total});
+  PagePhotoGroupBindBean({this.current, this.pages, this.records, this.size, this.total});
 
   PagePhotoGroupBindBean.fromJson(Map<String, dynamic> json) {
     current = json["current"];
     pages = json["pages"];
-    records = json["records"] == null
-        ? null
-        : (json["records"] as List).map((e) => Records.fromJson(e)).toList();
+    records = json["records"] == null ? null : (json["records"] as List).map((e) => Records.fromJson(e)).toList();
     size = json["size"];
     total = json["total"];
   }
@@ -56,19 +53,15 @@ class Records {
   int? bindType;
   PhotoFuncResp? photoFuncResp;
   PhotoGroupResp? photoGroupResp;
-
-  Records(
-      {this.bindId, this.bindType, this.photoFuncResp, this.photoGroupResp});
+  // double height = 0;
+  Records({this.bindId, this.bindType, this.photoFuncResp, this.photoGroupResp});
 
   Records.fromJson(Map<String, dynamic> json) {
     bindId = json["bindId"];
     bindType = json["bindType"];
-    photoFuncResp = json["photoFuncResp"] == null
-        ? null
-        : PhotoFuncResp.fromJson(json["photoFuncResp"]);
-    photoGroupResp = json["photoGroupResp"] == null
-        ? null
-        : PhotoGroupResp.fromJson(json["photoGroupResp"]);
+    photoFuncResp = json["photoFuncResp"] == null ? null : PhotoFuncResp.fromJson(json["photoFuncResp"]);
+    photoGroupResp = json["photoGroupResp"] == null ? null : PhotoGroupResp.fromJson(json["photoGroupResp"]);
+    // height = 20 + (Random().nextDouble() * (60 - 20));
   }
 
   Map<String, dynamic> toJson() {
@@ -96,18 +89,23 @@ class PhotoGroupResp {
   int? status;
   int? tabType;
   String? tips;
+  int? hot;
+  String? hotW;
 
-  PhotoGroupResp(
-      {this.groupName,
-      this.groupType,
-      this.id,
-      this.imgUrlAcross,
-      this.imgUrlVertical,
-      this.remark,
-      this.sortNo,
-      this.status,
-      this.tabType,
-      this.tips});
+  PhotoGroupResp({
+    this.groupName,
+    this.groupType,
+    this.id,
+    this.imgUrlAcross,
+    this.imgUrlVertical,
+    this.remark,
+    this.sortNo,
+    this.status,
+    this.tabType,
+    this.tips,
+    this.hot,
+    this.hotW,
+  });
 
   PhotoGroupResp.fromJson(Map<String, dynamic> json) {
     groupName = json["groupName"];
@@ -120,6 +118,8 @@ class PhotoGroupResp {
     status = json["status"];
     tabType = json["tabType"];
     tips = json["tips"];
+    hot = 1500 + Random().nextInt(6000 - 1500 + 1);
+    hotW = (1.5 + (Random().nextDouble() * (3.2 - 1.5))).toStringAsFixed(1);
   }
 
   Map<String, dynamic> toJson() {
@@ -151,20 +151,25 @@ class PhotoFuncResp {
   String? showImgGif;
   String? tags;
   String? videoUrl;
+  int? hot;
+  String? hotW;
 
-  PhotoFuncResp(
-      {this.apiType,
-      this.funcName,
-      this.funcUrl,
-      this.funcValue,
-      this.funcValueOne,
-      this.funcValueThree,
-      this.funcValueTwo,
-      this.id,
-      this.remark,
-      this.showImgGif,
-      this.tags,
-      this.videoUrl});
+  PhotoFuncResp({
+    this.apiType,
+    this.funcName,
+    this.funcUrl,
+    this.funcValue,
+    this.funcValueOne,
+    this.funcValueThree,
+    this.funcValueTwo,
+    this.id,
+    this.remark,
+    this.showImgGif,
+    this.tags,
+    this.videoUrl,
+    this.hot,
+    this.hotW,
+  });
 
   PhotoFuncResp.fromJson(Map<String, dynamic> json) {
     apiType = json["apiType"];
@@ -179,6 +184,8 @@ class PhotoFuncResp {
     showImgGif = json["showImgGif"];
     tags = json["tags"];
     videoUrl = json["videoUrl"];
+    hot = 1500 + Random().nextInt(6000 - 1500 + 1);
+    hotW = (1.5 + (Random().nextDouble() * (3.2 - 1.5))).toStringAsFixed(1);
   }
 
   Map<String, dynamic> toJson() {

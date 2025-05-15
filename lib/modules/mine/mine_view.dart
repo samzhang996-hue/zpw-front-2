@@ -363,7 +363,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             InkWell(
               onTap: () {
                 // Get.back();
-                Get.find<MainLogic>().changeIndex(_tabController.index == 0 ? 1 : 0);
+                Get.find<MainLogic>().changeIndex(0);
               },
               child: Container(
                 width: 122.w,
