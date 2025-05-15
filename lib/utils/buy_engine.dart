@@ -116,7 +116,7 @@ class BuyEngin with AppMixin {
       if (response.notFoundIDs.isNotEmpty) {
         EasyLoading.dismiss();
         if (_vipLogic.click) {
-          HandleTool.showAppToastText("未查询到商品订单");
+          // HandleTool.showAppToastText("未查询到商品订单");
         }
         //
         // print("无法找到指定的商品");
@@ -176,7 +176,7 @@ class BuyEngin with AppMixin {
     if (purchaseDetailsList.isEmpty) {
       EasyLoading.dismiss();
       if (_vipLogic.click) {
-        HandleTool.showAppToastText("未查询到商品订单");
+        // HandleTool.showAppToastText("未查询到商品订单");
       }
       // HandleTool.showAppToastText("未查询到商品订单");
       return;
