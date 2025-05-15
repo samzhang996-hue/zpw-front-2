@@ -163,8 +163,8 @@ class CachedImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: Shimmer.fromColors(
-        baseColor: Colors.white.withOpacity(0.03),
-        highlightColor: Colors.white.withOpacity(0.06),
+        baseColor: Colors.red.withOpacity(0.03),
+        highlightColor: Colors.red.withOpacity(0.06),
         child: Container(width: width, height: height, color: const Color.fromRGBO(31, 34, 39, 1)),
       ),
     );
