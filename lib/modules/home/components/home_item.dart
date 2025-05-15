@@ -81,6 +81,7 @@ class _HomeItemState extends State<HomeItem> with AutomaticKeepAliveClientMixin<
   }
 
   Widget buildCard(int index) {
+    int current = index * 12;
     return Column(
       children: [
         Column(
@@ -90,23 +91,23 @@ class _HomeItemState extends State<HomeItem> with AutomaticKeepAliveClientMixin<
               children: [
                 Column(
                   children: [
-                    if (listPhotoGroupBean2.length > index) _cachedImage(114.w, 114.w, index * 12),
+                    if (listPhotoGroupBean2.length > current) _cachedImage(114.w, 114.w, current),
                     9.verticalSpace,
-                    if (listPhotoGroupBean2.length > index * 12 + 1) _cachedImage(114.w, 114.w, index * 12),
+                    if (listPhotoGroupBean2.length > current + 1) _cachedImage(114.w, 114.w, current + 1),
                   ],
                 ),
                 9.horizontalSpace,
-                if (listPhotoGroupBean2.length > index * 12 + 2) _cachedImage(236.w, 236.w, index * 12 + 1),
+                if (listPhotoGroupBean2.length > current + 2) _cachedImage(236.w, 236.w, current + 2),
               ],
             ),
             9.verticalSpace,
             Row(
               children: [
-                if (listPhotoGroupBean2.length > index * 12 + 3) _cachedImage(114.w, 114.w, index * 12 + 2),
+                if (listPhotoGroupBean2.length > current + 3) _cachedImage(114.w, 114.w, current + 3),
                 9.horizontalSpace,
-                if (listPhotoGroupBean2.length > index * 12 + 4) _cachedImage(114.w, 114.w, index * 12 + 3),
+                if (listPhotoGroupBean2.length > current + 4) _cachedImage(114.w, 114.w, current + 4),
                 9.horizontalSpace,
-                if (listPhotoGroupBean2.length > index * 12 + 4) _cachedImage(114.w, 114.w, index * 12 + 4),
+                if (listPhotoGroupBean2.length > current + 5) _cachedImage(114.w, 114.w, current + 5),
               ],
             )
           ],
@@ -119,14 +120,14 @@ class _HomeItemState extends State<HomeItem> with AutomaticKeepAliveClientMixin<
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                if (listPhotoGroupBean2.length > index * 12 + 5) _cachedImage(236.w, 236.w, index * 12 + 5),
+                if (listPhotoGroupBean2.length > current + 6) _cachedImage(236.w, 236.w, current + 6),
                 9.horizontalSpace,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (listPhotoGroupBean2.length > index * 12 + 6) _cachedImage(114.w, 114.w, index * 12 + 6),
+                    if (listPhotoGroupBean2.length > current + 7) _cachedImage(114.w, 114.w, current + 7),
                     9.verticalSpace,
-                    if (listPhotoGroupBean2.length > index * 12 + 7) _cachedImage(114.w, 114.w, index * 12 + 7),
+                    if (listPhotoGroupBean2.length > current + 8) _cachedImage(114.w, 114.w, current + 8),
                   ],
                 ),
               ],
@@ -134,11 +135,11 @@ class _HomeItemState extends State<HomeItem> with AutomaticKeepAliveClientMixin<
             9.verticalSpace,
             Row(
               children: [
-                if (listPhotoGroupBean2.length > index * 12 + 8) _cachedImage(114.w, 114.w, index * 12 + 8),
+                if (listPhotoGroupBean2.length > current + 9) _cachedImage(114.w, 114.w, current + 9),
                 9.horizontalSpace,
-                if (listPhotoGroupBean2.length > index * 12 + 9) _cachedImage(114.w, 114.w, index * 12 + 9),
+                if (listPhotoGroupBean2.length > current + 10) _cachedImage(114.w, 114.w, current + 10),
                 9.horizontalSpace,
-                if (listPhotoGroupBean2.length > index * 12 + 10) _cachedImage(114.w, 114.w, index * 12 + 10),
+                if (listPhotoGroupBean2.length > current + 11) _cachedImage(114.w, 114.w, current + 11),
               ],
             )
           ],
