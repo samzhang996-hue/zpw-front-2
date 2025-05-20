@@ -386,7 +386,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           height: 30.w,
                           // color: Colors.red,
                           padding: EdgeInsets.only(left: 16.w, top: 4),
-                          margin: EdgeInsets.only(top: 40.w, left: 0.w),
+                          margin: EdgeInsets.only(top: 48.w, left: 0.w),
                           child: Align(
                               alignment: Alignment.topLeft,
                               child: Image.asset(

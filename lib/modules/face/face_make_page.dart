@@ -10,6 +10,7 @@ import 'package:zpw/common/comm_images_widget.dart';
 import 'package:zpw/common/comm_success.dart';
 import 'package:zpw/common/comm_video_player_widget.dart';
 import 'package:zpw/common/constant.dart';
+import 'package:zpw/common/face_dialog.dart';
 import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/model/group_other_func_list_bean.dart';
@@ -20,6 +21,8 @@ import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/network_api.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
+
+import '../../utils/sp_utils.dart';
 
 class FaceMakePage extends BaseStatefulWidget {
   final String title;
@@ -280,12 +283,40 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     }
   }
 
+  Future<bool> _checkFaceDialog() async {
+    String faceDialog = await SpUtils.getString('faceDialog');
+    if (faceDialog.isEmpty) {
+      var isOK = false;
+      await Get.dialog(
+        FaceDialog(
+          title: "功能授权",
+          message: """为了提供更好的服务，我们将会向您申请“AI换脸”功能授权；
+功能说明：为了给用户提供“换脸”效果，应用程序需要找出特征点（如眼睛、鼻子、嘴巴等）。
+数据收集类型：照片中人脸的特征点（如眼睛、鼻子、嘴巴等）以进行人脸处理。
+使用范围与期限：您的图片传输到阿里云服务器（第三方）。所用面部合成后的地址为阿里云临时地址，有效期为30分钟，过期后阿里云会自动删除。我们将不会保存您的任何个人信息，请您放心使用。""",
+          onConfirm: () {
+            SpUtils.setString('faceDialog', 'faceDialog');
+            isOK = true;
+          },
+        ),
+        barrierDismissible: false,
+        useSafeArea: false,
+      );
+      return isOK;
+    }
+
+    return true;
+  }
+
   void _uploadNewHeadImg() async {
     // final result = await _checkFaceAndShowDialog();
     // if (result == false) {
     //   await Get.bottomSheet<bool?>(const FacePhotoBottomSheet(), isDismissible: false);
     // }
-
+    final checkOK = await _checkFaceDialog();
+    if (checkOK == false) {
+      return;
+    }
     _autoPlay.value = false;
 
     if ((await wxLogin() == true)) {
