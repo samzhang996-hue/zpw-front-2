@@ -201,20 +201,20 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                     CommText(
                                       text: HandleTool.instance.isMember ? "尊享会员权益" : "低至¥0.01/天",
                                       fontSize: 20.sp,
-                                      textColor: Color(0xff4C3504),
+                                      textColor: const Color(0xff4C3504),
                                       fontWeight: FontWeight.bold,
                                     ),
                                     9.w.verticalSpace,
                                     CommText(
                                       text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "终身有效" : "到期时间:${state.userInfoBean.vipExpireTime}") : "新用户福利",
                                       fontSize: 15.sp,
-                                      textColor: Color(0xff8E691E),
+                                      textColor: const Color(0xff8E691E),
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ],
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Container(
                                 margin: EdgeInsets.only(right: 20.w),
                                 width: 82.w,
@@ -253,7 +253,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                           width: 32.w,
                         ),
                       ),
-                      4.horizontalSpace,
+                      12.horizontalSpace,
                       InkWell(
                         onTap: () {
                           gotoPushPage(AboutPage());
@@ -267,7 +267,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 330.w),
+                  margin: EdgeInsets.only(top: 330.w, left: 10.w),
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,12 +295,12 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       Container(
                         margin: EdgeInsets.only(left: 16.w, bottom: 10.w),
                         child: Align(
+                          alignment: Alignment.centerLeft,
                           child: CommText(
                             text: "内容由ai生成，禁止利用本功能从事违法活动",
                             textColor: const Color(0xffCCCCCC),
                             fontSize: 10.sp,
                           ),
-                          alignment: Alignment.centerLeft,
                         ),
                       ),
                     ],

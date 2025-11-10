@@ -18,7 +18,7 @@ class VipState {
   VipBean normalVipBean = Platform.isIOS
       ? VipBean.fromJson({
           "id": 149,
-          "channel": "AIIOS",
+          "channel": "DNXJIOS",
           "createTime": "2025-01-18 14:40:48",
           "projectId": 30,
           "vipList": [

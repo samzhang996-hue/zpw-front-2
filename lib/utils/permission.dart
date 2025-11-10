@@ -32,7 +32,7 @@ class PermissionUtils {
       PermissionStatus imagesStatus = await Permission.photos.status;
       PermissionStatus videoStatus = await Permission.videos.status;
 
-      if (!videoStatus.isGranted||!imagesStatus.isGranted) {
+      if (!videoStatus.isGranted || !imagesStatus.isGranted) {
         showTopSnackbar();
         imagesStatus = await Permission.photos.request();
         videoStatus = await Permission.videos.request();
@@ -81,7 +81,7 @@ class PermissionUtils {
   static void showTopSnackbar() {
     Get.rawSnackbar(
       title: '相机、相册权限使用说明',
-      message: 'AI照片王正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
+      message: '多能相机正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.white,
       borderRadius: 8,
@@ -96,7 +96,7 @@ class PermissionUtils {
         ),
       ),
       messageText: Text(
-        'AI照片王正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
+        '多能相机正在向您获取“相机”权限，同意后，将用于为您提供拍照、图片编辑、美化、保存服务。',
         style: TextStyle(
           color: Color(0xff818181),
           fontSize: 14,

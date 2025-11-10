@@ -63,8 +63,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           children: [
                             Image.asset(
                               "home.png".home,
-                              width: 95.w,
-                              height: 24.w,
+                              width: 80.w,
+                              height: 20.w,
                               fit: BoxFit.cover,
                             ),
                             GetBuilder<MineLogic>(

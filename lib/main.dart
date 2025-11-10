@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
       designSize: const Size(390, 844),
       builder: (context, child) {
         return GetMaterialApp(
-            title: 'AI照片王',
+            title: '多能相机',
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
             locale: const Locale('zh', 'CN'),

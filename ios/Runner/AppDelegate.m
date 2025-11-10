@@ -20,7 +20,7 @@
   // Handle method calls from Flutter
   [methodChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
     if ([call.method isEqualToString:@"getChannelInfo"]) {
-           result(@"AIIOS");
+           result(@"DNXJIOS");
 //      NSDictionary *args = call.arguments;
 //      NSNumber *type = args[@"type"];
 //      
@@ -30,7 +30,7 @@
 //        } else if ([type isEqualToNumber:@2]) {
 //          result(@"30");
 //        } else if ([type isEqualToNumber:@3]) {
-//          result(@"AIIOS");
+//          result(@"DNXJIOS");
 //        } else {
 //          result([FlutterError errorWithCode:@"INVALID_ARGUMENT"
 //                                     message:@"Invalid argument"
@@ -46,7 +46,7 @@
         [self rangerInit:launchOptions];
     }
     else  if ([call.method isEqualToString:@"projectId"]) {
-        result(@"30");
+        result(@"23");
     }
       else if([call.method isEqualToString:@"getIDFA"]) {
        [self getIDFAWithResult:result];

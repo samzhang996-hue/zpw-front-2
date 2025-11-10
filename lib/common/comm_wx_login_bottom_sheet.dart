@@ -224,17 +224,20 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
         children: [
           Container(
             margin: EdgeInsets.only(top: 39.w),
-            child: Image.asset(
-              "logo.png".comm,
-              width: 60.w,
-              height: 60.w,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Image.asset(
+                "logo.png".comm,
+                width: 60.w,
+                height: 60.w,
+              ),
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 28.w),
             child: Center(
               child: CommText(
-                text: "欢迎使用Ai照片王",
+                text: "欢迎使用多能相机",
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w500,
                 textColor: Colors.black,

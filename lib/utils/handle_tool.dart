@@ -103,7 +103,7 @@ class HandleTool {
       deviceId = deviceIdStr.isEmpty ? await FlutterUdid.udid : deviceIdStr;
       // deviceId = deviceIdStr.isEmpty ? "59245b9e42a7a51e1212" : deviceIdStr;
       SpUtils.setString("deviceId", deviceId);
-      channel = "AIIOS";
+      channel = "DNXJIOS";
     }
     HandleTool.instance.channel = channel;
 
@@ -356,7 +356,7 @@ class HandleTool {
     if (Platform.isAndroid) {
       channel = channel.isEmpty ? await getChannelInfo() : channel;
     } else {
-      channel = "AIIOS";
+      channel = "DNXJIOS";
     }
     String projectId = await getProjectId();
     Map<String, dynamic> map = {

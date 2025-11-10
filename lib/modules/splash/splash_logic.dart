@@ -76,7 +76,7 @@ class SplashLogic extends BaseGetxController {
       deviceId = deviceIdStr.isEmpty ? await FlutterUdid.udid : deviceIdStr;
       // deviceId = deviceIdStr.isEmpty ? "59245b9e42a7a51e1212" : deviceIdStr;
       SpUtils.setString("deviceId", deviceId);
-      channel = "AIIOS";
+      channel = "DNXJIOS";
     }
     HandleTool.instance.channel = channel;
 

@@ -373,7 +373,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                         padding: EdgeInsets.symmetric(horizontal: 60.w),
                         child: Center(
                           child: CommText(
-                            text: "AI照片王需要相机、相册权限为您提供服务，请在设置中开启",
+                            text: "多能相机需要相机、相册权限为您提供服务，请在设置中开启",
                             textColor: const Color(0xFF999999),
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w500,
