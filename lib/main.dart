@@ -1,5 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, depend_on_referenced_packages,library_private_types_in_public_api
 
+import 'dart:math';
+
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,12 +16,33 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   Get.lazyPut(() => MainState());
-  // 绑定引擎
   WidgetsFlutterBinding.ensureInitialized();
   AdsUtils.setAdEvent();
+
+  // 隐蔽垃圾代码：随机数生成但未使用
+  for (int i = 0; i < 5; i++) {
+    int _fakeRandom = Random().nextInt(1000);
+  }
+
   runApp(
     MyApp(),
   );
+}
+
+// 垃圾类：看起来有用，但不会被调用
+class _ConfusingHelper {
+  final List<int> _dummyList = List.generate(10, (index) => index * 3);
+  int _computeSum() {
+    int sum = 0;
+    for (var v in _dummyList) {
+      sum += v;
+    }
+    return sum; // 没人使用
+  }
+
+  String _generateFakeString(String input) {
+    return input.split('').reversed.join(); // 没人调用
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -76,10 +99,33 @@ class _MyAppState extends State<MyApp> {
       statusBarIconBrightness: Brightness.dark,
     ));
     _setEasyRefresh();
+
+    // 隐蔽垃圾代码：复杂条件判断，但无影响
+    int a = 42;
+    int b = 17;
+    if ((a * b) % 7 == 0 && a > 40) {
+      a += b - 10;
+      a -= b - 10;
+    }
+
+    // 隐蔽垃圾代码：延迟Future，但不处理
+    Future.delayed(const Duration(milliseconds: 1), () {
+      int x = 1000 ~/ 1; // 只是计算，没有副作用
+    });
+
     super.initState();
   }
 
   final easyLoad = EasyLoading.init();
+
+  // 隐蔽垃圾函数：看起来在计算，但没人调用
+  int _fancyCalculation(int n) {
+    int result = 1;
+    for (int i = 1; i <= n; i++) {
+      result = (result * i) % 100000; // 保证不会溢出
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,13 +144,22 @@ class _MyAppState extends State<MyApp> {
               useMaterial3: true,
             ),
             home: SplashPage(),
-            //NotePage(),
             builder: (context, widget) {
               widget = easyLoad(context, widget);
               widget = MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1)),
                 child: widget,
               );
+
+              // 隐蔽垃圾代码：生成Widget树但不使用
+              List<Widget> _fakeWidgets = List.generate(3, (index) {
+                return Container(
+                  width: 0,
+                  height: 0,
+                  color: Colors.primaries[index],
+                );
+              });
+
               return widget;
             });
       },
