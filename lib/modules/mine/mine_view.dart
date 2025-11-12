@@ -344,7 +344,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
   }
 
   Widget _item() {
-    if (state.records.value.isEmpty) {
+    if (state.records.value.isEmpty || HandleTool.instance.isEmpty(state.userInfoBean.nickName)) {
       return Container(
         child: Column(
           children: [

@@ -57,6 +57,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>"多能相机"可能依赖第三方库引用了位置权限，但我们不会主动使用位置信息</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>"多能相机"可能依赖第三方库引用了位置权限，但我们不会主动使用位置信息</string>
 	<key>NSCameraUsageDescription</key>
 	<string>"多能相机"需要您的同意，才能访问摄像头以拍摄照片进行AI制作。</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
