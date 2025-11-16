@@ -4,25 +4,49 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img; // 用于图片处理
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:zpw/modules/wf/znxc/znxc_logic.dart';
-import 'package:zpw/utils/my_plugin.dart'; // 用于保存图片到相册
+import 'package:image_picker/image_picker.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/my_plugin.dart';
 
 class ZnxcPage extends StatefulWidget {
+  const ZnxcPage({Key? key}) : super(key: key);
+
   @override
-  _ZnxcPageState createState() => _ZnxcPageState();
+  State<ZnxcPage> createState() => _ZnxcPageState();
 }
 
 class _ZnxcPageState extends State<ZnxcPage> {
-  final logic = Get.put(ZnxcLogic());
-  final state = Get.find<ZnxcLogic>().state;
   File? _image; // 用户选择的图片
   ui.Image? _paintImage; // 用于绘制的图片
   List<Offset> _points = []; // 用户涂抹的点
   GlobalKey _globalKey = GlobalKey(); // 用于获取绘制的区域
+
+  // ============ 原 ZnxcLogic 的方法 ============
+
+  Future<void> smartRemove(String img, String mask) async {
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.smartRemove,
+        data: {"imgUrls": [img], "mask": mask},
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final Map data = response.data as Map;
+        setState(() {});
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
+  }
+
+  // ============ 图片处理方法 ============
 
   // 选择图片
   Future<void> _pickImage() async {
@@ -79,60 +103,7 @@ class _ZnxcPageState extends State<ZnxcPage> {
     return byteData!.buffer.asUint8List();
   }
 
-  // // 消除图片并保存到相册
-  // Future<void> _eraseImage() async {
-  //   if (_image == null || _points.isEmpty) return;
-  //
-  //   // 将原图和 Mask 图转换为 Base64
-  //   final imageBytes = await _image!.readAsBytes();
-  //   final maskBytes = await _generateMask();
-  //
-  //   // 使用 image 包处理图片
-  //   final img.Image originalImage = img.decodeImage(imageBytes)!;
-  //   final img.Image maskImage = img.decodeImage(maskBytes)!;
-  //
-  //   // // 创建一个新的图片，保留背景
-  //   // final img.Image resultImage = img.Image.from(originalImage);
-  //   //
-  //   // // 遍历每个像素，根据 Mask 图消除图片
-  //   // for (int y = 0; y < originalImage.height; y++) {
-  //   //   for (int x = 0; x < originalImage.width; x++) {
-  //   //     final maskPixel = maskImage.getPixel(x, y);
-  //   //     if (maskPixel.r == 255 && maskPixel.g == 255 && maskPixel.b == 255) {
-  //   //       // 如果 Mask 图的像素为白色，则将原图的像素设置为透明
-  //   //       resultImage.setPixel(x, y, img.ColorFloat64.rgba(0, 0, 0, 0));
-  //   //     }
-  //   //   }
-  //   // }
-  //   final success = await inpaint(_image!.path, maskFile.path, outputFile.path, 10);
-  //
-  //   // 保存处理后的图片到临时文件
-  //   final erasedImageBytes = img.encodePng(resultImage);
-  //   final tempDir = Directory.systemTemp; // 获取系统临时目录
-  //   final tempFile = File('${tempDir.path}/erased_image_${DateTime.now().millisecondsSinceEpoch}.png');
-  //   await tempFile.writeAsBytes(erasedImageBytes);
-  //
-  //   // 保存图片到相册
-  //   final result = await GallerySaver.saveImage(
-  //     tempFile.path, // 传递临时文件路径
-  //     albumName: 'MyAlbum', // 可选：保存到指定相册
-  //     toDcim: true, // 可选：保存到 DCIM 文件夹
-  //   );
-  //
-  //   // 显示保存结果
-  //   if (result == true) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('图片已保存到相册')),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('保存失败，请重试')),
-  //     );
-  //   }
-  //
-  //   // 删除临时文件
-  //   tempFile.delete();
-  // }
+  // 消除图片并保存到相册
   Future<void> _eraseImage() async {
     if (_image == null || _points.isEmpty) return;
 
@@ -195,47 +166,47 @@ class _ZnxcPageState extends State<ZnxcPage> {
             child: _image == null
                 ? Center(child: Text('请选择一张图片'))
                 : GestureDetector(
-              onPanUpdate: (details) {
-                setState(() {
-                  // 将全局坐标转换为相对于图片的局部坐标
-                  RenderBox renderBox = _globalKey.currentContext!.findRenderObject() as RenderBox;
-                  Offset localPosition = renderBox.globalToLocal(details.globalPosition);
+                    onPanUpdate: (details) {
+                      setState(() {
+                        // 将全局坐标转换为相对于图片的局部坐标
+                        RenderBox renderBox = _globalKey.currentContext!.findRenderObject() as RenderBox;
+                        Offset localPosition = renderBox.globalToLocal(details.globalPosition);
 
-                  // 计算图片的实际显示尺寸
-                  final imageWidth = _paintImage!.width.toDouble();
-                  final imageHeight = _paintImage!.height.toDouble();
-                  final containerSize = renderBox.size;
+                        // 计算图片的实际显示尺寸
+                        final imageWidth = _paintImage!.width.toDouble();
+                        final imageHeight = _paintImage!.height.toDouble();
+                        final containerSize = renderBox.size;
 
-                  // 计算缩放比例
-                  final scaleX = imageWidth / containerSize.width;
-                  final scaleY = imageHeight / containerSize.height;
+                        // 计算缩放比例
+                        final scaleX = imageWidth / containerSize.width;
+                        final scaleY = imageHeight / containerSize.height;
 
-                  // 转换坐标
-                  final scaledPosition = Offset(
-                    localPosition.dx * scaleX,
-                    localPosition.dy * scaleY,
-                  );
+                        // 转换坐标
+                        final scaledPosition = Offset(
+                          localPosition.dx * scaleX,
+                          localPosition.dy * scaleY,
+                        );
 
-                  _points.add(scaledPosition);
-                });
-              },
-              onPanEnd: (details) {
-                _points.add(Offset(-1, -1)); // 添加一个结束标记
-              },
-              child: Center(
-                child: FittedBox(
-                  key: _globalKey,
-                  fit: BoxFit.contain,
-                  child: SizedBox(
-                    width: _paintImage!.width.toDouble(),
-                    height: _paintImage!.height.toDouble(),
-                    child: CustomPaint(
-                      painter: ImagePainter(_paintImage!, _points),
+                        _points.add(scaledPosition);
+                      });
+                    },
+                    onPanEnd: (details) {
+                      _points.add(Offset(-1, -1)); // 添加一个结束标记
+                    },
+                    child: Center(
+                      child: FittedBox(
+                        key: _globalKey,
+                        fit: BoxFit.contain,
+                        child: SizedBox(
+                          width: _paintImage!.width.toDouble(),
+                          height: _paintImage!.height.toDouble(),
+                          child: CustomPaint(
+                            painter: ImagePainter(_paintImage!, _points),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
           ),
           ElevatedButton(
             onPressed: _pickImage,

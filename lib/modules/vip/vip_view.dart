@@ -31,15 +31,12 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.paused:
-        Log.d("AppLifecycleState--paused");
         break;
       case AppLifecycleState.resumed:
-        Log.d("AppLifecycleState--resumed--${logic.isAt}");
         logic.getUserInfo();
         logic.getVipHome();
         break;
       case AppLifecycleState.hidden:
-        Log.d("AppLifecycleState--hidden");
       default:
         break;
     }
@@ -90,7 +87,6 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           // logic.onSatePay(state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.defaultPayKeyType ?? 0);
           state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
           state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
-          Log.d("pay---1---${state.statePay.value}");
         } else {
           rk9 = "";
           rk8 = "";
@@ -171,7 +167,6 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                       child: InkWell(
                                         onTap: () {
                                           logic.onSatePay(0);
-                                          Log.d("pay---${state.statePay.value}");
                                         },
                                         child: Container(
                                           height: 47.w,

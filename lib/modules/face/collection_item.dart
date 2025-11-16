@@ -11,8 +11,9 @@ import 'package:zpw/model/page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/wf/wst/wst_view.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 class CollectionItem extends StatefulWidget {
@@ -38,21 +39,28 @@ class _CollectionItemState extends State<CollectionItem> {
   // double get _itemHeight => widget.isHome == false ? 295.w : 265.w;
   double get _itemHeight => 335.w;
 
-  void _getData() {
+  Future<void> _getData() async {
     final params = {
       "id": widget.id,
       "pageIndex": 1,
       "pageSize": 10,
     };
 
-    Log.e("params:$params");
     _showNoMoreContent.value = false;
-    HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
-      Api.pagePhotoGroupBind,
-      isShowProgress: true,
-      params: params,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
+
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.pagePhotoGroupBind,
+        queryParameters: params,
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => PagePhotoGroupBindBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
           _records.value = results.first.records ?? [];
           _pages = results.first.pages ?? 0;
           _showNoMoreContent.value = true;
@@ -60,12 +68,17 @@ class _CollectionItemState extends State<CollectionItem> {
         } else {
           _showNoMoreContent.value = true;
         }
-      },
-      onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
-    );
+      } else {
+        _showNoMoreContent.value = true;
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      _showNoMoreContent.value = true;
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
-  void _getLoadData() {
+  Future<void> _getLoadData() async {
     if (_pages < _loadPage) {
       return;
     }
@@ -81,14 +94,21 @@ class _CollectionItemState extends State<CollectionItem> {
       "pageSize": 10,
     };
 
-    Log.e("_loadPage.params:$params");
     _showNoMoreContent.value = false;
-    HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
-      Api.pagePhotoGroupBind,
-      isShowProgress: true,
-      params: params,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
+
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.pagePhotoGroupBind,
+        queryParameters: params,
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => PagePhotoGroupBindBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
           _records.addAll(results.first.records ?? []);
           _pages = results.first.pages ?? 0;
           _loadPage += 1;
@@ -97,9 +117,16 @@ class _CollectionItemState extends State<CollectionItem> {
         } else {
           _showNoMoreContent.value = true;
         }
-      },
-      onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
-    );
+      } else {
+        _showNoMoreContent.value = true;
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      _showNoMoreContent.value = true;
+      EasyLoading.showError('请求失败: $e');
+    } finally {
+      _isLoading = false;
+    }
   }
 
   /// 模板

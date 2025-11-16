@@ -5,8 +5,9 @@ import 'package:zpw/common/constant.dart';
 import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/model/page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 class FaceItem extends StatefulWidget {
@@ -21,26 +22,35 @@ class FaceItem extends StatefulWidget {
 class _FaceItemState extends State<FaceItem> {
   late final _bean = PagePhotoGroupBindBean().obs;
 
-  void _getData() {
+  Future<void> _getData() async {
     final params = {
       "id": widget.id,
       "pageIndex": 1,
       "pageSize": 20,
     };
 
-    Log.e("params:$params");
 
-    HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
-      Api.pagePhotoGroupBind,
-      isShowProgress: true,
-      params: params,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.pagePhotoGroupBind,
+        queryParameters: params,
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => PagePhotoGroupBindBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
           _bean.value = results.first;
         }
-      },
-      onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
-    );
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   @override

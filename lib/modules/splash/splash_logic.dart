@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 // import 'package:flutter_udid/flutter_udid.dart';
@@ -12,7 +13,8 @@ import 'package:zpw/common/ads_config.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
-import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
 import 'package:zpw/utils/ads_utils.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -82,7 +84,6 @@ class SplashLogic extends BaseGetxController {
 
     UmengCommonSdk.initCommon('', '67aeea638f232a05f113c1be', channel);
     UmengCommonSdk.setPageCollectionModeManual();
-    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     _onLogin(channel, deviceId ?? "", oaid);
   }
 
@@ -110,31 +111,36 @@ class SplashLogic extends BaseGetxController {
         Get.offAll(const MainPage());
       }
     } on TimeoutException catch (_) {
-      Log.e("AdsUtils.init() timed out");
       Get.offAll(const MainPage()); // 超时，直接进入主页
     } catch (error) {
-      Log.e("AdsUtils.init() failed: $error");
       Get.offAll(const MainPage()); // 发生异常，直接进入主页
     }
     return;
   }
 
-  void _tokenLogin() {
-    get(
-      Api.authByToken,
-      success: (isSuccess, code, message, results) async {
-        if (isSuccess == true && results.isNotEmpty) {
+  Future<void> _tokenLogin() async {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.authByToken,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        if (dataList.isNotEmpty) {
           requestMax = 100;
-          Map data = results.first as Map;
+          Map data = dataList.first as Map;
           SpUtils.setString("token", data['token'] ?? "");
           HandleTool.instance.token = data['token'] ?? "";
           SpUtils.setBool("isAgreed", true);
-          Log.d("res----${data}");
           Get.put(VipLogic());
           getUserInfo();
         }
-      },
-    );
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   loginWithDeviceInfo() async {
@@ -179,7 +185,7 @@ class SplashLogic extends BaseGetxController {
 
   bool _showAd = true;
 
-  _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = false}) async {
+  Future<void> _onLogin(String channel, String deviceId, String oaid, {bool isShowProgress = false}) async {
     String idfa = "";
     String idfv = "";
     if (Platform.isIOS) {
@@ -199,22 +205,30 @@ class SplashLogic extends BaseGetxController {
       "channel": channel,
       "userDeviceInfo": {"deviceCode": androidID, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": idfa, "idfv": idfv},
     };
-    Log.i("requestMax====>${dataMap}");
-    Post(Api.sso_login, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
+
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.sso_login,
+        data: dataMap,
+        showLoading: isShowProgress,
+      );
+
       requestMax = requestMax + 1;
-      Log.i("isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
-      if (isSuccess == true && results.isNotEmpty) {
-        requestMax = 100;
-        Map data = results.first as Map;
-        SpUtils.setString("token", data['token'] ?? "");
-        HandleTool.instance.token = data['token'] ?? "";
-        SpUtils.setBool("isAgreed", true);
-        Log.d("res----${data}");
-        Get.put(VipLogic());
-        getUserInfo();
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        if (dataList.isNotEmpty) {
+          requestMax = 100;
+          Map data = dataList.first as Map;
+          SpUtils.setString("token", data['token'] ?? "");
+          HandleTool.instance.token = data['token'] ?? "";
+          SpUtils.setBool("isAgreed", true);
+          Get.put(VipLogic());
+          getUserInfo();
+        }
       } else {
         /// ------->  这里单独处理已选
-        if (code == -1111) {
+        if (response.code == -1111) {
           if (requestMax > 30) {
             ///请求最大限制
             HandleTool.showAppToastText("请检查网络连接或者网络授权");
@@ -226,7 +240,7 @@ class SplashLogic extends BaseGetxController {
           return;
         }
 
-        if (code == -2222) {
+        if (response.code == -2222) {
           _showAd = false;
           if (requestUserInfoMax > 30) {
             ///请求最大限制
@@ -238,68 +252,89 @@ class SplashLogic extends BaseGetxController {
           }
         }
       }
-    });
+    } catch (e) {
+      requestMax = requestMax + 1;
+      if (requestMax <= 30) {
+        Future.delayed(const Duration(seconds: 1), () {
+          _onLogin(channel, deviceId, oaid, isShowProgress: false);
+        });
+      } else {
+        HandleTool.showAppToastText("请检查网络连接或者网络授权");
+      }
+    }
   }
 
   bool isFirst = false;
 
-  getUserInfo() {
-    Post<UserInfoBean>(Api.sso_getUserInfo,
-        isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
-          requestUserInfoMax = requestUserInfoMax + 1;
-          Log.d("requestUserInfoMax----$requestUserInfoMax");
-          if (isSuccess == true && results.isNotEmpty) {
-            rangerInit();
-            Log.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
-            requestUserInfoMax = 100;
-            Log.d("userInfoBean----${results.first.id}");
-            UserInfoBean userInfoBean = results.first;
-            HandleTool.instance.isMember = userInfoBean.vipFlag == 1;
-            Log.d("userInfoBean----${HandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
-            UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
-            // Get.offAll(const MainPage());
-            // return;
-            if (userInfoBean.headImg!.isNotEmpty) {
-              isFirst = true;
-            }
-            HandleTool.instance.headImg = userInfoBean.headImg ?? '';
-            if (!_showAd || HandleTool.instance.channelAds) {
-              progress.value = 1.0;
-              Get.offAll(const MainPage());
-              return;
-            }
-            try {
-              bool value = await AdsUtils.init().timeout(Duration(seconds: 5));
-              Log.d("ads2----$value");
-              progress.value = 1.0;
-              if (value) {
-                AdsUtils.showSplashAd();
-              } else {
-                Get.offAll(const MainPage());
-              }
-            } on TimeoutException catch (_) {
-              Log.e("AdsUtils.init() timed out");
-              Get.offAll(const MainPage()); // 超时，直接进入主页
-            } catch (error) {
-              Log.e("AdsUtils.init() failed: $error");
-              Get.offAll(const MainPage()); // 发生异常，直接进入主页
-            }
-          } else {
-            if (code == -2222) {
-              _showAd = false;
-              if (requestUserInfoMax > 30) {
-                ///请求最大限制
-                HandleTool.showAppToastText("请退出程序，稍后重试");
-              } else {
-                Future.delayed(const Duration(seconds: 1), () {
-                  getUserInfo();
-                });
-              }
-            }
+  Future<void> getUserInfo() async {
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.sso_getUserInfo,
+        showLoading: true,
+      );
+
+      requestUserInfoMax = requestUserInfoMax + 1;
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => UserInfoBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        if (results.isNotEmpty) {
+          rangerInit();
+          requestUserInfoMax = 100;
+          UserInfoBean userInfoBean = results.first;
+          HandleTool.instance.isMember = userInfoBean.vipFlag == 1;
+          UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
+          // Get.offAll(const MainPage());
+          // return;
+          if (userInfoBean.headImg!.isNotEmpty) {
+            isFirst = true;
           }
-        },
-        onModel: (m) => UserInfoBean.fromJson(m));
+          HandleTool.instance.headImg = userInfoBean.headImg ?? '';
+          if (!_showAd || HandleTool.instance.channelAds) {
+            progress.value = 1.0;
+            Get.offAll(const MainPage());
+            return;
+          }
+          try {
+            bool value = await AdsUtils.init().timeout(Duration(seconds: 5));
+            progress.value = 1.0;
+            if (value) {
+              AdsUtils.showSplashAd();
+            } else {
+              Get.offAll(const MainPage());
+            }
+          } on TimeoutException catch (_) {
+            Get.offAll(const MainPage()); // 超时，直接进入主页
+          } catch (error) {
+            Get.offAll(const MainPage()); // 发生异常，直接进入主页
+          }
+        }
+      } else {
+        if (response.code == -2222) {
+          _showAd = false;
+          if (requestUserInfoMax > 30) {
+            ///请求最大限制
+            HandleTool.showAppToastText("请退出程序，稍后重试");
+          } else {
+            Future.delayed(const Duration(seconds: 1), () {
+              getUserInfo();
+            });
+          }
+        }
+      }
+    } catch (e) {
+      requestUserInfoMax = requestUserInfoMax + 1;
+      if (requestUserInfoMax <= 30) {
+        Future.delayed(const Duration(seconds: 1), () {
+          getUserInfo();
+        });
+      } else {
+        HandleTool.showAppToastText("请退出程序，稍后重试");
+      }
+    }
   }
 
   test() {

@@ -26,10 +26,8 @@ class AdsUtils {
   /// 设置广告监听
   static Future<void> setAdEvent() async {
     FlutterPangleAds.onEventListener((event) {
-      Log.d("event---${event.action}--${event.adId}");
       print("event---${event.action}--${event.adId}");
       if (event is AdErrorEvent) {
-        Log.d(
             "${event.adId}--errCode:${event.errCode}---errMsg:${event.errMsg}");
       }
 
@@ -84,7 +82,6 @@ class AdsUtils {
       logo: logo,
       timeout: 3.5,
     );
-    Log.i("展示开屏广告${result ? '成功' : '失败'}");
   }
 
   /// 展示全屏视频、新插屏广告

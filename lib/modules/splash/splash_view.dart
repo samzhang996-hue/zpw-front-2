@@ -39,7 +39,6 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
   void initState() {
     super.initState();
     SpUtils.getBool("isAgreed").then((value) {
-      Log.i("splash--$value");
       if (value == null || !value) {
         if (Platform.isIOS) {
           logic.loginWithDeviceInfo();
@@ -54,7 +53,6 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
               },
             );
 
-            Log.i("splash2--$agreed");
             // if (mounted) {
             //   setState(() {
             //     // 在对话框关闭后恢复视频播放

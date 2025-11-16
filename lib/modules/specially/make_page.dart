@@ -10,7 +10,9 @@ import 'package:zpw/common/view/comm_text.dart';
 import 'package:zpw/mixin/app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/specially/model/comm_enum_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -69,7 +71,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
     return foundKeys.isNotEmpty ? foundKeys.first : '鼠';
   }
 
-  void _make() {
+  Future<void> _make() async {
     _canBack = true;
     if (_nicknameEditingController.text.isEmpty) {
       HandleTool.showAppToastText("请输入文案");
@@ -142,53 +144,71 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
       params["tips"] = _tipsEditingController.text;
     }
 
-    Log.e("params:$params");
     // _showError();
     // _showSuccess();
     // return;
-    HandleTool.instance.SMWPost(Api.addTask, params: params, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
+
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.addTask,
+        data: params,
+      );
+
+      if (response.isSuccess && response.data != null) {
         _showSuccess();
       } else {
         _showError();
       }
-    });
+    } catch (e) {
+      _showError();
+    }
 
     // gotoPushPage(MakeResultPage());
   }
 
-  void _getData() {
+  Future<void> _getData() async {
     var path = '';
     if (widget.map["useMethod"] == "03") {
-      path = Api.animalsEnum;
+      path = ApiConfig.animalsEnum;
     }
     if (widget.map["useMethod"] == "06") {
-      path = Api.milkTeaEnum;
+      path = ApiConfig.milkTeaEnum;
     }
     if (widget.map["useMethod"] == "09") {
-      path = Api.cartoonEnum;
+      path = ApiConfig.cartoonEnum;
     }
     if (widget.map["useMethod"] == "10") {
-      path = Api.cartoonGirlEnum;
+      path = ApiConfig.cartoonGirlEnum;
     }
     if (widget.map["useMethod"] == "11") {
-      path = Api.cartoonBoyEnum;
+      path = ApiConfig.cartoonBoyEnum;
     }
-    HandleTool.instance.QDSGet<CommEnumBean>(path,
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            _commEnumBean.value = results;
 
-            if (widget.map["useMethod"] != "03") {
-              for (var e in results) {
-                if (e.name == widget.map["name"]) {
-                  _value = e.value ?? '';
-                }
+    try {
+      final response = await HttpClient().get(path);
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => CommEnumBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
+          _commEnumBean.value = results;
+
+          if (widget.map["useMethod"] != "03") {
+            for (var e in results) {
+              if (e.name == widget.map["name"]) {
+                _value = e.value ?? '';
               }
             }
-          } else {}
-        },
-        onModel: (json) => CommEnumBean.fromJson(json));
+          }
+        }
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   @override

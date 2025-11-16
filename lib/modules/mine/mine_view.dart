@@ -91,13 +91,10 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
     // 垃圾逻辑
     _fakeHelper.fakeLoop();
     int progress = _calculateProgress(12, 34);
-    Log.d("Fake progress: $progress");
 
     // TabController监听
     _tabController.addListener(() {
-      Log.d("Tab index changed: ${_tabController.index}");
       int fake = _fakeHelper.updateVipStatus(_tabController.index);
-      Log.d("Fake VIP: $fake");
     });
   }
 

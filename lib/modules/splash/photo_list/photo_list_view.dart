@@ -83,7 +83,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
         }
       }
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
-      Log.d("msg----${ps.hasAccess}");
       if (!ps.hasAccess) {
         final res = await PermissionUtils.checkFilesAccessPermission();
         if (!res) {
@@ -96,7 +95,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     _isFilesAccessPermission.value = true;
     state.isPermission.value = true;
     List<AssetPathEntity> resultList = await PhotoManager.getAssetPathList(type: RequestType.image);
-    Log.d("list----list----${resultList.length}");
     // 假设我们只获取第一个相册的照片
     if (resultList.isNotEmpty) {
       final AssetPathEntity firstAlbum = resultList.first;
@@ -120,7 +118,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
       return;
     }
     HandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
-      Log.e("widget.isNew:${widget.isNew}");
       // if (path == null) return;
       if (widget.isNew) {
         Get.offAll(() => const MainPage());
@@ -173,14 +170,12 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     if (pickedFile == null) {
       return;
     }
-    Log.e('file----${pickedFile.path}');
     // if (Platform.isIOS) {
     int fileSize = await pickedFile.length();
     if (fileSize > _maxSize) {
       HandleTool.showAppToastText("文件过大,请重新选择");
       return;
     }
-    Log.e("file:${formatFileSize(fileSize)}");
     if (state.type == 1) {
       // gotoPushPage(AiktPage(), arguments: {"path": pickedFile.path});
       Get.off(AiktPage(), arguments: {"path": pickedFile.path});
@@ -312,7 +307,6 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                             HandleTool.showAppToastText("文件过大,请重新选择");
                                             return;
                                           }
-                                          Log.e("file:${formatFileSize(fileSize)}");
                                           _uploadImg(file.path);
                                           // Log.e(
                                           //     "file:${formatFileSize(fileSize)}");

@@ -12,7 +12,6 @@ typedef DownloadCallback = void Function(bool success);
 Future<void> downloadAndSaveMedia(
     String videoUrl, DownloadCallback callback) async {
   try {
-    Log.d("video----$videoUrl");
     String endStr = "temp_video.mp4";
     bool isMp4 = true;
     if (videoUrl.toLowerCase().endsWith('.mp4')) {
@@ -25,7 +24,6 @@ Future<void> downloadAndSaveMedia(
     // 获取临时目录路径
     final tempDir = await getTemporaryDirectory();
     final tempPath = '${tempDir.path}/$endStr';
-    Log.d("path---$tempPath");
     EasyLoading.show();
     // 使用 Dio 下载文件
     Dio dio = Dio();

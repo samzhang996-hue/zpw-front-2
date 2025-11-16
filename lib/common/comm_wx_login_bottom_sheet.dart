@@ -17,7 +17,8 @@ import 'package:zpw/utils/handle_tool.dart';
 import '../modules/gameplay/gameplay_logic.dart';
 import '../modules/main/model/user_info_bean.dart';
 import '../modules/mine/mine_logic.dart';
-import '../network/api/network_api.dart';
+import '../network/api_config.dart';
+import '../network/http_client.dart';
 import '../utils/sp_utils.dart';
 
 class CommWxLoginBottomSheet extends StatefulWidget {
@@ -172,36 +173,54 @@ class _CommWxLoginBottomSheetState extends State<CommWxLoginBottomSheet> with Wx
         Get.back();
       } else {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        HandleTool.instance.SMWPost(Api.authorizeByIos, isShowProgress: true, params: {
-          'identityToken': credential.identityToken,
-          'aud': packageInfo.packageName,
-          'userDeviceInfo': await HandleTool.instance.getMap(),
-        }, success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
+
+        try {
+          final response = await HttpClient().post(
+            ApiConfig.authorizeByIos,
+            data: {
+              'identityToken': credential.identityToken,
+              'aud': packageInfo.packageName,
+              'userDeviceInfo': await HandleTool.instance.getMap(),
+            },
+            showLoading: true,
+          );
+
+          if (response.isSuccess && response.data != null) {
             HandleTool.showAppToastText('登录成功');
-            Map data = results.first as Map;
+            Map data = response.data as Map;
             SpUtils.setString("token", data['token'] ?? "");
             HandleTool.instance.token = data['token'] ?? "";
-            HandleTool.instance.SMWPost<UserInfoBean>(Api.sso_getUserInfo,
-                isShowProgress: true,
-                success: (isSuccess, code, message, results) {
-                  if (isSuccess == true && results.isNotEmpty) {
-                    final mineLogic = Get.find<MineLogic>();
-                    mineLogic.state.userInfoBean = results.first;
-                    HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
-                    final logic = Get.find<GameplayLogic>();
-                    logic.stateShowVip(HandleTool.instance.isMember);
-                    mineLogic.update();
-                    EasyLoading.dismiss();
-                    Get.back();
-                  } else {
-                    EasyLoading.dismiss();
-                    Get.back();
-                  }
-                },
-                onModel: (m) => UserInfoBean.fromJson(m));
+
+            try {
+              final userResponse = await HttpClient().post(
+                ApiConfig.sso_getUserInfo,
+                showLoading: true,
+              );
+
+              if (userResponse.isSuccess && userResponse.data != null) {
+                final mineLogic = Get.find<MineLogic>();
+                final Map userData = userResponse.data as Map;
+                mineLogic.state.userInfoBean = UserInfoBean.fromJson(userData as Map<String, dynamic>);
+                HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
+                final logic = Get.find<GameplayLogic>();
+                logic.stateShowVip(HandleTool.instance.isMember);
+                mineLogic.update();
+                EasyLoading.dismiss();
+                Get.back();
+              } else {
+                EasyLoading.dismiss();
+                Get.back();
+              }
+            } catch (e) {
+              EasyLoading.dismiss();
+              Get.back();
+            }
+          } else {
+            EasyLoading.dismiss();
           }
-        });
+        } catch (e) {
+          EasyLoading.dismiss();
+        }
       }
     } catch (e) {
       EasyLoading.dismiss();

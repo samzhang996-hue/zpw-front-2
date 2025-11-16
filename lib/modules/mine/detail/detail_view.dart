@@ -52,15 +52,12 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
         }
       });
     } catch (error) {
-      Log.d('Error initializing video player: $error');
     }
   }
 
   Widget _buildContent() {
     int worksType = logic.state.worksType.value;
     int apiType = logic.state.apiType.value;
-    Log.d("type----$worksType");
-    Log.d("type----${logic.state.returnUrl.value}");
 
     if (worksType == 0) {
       if (apiType == -1) {
@@ -190,7 +187,6 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                 state.apiType.value == 6 ||
                                 state.apiType.value == 14) return;
                             _controller.pause();
-                            Log.d("pause---${state.returnUrl.value}----");
                             logic.getFuncDetail(state.funcId.value);
                           },
                           child: Container(

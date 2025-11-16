@@ -18,7 +18,9 @@ import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
 
@@ -272,13 +274,20 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
         // "prompt": "",
       };
 
-      HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params, success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
+      try {
+        final response = await HttpClient().post(
+          ApiConfig.addPhotoRecord,
+          data: params,
+        );
+
+        if (response.isSuccess && response.data != null) {
           _showSuccess();
         } else {
           _showError();
         }
-      });
+      } catch (e) {
+        _showError();
+      }
       return;
     }
   }
@@ -338,7 +347,6 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       if (_isNotEmptyVideoUrl) {
         _videoPlayerController?.play();
       }
-      Log.e("res:$res");
       if (res?.isNotEmpty == true) {
         _myHeadImg.value = res ?? '';
         if (_myHeadImg.isNotEmpty) {
@@ -365,7 +373,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     // }
   }
 
-  void _getData() {
+  Future<void> _getData() async {
     if (widget.groupId == -1) {
       if (_isNotEmptyVideoUrl) {
         _videoUrls.add(widget.videoUrl);
@@ -379,13 +387,20 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       "groupId": widget.groupId,
     };
 
-    Log.e("params:$params");
     _funcIds.clear();
-    HandleTool.instance.QDSGet<GroupOtherFuncListBean>(
-      "${Api.getGroupOtherFuncList}?funcId=${widget.funcId}&groupId=${widget.groupId}",
-      isShowProgress: true,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
+
+    try {
+      final response = await HttpClient().get(
+        "${ApiConfig.getGroupOtherFuncList}?funcId=${widget.funcId}&groupId=${widget.groupId}",
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => GroupOtherFuncListBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
           _apiTypes.value = results.map((e) => e.apiType ?? -1).toList();
           _tags.value = results.map((e) => e.tags ?? "").toList();
           _funcIds.addAll(results.map((e) => e.id ?? 0).toList());
@@ -396,9 +411,12 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
             _list.value = results.map((e) => '${e.showImgGif}').toList();
           }
         }
-      },
-      onModel: (json) => GroupOtherFuncListBean.fromJson(json),
-    );
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   @override
@@ -407,7 +425,6 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     // _checkImage();
     UmengCommonSdk.onPageStart("FaceMakePage");
     _getData();
-    Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
   }
 
   @override

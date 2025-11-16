@@ -53,7 +53,6 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
     _tabController = TabController(length: 2, vsync: this);
     // 监听 TabController 的 index 变化
     _tabController.addListener(() {
-      Log.d("msg----${_tabController.index}");
       // logic.stateIndex(_tabController.index == 0 ? 1 : 0);
       // logic.photoRecord();
     });
@@ -151,7 +150,6 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                       double unit = 1.0 / _tabs.length;
                       int index = progress ~/ unit;
                       if (index != _currentIndex && index < _tabs.length) {
-                        Log.d("msg----${_tabController.index}");
                         setState(() {
                           _currentIndex = index;
                         });
@@ -243,7 +241,6 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
           int id = data["id"] ?? 0;
           int funcId = data["funcId"] ?? 0;
           int apiType = data["apiType"] ?? 0;
-          Log.d("data111--$data");
           String imagUrl;
           if ((apiType == -1 || apiType == 6)) {
             imagUrl = returnUrl;
@@ -331,7 +328,6 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                 ),
                               ),
                               onTap: () {
-                                Log.d("xxxx----------$funcId---$id");
                                 logic.getFuncDetail(funcId, id);
                               },
                             ),

@@ -63,7 +63,6 @@ class _UpgradeState extends State<Upgrade> {
         final path = directory?.path;
 
         if (path == null) {
-          Log.e("无法获取下载目录");
           return;
         }
 
@@ -93,24 +92,20 @@ class _UpgradeState extends State<Upgrade> {
           // 下载完成后安装 APK
           await _installApk(filePath);
         } catch (e) {
-          Log.e("下载或安装失败: $e");
           setState(() {
             _isUpdating = false;
             msg = "安装失败"; // 更新下载进度
           });
         }
       } else {
-        Log.e("存储权限被拒绝");
       }
     } else if (Platform.isIOS) {
       // iOS 不支持直接下载 APK
-      Log.i("iOS 不支持直接下载 APK，请跳转到 App Store");
     }
   }
 
   // 安装 APK 文件
   Future<void> _installApk(String filePath) async {
-    Log.i("apk--------------11$filePath");
     if (Platform.isAndroid) {
       // 请求安装未知来源应用的权限
       final result = await Permission.requestInstallPackages.request();
@@ -140,7 +135,6 @@ class _UpgradeState extends State<Upgrade> {
         //   Log.e("文件不存在: $filePath");
         // }
       } else {
-        Log.e("安装未知来源应用的权限被拒绝");
       }
     }
   }
@@ -264,7 +258,6 @@ class _UpgradeState extends State<Upgrade> {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          Log.d("sj----------${widget.forcedUpgrade}");
                                           _startDownload(); // 开始下载
                                         },
                                         child: Container(

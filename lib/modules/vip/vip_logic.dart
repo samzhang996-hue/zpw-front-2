@@ -11,7 +11,8 @@ import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/model/payBean.dart';
 import 'package:zpw/modules/vip/model/vipBean.dart';
-import 'package:zpw/network/api/network_api.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
 import 'package:zpw/utils/buy_engine.dart';
 import 'package:zpw/utils/handle_tool.dart';
 import 'package:zpw/utils/log_utils.dart';
@@ -56,7 +57,6 @@ class VipLogic extends BaseGetxController with AppMixin {
   void _startPolling() {
     _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       _elapsedSeconds += 2;
-      Log.d("el----$_elapsedSeconds");
       // 检查条件
       if (HandleTool.instance.isMember || _conditionMet || _elapsedSeconds >= 180) {
         stopPolling();
@@ -70,39 +70,64 @@ class VipLogic extends BaseGetxController with AppMixin {
     _timer?.cancel();
   }
 
-  restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) {
-    Log.i("------click : $click=========");
-    Post(Api.payOrder_restoreIosPay, isShowProgress: true, params: {
-      "receiptData": receiptData,
-      "transactionId": transactionId,
-      "isRestore": true,
-      "orderId": "",
-    }, success: (isSuccess, code, message, results) {
-      // Log.i("------${results.first} ${isSuccess}=========");
-      if (isSuccess == true && results.isNotEmpty) {
-        // HandleTool.showAppToastText("恢复成功");
+  Future<void> restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) async {
 
-        if (click) {
-          getUserInfo();
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.payOrder_restoreIosPay,
+        data: {
+          "receiptData": receiptData,
+          "transactionId": transactionId,
+          "isRestore": true,
+          "orderId": "",
+        },
+        showLoading: true,
+      );
+
+      // Log.i("------${results.first} ${isSuccess}=========");
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        if (dataList.isNotEmpty) {
+          // HandleTool.showAppToastText("恢复成功");
+
+          if (click) {
+            getUserInfo();
+          }
         }
+      } else {
+        EasyLoading.showError(response.message);
       }
-    });
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
-  iosPay(dynamic receiptData, String transactionId) {
+  Future<void> iosPay(dynamic receiptData, String transactionId) async {
     Map<String, dynamic> dataMap = {"transactionId": transactionId, "receiptData": receiptData, "orderId": "", "isRestore": false};
 
-    Log.i("------click : $click=========");
 
-    Post(Api.payOrder_iosPay, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        // HandleTool.showAppToastText("购买成功");
-        // getVipHome();
-        if (click) {
-          timerGetUserInfo();
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.payOrder_iosPay,
+        data: dataMap,
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        if (dataList.isNotEmpty) {
+          // HandleTool.showAppToastText("购买成功");
+          // getVipHome();
+          if (click) {
+            timerGetUserInfo();
+          }
         }
+      } else {
+        EasyLoading.showError(response.message);
       }
-    });
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   selectItem(int index) {
@@ -120,26 +145,37 @@ class VipLogic extends BaseGetxController with AppMixin {
     update();
   }
 
-  getVipHome() {
-    Post<VipBean>(Api.vip_getVipHome,
-        isShowProgress: true,
-        success: (isSuccess, code, message, results) {
-          Log.d("vip0000----$isSuccess----${results.first.vipList?.length}");
-          if (isSuccess == true && results.isNotEmpty) {
-            state.vipBean = results.first;
-            Log.d("vip111----$isSuccess----${results.first.toJson()}");
-            if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
-              HandleTool.showAppToastText("暂无会员套餐");
-            } else {
-              state.payKeyType = state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ?? 0;
-            }
-            update();
+  Future<void> getVipHome() async {
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.vip_getVipHome,
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => VipBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        if (results.isNotEmpty) {
+          state.vipBean = results.first;
+          if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
+            HandleTool.showAppToastText("暂无会员套餐");
           } else {
-            state.vipBean = state.normalVipBean;
-            update();
+            state.payKeyType = state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ?? 0;
           }
-        },
-        onModel: (m) => VipBean.fromJson(m));
+          update();
+        }
+      } else {
+        state.vipBean = state.normalVipBean;
+        update();
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+      state.vipBean = state.normalVipBean;
+      update();
+    }
   }
 
   Future<void> test(String url) async {
@@ -165,24 +201,37 @@ class VipLogic extends BaseGetxController with AppMixin {
     });
   }
 
-  addUserAgreementOrder() async {
+  Future<void> addUserAgreementOrder() async {
     if ((await wxLogin() == true)) {
       Map<String, dynamic> dataMap = {
         "goodsId": state.goodsId,
         "payKeyType": state.payKeyType,
       };
-      Post(Api.payOrder_addUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-        Log.i("------${results.first} ");
-        if (isSuccess == true && results.isNotEmpty) {
-          var result = results[0];
-          if (Platform.isAndroid) {
-            isAt = true;
-            test(result.toString());
-          } else {
-            //ios
+
+      try {
+        final response = await HttpClient().post(
+          ApiConfig.payOrder_addUserAgreementOrder,
+          data: dataMap,
+          showLoading: true,
+        );
+
+        if (response.isSuccess && response.data != null) {
+          final List<dynamic> dataList = response.data as List<dynamic>;
+          if (dataList.isNotEmpty) {
+            var result = dataList[0];
+            if (Platform.isAndroid) {
+              isAt = true;
+              test(result.toString());
+            } else {
+              //ios
+            }
           }
+        } else {
+          EasyLoading.showError(response.message);
         }
-      });
+      } catch (e) {
+        EasyLoading.showError('请求失败: $e');
+      }
     }
   }
 
@@ -208,43 +257,55 @@ class VipLogic extends BaseGetxController with AppMixin {
         "goodsId": state.goodsId,
         "payKeyType": state.payKeyType,
       };
-      Log.d("map----$dataMap");
-      Post<PayBean>(Api.payOrder_addOrder,
-          isShowProgress: true,
-          params: dataMap,
-          success: (isSuccess, code, message, results) {
-            Log.i("------${results.first.toJson()} $isSuccess=========");
-            if (isSuccess == true && results.isNotEmpty) {
-              state.payBean = results.first;
-              Tobias tobias = Tobias();
-              if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
-                tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
-                  if ("${value["resultStatus"]}" == "9000") {
-                    HandleTool.instance.isMember = true;
-                    HandleTool.showAppToastText("支付成功");
-                    // _startPolling();
-                  } else {
-                    HandleTool.showAppToastText("支付失败");
-                  }
-                });
-              } else if (state.payBean.payKeyType == 3) {
-                // ZfbServerPayOrderVo? zfbServerPayOrderVo =
-                //     state.payBean.zfbServerPayOrderVo;
-                // if (zfbServerPayOrderVo != null) {
-                //   htmlFlutter(
-                //       zfbServerPayOrderVo.appId ?? "",
-                //       zfbServerPayOrderVo.jumpUrl ?? "",
-                //       zfbServerPayOrderVo.outTradeNo ?? "");
-                //   _startPolling();
-                // }
-              } else if (state.payBean.payKeyType == 5) {
-                onH5(state.payBean.zfbPayOrderVo!.trademsg.toString());
-              } else if (state.payBean.payKeyType == 6) {
-                toUrl2(state.payBean.zfbPayOrderVo!.trademsg.toString());
-              }
+
+      try {
+        final response = await HttpClient().post(
+          ApiConfig.payOrder_addOrder,
+          data: dataMap,
+          showLoading: true,
+        );
+
+        if (response.isSuccess && response.data != null) {
+          final List<dynamic> dataList = response.data as List<dynamic>;
+          final results = dataList
+              .map((e) => PayBean.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+          if (results.isNotEmpty) {
+            state.payBean = results.first;
+            Tobias tobias = Tobias();
+            if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
+              tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
+                if ("${value["resultStatus"]}" == "9000") {
+                  HandleTool.instance.isMember = true;
+                  HandleTool.showAppToastText("支付成功");
+                  // _startPolling();
+                } else {
+                  HandleTool.showAppToastText("支付失败");
+                }
+              });
+            } else if (state.payBean.payKeyType == 3) {
+              // ZfbServerPayOrderVo? zfbServerPayOrderVo =
+              //     state.payBean.zfbServerPayOrderVo;
+              // if (zfbServerPayOrderVo != null) {
+              //   htmlFlutter(
+              //       zfbServerPayOrderVo.appId ?? "",
+              //       zfbServerPayOrderVo.jumpUrl ?? "",
+              //       zfbServerPayOrderVo.outTradeNo ?? "");
+              //   _startPolling();
+              // }
+            } else if (state.payBean.payKeyType == 5) {
+              onH5(state.payBean.zfbPayOrderVo!.trademsg.toString());
+            } else if (state.payBean.payKeyType == 6) {
+              toUrl2(state.payBean.zfbPayOrderVo!.trademsg.toString());
             }
-          },
-          onModel: (m) => PayBean.fromJson(m));
+          }
+        } else {
+          EasyLoading.showError(response.message);
+        }
+      } catch (e) {
+        EasyLoading.showError('请求失败: $e');
+      }
     }
   }
 
@@ -259,38 +320,51 @@ class VipLogic extends BaseGetxController with AppMixin {
     }
   }
 
-  getUserInfo() {
+  Future<void> getUserInfo() async {
     final MineLogic mineLogic = Get.find<MineLogic>();
 
     mineLogic.getUserInfo();
-    Post<UserInfoBean>(Api.sso_getUserInfo,
-        isShowProgress: false,
-        success: (isSuccess, code, message, results) async {
-          if (isSuccess == true && results.isNotEmpty) {
-            Log.d("is----${results.first}");
-            mineLogic.state.userInfoBean = results.first;
-            HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
-            if (HandleTool.instance.isMember) {
-              _conditionMet = true;
-              if (_success == false) {
-                if (click) {
-                  if (showToast) {
-                    HandleTool.showAppToastText("您已成为会员");
-                  }
-                }
-                if (canBack) {
-                  Get.back();
+
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.sso_getUserInfo,
+        showLoading: false,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => UserInfoBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        if (results.isNotEmpty) {
+          mineLogic.state.userInfoBean = results.first;
+          HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
+          if (HandleTool.instance.isMember) {
+            _conditionMet = true;
+            if (_success == false) {
+              if (click) {
+                if (showToast) {
+                  HandleTool.showAppToastText("您已成为会员");
                 }
               }
-              _success = true;
-              String phones = mineLogic.state.userInfoBean.userPhone ?? "";
-              if (phones.isNotEmpty) {
-                return;
+              if (canBack) {
+                Get.back();
               }
             }
-            update();
+            _success = true;
+            String phones = mineLogic.state.userInfoBean.userPhone ?? "";
+            if (phones.isNotEmpty) {
+              return;
+            }
           }
-        },
-        onModel: (m) => UserInfoBean.fromJson(m));
+          update();
+        }
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/modules/home/home_detail.dart';
 
 import '../../../common/cached_image/cached_image.dart';
 import '../../../model/list_photo_group_bean.dart';
-import '../../../network/api/network_api.dart';
-import '../../../utils/handle_tool.dart';
+import '../../../network/api_config.dart';
+import '../../../network/http_client.dart';
 
 class HomeItem extends StatefulWidget {
   const HomeItem({super.key, required this.title});
@@ -26,7 +27,7 @@ class _HomeItemState extends State<HomeItem> with AutomaticKeepAliveClientMixin<
 
   var listPhotoGroupBean2 = <ListPhotoGroupBean>[].obs;
 
-  void _getData2() {
+  Future<void> _getData2() async {
     if (widget.title == "全部") {
       const all = [
         {"id": 178, "groupType": 0, "groupName": "婚纱", "tips": null, "frontType": null, "remark": "批量跑数据", "imgUrlAcross": "https://imgeffect.obs.cn-north-1.myhuaweicloud.com/socialParent/e8a07f7d-725d-4628-bae9-915da386b002.png", "imgUrlVertical": null, "tabType": null, "status": 1, "sortNo": 96},
@@ -43,18 +44,27 @@ class _HomeItemState extends State<HomeItem> with AutomaticKeepAliveClientMixin<
       return;
     }
 
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
-        isShowProgress: true,
-        params: {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.listPhotoGroup,
+        queryParameters: {
           "groupType": 0,
           "tabType": tabType,
         },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            listPhotoGroupBean2.value = results;
-          }
-        },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        listPhotoGroupBean2.value = dataList
+            .map((e) => ListPhotoGroupBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   @override

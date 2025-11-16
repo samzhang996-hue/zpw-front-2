@@ -56,7 +56,6 @@ class BuyEngin with AppMixin {
       _inAppPurchase.restorePurchases();
     } catch (e) {
       EasyLoading.dismiss();
-      Log.d("$e");
     }
   }
 
@@ -181,7 +180,6 @@ class BuyEngin with AppMixin {
       // HandleTool.showAppToastText("未查询到商品订单");
       return;
     }
-    Log.d("sta----0000----${purchaseDetailsList.length}");
     // final logic = Get.put(VipLogic());
     for (PurchaseDetails purchase in purchaseDetailsList) {
       var appstoreDetail = purchase as AppStorePurchaseDetails;
@@ -206,7 +204,6 @@ class BuyEngin with AppMixin {
           // checkAndroidPayInfo(googleDetail);
         } else if (Platform.isIOS) {
           var appstoreDetail = purchase as AppStorePurchaseDetails;
-          Log.d("sta----rl--${purchase.pendingCompletePurchase}");
           if (!("${appstoreDetail.purchaseID}" == id && reData == appstoreDetail.verificationData.serverVerificationData)) {
             if (isPay == false) {
               _vipLogic.restoreIosPay(appstoreDetail.verificationData.serverVerificationData, "${appstoreDetail.purchaseID}");
@@ -263,7 +260,6 @@ class BuyEngin with AppMixin {
 
   void onCloseIos() {
     EasyLoading.dismiss();
-    Log.d("close----");
     if (Platform.isIOS) {
       final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition = _inAppPurchase.getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
       iosPlatformAddition.setDelegate(null);

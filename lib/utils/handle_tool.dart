@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:dio/src/form_data.dart' as ffff;
 import 'package:dio/src/multipart_file.dart' as ffff;
 import 'package:flutter/material.dart';
@@ -20,8 +19,8 @@ import 'package:zpw/main.dart';
 import 'package:zpw/model/upload_bean.dart';
 import 'package:zpw/modules/mine/about/about_logic.dart';
 import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/network/network_util.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
 import 'package:zpw/utils/log_utils.dart';
 import 'package:zpw/utils/my_plugin.dart';
 import 'package:zpw/utils/sp_utils.dart';
@@ -109,7 +108,6 @@ class HandleTool {
 
     UmengCommonSdk.initCommon('', '67aeea638f232a05f113c1be', channel);
     UmengCommonSdk.setPageCollectionModeManual();
-    Log.i('Device Info: $deviceId---$oaid----$channel-----${HandleTool.instance.channel}');
     if (Platform.isIOS) {
       idfa = await getIDFA();
       idfv = await getIDFV();
@@ -173,13 +171,18 @@ class HandleTool {
     return result;
   }
 
-  final tempComplete = Completer<void>();
-  Future<void> getProtocolConfig({bool isShowProgress = false}) {
-    SMWPost(Api.center_getProtocolConfig, isShowProgress: isShowProgress, success: (isSuccess, code, message, results) {
+  Future<void> getProtocolConfig({bool isShowProgress = false}) async {
+    try {
       _requestMax = _requestMax + 1;
-      Log.d("config---$isSuccess----$results,code : $code,_requestMax : $_requestMax");
-      if (isSuccess == true && results is List<dynamic> && results.isNotEmpty) {
+      final response = await HttpClient().post(
+        ApiConfig.center_getProtocolConfig,
+        showLoading: isShowProgress,
+      );
+
+
+      if (response.isSuccess && response.data is List<dynamic> && (response.data as List).isNotEmpty) {
         _requestMax = 100;
+        final results = response.data as List<dynamic>;
         // 遍历 results 列表,提取 configType 和 configValue
         for (Map<String, dynamic> item in results) {
           int configType = item['configType'];
@@ -207,23 +210,25 @@ class HandleTool {
           }
         }
         // Log.e("HandleTool.instance.channelAds----1----:${HandleTool.instance.channelAds}");
-        return tempComplete.complete();
       } else {
         /// ------->  这里单独处理已选
-        if (code == -1111) {
+        if (response.code == -1111) {
           if (_requestMax > 50) {
             ///请求最大限制
             EasyLoading.showToast("请检查网络连接或者网络授权", toastPosition: EasyLoadingToastPosition.bottom, duration: const Duration(days: 100));
             // HandleTool.showAppToastText("请检查网络连接或者网络授权");
           } else {
-            Future.delayed(const Duration(seconds: 1), () {
-              getProtocolConfig();
-            });
+            await Future.delayed(const Duration(seconds: 1));
+            await getProtocolConfig();
           }
         }
       }
-    });
-    return tempComplete.future;
+    } catch (e) {
+      if (_requestMax <= 50) {
+        await Future.delayed(const Duration(seconds: 1));
+        await getProtocolConfig();
+      }
+    }
   }
 
   static showAppToastText(String message, {ToastGravity gravity = ToastGravity.CENTER}) {
@@ -275,7 +280,6 @@ class HandleTool {
       return prefs.getStringList(key) ?? <String>[];
     }
 
-    Log.i("type====>$type");
   }
 
   ///value: 文本内容；fontSize : 文字的大小；fontWeight：文字权重；maxWidth：文本框的最大宽度；maxLines：文本支持最大多少行 ；locale：当前手机语言；textScaleFactor：手机系统可以设置字体大小（默认1.0）
@@ -364,64 +368,29 @@ class HandleTool {
       "projectId": projectId,
     };
 
-    Log.i("map====>$map");
 
-    QDSGet(Api.appPackage_latestPackage, isShowProgress: isShowProgress, params: map, success: (isSuccess, code, message, results) {
-      Log.i("版本=====>$results $channel");
-      if (isSuccess && results.isNotEmpty) {
-        Log.d("app-------------${results.first}");
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.appPackage_latestPackage,
+        queryParameters: map,
+        showLoading: isShowProgress,
+      );
 
-        /// 获取本地版本
-        isCheckUpdateAction(results.first as Map, isShowProgress, isSetting);
-      }
-    });
-  }
+      if (response.isSuccess && response.data != null) {
+        final results = response.data as List<dynamic>;
+        if (results.isNotEmpty) {
 
-  SMWPost<T>(String url, {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? totalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, bool isCancleToken = false}) {
-    ///创建取消标志
-    CancelToken cancelToken = CancelToken();
-    DioUtils.instance.post<T>(url, success: (isSuccess, code, message, resulsts) {
-      if (code == -1004) {
-        HandleTool.deleteDataWithKey("token");
-      } else {
-        if (success != null) {
-          success(isSuccess, code, message, resulsts);
+          /// 获取本地版本
+          isCheckUpdateAction(results.first as Map, isShowProgress, isSetting);
         }
       }
-    }, successTotalCount: totalCount, params: params, onModel: onModel, isShowProgress: isShowProgress, isShowError: isShowError, cancelToken: cancelToken, isCancleToken: isCancleToken);
-  }
-
-  /// get
-  QDSGet<T>(String url, {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? totalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, bool isCancleToken = false}) {
-    ///创建取消标志
-    CancelToken cancelToken = CancelToken();
-    DioUtils.instance.get<T>(url, success: (isSuccess, code, message, results) {
-      if (code == -1004) {
-        HandleTool.deleteDataWithKey("token");
-      } else {
-        if (success != null) {
-          success(isSuccess, code, message, results);
-        }
-      }
-    }, successTotalCount: totalCount, params: params, onModel: onModel, isShowProgress: isShowProgress, isShowError: isShowError, cancelToken: cancelToken, isCancleToken: isCancleToken);
-  }
-
-  Future<T?> QDSUpload<T>(
-    String url, {
-    Object? params,
-    onModel,
-  }) {
-    return DioUtils.instance.upload<T>(
-      url,
-      params: params,
-      onModel: onModel,
-    );
+    } catch (e) {
+    }
   }
 
   /// 检查是否更新
   isCheckUpdateAction(Map map, bool isShowProgress, bool isSetting) async {
     if (map["versionCode"] == null) {
-      Log.i("===== 没有更新信息=======");
       if (isShowProgress) {
         HandleTool.showAppToastText("当前已是最新版本");
       }
@@ -480,7 +449,6 @@ class HandleTool {
         HandleTool.showAppToastText("当前已是最新版本");
       }
 
-      Log.i("===== 1没有更新信息 $localVersion $localBuildnumber=======");
     }
   }
 
@@ -556,7 +524,6 @@ class HandleTool {
 
   _appUpdate(String url) {
     if (url.isEmpty) {
-      Log.i("===== 无下载链接= ====");
       return;
     }
 
@@ -599,28 +566,43 @@ class HandleTool {
     if (path.isNotEmpty == true) {
       // getApplicationCacheDirectory()
 
-      final formData = ffff.FormData.fromMap({
-        "file": await ffff.MultipartFile.fromFile(path),
-      });
-      final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile, params: formData, onModel: (v) => UploadBean.fromJson(v));
-      if (bean == null) {
-        HandleTool.showAppToastText("上传失败,请重试");
-        return;
-      }
+      try {
+        final formData = ffff.FormData.fromMap({
+          "file": await ffff.MultipartFile.fromFile(path),
+        });
 
-      if (!bindDefaultImg) {
-        success?.call(bean.url ?? '');
-        return;
-      }
+        final response = await HttpClient().upload(
+          ApiConfig.uploadFile,
+          formData,
+          showLoading: true,
+        );
 
-      HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}', isShowProgress: true, success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
+        if (!response.isSuccess || response.data == null) {
+          HandleTool.showAppToastText("上传失败,请重试");
+          return;
+        }
+
+        final bean = UploadBean.fromJson(response.data as Map<String, dynamic>);
+
+        if (!bindDefaultImg) {
+          success?.call(bean.url ?? '');
+          return;
+        }
+
+        final bindResponse = await HttpClient().post(
+          '${ApiConfig.bindDefaultImg}?imgUrl=${bean.url}',
+          showLoading: true,
+        );
+
+        if (bindResponse.isSuccess && bindResponse.data != null) {
           HandleTool.instance.headImg = '${bean.url}';
           success?.call(bean.url ?? '');
         } else {
           CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
         }
-      });
+      } catch (e) {
+        HandleTool.showAppToastText("上传失败,请重试");
+      }
 
       // final cacheDir = await getApplicationCacheDirectory();
       // File old = File(path);

@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:zpw/base/base_getx_controller.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/gameplay/gameplay_state.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:zpw/utils/log_utils.dart';
 
 import '../main/main_logic.dart';
@@ -26,44 +27,67 @@ class HomeLogic extends BaseGetxController with GetSingleTickerProviderStateMixi
     super.onInit();
   }
 
-  void _getData() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
-        isShowProgress: true,
-        params: {
+  Future<void> _getData() async {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.listPhotoGroup,
+        queryParameters: {
           "groupType": 1,
           "tabType": 2,
         },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            listPhotoGroupBean = results;
-            update();
-          }
-        },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => ListPhotoGroupBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
+          listPhotoGroupBean = results;
+          update();
+        }
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
-  void _getData2() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
-        isShowProgress: true,
-        params: {
+  Future<void> _getData2() async {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.listPhotoGroup,
+        queryParameters: {
           "groupType": 0,
           "tabType": 2,
         },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            final bean = results;
+        showLoading: true,
+      );
 
-            Log.d("listPhotoGroup.bean----${bean.length}");
-            // listPhotoGroupBean2 = results;
-            listPhotoGroupBean2 = [];
-            final chatListPhotoGroupBean = ListPhotoGroupBean(groupName: "Ai对话");
-            listPhotoGroupBean2.add(chatListPhotoGroupBean);
-            listPhotoGroupBean2.addAll(results);
-            tabController = TabController(length: list.length, vsync: this);
-            update();
-          }
-        },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => ListPhotoGroupBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
+          final bean = results;
+
+          // listPhotoGroupBean2 = results;
+          listPhotoGroupBean2 = [];
+          final chatListPhotoGroupBean = ListPhotoGroupBean(groupName: "Ai对话");
+          listPhotoGroupBean2.add(chatListPhotoGroupBean);
+          listPhotoGroupBean2.addAll(results);
+          tabController = TabController(length: list.length, vsync: this);
+          update();
+        }
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   void bannerClick(int index) {

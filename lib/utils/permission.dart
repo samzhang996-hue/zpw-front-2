@@ -55,7 +55,6 @@ class PermissionUtils {
 
       return imagesStatus.isGranted && videoStatus.isGranted;
     } else {
-      Log.d("relse----$release");
       if (release.isNotEmpty) {
         List<String> releaseList = release.split('.');
         int firstValue = int.parse(releaseList.first);

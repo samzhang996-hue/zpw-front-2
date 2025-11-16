@@ -6,8 +6,9 @@ import 'package:zpw/common/qds_Image.dart';
 import 'package:zpw/common/view/no_more_content_view.dart';
 import 'package:zpw/model/list_photo_group_bean.dart';
 import 'package:zpw/modules/face/collection_item.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/network/api_config.dart';
+import 'package:zpw/network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class GatherSinglePage extends StatefulWidget {
   const GatherSinglePage({
@@ -40,25 +41,37 @@ class _GatherSinglePageState extends State<GatherSinglePage>
 
   late final _title = widget.title.obs;
 
-  void _getData() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.effectGroupList,
-        isShowProgress: true,
-        params: {
+  Future<void> _getData() async {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.effectGroupList,
+        queryParameters: {
           "id": widget.id,
         },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            listPhotoGroupBean = results;
-            _tabController =
-                TabController(length: listPhotoGroupBean.length, vsync: this);
-            if (listPhotoGroupBean.isNotEmpty) {
-              _title.value = listPhotoGroupBean.first.groupName ?? '';
-            }
+        showLoading: true,
+      );
 
-            setState(() {});
+      if (response.isSuccess && response.data != null) {
+        final List<dynamic> dataList = response.data as List<dynamic>;
+        final results = dataList
+            .map((e) => ListPhotoGroupBean.fromJson(e as Map<String, dynamic>))
+            .toList();
+        if (results.isNotEmpty) {
+          listPhotoGroupBean = results;
+          _tabController =
+              TabController(length: listPhotoGroupBean.length, vsync: this);
+          if (listPhotoGroupBean.isNotEmpty) {
+            _title.value = listPhotoGroupBean.first.groupName ?? '';
           }
-        },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+
+          setState(() {});
+        }
+      } else {
+        EasyLoading.showError(response.message);
+      }
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   @override

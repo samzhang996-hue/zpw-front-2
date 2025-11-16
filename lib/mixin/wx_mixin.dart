@@ -41,7 +41,6 @@ mixin WxMixin<T extends StatefulWidget> on State<T> {
   void _listenResp(WeChatResponse resp) {
     if (resp is WeChatAuthResponse) {
       // final String content = 'auth: ${resp.state} ${resp.errCode},${resp.code}';
-      Log.e("msg,content:${resp.code}");
 
       if (resp.code == null) {
         HandleTool.showAppToastText('取消登录');
@@ -62,7 +61,6 @@ mixin WxMixin<T extends StatefulWidget> on State<T> {
         completer = null;
         return;
       }
-      Log.e("msg,content----:${resp.code}");
       completer?.complete(resp.code);
 
       //   if (_mineController.wxNickName.isNotEmpty) {

@@ -6,7 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 
-import '../../../network/api/network_api.dart';
+import '../../../network/api_config.dart';
+import '../../../network/http_client.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../utils/filecache.dart';
 import '../../../utils/handle_tool.dart';
 import '../../../utils/my_plugin.dart';
@@ -55,33 +57,49 @@ class AboutLogic extends GetxController {
     state.version.value = HandleTool.instance.localVersion;
   }
 
-  accountLogin(String name, String password) {
+  Future<void> accountLogin(String name, String password) async {
     Map<String, dynamic> dataMap = {
       "account": name,
       "password": password,
     };
 
     final MineLogic mineLogic = Get.find<MineLogic>();
-    HandleTool.instance.SMWPost(Api.accountLogin, params: dataMap, isShowProgress: true, success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        final map = results.first as Map;
+
+    try {
+      final response = await HttpClient().post(
+        ApiConfig.accountLogin,
+        data: dataMap,
+        showLoading: true,
+      );
+
+      if (response.isSuccess && response.data != null) {
+        final Map data = response.data as Map;
         Navigator.pop(navigator!.context); // 关闭弹窗
         HandleTool.showAppToastText("切换成功");
         // mineLogic.getUserInfo();
-        await SpUtils.setString("token", "${map["token"]}");
-        HandleTool.instance.token = "${map["token"]}";
+        await SpUtils.setString("token", "${data["token"]}");
+        HandleTool.instance.token = "${data["token"]}";
         mineLogic.getUserInfo();
         Get.back();
+      } else {
+        EasyLoading.showError(response.message);
       }
-    });
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
   void onDoubleTap() {
     HandleTool.showAppToastText('当前渠道：${HandleTool.instance.channel}');
   }
 
-  deleteUser() {
-    HandleTool.instance.QDSGet(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) async {
+  Future<void> deleteUser() async {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.deleteUser,
+        showLoading: true,
+      );
+
       UmengCommonSdk.onProfileSignOff();
       HandleTool.showAppToastText("注销成功");
       SpUtils.clear();
@@ -92,11 +110,18 @@ class AboutLogic extends GetxController {
       // if (isSuccess == true && results.isNotEmpty) {
       //   HandleTool.showAppToastText("注销成功");
       // }
-    });
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 
-  void onExit() {
-    HandleTool.instance.QDSGet(Api.logout, isShowProgress: true, success: (isSuccess, code, message, results) async {
+  Future<void> onExit() async {
+    try {
+      final response = await HttpClient().get(
+        ApiConfig.logout,
+        showLoading: true,
+      );
+
       HandleTool.showAppToastText("退出成功");
       await 0.15.delay();
       SpUtils.setString("token", "");
@@ -109,6 +134,8 @@ class AboutLogic extends GetxController {
       // if (isSuccess == true && results.isNotEmpty) {
       //   HandleTool.showAppToastText("注销成功");
       // }
-    });
+    } catch (e) {
+      EasyLoading.showError('请求失败: $e');
+    }
   }
 }
