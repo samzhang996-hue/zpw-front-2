@@ -21,6 +21,15 @@ version: 3.3.1+34
 environment:
   sdk: '>=3.4.3 <4.0.0'
 
+fluwx:
+  app_id: 'wx5bdeda6fcfb891c8'
+  debug_logging: true # Logging in debug mode.
+  android:
+#    interrupt_wx_request: true # Defaults to true.
+#    flutter_activity: 'MainActivity' # Defaults to app's launcher
+  ios:
+    universal_link: https://photo.jlhkj168.cn/photoking/
+
 tobias:
   url_scheme: https://baidu.com/
 # Dependencies specify other packages that your package needs in order to work.
