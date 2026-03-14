@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zpw/model/list_photo_group_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/model/zpw_list_photo_group_bean.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'face_state.dart';
 
 class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
   final FaceState state = FaceState();
   TabController? tabController;
-  var listPhotoGroupBean = <ListPhotoGroupBean>[];
-  var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
+  var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
+  var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];
 
   @override
   void onInit() {
@@ -19,7 +19,7 @@ class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   void _getData() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 1,
@@ -31,11 +31,11 @@ class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   void _getData2() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 0,
@@ -45,14 +45,14 @@ class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
           if (isSuccess == true && results.isNotEmpty) {
             final bean = results;
 
-            Log.d("listPhotoGroup.bean----${bean.length}");
+            ZpwLog.d("listPhotoGroup.bean----${bean.length}");
             listPhotoGroupBean2 = results;
             tabController =
                 TabController(length: listPhotoGroupBean2.length, vsync: this);
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   @override

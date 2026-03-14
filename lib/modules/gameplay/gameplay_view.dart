@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
 import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class GameplayPage extends StatefulWidget {
   const GameplayPage({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class _GameplayPageState extends State<GameplayPage>
                             GetBuilder<MineLogic>(
                               builder: (mineLogic) {
                                 return Visibility(
-                                  visible: !HandleTool.instance.isMember,
+                                  visible: !ZpwHandleTool.instance.isMember,
                                   child: GestureDetector(
                                     onTap: () {
                                       Get.find<VipLogic>().getVipHome();
@@ -119,7 +119,7 @@ class _GameplayPageState extends State<GameplayPage>
                                         right: index == 2 ? 16.w : 0),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8.w),
-                                      child: QdsImage(
+                                      child: ZpwQdsImage(
                                         "${bean.imgUrlAcross}",
                                         182.w,
                                         90.w,

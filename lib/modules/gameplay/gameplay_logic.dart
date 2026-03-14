@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
-import 'package:zpw/model/list_photo_group_bean.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
+import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 import 'package:zpw/modules/gameplay/gameplay_state.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
-class GameplayLogic extends BaseGetxController with GetSingleTickerProviderStateMixin {
+class GameplayLogic extends ZpwBaseGetxController with GetSingleTickerProviderStateMixin {
   final GameplayState state = GameplayState();
   TabController? tabController;
-  var listPhotoGroupBean = <ListPhotoGroupBean>[];
-  var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
+  var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
+  var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];
   late final isOk = false.obs;
   late final showVip = false.obs;
 
@@ -22,7 +22,7 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
   }
 
   void _getData() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 1,
@@ -34,11 +34,11 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   void _getData2() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 0,
@@ -48,13 +48,13 @@ class GameplayLogic extends BaseGetxController with GetSingleTickerProviderState
           if (isSuccess == true && results.isNotEmpty) {
             final bean = results;
 
-            Log.d("listPhotoGroup.bean----${bean.length}");
+            ZpwLog.d("listPhotoGroup.bean----${bean.length}");
             listPhotoGroupBean2 = results;
             tabController = TabController(length: listPhotoGroupBean2.length, vsync: this);
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   stateShowVip(bool isVip) {

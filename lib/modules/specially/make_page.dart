@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/comm_error.dart';
-import 'package:zpw/common/comm_success.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_comm_error.dart';
+import 'package:zpw/common/zpw_comm_success.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/specially/model/comm_enum_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
-class MakePage extends BaseStatefulWidget {
+class MakePage extends ZpwBaseStatefulWidget {
   final Map<String, String> map;
 
   MakePage({required this.map});
   @override
-  BaseWidgetState<MakePage> getState() => _MakePageState();
+  ZpwBaseWidgetState<MakePage> getState() => _MakePageState();
 }
 
-class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
+class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
   late final _nicknameEditingController = TextEditingController();
   late final _tipsEditingController = TextEditingController();
 
@@ -40,17 +40,17 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
   late final _currentZodiac = 0.obs;
   void _toHistory() {
     _canBack = false;
-    gotoPushPage(WorksPage());
+    zpwGotoPushPage(WorksPage());
   }
 
   void _showError() async {
-    final res = await Get.dialog(const CommError(), barrierDismissible: false);
+    final res = await Get.dialog(const ZpwCommError(), barrierDismissible: false);
     if (res == true) {}
     // _show.value = false;
   }
 
   void _showSuccess() {
-    Get.dialog(const CommSuccess(), barrierDismissible: false);
+    Get.dialog(const ZpwCommSuccess(), barrierDismissible: false);
 
     Future.delayed(const Duration(seconds: 3), () {
       if (_canBack) {
@@ -72,12 +72,12 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
   void _make() {
     _canBack = true;
     if (_nicknameEditingController.text.isEmpty) {
-      HandleTool.showAppToastText("请输入文案");
+      ZpwHandleTool.showAppToastText("请输入文案");
       return;
     }
 
     if (_nicknameEditingController.text.length > 4) {
-      HandleTool.showAppToastText("请输入1-2个字符");
+      ZpwHandleTool.showAppToastText("请输入1-2个字符");
       return;
     }
 
@@ -98,12 +98,12 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
     //// 08/09/10/11/15：姓氏+宣言/印签文字
     if (widget.map["useMethod"] == "09") {
       if (_tipsEditingController.text.isEmpty) {
-        HandleTool.showAppToastText("请输入文案");
+        ZpwHandleTool.showAppToastText("请输入文案");
         return;
       }
 
       if (_tipsEditingController.text.length > 16) {
-        HandleTool.showAppToastText("请输入1-16个字符");
+        ZpwHandleTool.showAppToastText("请输入1-16个字符");
         return;
       }
       params["dart09"] = {
@@ -113,12 +113,12 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
     }
     if (widget.map["useMethod"] == "10") {
       if (_tipsEditingController.text.isEmpty) {
-        HandleTool.showAppToastText("请输入文案");
+        ZpwHandleTool.showAppToastText("请输入文案");
         return;
       }
 
       if (_tipsEditingController.text.length > 16) {
-        HandleTool.showAppToastText("请输入1-16个字符");
+        ZpwHandleTool.showAppToastText("请输入1-16个字符");
         return;
       }
       params["dart10"] = {
@@ -128,12 +128,12 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
     }
     if (widget.map["useMethod"] == "11") {
       if (_tipsEditingController.text.isEmpty) {
-        HandleTool.showAppToastText("请输入文案");
+        ZpwHandleTool.showAppToastText("请输入文案");
         return;
       }
 
       if (_tipsEditingController.text.length > 16) {
-        HandleTool.showAppToastText("请输入1-16个字符");
+        ZpwHandleTool.showAppToastText("请输入1-16个字符");
         return;
       }
       params["dart11"] = {
@@ -142,11 +142,11 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
       params["tips"] = _tipsEditingController.text;
     }
 
-    Log.e("params:$params");
+    ZpwLog.e("params:$params");
     // _showError();
     // _showSuccess();
     // return;
-    HandleTool.instance.SMWPost(Api.addTask, params: params, success: (isSuccess, code, message, results) {
+    ZpwHandleTool.instance.SMWPost(ZpwApi.zpwAddTask, params: params, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         _showSuccess();
       } else {
@@ -154,27 +154,27 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
       }
     });
 
-    // gotoPushPage(MakeResultPage());
+    // zpwGotoPushPage(MakeResultPage());
   }
 
   void _getData() {
     var path = '';
     if (widget.map["useMethod"] == "03") {
-      path = Api.animalsEnum;
+      path = ZpwApi.zpwAnimalsEnum;
     }
     if (widget.map["useMethod"] == "06") {
-      path = Api.milkTeaEnum;
+      path = ZpwApi.zpwMilkTeaEnum;
     }
     if (widget.map["useMethod"] == "09") {
-      path = Api.cartoonEnum;
+      path = ZpwApi.zpwCartoonEnum;
     }
     if (widget.map["useMethod"] == "10") {
-      path = Api.cartoonGirlEnum;
+      path = ZpwApi.zpwCartoonGirlEnum;
     }
     if (widget.map["useMethod"] == "11") {
-      path = Api.cartoonBoyEnum;
+      path = ZpwApi.zpwCartoonBoyEnum;
     }
-    HandleTool.instance.QDSGet<CommEnumBean>(path,
+    ZpwHandleTool.instance.QDSGet<CommEnumBean>(path,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
             _commEnumBean.value = results;
@@ -209,7 +209,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
   Color get backgroundColor => Colors.white;
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Stack(
@@ -237,7 +237,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CommText(
+                      ZpwCommText(
                         text: "姓氏：",
                         textColor: const Color(0xff191919),
                         fontSize: 18.sp,
@@ -269,7 +269,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                                   inputFormatters: [LengthLimitingTextInputFormatter(_max)],
                                 ),
                               ),
-                              Obx(() => CommText(
+                              Obx(() => ZpwCommText(
                                     text: "${_count.value == 0 ? "" : _count.value}",
                                     textColor: const Color(0xFF999999),
                                     fontSize: 13.sp,
@@ -281,7 +281,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                       ),
                       if (widget.map["useMethod"] == "03") ...[
                         SizedBox(height: 20.w),
-                        CommText(
+                        ZpwCommText(
                           text: "生肖：",
                           textColor: const Color(0xff191919),
                           fontSize: 18.sp,
@@ -317,7 +317,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                                           height: 44.w,
                                           fit: BoxFit.cover,
                                         ),
-                                        CommText(
+                                        ZpwCommText(
                                           text: findKeyByPartialIcon(_commEnumBean[index].name ?? ''),
                                           textColor: _currentZodiac.value == index ? const Color(0xFF191919) : const Color(0xFFB2B2B2),
                                           fontSize: 12.sp,
@@ -335,7 +335,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                       ],
                       if (widget.map["useMethod"] == "09" || widget.map["useMethod"] == "10" || widget.map["useMethod"] == "11") ...[
                         SizedBox(height: 20.w),
-                        CommText(
+                        ZpwCommText(
                           text: "宣言：",
                           textColor: const Color(0xff191919),
                           fontSize: 18.sp,
@@ -367,7 +367,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                                     inputFormatters: [LengthLimitingTextInputFormatter(_maxTips)],
                                   ),
                                 ),
-                                Obx(() => CommText(
+                                Obx(() => ZpwCommText(
                                       text: "${_countTips.value == 0 ? "" : _countTips.value}",
                                       textColor: const Color(0xFF999999),
                                       fontSize: 13.sp,
@@ -378,7 +378,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                           ),
                         ),
                         SizedBox(height: 8.w),
-                        CommText(
+                        ZpwCommText(
                           text: "ps:可输入空格",
                           textColor: const Color(0xFFB2B2B2),
                           fontSize: 12.sp,
@@ -396,7 +396,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
             left: 0,
             right: 0,
             top: 0,
-            child: YAppBar(
+            child: zpwYAppBar(
               bgColor: Colors.white,
               widget: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -433,7 +433,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                     color: Colors.transparent,
                     child: GestureDetector(
                       onTap: () async {
-                        if ((await wxLogin() == true)) {
+                        if ((await zpwWxLogin() == true)) {
                           _toHistory();
                         }
                       },
@@ -493,7 +493,7 @@ class _MakePageState extends BaseWidgetState<MakePage> with AppMixin {
                         borderRadius: BorderRadius.circular(26.w),
                       ),
                       child: Center(
-                        child: CommText(
+                        child: ZpwCommText(
                           text: "一键制作",
                           textColor: const Color(0xFF191919),
                           fontSize: 18.sp,

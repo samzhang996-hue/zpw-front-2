@@ -4,29 +4,29 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/bottom_sheet/face_photo_bottom_sheet.dart';
-import 'package:zpw/common/comm_error.dart';
-import 'package:zpw/common/comm_images_widget.dart';
-import 'package:zpw/common/comm_success.dart';
-import 'package:zpw/common/comm_video_player_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
-import 'package:zpw/model/group_other_func_list_bean.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/bottom_sheet/zpw_face_photo_bottom_sheet.dart';
+import 'package:zpw/common/zpw_comm_error.dart';
+import 'package:zpw/common/zpw_comm_images_widget.dart';
+import 'package:zpw/common/zpw_comm_success.dart';
+import 'package:zpw/common/zpw_comm_video_player_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
+import 'package:zpw/model/zpw_group_other_func_list_bean.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
-import '../../common/bottom_sheet/whole_body_photo_bottom_sheet.dart';
-import '../../utils/sp_utils.dart';
+import '../../common/bottom_sheet/zpw_whole_body_photo_bottom_sheet.dart';
+import '../../utils/zpw_sp_utils.dart';
 
-class FaceMakePage extends BaseStatefulWidget {
+class FaceMakePage extends ZpwBaseStatefulWidget {
   final String title;
   final int funcId;
   final String imageUrl;
@@ -45,10 +45,10 @@ class FaceMakePage extends BaseStatefulWidget {
   });
 
   @override
-  BaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
+  ZpwBaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
 }
 
-class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
+class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMixin {
   // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
   late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 || widget.apiType == 4 ? true.obs : false.obs);
   var _canBack = true;
@@ -67,7 +67,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
 
   bool get _isNotEmptyVideoUrl => widget.videoUrl.isNotEmpty;
 
-  late final _myHeadImg = HandleTool.instance.headImg.obs;
+  late final _myHeadImg = ZpwHandleTool.instance.headImg.obs;
   var _showDialog = false;
   late final _list = <String>[].obs;
   VideoPlayerController? _videoPlayerController;
@@ -96,7 +96,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   void _showSuccess() async {
     _showDialog = true;
     Get.dialog(
-      const CommSuccess(),
+      const ZpwCommSuccess(),
       barrierDismissible: false,
     );
     if (_isNotEmptyVideoUrl) {
@@ -111,7 +111,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   }
 
   void _showError() async {
-    final res = await Get.dialog(const CommError(), barrierDismissible: false);
+    final res = await Get.dialog(const ZpwCommError(), barrierDismissible: false);
     if (res == true) {}
     if (_isNotEmptyVideoUrl) {
       _videoPlayerController?.play();
@@ -137,18 +137,18 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       _hasAvatar.value = false;
     }
 
-    // Log.e("_hasAvatar:${_hasAvatar.value}");
+    // ZpwLog.e("_hasAvatar:${_hasAvatar.value}");
   }
 
   // 检查并显示弹窗
   Future<bool> _checkFaceAndShowDialog() async {
     if (_apiType == 9 || _apiType == 10 || _apiType == 4 || _apiType == 16 || _apiType == 2) {
-      String lastShownDate = await SpUtils.getString('lastFaceShownDate_$_apiType');
+      String lastShownDate = await ZpwSpUtils.getString('lastFaceShownDate_$_apiType');
       String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       // 如果当天没有弹过窗，或者日期不同，则显示弹窗
       if (lastShownDate != todayDate) {
-        await SpUtils.setString('lastFaceShownDate_$_apiType', todayDate); // 更新为今天的日期
+        await ZpwSpUtils.setString('lastFaceShownDate_$_apiType', todayDate); // 更新为今天的日期
         return false;
       } else {
         return true;
@@ -159,12 +159,12 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   }
 
   Future<bool> _checkWholeBodyAndShowDialog() async {
-    String lastShownDate = await SpUtils.getString('lastWholeBodyShownDate');
+    String lastShownDate = await ZpwSpUtils.getString('lastWholeBodyShownDate');
     String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
     // 如果当天没有弹过窗，或者日期不同，则显示弹窗
     if (lastShownDate != todayDate) {
-      await SpUtils.setString('lastWholeBodyShownDate', todayDate); // 更新为今天的日期
+      await ZpwSpUtils.setString('lastWholeBodyShownDate', todayDate); // 更新为今天的日期
       return false;
     } else {
       return true;
@@ -172,7 +172,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   }
 
   void _make() async {
-    // Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
+    // ZpwLog.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
     // return;
     UmengCommonSdk.onEvent('Make_click_event', {'name': widget.groupId == -1 ? widget.title : _tags[_currentIndex.value]});
     if (_myHeadImg.isEmpty && (_hasAvatar.isTrue)) {
@@ -183,11 +183,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     _canBack = true;
     _autoPlay.value = false;
 
-    if ((await wxLogin() == true)) {
+    if ((await zpwWxLogin() == true)) {
       if (_isNotEmptyVideoUrl) {
         _videoPlayerController?.pause();
       }
-      if (!HandleTool.instance.isMember) {
+      if (!ZpwHandleTool.instance.isMember) {
         Get.find<VipLogic>().getVipHome();
         await Get.to(() => VipPage());
         if (_isNotEmptyVideoUrl) {
@@ -199,7 +199,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       if (_apiType == 0) {
         final result = await _checkWholeBodyAndShowDialog();
         if (result == false) {
-          await Get.bottomSheet<bool?>(const WholeBodyPhotoBottomSheet(), isDismissible: false);
+          await Get.bottomSheet<bool?>(const ZpwWholeBodyPhotoBottomSheet(), isDismissible: false);
         }
         final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
         _videoPlayerController?.play();
@@ -248,11 +248,11 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       // final formData = ffff.FormData.fromMap({
       //   "file": await ffff.MultipartFile.fromFile(_myHeadImg.value),
       // });
-      // final bean = await HandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
+      // final bean = await ZpwHandleTool.instance.QDSUpload<UploadBean>(Api.uploadFile,
       //     params: formData, onModel: (v) => UploadBean.fromJson(v));
       // if (bean == null) return;
-      // Log.e("bean:${bean.url}");
-      // Log.e("_myHeadImg.value:${_myHeadImg.value}");
+      // ZpwLog.e("bean:${bean.url}");
+      // ZpwLog.e("_myHeadImg.value:${_myHeadImg.value}");
       // return;
 
       final params = {
@@ -261,7 +261,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
         // "prompt": "",
       };
 
-      HandleTool.instance.SMWPost(Api.addPhotoRecord, params: params, success: (isSuccess, code, message, results) {
+      ZpwHandleTool.instance.SMWPost(ZpwApi.zpwAddPhotoRecord, params: params, success: (isSuccess, code, message, results) {
         if (isSuccess == true && results.isNotEmpty) {
           _showSuccess();
         } else {
@@ -275,16 +275,16 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   void _uploadNewHeadImg() async {
     final result = await _checkFaceAndShowDialog();
     if (result == false) {
-      await Get.bottomSheet<bool?>(const FacePhotoBottomSheet(), isDismissible: false);
+      await Get.bottomSheet<bool?>(const ZpwFacePhotoBottomSheet(), isDismissible: false);
     }
 
     _autoPlay.value = false;
 
-    if ((await wxLogin() == true)) {
+    if ((await zpwWxLogin() == true)) {
       if (_isNotEmptyVideoUrl) {
         _videoPlayerController?.pause();
       }
-      if (!HandleTool.instance.isMember) {
+      if (!ZpwHandleTool.instance.isMember) {
         Get.find<VipLogic>().getVipHome();
         await Get.to(() => VipPage());
         if (_isNotEmptyVideoUrl) {
@@ -299,7 +299,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       if (_isNotEmptyVideoUrl) {
         _videoPlayerController?.play();
       }
-      Log.e("res:$res");
+      ZpwLog.e("res:$res");
       if (res?.isNotEmpty == true) {
         _myHeadImg.value = res ?? '';
         if (_myHeadImg.isNotEmpty) {
@@ -310,7 +310,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       }
     }
 
-    // _myHeadImg.value = HandleTool.instance.headImg;
+    // _myHeadImg.value = ZpwHandleTool.instance.headImg;
   }
 
   void _closeHeadImg() {
@@ -340,10 +340,10 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
       "groupId": widget.groupId,
     };
 
-    Log.e("params:$params");
+    ZpwLog.e("params:$params");
     _funcIds.clear();
-    HandleTool.instance.QDSGet<GroupOtherFuncListBean>(
-      "${Api.getGroupOtherFuncList}?funcId=${widget.funcId}&groupId=${widget.groupId}",
+    ZpwHandleTool.instance.QDSGet<ZpwGroupOtherFuncListBean>(
+      "${ZpwApi.zpwGetGroupOtherFuncList}?funcId=${widget.funcId}&groupId=${widget.groupId}",
       isShowProgress: true,
       success: (isSuccess, code, message, results) {
         if (isSuccess == true && results.isNotEmpty) {
@@ -358,7 +358,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
           }
         }
       },
-      onModel: (json) => GroupOtherFuncListBean.fromJson(json),
+      onModel: (json) => ZpwGroupOtherFuncListBean.fromJson(json),
     );
   }
 
@@ -368,7 +368,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
     // _checkImage();
     UmengCommonSdk.onPageStart("FaceMakePage");
     _getData();
-    Log.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
+    ZpwLog.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
   }
 
   @override
@@ -379,10 +379,10 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
   }
 
   @override
-  void yCloseInputMethod() {}
+  void zpwYCloseInputMethod() {}
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: const Color(0xFF191919),
       child: Stack(
@@ -398,7 +398,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                 ? Obx(
                     () => _list.isEmpty
                         ? const SizedBox.shrink()
-                        : CommImagesWidget(
+                        : ZpwCommImagesWidget(
                             images: _list,
                             initialPage: _initialPage.value,
                             groupId: widget.groupId,
@@ -411,7 +411,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                 : Obx(
                     () => _videoUrls.isEmpty
                         ? const SizedBox.shrink()
-                        : CommVideoPlayerWidget(
+                        : ZpwCommVideoPlayerWidget(
                             autoPlay: _autoPlay.value,
                             initialPage: _initialPage.value,
                             videoUrls: _videoUrls,
@@ -428,7 +428,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
             top: 0,
             left: 0,
             right: 0,
-            child: YAppBar(
+            child: zpwYAppBar(
               bgColor: Colors.transparent,
               widget: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -479,7 +479,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                     color: Colors.transparent,
                     child: GestureDetector(
                       onTap: () async {
-                        if ((await wxLogin() == true)) {
+                        if ((await zpwWxLogin() == true)) {
                           _toHistory();
                         }
                       },
@@ -593,7 +593,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                                                       ),
                                                     ),
                                                     ClipOval(
-                                                      child: QdsImage(_myHeadImg.value, 68.w, 68.w),
+                                                      child: ZpwQdsImage(_myHeadImg.value, 68.w, 68.w),
                                                     ),
                                                   ],
                                                 )
@@ -613,7 +613,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                                                   top: 0,
                                                   right: 0,
                                                   child: Visibility(
-                                                    visible: _showHeadImg.isTrue && HandleTool.instance.headImg.isNotEmpty,
+                                                    visible: _showHeadImg.isTrue && ZpwHandleTool.instance.headImg.isNotEmpty,
                                                     child: GestureDetector(
                                                       onTap: _closeHeadImg,
                                                       behavior: HitTestBehavior.opaque,
@@ -652,7 +652,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                                               //         ),
                                               //       ),
                                               //       child: Center(
-                                              //         child: CommText(
+                                              //         child: ZpwCommText(
                                               //           text: "上传新头像",
                                               //           textColor:
                                               //               const Color(0xFFFFFFFF),
@@ -699,7 +699,7 @@ class _FaceMakePageState extends BaseWidgetState<FaceMakePage> with AppMixin {
                                       borderRadius: BorderRadius.circular(26.w),
                                     ),
                                     child: Center(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                         text: "一键制作",
                                         textColor: const Color(0xFF191919),
                                         fontSize: 18.sp,

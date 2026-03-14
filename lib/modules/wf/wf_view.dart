@@ -2,32 +2,32 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/model/list_photo_group_bean.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/wf/restore/restore_view.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 // import 'package:zpw/modules/wf/wf_page.dart';
-import '../../mixin/app_mixin.dart';
+import '../../mixin/zpw_app_mixin.dart';
 import 'wf_logic.dart';
 
-class WfPage extends BaseStatefulWidget {
+class WfPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<WfPage> getState() => _WfPageState();
+  ZpwBaseWidgetState<WfPage> getState() => _WfPageState();
 }
 
-class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
-  final logic = Get.put(WfLogic());
-  final state = Get.find<WfLogic>().state;
+class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
+  final logic = Get.put(WfZpwLogic());
+  final state = Get.find<WfZpwLogic>().state;
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -38,7 +38,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
             height: 371.w,
             fit: BoxFit.cover,
           ),
-          GetBuilder<WfLogic>(builder: (logic) {
+          GetBuilder<WfZpwLogic>(builder: (logic) {
             return Column(
               children: [
                 Container(
@@ -53,15 +53,15 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                         height: 25.w,
                       ),
                       InkWell(
-                        child: CommText(
+                        child: ZpwCommText(
                           text: '我的作品',
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w500,
                           textColor: const Color(0xFF656565),
                         ),
                         onTap: () async {
-                          if ((await wxLogin() == true)) {
-                            gotoPushPage(WorksPage());
+                          if ((await zpwWxLogin() == true)) {
+                            zpwGotoPushPage(WorksPage());
                           }
                         },
                       ),
@@ -98,7 +98,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
             shrinkWrap: true,
             itemCount: logic.state.listPhotoGroupBean.length,
             itemBuilder: (BuildContext context, int index) {
-              ListPhotoGroupBean data = state.listPhotoGroupBean[index];
+              ZpwListPhotoGroupBean data = state.listPhotoGroupBean[index];
               var groupName = data.groupName ?? "";
               var tips = data.tips ?? "";
               var frontType = data.frontType ?? "";
@@ -108,7 +108,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                 child: Container(
                     child: Column(
                   children: [
-                    QdsImageCorner(imgUrlVertical, 175.w, 210.w, 8),
+                    ZpwQdsImageCorner(imgUrlVertical, 175.w, 210.w, 8),
                     SizedBox(
                       height: 8.w,
                     ),
@@ -119,7 +119,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                           children: [
                             Row(
                               children: [
-                                CommText(
+                                ZpwCommText(
                                   text: groupName,
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
@@ -127,7 +127,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                                 )
                               ],
                             ),
-                            CommText(
+                            ZpwCommText(
                               text: tips,
                               fontSize: 13.sp,
                               textColor: Color(0xff999999),
@@ -150,7 +150,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                               ),
                               borderRadius: BorderRadius.circular(15.w)),
                           child: Center(
-                              child: CommText(
+                              child: ZpwCommText(
                             text: "使用",
                             fontSize: 15.sp,
                             textColor: Color(0xFF19CDF2),
@@ -162,17 +162,17 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                   ],
                 )),
                 onTap: () {
-                  Log.d("async----$frontType");
+                  ZpwLog.d("async----$frontType");
                   switch (frontType) {
                     case "SJHF":
-                      gotoPushPage(RestorePage());
+                      zpwGotoPushPage(RestorePage());
                       break;
                     case "AIKT":
-                      gotoPushPage(Photo_listPage(isNew: false), arguments: {"type": 1});
+                      zpwGotoPushPage(Photo_listPage(isNew: false), arguments: {"type": 1});
                       break;
                     case "WST":
                     default:
-                      Log.e("xx: ${data.toJson()}");
+                      ZpwLog.e("xx: ${data.toJson()}");
                       Get.to(
                         () => GatherSinglePage(
                           id: data.id ?? 0,
@@ -192,7 +192,7 @@ class _WfPageState extends BaseWidgetState<WfPage> with AppMixin {
                   //   ),
                   // );
                   // if (worksStatus == 3) {
-                  //   final res = await gotoPushPage(
+                  //   final res = await zpwGotoPushPage(
                   //     DetailPage(),
                   //     arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id},
                   //   );

@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/splash/guide/view/custom_photo_dialog_utils.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'guide_state.dart';
 
-class GuideLogic extends BaseGetxController {
+class GuideLogic extends ZpwBaseGetxController {
   final GuideState state = GuideState();
   VideoPlayerController? videoPlayerController;
   @override
@@ -32,7 +32,7 @@ class GuideLogic extends BaseGetxController {
   }
 
   getFuncDetail() {
-    get("${Api.getFuncDetail}?id=1", isShowProgress: true,
+    get("${ZpwApi.zpwGetFuncDetail}?id=1", isShowProgress: true,
         success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
@@ -49,7 +49,7 @@ class GuideLogic extends BaseGetxController {
                 });
         }
         state.funcName = data["tags"] ?? "";
-        Log.d("fun---$data");
+        ZpwLog.d("fun---$data");
         update();
       }
     });

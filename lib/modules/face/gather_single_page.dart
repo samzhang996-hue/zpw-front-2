@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/no_more_content_view.dart';
-import 'package:zpw/model/list_photo_group_bean.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_no_more_content_view.dart';
+import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 import 'package:zpw/modules/face/collection_item.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class GatherSinglePage extends StatefulWidget {
   const GatherSinglePage({
@@ -33,7 +33,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
   TabController? _tabController;
   late ScrollController? _scrollViewController = ScrollController();
   // var outHeight = 0.0.w;
-  var listPhotoGroupBean = <ListPhotoGroupBean>[];
+  var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
   late PageController? _pageController = PageController();
   Color _backgroundColor = Colors.transparent;
   var _showTitle = false;
@@ -41,7 +41,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
   late final _title = widget.title.obs;
 
   void _getData() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.effectGroupList,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwEffectGroupList,
         isShowProgress: true,
         params: {
           "id": widget.id,
@@ -58,7 +58,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
             setState(() {});
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   @override
@@ -121,7 +121,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                         height: double.infinity,
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: QdsImage(widget.imgUrlAcross, 1.sw, 232.w,
+                          child: ZpwQdsImage(widget.imgUrlAcross, 1.sw, 232.w,
                               fit: BoxFit.cover),
                         ),
                       ),
@@ -218,7 +218,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
               // ),
               body: widget.isWF
                   ? listPhotoGroupBean.isEmpty
-                      ? const NoMoreContentView()
+                      ? const ZpwNoMoreContentView()
                       : PageView(
                           controller: _pageController,
 

@@ -2,13 +2,13 @@
 
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/main/main_state.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import '../vip/vip_view.dart';
 
-class MainLogic extends BaseGetxController {
+class MainLogic extends ZpwBaseGetxController {
   final MainState state = MainState();
 
   changeIndex(int index) {
@@ -25,8 +25,8 @@ class MainLogic extends BaseGetxController {
   @override
   void onReady() {
     super.onReady();
-    HandleTool.instance.packagesGetForcePackage();
-    if (!HandleTool.instance.isMember) {
+    ZpwHandleTool.instance.packagesGetForcePackage();
+    if (!ZpwHandleTool.instance.isMember) {
       Get.to(() => VipPage());
     }
   }

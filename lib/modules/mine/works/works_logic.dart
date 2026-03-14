@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'works_state.dart';
 
-class WorksLogic extends BaseGetxController {
+class WorksZpwLogic extends ZpwBaseGetxController {
   final WorksState state = WorksState();
 
   @override
@@ -28,19 +28,19 @@ class WorksLogic extends BaseGetxController {
       "pageSize": 100,
       "worksType": state.index.value,
     };
-    Log.d("map-----------$dataMap");
-    get(Api.photoRecord, isShowProgress: false, params: dataMap, success: (isSuccess, code, message, results) {
+    ZpwLog.d("map-----------$dataMap");
+    get(ZpwApi.zpwPhotoRecord, isShowProgress: false, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         state.records.value = data["records"];
-        // Log.d("get----${data["records"]}");
+        // ZpwLog.d("get----${data["records"]}");
         update();
       }
     });
   }
 
   getFuncDetail(int funcId, int id) {
-    get("${Api.getFuncDetail}?id=$funcId", isShowProgress: true, success: (isSuccess, code, message, results) async {
+    get("${ZpwApi.zpwGetFuncDetail}?id=$funcId", isShowProgress: true, success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         String showImgGif = data["showImgGif"];
@@ -49,7 +49,7 @@ class WorksLogic extends BaseGetxController {
         String videoUrl = data["videoUrl"] ?? "";
         int apiType = data["apiType"] ?? -1;
 
-        Log.d("fun---$data");
+        ZpwLog.d("fun---$data");
         Get.to(
           () => FaceMakePage(
             title: funcName,
@@ -66,9 +66,9 @@ class WorksLogic extends BaseGetxController {
   }
 
   delete(int id) {
-    Post("${Api.delete}/$id", isShowProgress: true, success: (isSuccess, code, message, results) async {
+    Post("${ZpwApi.zpwDelete}/$id", isShowProgress: true, success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
-        // HandleTool.showAppToastText("删除成功");
+        // ZpwHandleTool.showAppToastText("删除成功");
         // Get.back(result: "123");
         photoRecord();
       }

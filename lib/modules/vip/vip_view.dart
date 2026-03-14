@@ -5,23 +5,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
 import 'package:zpw/modules/vip/view/custom_exit_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'vip_logic.dart';
 
-class VipPage extends BaseStatefulWidget {
+class VipPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<VipPage> getState() => _VipPageState();
+  ZpwBaseWidgetState<VipPage> getState() => _VipPageState();
 }
 
-class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver {
+class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObserver {
   final logic = Get.find<VipLogic>();
   final state = Get.find<VipLogic>().state;
   late VideoPlayerController _controller;
@@ -31,15 +31,15 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.paused:
-        Log.d("AppLifecycleState--paused");
+        ZpwLog.d("AppLifecycleState--paused");
         break;
       case AppLifecycleState.resumed:
-        Log.d("AppLifecycleState--resumed--${logic.isAt}");
+        ZpwLog.d("AppLifecycleState--resumed--${logic.isAt}");
         logic.getUserInfo();
         logic.getVipHome();
         break;
       case AppLifecycleState.hidden:
-        Log.d("AppLifecycleState--hidden");
+        ZpwLog.d("AppLifecycleState--hidden");
       default:
         break;
     }
@@ -74,7 +74,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return GetBuilder<VipLogic>(builder: (logic) {
       String? rk8;
       String? rk9;
@@ -90,7 +90,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
           // logic.onSatePay(state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.defaultPayKeyType ?? 0);
           state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
           state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
-          Log.d("pay---1---${state.statePay.value}");
+          ZpwLog.d("pay---1---${state.statePay.value}");
         } else {
           rk9 = "";
           rk8 = "";
@@ -136,7 +136,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                       child: Column(
                         children: [
                           Center(
-                            child: CommText(
+                            child: ZpwCommText(
                               text: "会员无限制作 / 无水印 / 无广告 / 专属客服",
                               fontSize: 15.w,
                               textColor: Color(0xffB2B2B2),
@@ -149,7 +149,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                               alignment: Alignment.topLeft,
                               child: Padding(
                                 padding: EdgeInsets.only(left: 16.w),
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: rk9,
                                   fontSize: 11.sp,
                                   textColor: Color(0xff7E7E7E),
@@ -171,7 +171,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                       child: InkWell(
                                         onTap: () {
                                           logic.onSatePay(0);
-                                          Log.d("pay---${state.statePay.value}");
+                                          ZpwLog.d("pay---${state.statePay.value}");
                                         },
                                         child: Container(
                                           height: 47.w,
@@ -184,7 +184,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                               SizedBox(
                                                 width: 8.w,
                                               ),
-                                              CommText(
+                                              ZpwCommText(
                                                 text: "支付宝支付",
                                                 fontSize: 15.w,
                                                 textColor: Color(0xffFFD9D0),
@@ -220,7 +220,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                               SizedBox(
                                                 width: 8.w,
                                               ),
-                                              CommText(
+                                              ZpwCommText(
                                                 text: "微信支付",
                                                 fontSize: 15.w,
                                                 textColor: Color(0xffFFD9D0),
@@ -295,7 +295,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                     ),
                                   ),
                                   child: Center(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                     text: rk8,
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
@@ -312,7 +312,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                           width: 183.w,
                                           height: 27.w,
                                           decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
-                                          child: CommText(
+                                          child: ZpwCommText(
                                             text: rk10,
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w500,
@@ -336,7 +336,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                         state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
                                         width: 14.w,
                                       ),
-                                      CommText(
+                                      ZpwCommText(
                                         text: "点击购买即表示您同意",
                                         fontSize: 12.sp,
                                         textColor: Color(0xff646464),
@@ -353,18 +353,18 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    String htmlStr = HandleTool.instance.hYxy;
+                                    String htmlStr = ZpwHandleTool.instance.hYxy;
                                     if (htmlStr.isEmpty) {
                                       return;
                                     }
-                                    gotoPushPage(
-                                      MyWebViewPage(
+                                    zpwGotoPushPage(
+                                      ZpwMyWebViewPage(
                                         titleStr: "会员协议",
-                                        htmlUrl: HandleTool.instance.hYxy,
+                                        htmlUrl: ZpwHandleTool.instance.hYxy,
                                       ),
                                     );
                                   },
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: "《会员协议》",
                                     fontSize: 12.sp,
                                     textColor: Colors.white,
@@ -395,8 +395,8 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                               )),
                           // child: GestureDetector(
                           //   onTap: () {
-                          //     Log.e("msg----");
-                          //     if (HandleTool.instance.isMember) {
+                          //     ZpwLog.e("msg----");
+                          //     if (ZpwHandleTool.instance.isMember) {
                           //       Get.back();
                           //     } else {
                           //       CustomExitVipDialogUtils2.showCustomDialog(
@@ -412,7 +412,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           // ),
                         ),
                         onTap: () {
-                          if (HandleTool.instance.isMember) {
+                          if (ZpwHandleTool.instance.isMember) {
                             Get.back();
                           } else {
                             if (state.vipBean == null || state.vipBean.vipPopList?.length == 0) {
@@ -495,7 +495,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           SizedBox(
                             height: 20.w,
                           ),
-                          CommText(
+                          ZpwCommText(
                             text: vp?.remark2,
                             fontSize: 15.sp,
                             textColor: isSelect ? Colors.white : Color(0xff54FFFFFF),
@@ -508,14 +508,14 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8.0),
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: "¥",
                                     fontSize: 13.sp,
                                     textColor: isSelect ? Color(0xFF7EF7F0) : Color(0xff54FFFFFF),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                CommText(
+                                ZpwCommText(
                                   text: vp?.remark3 ?? "0",
                                   fontSize: 27.sp,
                                   textColor: isSelect ? Color(0xFF7EF7F0) : Color(0xff939393),
@@ -527,7 +527,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           SizedBox(
                             height: 12.w,
                           ),
-                          CommText(
+                          ZpwCommText(
                             text: vp?.remark4 ?? "",
                             fontSize: 12.sp,
                             textColor: Color(0xff6F6F6F),
@@ -561,7 +561,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with WidgetsBindingObserver
                           child: Container(
                             margin: EdgeInsets.only(left: 8, right: 8),
                             child: Center(
-                              child: CommText(
+                              child: ZpwCommText(
                                 text: vp?.remark1 ?? "",
                                 fontSize: 12.sp,
                                 textColor: Color(0xff191919),

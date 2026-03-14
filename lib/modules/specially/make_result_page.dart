@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class MakeResultPage extends BaseStatefulWidget {
+class MakeResultPage extends ZpwBaseStatefulWidget {
   final int index;
 
   MakeResultPage({required this.index});
   @override
-  BaseWidgetState<MakeResultPage> getState() => _MakeResultPageState();
+  ZpwBaseWidgetState<MakeResultPage> getState() => _MakeResultPageState();
 }
 
-class _MakeResultPageState extends BaseWidgetState<MakeResultPage> {
+class _MakeResultPageState extends ZpwBaseWidgetState<MakeResultPage> {
   late final _currentZodiac = 0.obs;
 
   void _make() {
-    HandleTool.showAppToastText("请输入文案");
+    ZpwHandleTool.showAppToastText("请输入文案");
   }
 
   @override
@@ -26,13 +26,13 @@ class _MakeResultPageState extends BaseWidgetState<MakeResultPage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
       child: SingleChildScrollView(
         child: Column(
           children: [
-            YAppBar(title: "天马行空"),
+            zpwYAppBar(title: "天马行空"),
             Center(
               child: Container(
                 color: Colors.grey,
@@ -60,7 +60,7 @@ class _MakeResultPageState extends BaseWidgetState<MakeResultPage> {
                   borderRadius: BorderRadius.circular(26.w),
                 ),
                 child: Center(
-                  child: CommText(
+                  child: ZpwCommText(
                     text: "一键制作",
                     textColor: const Color(0xFF191919),
                     fontSize: 18.sp,

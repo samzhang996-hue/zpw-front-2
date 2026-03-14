@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
-import 'package:zpw/model/list_photo_group_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
+import 'package:zpw/model/zpw_list_photo_group_bean.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'wf_state.dart';
 
-class WfLogic extends BaseGetxController {
+class WfZpwLogic extends ZpwBaseGetxController {
   final WfState state = WfState();
 
   @override
@@ -20,7 +20,7 @@ class WfLogic extends BaseGetxController {
   }
 
   void getData() {
-    get<ListPhotoGroupBean>(Api.listPhotoGroup,
+    get<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 2,
@@ -32,10 +32,10 @@ class WfLogic extends BaseGetxController {
             } else {
               state.listPhotoGroupBean = results;
             }
-            Log.d("list----${state.listPhotoGroupBean[1].toJson()}");
+            ZpwLog.d("list----${state.listPhotoGroupBean[1].toJson()}");
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 }

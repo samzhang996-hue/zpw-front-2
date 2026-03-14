@@ -5,22 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/style.dart';
-import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
-import 'package:zpw/utils/sp_utils.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_style.dart';
+import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
+import 'package:zpw/utils/zpw_sp_utils.dart';
 
 import 'splash_logic.dart';
 
-class SplashPage extends BaseStatefulWidget {
+class SplashPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<SplashPage> getState() => _SplashPageState();
+  ZpwBaseWidgetState<SplashPage> getState() => _SplashPageState();
 }
 
-class _SplashPageState extends BaseWidgetState<SplashPage> {
+class _SplashPageState extends ZpwBaseWidgetState<SplashPage> {
   final logic = Get.put(SplashLogic());
   final state = Get.find<SplashLogic>().state;
 
@@ -38,8 +38,8 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    SpUtils.getBool("isAgreed").then((value) {
-      Log.i("splash--$value");
+    ZpwSpUtils.getBool("isAgreed").then((value) {
+      ZpwLog.i("splash--$value");
       if (value == null || !value) {
         if (Platform.isIOS) {
           logic.loginWithDeviceInfo();
@@ -54,7 +54,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
               },
             );
 
-            Log.i("splash2--$agreed");
+            ZpwLog.i("splash2--$agreed");
             // if (mounted) {
             //   setState(() {
             //     // 在对话框关闭后恢复视频播放
@@ -79,7 +79,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Stack(
       children: [
         Container(
@@ -93,7 +93,7 @@ class _SplashPageState extends BaseWidgetState<SplashPage> {
           child: Center(
             child: Column(
               children: [
-                const Text('应用启动中...', style: TextStyle(color: ColorPlate.themeColor, fontSize: 14)),
+                const Text('应用启动中...', style: TextStyle(color: ZpwColorPlate.zpwThemeColor, fontSize: 14)),
                 const SizedBox(height: 10),
                 Container(
                   width: 256,
@@ -185,15 +185,15 @@ class UserAgreementDialog extends GetWidget {
                       text: "《隐私政策》",
                       style: const TextStyle(
                         fontSize: 14,
-                        color: ColorPlate.themeColor,
+                        color: ZpwColorPlate.zpwThemeColor,
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          String htmlStr = HandleTool.instance.ySxy;
+                          String htmlStr = ZpwHandleTool.instance.ySxy;
                           if (htmlStr.length > 0) {
                             Get.to(
-                              MyWebViewPage(
+                              ZpwMyWebViewPage(
                                 titleStr: "隐私政策",
                                 htmlUrl: htmlStr,
                               ),
@@ -211,15 +211,15 @@ class UserAgreementDialog extends GetWidget {
                       text: "《用户协议》",
                       style: const TextStyle(
                         fontSize: 14,
-                        color: ColorPlate.themeColor,
+                        color: ZpwColorPlate.zpwThemeColor,
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          String htmlStr = HandleTool.instance.yHxy;
+                          String htmlStr = ZpwHandleTool.instance.yHxy;
                           if (htmlStr.length > 0) {
                             Get.to(
-                              MyWebViewPage(
+                              ZpwMyWebViewPage(
                                 titleStr: "用户协议",
                                 htmlUrl: htmlStr,
                               ),
@@ -241,7 +241,7 @@ class UserAgreementDialog extends GetWidget {
                 Container(
                   margin: const EdgeInsets.all(15.0), // 设置上边距为15.0
                   decoration: BoxDecoration(
-                    color: ColorPlate.themeColor,
+                    color: ZpwColorPlate.zpwThemeColor,
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   child: TextButton(

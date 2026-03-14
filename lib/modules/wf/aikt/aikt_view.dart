@@ -4,42 +4,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/aikt/view/my_slider.dart';
-import 'package:zpw/utils/dowload.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_dowload.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'aikt_logic.dart';
 
-class AiktPage extends BaseStatefulWidget {
+class AiktPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<BaseStatefulWidget> getState() => _AiktPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _AiktPageState();
 }
 
-class _AiktPageState extends BaseWidgetState with AppMixin {
+class _AiktPageState extends ZpwBaseWidgetState with ZpwAppMixin {
   final logic = Get.put(AiktLogic());
   final state = Get.find<AiktLogic>().state;
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          YAppBar(
+          zpwYAppBar(
               title: "扩图",
               right: InkWell(
                   onTap: () async {
-                    if ((await wxLogin() == true)) {
-                      gotoPushPage(WorksPage());
+                    if ((await zpwWxLogin() == true)) {
+                      zpwGotoPushPage(WorksPage());
                     }
                   },
-                  child: CommText(
+                  child: ZpwCommText(
                     text: "我的作品",
                     fontSize: 13.sp,
                     textColor: Color(0xff191919),
@@ -47,7 +47,7 @@ class _AiktPageState extends BaseWidgetState with AppMixin {
                   ))),
           Obx(() {
             return state.text.value == "保存图片"
-                ? QdsImage(state.path.value, 358.w, 531.w)
+                ? ZpwQdsImage(state.path.value, 358.w, 531.w)
                 : Image.file(
                     File(state.path.value),
                     width: 358.w,
@@ -61,7 +61,7 @@ class _AiktPageState extends BaseWidgetState with AppMixin {
                 margin: EdgeInsets.only(top: 20.w, left: 16.w),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: CommText(
+                    child: ZpwCommText(
                       text: "比例",
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
@@ -86,9 +86,9 @@ class _AiktPageState extends BaseWidgetState with AppMixin {
           InkWell(
             onTap: () async {
               UmengCommonSdk.onEvent('Aikt_click_event', {'name': ''});
-              if ((await wxLogin() == true)) {
-                if (!HandleTool.instance.isMember) {
-                  gotoPushPage(VipPage());
+              if ((await zpwWxLogin() == true)) {
+                if (!ZpwHandleTool.instance.isMember) {
+                  zpwGotoPushPage(VipPage());
                   return;
                 }
                 if (state.text.value == "保存图片") {
@@ -115,7 +115,7 @@ class _AiktPageState extends BaseWidgetState with AppMixin {
                 ),
               ),
               child: Center(child: Obx(() {
-                return CommText(
+                return ZpwCommText(
                   text: state.text.value,
                   fontWeight: FontWeight.w500,
                   fontSize: 18.sp,

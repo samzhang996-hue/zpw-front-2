@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 
 class CountdownTimer2 extends StatefulWidget {
   final void Function()? onCountdownComplete; // 添加回调函数
@@ -68,7 +68,7 @@ class _CountdownTimerState extends State<CountdownTimer2> {
         ),
        Container(
            margin: EdgeInsets.only(left: 3,right: 3),
-           child: CommText(text: ":",fontWeight: FontWeight.bold,fontSize: 20,textColor: Color(0xffE00505),)),
+           child: ZpwCommText(text: ":",fontWeight: FontWeight.bold,fontSize: 20,textColor: Color(0xffE00505),)),
         Container(
           width: 31,
           height: 27,
@@ -87,7 +87,7 @@ class _CountdownTimerState extends State<CountdownTimer2> {
         ),
         Container(
             margin: EdgeInsets.only(left: 3,right: 3),
-            child: CommText(text: ":",fontWeight: FontWeight.bold,fontSize: 20,textColor: Color(0xffE00505),)),
+            child: ZpwCommText(text: ":",fontWeight: FontWeight.bold,fontSize: 20,textColor: Color(0xffE00505),)),
         Container(
           width: 31,
           height: 27,
@@ -125,7 +125,7 @@ class CountdownDigit extends StatelessWidget {
       ),
       child:Align(
         alignment: Alignment.center,
-        child:  CommText(
+        child:  ZpwCommText(
           text: digit,
           fontSize: 16,
           fontWeight: FontWeight.bold,

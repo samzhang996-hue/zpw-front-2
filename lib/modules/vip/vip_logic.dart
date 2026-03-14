@@ -5,26 +5,26 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:tobias/tobias.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zpw/base/base_getx_controller.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/vip/model/payBean.dart';
 import 'package:zpw/modules/vip/model/vipBean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/buy_engine.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
-import 'package:zpw/utils/my_plugin.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_buy_engine.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
+import 'package:zpw/utils/zpw_my_plugin.dart';
 
 import 'vip_state.dart';
 
-class VipLogic extends BaseGetxController with AppMixin {
+class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
   final VipState state = VipState();
   Timer? _timer;
   int _elapsedSeconds = 0;
   bool _conditionMet = false;
-  late BuyEngin buyEngin;
+  late ZpwBuyEngin buyEngin;
   var click = false;
   var _success = false;
   bool isAt = false;
@@ -42,7 +42,7 @@ class VipLogic extends BaseGetxController with AppMixin {
       update();
     }
     getVipHome();
-    buyEngin = BuyEngin();
+    buyEngin = ZpwBuyEngin();
     buyEngin.initializeInAppPurchase();
     buyEngin.clearPendingPurchases();
   }
@@ -56,9 +56,9 @@ class VipLogic extends BaseGetxController with AppMixin {
   void _startPolling() {
     _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       _elapsedSeconds += 2;
-      Log.d("el----$_elapsedSeconds");
+      ZpwLog.d("el----$_elapsedSeconds");
       // 检查条件
-      if (HandleTool.instance.isMember || _conditionMet || _elapsedSeconds >= 180) {
+      if (ZpwHandleTool.instance.isMember || _conditionMet || _elapsedSeconds >= 180) {
         stopPolling();
       } else {
         getUserInfo();
@@ -71,16 +71,16 @@ class VipLogic extends BaseGetxController with AppMixin {
   }
 
   restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) {
-    Log.i("------click : $click=========");
-    Post(Api.payOrder_restoreIosPay, isShowProgress: true, params: {
+    ZpwLog.i("------click : $click=========");
+    Post(ZpwApi.zpwPayOrderRestoreIosPay, isShowProgress: true, params: {
       "receiptData": receiptData,
       "transactionId": transactionId,
       "isRestore": true,
       "orderId": "",
     }, success: (isSuccess, code, message, results) {
-      // Log.i("------${results.first} ${isSuccess}=========");
+      // ZpwLog.i("------${results.first} ${isSuccess}=========");
       if (isSuccess == true && results.isNotEmpty) {
-        // HandleTool.showAppToastText("恢复成功");
+        // ZpwHandleTool.showAppToastText("恢复成功");
 
         if (click) {
           getUserInfo();
@@ -92,11 +92,11 @@ class VipLogic extends BaseGetxController with AppMixin {
   iosPay(dynamic receiptData, String transactionId) {
     Map<String, dynamic> dataMap = {"transactionId": transactionId, "receiptData": receiptData, "orderId": "", "isRestore": false};
 
-    Log.i("------click : $click=========");
+    ZpwLog.i("------click : $click=========");
 
-    Post(Api.payOrder_iosPay, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
+    Post(ZpwApi.zpwPayOrderIosPay, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
-        // HandleTool.showAppToastText("购买成功");
+        // ZpwHandleTool.showAppToastText("购买成功");
         // getVipHome();
         if (click) {
           timerGetUserInfo();
@@ -121,15 +121,15 @@ class VipLogic extends BaseGetxController with AppMixin {
   }
 
   getVipHome() {
-    Post<VipBean>(Api.vip_getVipHome,
+    Post<VipBean>(ZpwApi.zpwVipGetVipHome,
         isShowProgress: true,
         success: (isSuccess, code, message, results) {
-          Log.d("vip0000----$isSuccess----${results.first.vipList?.length}");
+          ZpwLog.d("vip0000----$isSuccess----${results.first.vipList?.length}");
           if (isSuccess == true && results.isNotEmpty) {
             state.vipBean = results.first;
-            Log.d("vip111----$isSuccess----${results.first.toJson()}");
+            ZpwLog.d("vip111----$isSuccess----${results.first.toJson()}");
             if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
-              HandleTool.showAppToastText("暂无会员套餐");
+              ZpwHandleTool.showAppToastText("暂无会员套餐");
             } else {
               state.payKeyType = state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ?? 0;
             }
@@ -152,12 +152,12 @@ class VipLogic extends BaseGetxController with AppMixin {
     Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (count >= 20) {
         EasyLoading.dismiss();
-        HandleTool.showAppToastText('未查询到会员信息，请回到首页稍后刷新');
+        ZpwHandleTool.showAppToastText('未查询到会员信息，请回到首页稍后刷新');
         timer.cancel();
       }
       count++;
       getUserInfo();
-      if (HandleTool.instance.isMember) {
+      if (ZpwHandleTool.instance.isMember) {
         EasyLoading.dismiss();
         timer.cancel();
         Get.until((route) => route.isFirst);
@@ -166,13 +166,13 @@ class VipLogic extends BaseGetxController with AppMixin {
   }
 
   addUserAgreementOrder() async {
-    if ((await wxLogin() == true)) {
+    if ((await zpwWxLogin() == true)) {
       Map<String, dynamic> dataMap = {
         "goodsId": state.goodsId,
         "payKeyType": state.payKeyType,
       };
-      Post(Api.payOrder_addUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-        Log.i("------${results.first} ");
+      Post(ZpwApi.zpwPayOrderAddUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
+        ZpwLog.i("------${results.first} ");
         if (isSuccess == true && results.isNotEmpty) {
           var result = results[0];
           if (Platform.isAndroid) {
@@ -192,39 +192,39 @@ class VipLogic extends BaseGetxController with AppMixin {
     // Tobias tobias = Tobias();
     // tobias.pay(msg).then((value) {
     //   if ("${value["resultStatus"]}" == "9000") {
-    //     HandleTool.instance.isMember = true;
-    //     HandleTool.showAppToastText("支付成功");
+    //     ZpwHandleTool.instance.isMember = true;
+    //     ZpwHandleTool.showAppToastText("支付成功");
     //     // _startPolling();
     //   } else {
-    //     HandleTool.showAppToastText("支付失败");
+    //     ZpwHandleTool.showAppToastText("支付失败");
     //   }
     // });
 
     // String channel = await getChannelInfo(3);
 
-    if ((await wxLogin() == true)) {
+    if ((await zpwWxLogin() == true)) {
       Map<String, dynamic> dataMap = {
         // "channel": channel,
         "goodsId": state.goodsId,
         "payKeyType": state.payKeyType,
       };
-      Log.d("map----$dataMap");
-      Post<PayBean>(Api.payOrder_addOrder,
+      ZpwLog.d("map----$dataMap");
+      Post<PayBean>(ZpwApi.zpwPayOrderAddOrder,
           isShowProgress: true,
           params: dataMap,
           success: (isSuccess, code, message, results) {
-            Log.i("------${results.first.toJson()} $isSuccess=========");
+            ZpwLog.i("------${results.first.toJson()} $isSuccess=========");
             if (isSuccess == true && results.isNotEmpty) {
               state.payBean = results.first;
               Tobias tobias = Tobias();
               if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
                 tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
                   if ("${value["resultStatus"]}" == "9000") {
-                    HandleTool.instance.isMember = true;
-                    HandleTool.showAppToastText("支付成功");
+                    ZpwHandleTool.instance.isMember = true;
+                    ZpwHandleTool.showAppToastText("支付成功");
                     // _startPolling();
                   } else {
-                    HandleTool.showAppToastText("支付失败");
+                    ZpwHandleTool.showAppToastText("支付失败");
                   }
                 });
               } else if (state.payBean.payKeyType == 3) {
@@ -256,19 +256,19 @@ class VipLogic extends BaseGetxController with AppMixin {
     final MineLogic mineLogic = Get.find<MineLogic>();
 
     mineLogic.getUserInfo();
-    Post<UserInfoBean>(Api.sso_getUserInfo,
+    Post<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
         isShowProgress: false,
         success: (isSuccess, code, message, results) async {
           if (isSuccess == true && results.isNotEmpty) {
-            Log.d("is----${results.first}");
+            ZpwLog.d("is----${results.first}");
             mineLogic.state.userInfoBean = results.first;
-            HandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
-            if (HandleTool.instance.isMember) {
+            ZpwHandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
+            if (ZpwHandleTool.instance.isMember) {
               _conditionMet = true;
               if (_success == false) {
                 if (click) {
                   if (showToast) {
-                    HandleTool.showAppToastText("您已成为会员");
+                    ZpwHandleTool.showAppToastText("您已成为会员");
                   }
                 }
                 if (canBack) {

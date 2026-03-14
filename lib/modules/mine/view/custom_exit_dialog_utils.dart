@@ -2,10 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class CustomExitDialogUtils {
   static void showCustomDialog({
@@ -39,7 +39,7 @@ class CustomExitDialogUtils {
                           child: Column(
                             children: [
                               Container(
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: "注销账号",
                                   textColor: Color(0xff191919),
                                   fontSize: 20.sp,
@@ -50,7 +50,7 @@ class CustomExitDialogUtils {
                               ),
                               Container(
                                 margin: EdgeInsets.all(20),
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: "所有相关数据将被删除并无法找回，确定要删除账号吗？",
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w500,
@@ -72,7 +72,7 @@ class CustomExitDialogUtils {
                                           color: Color(0xff191919)
                                         )),
                                         child: Center(
-                                            child: CommText(
+                                            child: ZpwCommText(
                                           text: "取消",
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w500,
@@ -95,7 +95,7 @@ class CustomExitDialogUtils {
                                             ),
                                             borderRadius: BorderRadius.circular(30)),
                                         child: Center(
-                                            child: CommText(
+                                            child: ZpwCommText(
                                           text: "确定",
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w500,

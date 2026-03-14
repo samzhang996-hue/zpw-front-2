@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 import 'dart:convert';
 import 'makewst_state.dart';
 
-class MakewstLogic extends BaseGetxController {
+class MakewstZpwLogic extends ZpwBaseGetxController {
   final MakewstState state = MakewstState();
 
   @override
@@ -60,20 +60,20 @@ class MakewstLogic extends BaseGetxController {
 
   photoRecord(bool rush) {
     Map<String, dynamic> dataMap = {"pageIndex": 1, "pageSize": 100, "apiType": 6, "sortType": 1};
-    get(Api.photoRecord, isShowProgress: rush, params: dataMap, success: (isSuccess, code, message, results) {
+    get(ZpwApi.zpwPhotoRecord, isShowProgress: rush, params: dataMap, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
         state.records.value = data["records"];
-        Log.d("get----${state.records}");
+        ZpwLog.d("get----${state.records}");
         update();
         bool shouldContinuePolling = state.records.value.any((record) => (record['worksStatus'] == 0 || record['worksStatus'] == 1));
-        Log.d("msg1111---$shouldContinuePolling");
+        ZpwLog.d("msg1111---$shouldContinuePolling");
         if (!shouldContinuePolling) {
           stopPolling();
         } else {
           startPolling();
         }
-        Log.d("get----${state.records.value}");
+        ZpwLog.d("get----${state.records.value}");
       }
     });
   }
@@ -93,16 +93,16 @@ class MakewstLogic extends BaseGetxController {
       "valueJson": valueJsonString
     };
 
-    Post(Api.addPhotoRecord, params: params, success: (isSuccess, code, message, results) {
+    Post(ZpwApi.zpwAddPhotoRecord, params: params, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
-        Log.d("list----${results.first}");
+        ZpwLog.d("list----${results.first}");
         photoRecord(true);
       }
     });
   }
 
   defTimbreVO() {
-    get(Api.defTimbreVO, success: (isSuccess, code, message, results) {
+    get(ZpwApi.zpwDefTimbreVO, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         List<Map<String, dynamic>> dataList = results.cast<Map<String, dynamic>>();
         state.hfList.value = dataList;
@@ -112,7 +112,7 @@ class MakewstLogic extends BaseGetxController {
   }
 
   remakePhotoRecord(int id) {
-    get("${Api.remakePhotoRecord}?id=$id", isShowProgress: true, success: (isSuccess, code, message, results) {
+    get("${ZpwApi.zpwRemakePhotoRecord}?id=$id", isShowProgress: true, success: (isSuccess, code, message, results) {
       if (isSuccess == true && results.isNotEmpty) {
         photoRecord(true);
         update();

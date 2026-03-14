@@ -4,30 +4,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/style.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/zpw_style.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/mine/detail/detail_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'makewst_logic.dart';
 
-class MakewstPage extends BaseStatefulWidget {
+class MakewstPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<BaseStatefulWidget> getState() => MakewstPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => MakewstPageState();
 }
 
-class MakewstPageState extends BaseWidgetState with AppMixin {
+class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
   final ScrollController _scrollController = ScrollController();
   final _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  final logic = Get.put(MakewstLogic());
-  final state = Get.find<MakewstLogic>().state;
+  final logic = Get.put(MakewstZpwLogic());
+  final state = Get.find<MakewstZpwLogic>().state;
 
   @override
   void initState() {
@@ -61,8 +61,8 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
-    return GetBuilder<MakewstLogic>(builder: (logic) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
+    return GetBuilder<MakewstZpwLogic>(builder: (logic) {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Stack(
@@ -72,15 +72,15 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                 margin: EdgeInsets.only(bottom: 100.w),
                 child: Column(
                   children: [
-                    YAppBar(
+                    zpwYAppBar(
                         title: "文生图",
                         right: InkWell(
                             onTap: () async {
-                              if ((await wxLogin() == true)) {
-                                gotoPushPage(WorksPage());
+                              if ((await zpwWxLogin() == true)) {
+                                zpwGotoPushPage(WorksPage());
                               }
                             },
-                            child: CommText(
+                            child: ZpwCommText(
                               text: "我的作品",
                             ))),
                     Expanded(child: createListView())
@@ -97,7 +97,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                     children: [
                       Container(
                           margin: EdgeInsets.only(left: 16.w, bottom: 4.w),
-                          child: CommText(
+                          child: ZpwCommText(
                             text: "内容由ai生成，禁止利用本功能从事违法活",
                             fontWeight: FontWeight.w400,
                             textColor: Color(0xffCCCCCC),
@@ -112,7 +112,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(child: buildTextField(), margin: EdgeInsets.only(left: 12.w, right: 12.w)),
-                              // CommText(text: state.funcValue.value,fontSize: 14.sp,textColor: Color(0xff191919),),
+                              // ZpwCommText(text: state.funcValue.value,fontSize: 14.sp,textColor: Color(0xff191919),),
                               Container(
                                 margin: EdgeInsets.only(bottom: 5.w),
                                 child: Row(
@@ -138,7 +138,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                               height: 23.w,
                                               decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6)),
                                               child: Center(
-                                                  child: CommText(
+                                                  child: ZpwCommText(
                                                 text: state.title.value,
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.w500,
@@ -151,7 +151,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                               height: 23.w,
                                               decoration: BoxDecoration(color: Color(0xffEEEEEE), borderRadius: BorderRadius.circular(6.w)),
                                               child: Center(
-                                                  child: CommText(
+                                                  child: ZpwCommText(
                                                 text: state.name.value,
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.w500,
@@ -164,7 +164,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                     InkWell(
                                       onTap: () {
                                         if (state.funcValue.value.isEmpty) {
-                                          HandleTool.showAppToastText("请输入提示词！");
+                                          ZpwHandleTool.showAppToastText("请输入提示词！");
                                           return;
                                         }
                                         logic.addPhotoRecord();
@@ -193,7 +193,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                               children: [
                                 Container(
                                     margin: EdgeInsets.only(top: 18.w, bottom: 14.w),
-                                    child: CommText(
+                                    child: ZpwCommText(
                                       text: "选择比例",
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w500,
@@ -213,7 +213,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                             height: 34.w,
                                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), border: Border.all(width: 1.w, color: isSelect ? Color(0xff191919) : Color(0xffCCCCCC))),
                                             child: Center(
-                                                child: CommText(
+                                                child: ZpwCommText(
                                               text: title,
                                               fontSize: 16.sp,
                                               fontWeight: FontWeight.w500,
@@ -223,7 +223,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                     })),
                                 Container(
                                     margin: EdgeInsets.only(top: 18.w, bottom: 14.w),
-                                    child: CommText(
+                                    child: ZpwCommText(
                                       text: "选择风格",
                                       fontSize: 18.sp,
                                       fontWeight: FontWeight.w500,
@@ -251,7 +251,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                               alignment: Alignment.bottomCenter,
                                               children: [
                                                 // 假设 QdsImageCorner 是一个自定义组件，它接受图像 URL、宽度、高度和圆角半径作为参数
-                                                QdsImageCorner(bgImg, 80.w, 118.w, 8),
+                                                ZpwQdsImageCorner(bgImg, 80.w, 118.w, 8),
                                                 Container(
                                                   height: 27.w,
                                                   decoration: BoxDecoration(
@@ -261,7 +261,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                                         bottomRight: Radius.circular(8),
                                                       )),
                                                   child: Center(
-                                                      child: CommText(
+                                                      child: ZpwCommText(
                                                     text: name,
                                                     textColor: Colors.white,
                                                     fontWeight: FontWeight.w400,
@@ -354,7 +354,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                 color: Colors.white,
               ),
             ),
-            CommText(
+            ZpwCommText(
               text: worksStatus == 2 ? "制作失败" : "制作中...",
               fontSize: 12.sp,
               textColor: Colors.white,
@@ -365,15 +365,15 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                 child: Container(
                     margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.w),
                     height: 35.w,
-                    decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: ZpwColorPlate.themeColor, borderRadius: BorderRadius.circular(20)),
                     child: Center(
-                        child: CommText(
+                        child: ZpwCommText(
                       text: "重新制作",
                       fontSize: 15.sp,
                       textColor: Colors.white,
                     ))),
                 onTap: () {
-                  // Log.d("xxxx----------$funcId---$id");
+                  // ZpwLog.d("xxxx----------$funcId---$id");
                   // logic.getFuncDetail(funcId, id);
                   logic.remakePhotoRecord(id);
                 },
@@ -383,7 +383,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
         ),
       );
     } else {
-      return QdsImageCorner(returnUrl, w.w, h.w, 16.w);
+      return ZpwQdsImageCorner(returnUrl, w.w, h.w, 16.w);
     }
   }
 
@@ -405,7 +405,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
           int id = item["id"] ?? 0;
           int funcId = item["funcId"] ?? 0;
           int apiType = item["apiType"] ?? 0;
-          Log.d("msg----${item["valueJson"]}");
+          ZpwLog.d("msg----${item["valueJson"]}");
           String jsonName = "无风格";
           String jsonTitle = "1:1";
           if (item["valueJson"] != null) {
@@ -413,7 +413,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
             jsonName = jsonMap["name"] ?? "";
             jsonTitle = jsonMap["title"] ?? "";
           }
-          Log.d("list----$novel----$returnUrl---$type");
+          ZpwLog.d("list----$novel----$returnUrl---$type");
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -431,7 +431,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CommText(
+                          ZpwCommText(
                             text: novel,
                             fontSize: 14.sp,
                             textColor: Color(0xff191919),
@@ -451,7 +451,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Center(
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: jsonTitle,
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w400,
@@ -468,7 +468,7 @@ class MakewstPageState extends BaseWidgetState with AppMixin {
                                   borderRadius: BorderRadius.circular(4.w),
                                 ),
                                 child: Center(
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: jsonName,
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w400,

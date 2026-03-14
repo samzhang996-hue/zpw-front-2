@@ -9,29 +9,29 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/wf/aikt/aikt_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
-import 'package:zpw/utils/permission.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
+import 'package:zpw/utils/zpw_permission.dart';
 
 import 'photo_list_logic.dart';
 
-class Photo_listPage extends BaseStatefulWidget {
+class Photo_listPage extends ZpwBaseStatefulWidget {
   final bool isNew;
   final bool hasAvatar;
 
   Photo_listPage({this.isNew = true, this.hasAvatar = true});
 
   @override
-  BaseWidgetState<Photo_listPage> getState() => _Photo_listPageState();
+  ZpwBaseWidgetState<Photo_listPage> getState() => _Photo_listPageState();
 }
 
-class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
+class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
   final logic = Get.put(Photo_listLogic());
   final state = Get.find<Photo_listLogic>().state;
   late List<AssetEntity> _photos = [];
@@ -42,7 +42,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
 
   Future<void> _loadPhotos() async {
     if (Platform.isIOS) {
-      final res = await PermissionUtils.checkFilesAccessPermission();
+      final res = await ZpwPermissionUtils.checkFilesAccessPermission();
       if (!res) {
         _isFilesAccessPermission.value = false;
         state.isPermission.value = false;
@@ -59,7 +59,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
         PermissionStatus imagesStatus = await Permission.photos.status;
         PermissionStatus videoStatus = await Permission.videos.status;
         if (!videoStatus.isGranted || !imagesStatus.isGranted) {
-          PermissionUtils.showTopSnackbar();
+          ZpwPermissionUtils.showTopSnackbar();
           imagesStatus = await Permission.photos.request();
           // videoStatus = await Permission.videos.request();
           Get.back();
@@ -70,22 +70,22 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
         PermissionStatus imagesStatus = await Permission.photos.status;
         PermissionStatus videoStatus = await Permission.videos.status;
         if (!imagesStatus.isGranted || !videoStatus.isGranted) {
-          PermissionUtils.showTopSnackbar();
+          ZpwPermissionUtils.showTopSnackbar();
           imagesStatus = await Permission.photos.request();
           videoStatus = await Permission.videos.request();
           Get.back();
         }
       } else {
         if (!storagePermission) {
-          PermissionUtils.showTopSnackbar();
+          ZpwPermissionUtils.showTopSnackbar();
           storagePermission = await Permission.storage.request().isGranted;
           if (storagePermission) Get.back();
         }
       }
       final PermissionState ps = await PhotoManager.requestPermissionExtend();
-      Log.d("msg----${ps.hasAccess}");
+      ZpwLog.d("msg----${ps.hasAccess}");
       if (!ps.hasAccess) {
-        final res = await PermissionUtils.checkFilesAccessPermission();
+        final res = await ZpwPermissionUtils.checkFilesAccessPermission();
         if (!res) {
           _isFilesAccessPermission.value = false;
           state.isPermission.value = false;
@@ -96,7 +96,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     _isFilesAccessPermission.value = true;
     state.isPermission.value = true;
     List<AssetPathEntity> resultList = await PhotoManager.getAssetPathList(type: RequestType.image);
-    Log.d("list----list----${resultList.length}");
+    ZpwLog.d("list----list----${resultList.length}");
     // 假设我们只获取第一个相册的照片
     if (resultList.isNotEmpty) {
       final AssetPathEntity firstAlbum = resultList.first;
@@ -115,12 +115,12 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
 
   void _uploadImg(String? path) async {
     if (state.type == 1) {
-      // gotoPushPage(AiktPage(), arguments: {"path": path});
+      // zpwGotoPushPage(AiktPage(), arguments: {"path": path});
       Get.off(AiktPage(), arguments: {"path": path});
       return;
     }
-    HandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
-      Log.e("widget.isNew:${widget.isNew}");
+    ZpwHandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
+      ZpwLog.e("widget.isNew:${widget.isNew}");
       // if (path == null) return;
       if (widget.isNew) {
         Get.offAll(() => const MainPage());
@@ -136,21 +136,21 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     //   final formData = ffff.FormData.fromMap({
     //     "file": await ffff.MultipartFile.fromFile(res!),
     //   });
-    //   final bean = await HandleTool.instance.QDSUpload<UploadBean>(
+    //   final bean = await ZpwHandleTool.instance.QDSUpload<UploadBean>(
     //       Api.uploadFile,
     //       params: formData,
     //       onModel: (v) => UploadBean.fromJson(v));
     //   if (bean == null) return;
 
-    //   HandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
+    //   ZpwHandleTool.instance.SMWPost('${Api.bindDefaultImg}?imgUrl=${bean.url}',
     //       isShowProgress: true, success: (isSuccess, code, message, results) {
     //     if (isSuccess == true && results.isNotEmpty) {
     //       Get.back();
-    //       // HandleTool.showAppToastText("上传成功");
-    //       HandleTool.instance.headImg = '${bean.url}';
+    //       // ZpwHandleTool.showAppToastText("上传成功");
+    //       ZpwHandleTool.instance.headImg = '${bean.url}';
     //       // Get.offAll(() => const MainPage());
-    //       if (!HandleTool.instance.isMember) {
-    //         gotoPushPage(VipPage(), arguments: {"type": 1});
+    //       if (!ZpwHandleTool.instance.isMember) {
+    //         zpwGotoPushPage(VipPage(), arguments: {"type": 1});
     //       } else {
     //         Get.offAll(() => const MainPage());
     //       }
@@ -173,16 +173,16 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
     if (pickedFile == null) {
       return;
     }
-    Log.e('file----${pickedFile.path}');
+    ZpwLog.e('file----${pickedFile.path}');
     // if (Platform.isIOS) {
     int fileSize = await pickedFile.length();
     if (fileSize > _maxSize) {
-      HandleTool.showAppToastText("文件过大,请重新选择");
+      ZpwHandleTool.showAppToastText("文件过大,请重新选择");
       return;
     }
-    Log.e("file:${formatFileSize(fileSize)}");
+    ZpwLog.e("file:${formatFileSize(fileSize)}");
     if (state.type == 1) {
-      // gotoPushPage(AiktPage(), arguments: {"path": pickedFile.path});
+      // zpwGotoPushPage(AiktPage(), arguments: {"path": pickedFile.path});
       Get.off(AiktPage(), arguments: {"path": pickedFile.path});
       return;
     }
@@ -216,7 +216,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Stack(
       children: [
         Obx(
@@ -226,7 +226,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    YAppBar(
+                    zpwYAppBar(
                         title: "全部照片",
                         left: !widget.isNew
                             ? null
@@ -263,7 +263,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                     //                 color: const Color(0xffFF2E7E),
                     //                 borderRadius: BorderRadius.circular(30)),
                     //             child: Center(
-                    //                 child: CommText(
+                    //                 child: ZpwCommText(
                     //               text: "相册选择",
                     //               fontSize: 18.sp,
                     //               fontWeight: FontWeight.bold,
@@ -296,7 +296,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                               builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done) {
                                   if (snapshot.hasError) {
-                                    return CommText(text: 'Error loading thumbnail');
+                                    return ZpwCommText(text: 'Error loading thumbnail');
                                   }
                                   Uint8List? thumbnail = snapshot.data;
                                   if (thumbnail != null) {
@@ -309,18 +309,18 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                           int fileSize = await file.length();
 
                                           if (fileSize > _maxSize) {
-                                            HandleTool.showAppToastText("文件过大,请重新选择");
+                                            ZpwHandleTool.showAppToastText("文件过大,请重新选择");
                                             return;
                                           }
-                                          Log.e("file:${formatFileSize(fileSize)}");
+                                          ZpwLog.e("file:${formatFileSize(fileSize)}");
                                           _uploadImg(file.path);
-                                          // Log.e(
+                                          // ZpwLog.e(
                                           //     "file:${formatFileSize(fileSize)}");
                                           // Get.back(result: file.path);
                                         },
                                         child: Image.memory(thumbnail, fit: BoxFit.cover));
                                   } else {
-                                    return CommText(text: 'No thumbnail available');
+                                    return ZpwCommText(text: 'No thumbnail available');
                                   }
                                 } else {
                                   // 可以显示一个占位符，比如一个圆形进度指示器
@@ -361,7 +361,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                     children: [
                       SizedBox(height: 24.w),
                       Center(
-                        child: CommText(
+                        child: ZpwCommText(
                           text: "相机、相册",
                           textColor: const Color(0xFF191919),
                           fontSize: 18.sp,
@@ -372,7 +372,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 60.w),
                         child: Center(
-                          child: CommText(
+                          child: ZpwCommText(
                             text: "AI照片王需要相机、相册权限为您提供服务，请在设置中开启",
                             textColor: const Color(0xFF999999),
                             fontSize: 15.sp,
@@ -406,7 +406,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                         borderRadius: BorderRadius.circular(26.w),
                                       ),
                                       child: Center(
-                                        child: CommText(
+                                        child: ZpwCommText(
                                           text: "取消",
                                           textColor: const Color(0xFF191919),
                                           fontSize: 18.sp,
@@ -432,7 +432,7 @@ class _Photo_listPageState extends BaseWidgetState<Photo_listPage> {
                                         borderRadius: BorderRadius.circular(26.w),
                                       ),
                                       child: Center(
-                                        child: CommText(
+                                        child: ZpwCommText(
                                           text: "去设置",
                                           textColor: const Color(0xFF191919),
                                           fontSize: 18.sp,

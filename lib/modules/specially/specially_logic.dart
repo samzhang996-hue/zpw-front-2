@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zpw/model/list_photo_group_bean.dart';
+import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 import 'package:zpw/modules/specially/specially_state.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class SpeciallyLogic extends GetxController
     with GetSingleTickerProviderStateMixin {
   final SpeciallyState state = SpeciallyState();
   TabController? tabController;
-  var listPhotoGroupBean = <ListPhotoGroupBean>[];
-  var listPhotoGroupBean2 = <ListPhotoGroupBean>[];
+  var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
+  var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];
 
   void _getData() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 1,
@@ -25,11 +25,11 @@ class SpeciallyLogic extends GetxController
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   void _getData2() {
-    HandleTool.instance.QDSGet<ListPhotoGroupBean>(Api.listPhotoGroup,
+    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
         isShowProgress: true,
         params: {
           "groupType": 0,
@@ -39,13 +39,13 @@ class SpeciallyLogic extends GetxController
           if (isSuccess == true && results.isNotEmpty) {
             listPhotoGroupBean2 = results;
             listPhotoGroupBean2
-                .add(ListPhotoGroupBean(id: -1, groupName: "头像集"));
+                .add(ZpwListPhotoGroupBean(zpwId: -1, zpwGroupName: "头像集"));
             tabController =
                 TabController(length: listPhotoGroupBean2.length, vsync: this);
             update();
           }
         },
-        onModel: (json) => ListPhotoGroupBean.fromJson(json));
+        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
   }
 
   @override

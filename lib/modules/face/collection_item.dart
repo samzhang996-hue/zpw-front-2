@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/no_more_content_view.dart';
-import 'package:zpw/model/page_photo_group_bind_bean.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_no_more_content_view.dart';
+import 'package:zpw/model/zpw_page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/wf/wst/wst_view.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 class CollectionItem extends StatefulWidget {
   const CollectionItem({super.key, required this.id});
@@ -23,8 +23,8 @@ class CollectionItem extends StatefulWidget {
 }
 
 class _CollectionItemState extends State<CollectionItem> {
-  // late final _bean = PagePhotoGroupBindBean().obs;
-  late final _records = <Records>[].obs;
+  // late final _bean = ZpwPagePhotoGroupBindBean().obs;
+  late final _records = <ZpwRecords>[].obs;
   var _loadPage = 2;
   var _pages = 0;
 
@@ -38,10 +38,10 @@ class _CollectionItemState extends State<CollectionItem> {
       "pageSize": 10,
     };
 
-    Log.e("params:$params");
+    ZpwLog.e("params:$params");
     _showNoMoreContent.value = false;
-    HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
-      Api.pagePhotoGroupBind,
+    ZpwHandleTool.instance.QDSGet<ZpwPagePhotoGroupBindBean>(
+      ZpwApi.zpwPagePhotoGroupBind,
       isShowProgress: true,
       params: params,
       success: (isSuccess, code, message, results) {
@@ -54,7 +54,7 @@ class _CollectionItemState extends State<CollectionItem> {
           _showNoMoreContent.value = true;
         }
       },
-      onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
+      onModel: (json) => ZpwPagePhotoGroupBindBean.fromJson(json),
     );
   }
 
@@ -74,10 +74,10 @@ class _CollectionItemState extends State<CollectionItem> {
       "pageSize": 10,
     };
 
-    Log.e("_loadPage.params:$params");
+    ZpwLog.e("_loadPage.params:$params");
     _showNoMoreContent.value = false;
-    HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
-      Api.pagePhotoGroupBind,
+    ZpwHandleTool.instance.QDSGet<ZpwPagePhotoGroupBindBean>(
+      ZpwApi.zpwPagePhotoGroupBind,
       isShowProgress: true,
       params: params,
       success: (isSuccess, code, message, results) {
@@ -91,16 +91,16 @@ class _CollectionItemState extends State<CollectionItem> {
           _showNoMoreContent.value = true;
         }
       },
-      onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
+      onModel: (json) => ZpwPagePhotoGroupBindBean.fromJson(json),
     );
   }
 
   /// 模板
-  Widget _getBindType0(Records bean) {
+  Widget _getBindType0(ZpwRecords bean) {
     return GestureDetector(
       onTap: () {
         UmengCommonSdk.onEvent(
-            'Muban_click_event', {'Records': '${bean.toJson()}'});
+            'Muban_click_event', {'ZpwRecords': '${bean.toJson()}'});
         if (bean.photoFuncResp?.apiType == 6) {
           Get.to(WstPage(), arguments: {
             "funcValue": bean.photoFuncResp?.funcValue ?? "",
@@ -131,7 +131,7 @@ class _CollectionItemState extends State<CollectionItem> {
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.w),
-                child: QdsImage(
+                child: ZpwQdsImage(
                   "${bean.photoFuncResp?.showImgGif}",
                   175.w,
                   265.w,
@@ -182,10 +182,10 @@ class _CollectionItemState extends State<CollectionItem> {
   }
 
   /// 合集
-  Widget _getBindType1(Records bean) {
+  Widget _getBindType1(ZpwRecords bean) {
     return GestureDetector(
       onTap: () {
-        // Log.e('bean:${bean.toJson()}');
+        // ZpwLog.e('bean:${bean.toJson()}');
         // if (bean.photoFuncResp?.apiType == 6) {
         //   Get.to(WstPage(), arguments: {
         //     "funcValue": bean.photoFuncResp?.funcValue ?? "",
@@ -221,7 +221,7 @@ class _CollectionItemState extends State<CollectionItem> {
 
             ClipRRect(
               borderRadius: BorderRadius.circular(8.w),
-              child: QdsImage(
+              child: ZpwQdsImage(
                 "${bean.photoGroupResp?.imgUrlVertical}",
                 175.w,
                 265.w,
@@ -253,7 +253,7 @@ class _CollectionItemState extends State<CollectionItem> {
             //       SizedBox(height: 14.w),
             //       // ClipRRect(
             //       //   borderRadius: BorderRadius.circular(8.w),
-            //       //   child: QdsImage(
+            //       //   child: ZpwQdsImage(
             //       //     "${bean.photoGroupResp?.imgUrlAcross}",
             //       //     144.w,
             //       //     175.w,
@@ -351,7 +351,7 @@ class _CollectionItemState extends State<CollectionItem> {
                       child: Obx(
                         () => Visibility(
                           visible: _showNoMoreContent.isTrue,
-                          child: const NoMoreContentView(),
+                          child: const ZpwNoMoreContentView(),
                         ),
                       ),
                     )

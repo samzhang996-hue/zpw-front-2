@@ -2,11 +2,11 @@
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get.dart';
 // import 'package:tabbar_gradient_indicator_plus/tabbar_gradient_indicator_plus.dart';
-// import 'package:zpw/common/constant.dart';
-// import 'package:zpw/common/qds_Image.dart';
-// import 'package:zpw/model/list_photo_group_bean.dart';
+// import 'package:zpw/common/zpw_constant.dart';
+// import 'package:zpw/common/zpw_qds_image.dart';
+// import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 // import 'package:zpw/modules/face/collection_item.dart';
-// import 'package:zpw/utils/log_utils.dart';
+// import 'package:zpw/utils/zpw_log_utils.dart';
 
 // class GatherPage extends StatefulWidget {
 //   const GatherPage({
@@ -68,7 +68,7 @@
 //                       height: double.infinity,
 //                       child: Stack(
 //                         children: [
-//                           QdsImage(widget.imgUrlAcross, 1.sw, 260.w,
+//                           ZpwQdsImage(widget.imgUrlAcross, 1.sw, 260.w,
 //                               fit: BoxFit.cover),
 //                           // Positioned(
 //                           //   left: 0,

@@ -2,26 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/style.dart';
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/zpw_style.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/main/main_logic.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import '../detail/detail_view.dart';
 import 'works_logic.dart';
 
-class WorksPage extends BaseStatefulWidget {
+class WorksPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<WorksPage> getState() => _WorksPageState();
+  ZpwBaseWidgetState<WorksPage> getState() => _WorksPageState();
 }
 
-class _WorksPageState extends BaseWidgetState<WorksPage>
+class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
     with SingleTickerProviderStateMixin {
-  final logic = Get.put(WorksLogic());
-  final state = Get.find<WorksLogic>().state;
+  final logic = Get.put(WorksZpwLogic());
+  final state = Get.find<WorksZpwLogic>().state;
   final List<String> _tabs = ['视频', '图片'];
   late TabController _tabController;
 
@@ -53,7 +53,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
     _tabController = TabController(length: 2, vsync: this);
     // 监听 TabController 的 index 变化
     _tabController.addListener(() {
-      Log.d("msg----${_tabController.index}");
+      ZpwLog.d("msg----${_tabController.index}");
       // logic.stateIndex(_tabController.index == 0 ? 1 : 0);
       // logic.photoRecord();
     });
@@ -67,13 +67,13 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
-    return GetBuilder<WorksLogic>(builder: (logic) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
+    return GetBuilder<WorksZpwLogic>(builder: (logic) {
       return Container(
         color: Colors.white,
         child: Column(
           children: [
-            YAppBar(
+            zpwYAppBar(
               bgColor: Colors.transparent,
               widget: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,7 +132,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             Container(
               margin: EdgeInsets.only(left: 16.w, top: 10.w, bottom: 10.w),
               child: Align(
-                child: CommText(
+                child: ZpwCommText(
                   text: "内容由ai生成，禁止利用本功能从事违法活动",
                   textColor: const Color(0xffCCCCCC),
                   fontSize: 10.sp,
@@ -151,7 +151,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                       double unit = 1.0 / _tabs.length;
                       int index = progress ~/ unit;
                       if (index != _currentIndex && index < _tabs.length) {
-                        Log.d("msg----${_tabController.index}");
+                        ZpwLog.d("msg----${_tabController.index}");
                         setState(() {
                           _currentIndex = index;
                         });
@@ -207,7 +207,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                   ),
                 ),
                 child: Center(
-                  child: CommText(
+                  child: ZpwCommText(
                     text: "去创作",
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
@@ -243,7 +243,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
           int id = data["id"] ?? 0;
           int funcId = data["funcId"] ?? 0;
           int apiType = data["apiType"] ?? 0;
-          Log.d("data111--$data");
+          ZpwLog.d("data111--$data");
           String imagUrl;
           if ((apiType == -1 || apiType == 6)) {
             imagUrl = returnUrl;
@@ -256,7 +256,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
             child: Container(
               child: Stack(
                 children: [
-                  QdsImageCorner(imagUrl, 175.w, 265.w, 8),
+                  ZpwQdsImageCorner(imagUrl, 175.w, 265.w, 8),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
@@ -272,7 +272,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                       ),
                       child: Container(
                         margin: EdgeInsets.only(left: 10.w),
-                        child: CommText(
+                        child: ZpwCommText(
                           text: tags,
                           fontSize: 14.sp,
                           textColor: Colors.white,
@@ -301,7 +301,7 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                               color: Colors.white,
                             ),
                           ),
-                          CommText(
+                          ZpwCommText(
                             text: worksStatus == 2 ? "制作失败" : "生成中...",
                             fontSize: 12.sp,
                             textColor: Colors.white,
@@ -318,20 +318,20 @@ class _WorksPageState extends BaseWidgetState<WorksPage>
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
                                     width: 1.w,
-                                    color: ColorPlate.themeColor,
+                                    color: ZpwColorPlate.zpwThemeColor,
                                   ),
                                 ),
                                 child: Center(
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: "重新制作",
                                     fontSize: 13.sp,
-                                    textColor: ColorPlate.themeColor,
+                                    textColor: ZpwColorPlate.zpwThemeColor,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ),
                               onTap: () {
-                                Log.d("xxxx----------$funcId---$id");
+                                ZpwLog.d("xxxx----------$funcId---$id");
                                 logic.getFuncDetail(funcId, id);
                               },
                             ),

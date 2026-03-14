@@ -5,7 +5,7 @@ import 'package:zpw/modules/gameplay/gameplay_view.dart';
 import 'package:zpw/modules/mine/mine_view.dart';
 import 'package:zpw/modules/specially/specially_view.dart';
 import 'package:zpw/modules/wf/wf_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class MainState {
   late RxInt index;
@@ -19,7 +19,7 @@ class MainState {
   MainState() {
     index = 0.obs;
     currentIndex = 0.obs;
-    isMember = HandleTool().isMember.obs;
+    isMember = ZpwHandleTool().isMember.obs;
 
     pages = [
       // HomePage(),

@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/modules/wf/makewst/makewst_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'wst_logic.dart';
 
-class WstPage extends BaseStatefulWidget {
+class WstPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<BaseStatefulWidget> getState() => WstPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => WstPageState();
 }
 
-class WstPageState extends BaseWidgetState with AppMixin {
+class WstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
   final logic = Get.put(WstLogic());
   final state = Get.find<WstLogic>().state;
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(
@@ -31,12 +31,12 @@ class WstPageState extends BaseWidgetState with AppMixin {
           child: Stack(
             children: [
               Column(children: [
-                YAppBar(
+                zpwYAppBar(
                     title: "文生图",
                     right: InkWell(
                         onTap: () async {
-                          if ((await wxLogin() == true)) {
-                            gotoPushPage(WorksPage());
+                          if ((await zpwWxLogin() == true)) {
+                            zpwGotoPushPage(WorksPage());
                           }
                         },
                         child: Row(
@@ -46,7 +46,7 @@ class WstPageState extends BaseWidgetState with AppMixin {
                               width: 22.w,
                               height: 22.w,
                             ),
-                            CommText(
+                            ZpwCommText(
                               text: "作品",
                               fontSize: 13.sp,
                               textColor: Color(0xff191919),
@@ -58,7 +58,7 @@ class WstPageState extends BaseWidgetState with AppMixin {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(margin: EdgeInsets.all(10.w), child: QdsImageCorner(state.showImgGif.value, double.infinity, 458.w, 16.w, fit: BoxFit.cover)),
+                        Container(margin: EdgeInsets.all(10.w), child: ZpwQdsImageCorner(state.showImgGif.value, double.infinity, 458.w, 16.w, fit: BoxFit.cover)),
                         Container(
                           margin: EdgeInsets.all(10.w),
                           width: double.infinity,
@@ -68,7 +68,7 @@ class WstPageState extends BaseWidgetState with AppMixin {
                             children: [
                               Container(
                                   margin: EdgeInsets.only(left: 13.w, top: 15.w),
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: "提示词Prom",
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.sp,
@@ -76,7 +76,7 @@ class WstPageState extends BaseWidgetState with AppMixin {
                                   )),
                               Container(
                                   margin: EdgeInsets.only(top: 8.w, left: 13.w, right: 13.w, bottom: 16.w),
-                                  child: CommText(
+                                  child: ZpwCommText(
                                     text: state.funcValue.value,
                                     fontSize: 14.sp,
                                     textColor: Color(0xff818181),
@@ -98,11 +98,11 @@ class WstPageState extends BaseWidgetState with AppMixin {
                 right: 0,
                 child: InkWell(
                     onTap: () async {
-                      if ((await wxLogin() == true)) {
-                        if (HandleTool.instance.isMember) {
-                          gotoPushPage(MakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
+                      if ((await zpwWxLogin() == true)) {
+                        if (ZpwHandleTool.instance.isMember) {
+                          zpwGotoPushPage(MakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
                         } else {
-                          gotoPushPage(VipPage());
+                          zpwGotoPushPage(VipPage());
                         }
                       }
                     },
@@ -126,7 +126,7 @@ class WstPageState extends BaseWidgetState with AppMixin {
                             width: 26.w,
                             height: 26.w,
                           ),
-                          CommText(
+                          ZpwCommText(
                             text: "做同款",
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w500,

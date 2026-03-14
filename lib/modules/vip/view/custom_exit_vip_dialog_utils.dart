@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
 import 'package:zpw/modules/main/main_page.dart';
 import 'package:zpw/modules/vip/view/countdown_timer2.dart';
 import 'package:zpw/modules/vip/view/custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class CustomExitVipDialogUtils2 {
   static void showCustomDialog({
@@ -112,7 +112,7 @@ class CustomExitVipDialogUtils2 {
                                       margin: EdgeInsets.only(
                                           left: 8.w, right: 8.w),
                                       child: Center(
-                                        child: CommText(
+                                        child: ZpwCommText(
                                           text: rk4,
                                           fontSize: 14.sp,
                                           textColor: Color(0xff191919),
@@ -137,7 +137,7 @@ class CustomExitVipDialogUtils2 {
                                         Row(
                                           children: [
                                             Container(
-                                              child: CommText(
+                                              child: ZpwCommText(
                                                 text: "¥",
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20.sp,
@@ -145,7 +145,7 @@ class CustomExitVipDialogUtils2 {
                                               ),
                                               margin: EdgeInsets.only(top: 8.w),
                                             ),
-                                            CommText(
+                                            ZpwCommText(
                                               text: rk3,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 32.sp,
@@ -153,7 +153,7 @@ class CustomExitVipDialogUtils2 {
                                             ),
                                           ],
                                         ),
-                                        CommText(
+                                        ZpwCommText(
                                           text: rk5,
                                           fontSize: 13.sp,
                                           textColor: Color(0xff999999),
@@ -166,7 +166,7 @@ class CustomExitVipDialogUtils2 {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        CommText(
+                                        ZpwCommText(
                                           text: rk1,
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w500,
@@ -175,7 +175,7 @@ class CustomExitVipDialogUtils2 {
                                         SizedBox(
                                           height: 15.w,
                                         ),
-                                        CommText(
+                                        ZpwCommText(
                                           text: rk2,
                                           fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
@@ -193,7 +193,7 @@ class CustomExitVipDialogUtils2 {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CommText(
+                                    ZpwCommText(
                                       text: "距优惠结束还有",
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14.sp,
@@ -238,7 +238,7 @@ class CustomExitVipDialogUtils2 {
                                       width: 8,
                                     ),
                                     InkWell(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                         text: "点击购买即表示您同意",
                                         fontSize: 12,
                                         textColor: const Color(0xff808080),
@@ -252,17 +252,17 @@ class CustomExitVipDialogUtils2 {
                                       },
                                     ),
                                     InkWell(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                         text: "《会员协议》",
                                         fontSize: 12,
                                         textColor: const Color(0xff808080),
                                       ),
                                       onTap: () {
                                         String htmlStr =
-                                            HandleTool.instance.hYxy;
+                                            ZpwHandleTool.instance.hYxy;
                                         if (htmlStr.length > 0) {
                                           Get.to(
-                                            MyWebViewPage(
+                                            ZpwMyWebViewPage(
                                               titleStr: "会员协议",
                                               htmlUrl: htmlStr,
                                             ),
@@ -287,7 +287,7 @@ class CustomExitVipDialogUtils2 {
                                       ),
                                       borderRadius: BorderRadius.circular(25)),
                                   child: Center(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                     text: rk8,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.sp,
@@ -324,7 +324,7 @@ class CustomExitVipDialogUtils2 {
                                 height: 5.w,
                               ),
                               Center(
-                                  child: CommText(
+                                  child: ZpwCommText(
                                 text: rk9,
                                 fontSize: 10.sp,
                                 textColor: Color(0xffCECDCD),

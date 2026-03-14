@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
-import 'package:zpw/model/upload_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
+import 'package:zpw/model/zpw_upload_bean.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:dio/src/form_data.dart' as ffff;
 import 'package:dio/src/multipart_file.dart' as ffff;
 import 'aikt_state.dart';
 
-class AiktLogic extends BaseGetxController {
+class AiktLogic extends ZpwBaseGetxController {
   final AiktState state = AiktState();
 
   @override
@@ -18,7 +18,7 @@ class AiktLogic extends BaseGetxController {
     var map = Get.arguments;
     if (map != null) {
       state.path.value = map["path"] ?? "";
-      Log.d("path---${state.path.value}");
+      ZpwLog.d("path---${state.path.value}");
       update();
     }
   }
@@ -29,16 +29,16 @@ class AiktLogic extends BaseGetxController {
     final formData = ffff.FormData.fromMap({
       "file": await ffff.MultipartFile.fromFile(state.path.value),
     });
-    final bean = await HandleTool.instance.QDSUpload<UploadBean>(
-        Api.uploadFile,
+    final bean = await ZpwHandleTool.instance.QDSUpload<ZpwUploadBean>(
+        ZpwApi.zpwUploadFile,
         params: formData,
-        onModel: (v) => UploadBean.fromJson(v));
+        onModel: (v) => ZpwUploadBean.fromJson(v));
     if (bean == null) {
-      HandleTool.showAppToastText("扩图失败,请重试");
+      ZpwHandleTool.showAppToastText("扩图失败,请重试");
       return;
     }
 
-    Post(Api.outPaint, isShowProgress: true, params: {
+    Post(ZpwApi.zpwOutPaint, isShowProgress: true, params: {
       "imgUrls": [bean.url],
       "outPaintRatio": outPaintRatio
     }, success: (isSuccess, code, message, results) {
@@ -46,7 +46,7 @@ class AiktLogic extends BaseGetxController {
         state.text.value="保存图片";
         Map data = results.first as Map;
         state.path.value=data["returnUrl"];
-        Log.d("res---${data["returnUrl"]}");
+        ZpwLog.d("res---${data["returnUrl"]}");
         update();
       }
     });

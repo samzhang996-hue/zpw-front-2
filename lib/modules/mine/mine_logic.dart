@@ -1,15 +1,15 @@
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/gameplay/gameplay_logic.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
-import '../../utils/sp_utils.dart';
+import '../../utils/zpw_sp_utils.dart';
 import 'mine_state.dart';
 
-class MineLogic extends BaseGetxController {
+class MineLogic extends ZpwBaseGetxController {
   final MineState state = MineState();
 
   @override
@@ -19,22 +19,22 @@ class MineLogic extends BaseGetxController {
   }
 
   getUserInfo({bool isShowProgress = false}) async {
-    final isEmpty = HandleTool.instance.isEmpty(await SpUtils.getString("token"));
+    final isEmpty = ZpwHandleTool.instance.isEmpty(await ZpwSpUtils.getString("token"));
     if (isEmpty) {
       state.userInfoBean = UserInfoBean();
-      HandleTool.instance.isMember = false;
+      ZpwHandleTool.instance.isMember = false;
       update();
       return;
     }
     final logic = Get.put(GameplayLogic());
-    Post<UserInfoBean>(Api.sso_getUserInfo,
+    Post<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
         isShowProgress: isShowProgress,
         success: (isSuccess, code, message, results) {
           if (isSuccess == true && results.isNotEmpty) {
-            Log.d("userInfoBean----${results.first}");
+            ZpwLog.d("userInfoBean----${results.first}");
             state.userInfoBean = results.first;
-            HandleTool.instance.isMember = state.userInfoBean.vipFlag == 1;
-            logic.stateShowVip(HandleTool.instance.isMember);
+            ZpwHandleTool.instance.isMember = state.userInfoBean.vipFlag == 1;
+            logic.stateShowVip(ZpwHandleTool.instance.isMember);
             update();
           }
         },

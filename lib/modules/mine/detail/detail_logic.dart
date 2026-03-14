@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'detail_state.dart';
 
-class DetailLogic extends BaseGetxController {
+class DetailZpwLogic extends ZpwBaseGetxController {
   final DetailState state = DetailState();
 
   @override
@@ -22,24 +22,24 @@ class DetailLogic extends BaseGetxController {
       state.returnUrl.value = map["returnUrl"] ?? "";
       state.tags.value = map["tags"] ?? "";
       state.apiType.value = map["apiType"] ?? -1;
-      Log.d("param---${state.returnUrl.value}---${state.apiType.value}");
+      ZpwLog.d("param---${state.returnUrl.value}---${state.apiType.value}");
       update();
     }
-    Log.d("param---${state.returnUrl.value}---${state.worksType.value}");
+    ZpwLog.d("param---${state.returnUrl.value}---${state.worksType.value}");
   }
 
   delete() {
-    Post("${Api.delete}/${state.id.value}", isShowProgress: true,
+    Post("${ZpwApi.zpwDelete}/${state.id.value}", isShowProgress: true,
         success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
-        HandleTool.showAppToastText("删除成功");
+        ZpwHandleTool.showAppToastText("删除成功");
         Get.back(result: "123");
       }
     });
   }
 
   getFuncDetail(int id) {
-    get("${Api.getFuncDetail}?id=$id", isShowProgress: true,
+    get("${ZpwApi.zpwGetFuncDetail}?id=$id", isShowProgress: true,
         success: (isSuccess, code, message, results) async {
       if (isSuccess == true && results.isNotEmpty) {
         Map data = results.first as Map;
@@ -48,7 +48,7 @@ class DetailLogic extends BaseGetxController {
         String videoUrl = data["videoUrl"] ?? "";
         int apiType = data["apiType"] ?? -1;
 
-        Log.d("fun---$data");
+        ZpwLog.d("fun---$data");
         Get.to(
           () => FaceMakePage(
             title: funcName,

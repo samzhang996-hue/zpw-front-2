@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img; // 用于图片处理
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:zpw/modules/wf/znxc/znxc_logic.dart';
-import 'package:zpw/utils/my_plugin.dart'; // 用于保存图片到相册
+import 'package:zpw/utils/zpw_my_plugin.dart'; // 用于保存图片到相册
 
 class ZnxcPage extends StatefulWidget {
   @override

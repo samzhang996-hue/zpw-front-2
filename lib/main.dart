@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/modules/main/main_state.dart';
 import 'package:zpw/modules/splash/splash_view.dart';
-import 'package:zpw/utils/ads_utils.dart';
+import 'package:zpw/utils/zpw_ads_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -16,7 +16,7 @@ void main()   {
   Get.lazyPut(() => MainState());
   // 绑定引擎
   WidgetsFlutterBinding.ensureInitialized();
-  AdsUtils.setAdEvent();
+  ZpwAdsUtils.setAdEvent();
   runApp(
     MyApp(),
   );

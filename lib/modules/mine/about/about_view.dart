@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/ads_config.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_ads_config.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
 import 'package:zpw/modules/mine/sf/sf_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'about_logic.dart';
 
-class AboutPage extends BaseStatefulWidget {
+class AboutPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<AboutPage> getState() => _AboutPageState();
+  ZpwBaseWidgetState<AboutPage> getState() => _AboutPageState();
 }
 
-class _AboutPageState extends BaseWidgetState<AboutPage> {
+class _AboutPageState extends ZpwBaseWidgetState<AboutPage> {
   final logic = Get.put(AboutLogic());
   final state = Get.find<AboutLogic>().state;
 
@@ -29,12 +29,12 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          GestureDetector(onDoubleTap: logic.onDoubleTap, child: YAppBar(title: "关于我们")),
+          GestureDetector(onDoubleTap: logic.onDoubleTap, child: zpwYAppBar(title: "关于我们")),
           commItem("用户协议", ""),
           commItem("隐私政策", ""),
           commItem("会员协议", ""),
@@ -48,7 +48,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
           GetBuilder<MineLogic>(
             builder: (mineLogic) {
               return Visibility(
-                visible: HandleTool.instance.channelLogin && HandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName),
+                visible: ZpwHandleTool.instance.channelLogin && ZpwHandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName),
                 child: commItem("切换账号", ""),
               );
             },
@@ -60,7 +60,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: AdBannerWidget(
-                posId: AdsConfig.bannerId,
+                posId: ZpwAdsConfig.bannerId,
                 width: 345,
                 interval: 5,
                 show: true,
@@ -99,7 +99,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CommText(
+                ZpwCommText(
                   text: "账号",
                   textColor: Color(0xff1A1A1A),
                   fontWeight: FontWeight.w500,
@@ -128,7 +128,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                   ),
                 ),
                 SizedBox(height: 14.w),
-                CommText(
+                ZpwCommText(
                   text: "密码",
                   textColor: Color(0xff1A1A1A),
                   fontWeight: FontWeight.w500,
@@ -163,7 +163,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                     String username = _usernameController.text;
                     String password = _passwordController.text;
                     if (username.isEmpty || password.isEmpty) {
-                      HandleTool.showAppToastText("账号或者密码不能为空");
+                      ZpwHandleTool.showAppToastText("账号或者密码不能为空");
                       return;
                     }
                     logic.accountLogin(username, password);
@@ -180,7 +180,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                       ),
                     ),
                     child: Center(
-                      child: CommText(
+                      child: ZpwCommText(
                         text: "登录",
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w500,
@@ -215,49 +215,49 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                 _showLoginBottomSheet(context);
                 break;
               case "用户协议":
-                String htmlStr = HandleTool.instance.yHxy;
+                String htmlStr = ZpwHandleTool.instance.yHxy;
                 if (htmlStr.isEmpty) {
                   return;
                 }
-                gotoPushPage(
-                  MyWebViewPage(
+                zpwGotoPushPage(
+                  ZpwMyWebViewPage(
                     titleStr: "用户协议",
-                    htmlUrl: HandleTool.instance.yHxy,
+                    htmlUrl: ZpwHandleTool.instance.yHxy,
                   ),
                 );
                 break;
               case "隐私政策":
-                String htmlStr = HandleTool.instance.ySxy;
+                String htmlStr = ZpwHandleTool.instance.ySxy;
                 if (htmlStr.isEmpty) {
                   return;
                 }
-                gotoPushPage(
-                  MyWebViewPage(
+                zpwGotoPushPage(
+                  ZpwMyWebViewPage(
                     titleStr: "隐私政策",
-                    htmlUrl: HandleTool.instance.ySxy,
+                    htmlUrl: ZpwHandleTool.instance.ySxy,
                   ),
                 );
                 break;
               case "会员协议":
-                String htmlStr = HandleTool.instance.hYxy;
+                String htmlStr = ZpwHandleTool.instance.hYxy;
                 if (htmlStr.isEmpty) {
                   return;
                 }
-                gotoPushPage(
-                  MyWebViewPage(
+                zpwGotoPushPage(
+                  ZpwMyWebViewPage(
                     titleStr: "会员协议",
-                    htmlUrl: HandleTool.instance.hYxy,
+                    htmlUrl: ZpwHandleTool.instance.hYxy,
                   ),
                 );
                 break;
               case "算法公示":
-                gotoPushPage(SfPage());
+                zpwGotoPushPage(SfPage());
                 break;
               case "清理缓存":
                 logic.clearCache();
                 break;
               case "检查更新":
-                HandleTool.instance.packagesGetForcePackage(isShowProgress: true);
+                ZpwHandleTool.instance.packagesGetForcePackage(isShowProgress: true);
                 break;
             }
           },
@@ -270,7 +270,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                 SizedBox(
                   width: 16.w,
                 ),
-                CommText(
+                ZpwCommText(
                   text: title,
                   textColor: const Color(0xff191919),
                   fontSize: 16.sp,
@@ -289,7 +289,7 @@ class _AboutPageState extends BaseWidgetState<AboutPage> {
                         ),
                       ),
                     )),
-                CommText(
+                ZpwCommText(
                   text: tag,
                   textColor: const Color(0xff7E8293),
                   fontSize: 13.sp,

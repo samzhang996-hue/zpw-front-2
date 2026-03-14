@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
-import 'package:zpw/common/ads_config.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/common/zpw_ads_config.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'call_logic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CallPage extends BaseStatefulWidget {
+class CallPage extends ZpwBaseStatefulWidget {
   final logic = Get.put(CallLogic());
   final state = Get.find<CallLogic>().state;
 
   @override
-  BaseWidgetState<CallPage> getState() => _CallPageState();
+  ZpwBaseWidgetState<CallPage> getState() => _CallPageState();
 }
 
-class _CallPageState extends BaseWidgetState<CallPage> {
+class _CallPageState extends ZpwBaseWidgetState<CallPage> {
   @override
   void dispose() {
     Get.delete<CallPage>();
@@ -26,12 +26,12 @@ class _CallPageState extends BaseWidgetState<CallPage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          YAppBar(title: "联系客服"),
+          zpwYAppBar(title: "联系客服"),
           Container(
               margin: EdgeInsets.all(16),
               child: Image.asset(
@@ -68,13 +68,13 @@ class _CallPageState extends BaseWidgetState<CallPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CommText(
+                            ZpwCommText(
                               text: "在线客服",
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                               textColor: Color(0xff191919),
                             ),
-                            CommText(
+                            ZpwCommText(
                               text: "工作日：09:30-18:00",
                               fontSize: 14.sp,
                               textColor: Color(0xff999999),
@@ -90,7 +90,7 @@ class _CallPageState extends BaseWidgetState<CallPage> {
           ),
           InkWell(
             onTap: () {
-              launchPhone(HandleTool.instance.pHone);
+              launchPhone(ZpwHandleTool.instance.pHone);
             },
             child: Container(
               margin: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.w),
@@ -116,14 +116,14 @@ class _CallPageState extends BaseWidgetState<CallPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CommText(
+                            ZpwCommText(
                               text: "电话客服",
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                               textColor: Color(0xff191919),
                             ),
-                            CommText(
-                              text: HandleTool.instance.pHone,
+                            ZpwCommText(
+                              text: ZpwHandleTool.instance.pHone,
                               fontSize: 14.sp,
                               textColor: Color(0xff999999),
                             ),
@@ -143,7 +143,7 @@ class _CallPageState extends BaseWidgetState<CallPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: AdBannerWidget(
-                posId: AdsConfig.bannerId,
+                posId: ZpwAdsConfig.bannerId,
                 width: 345,
                 interval: 5,
                 show: true,

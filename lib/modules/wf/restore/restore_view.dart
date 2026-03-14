@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/my_plugin.dart';
-import 'package:zpw/utils/permission.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_my_plugin.dart';
+import 'package:zpw/utils/zpw_permission.dart';
 
 import 'restore_logic.dart';
 
-class RestorePage extends BaseStatefulWidget {
+class RestorePage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<BaseStatefulWidget> getState() => _RestorePageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _RestorePageState();
 }
 
-class _RestorePageState extends BaseWidgetState with AppMixin {
+class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
   final logic = Get.put(RestoreLogic());
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          YAppBar(title: "数据恢复"),
+          zpwYAppBar(title: "数据恢复"),
           Image.asset(
             "hf.png".comm,
             width: double.infinity,
@@ -42,7 +42,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
               SizedBox(
                 width: 2.w,
               ),
-              CommText(
+              ZpwCommText(
                 text: "数据恢复 安全可靠",
                 fontWeight: FontWeight.bold,
                 textColor: Color(0xff191919),
@@ -58,18 +58,18 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
               ),
             ],
           ),
-          CommText(
+          ZpwCommText(
             text: "数据不会在服务器上保存‌，仅存于本地设备",
             textColor: Color(0xff999999),
             fontSize: 13.sp,
           ),
           InkWell(
             onTap: () async {
-              if ((await wxLogin() == true)) {
-                if (HandleTool.instance.isMember) {
+              if ((await zpwWxLogin() == true)) {
+                if (ZpwHandleTool.instance.isMember) {
                   onStartPhoto();
                 } else {
-                  gotoPushPage(VipPage());
+                  zpwGotoPushPage(VipPage());
                 }
               }
             },
@@ -86,7 +86,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
                 ),
               ),
               child: Center(
-                  child: CommText(
+                  child: ZpwCommText(
                 text: "立即恢复",
                 textColor: Color(0xff191919),
                 fontSize: 18.sp,
@@ -110,7 +110,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
                   SizedBox(
                     height: 4.w,
                   ),
-                  CommText(
+                  ZpwCommText(
                     text: "误删",
                     fontSize: 14.sp,
                     textColor: Color(0xff191919),
@@ -127,7 +127,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
                   SizedBox(
                     height: 4.w,
                   ),
-                  CommText(
+                  ZpwCommText(
                     text: "回收站清空",
                     fontSize: 14.sp,
                     textColor: Color(0xff191919),
@@ -144,7 +144,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
                   SizedBox(
                     height: 4.w,
                   ),
-                  CommText(
+                  ZpwCommText(
                     text: "数据丢失",
                     fontSize: 14.sp,
                     textColor: Color(0xff191919),
@@ -161,7 +161,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
                   SizedBox(
                     height: 4.w,
                   ),
-                  CommText(
+                  ZpwCommText(
                     text: "目录损坏",
                     fontSize: 14.sp,
                     textColor: Color(0xff191919),
@@ -176,7 +176,7 @@ class _RestorePageState extends BaseWidgetState with AppMixin {
   }
 
   onStartPhoto() async {
-    await PermissionUtils.checkFilesAccessPermission();
+    await ZpwPermissionUtils.checkFilesAccessPermission();
     startPhoto();
   }
 }

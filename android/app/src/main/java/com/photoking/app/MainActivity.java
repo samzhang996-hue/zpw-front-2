@@ -3,7 +3,7 @@ package com.photoking.app;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.photoking.app.utils.MyPlugin;
+import com.photoking.app.utils.ZpwPlugin;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -21,7 +21,7 @@ public class MainActivity extends FlutterActivity {
     public void configureFlutterEngine(FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
         //注册插件
-        MyPlugin.registerWith(flutterEngine.getDartExecutor().getBinaryMessenger(), this);
+        ZpwPlugin.registerWith(flutterEngine.getDartExecutor().getBinaryMessenger(), this);
 
     }
 

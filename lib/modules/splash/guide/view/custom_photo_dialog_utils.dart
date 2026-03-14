@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 
 class CustomPhotoDialogUtils {
   static void showCustomDialog({
@@ -36,7 +36,7 @@ class CustomPhotoDialogUtils {
                           child: Column(
                             children: [
                               Container(
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: "温馨提示",
                                   textColor: Color(0xff1A1A1A),
                                   fontSize: 20.sp,
@@ -47,7 +47,7 @@ class CustomPhotoDialogUtils {
                               ),
                               Container(
                                 margin: EdgeInsets.all(13),
-                                child: CommText(
+                                child: ZpwCommText(
                                   text:
                                       "1.视频换脸技术类似视频版PS技术，利用人脸图像和视频结合。人脸照片在视频合成后会立即删除，不会保留你的人脸照片数据。\n\n2.请确保你使用的照片获得本人授权同意，严禁使用未获得本人授权同意的照片。如因照片为授权对他人肖像权造成侵犯所产生的法律责任由本人承担。\n\n3.严禁使用涉黄照片和视频。",
                                   fontSize: 13.sp,
@@ -69,7 +69,7 @@ class CustomPhotoDialogUtils {
                                       ),
                                       borderRadius: BorderRadius.circular(30)),
                                   child: Center(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                     text: "确定",
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w500,

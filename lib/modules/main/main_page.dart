@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/style.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_style.dart';
 import 'package:zpw/modules/main/main_logic.dart';
 
 class MainPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return GetBuilder<MainLogic>(builder: (logic) {
       return Scaffold(
-          backgroundColor: ColorPlate.themeBgColor,
+          backgroundColor: ZpwColorPlate.zpwThemeBgColor,
           body: IndexedStack(
             index: state.currentIndex.value,
             children: state.pages,
@@ -43,8 +43,8 @@ class _MainPageState extends State<MainPage> {
                   logic.changeIndex(idx);
                 },
                 iconSize: 36.0,
-                selectedItemColor: ColorPlate.tabbarThemeColor,
-                unselectedItemColor: ColorPlate.tabbarTextColorNormal,
+                selectedItemColor: ZpwColorPlate.zpwTabbarThemeColor,
+                unselectedItemColor: ZpwColorPlate.zpwTabbarTextColorNormal,
                 type: BottomNavigationBarType.fixed,
                 backgroundColor: Colors.white,
                 selectedFontSize: 12.sp,

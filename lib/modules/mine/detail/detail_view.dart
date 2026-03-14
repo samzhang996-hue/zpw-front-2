@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/mine/detail/report_view.dart';
 import 'package:zpw/modules/mine/view/custom_del_dialog_utils.dart';
-import 'package:zpw/utils/dowload.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/utils/zpw_dowload.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'detail_logic.dart';
 
-class DetailPage extends BaseStatefulWidget {
+class DetailPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<DetailPage> getState() => _DetailPageState();
+  ZpwBaseWidgetState<DetailPage> getState() => _DetailPageState();
 }
 
-class _DetailPageState extends BaseWidgetState<DetailPage> {
-  final logic = Get.put(DetailLogic());
-  final state = Get.find<DetailLogic>().state;
+class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
+  final logic = Get.put(DetailZpwLogic());
+  final state = Get.find<DetailZpwLogic>().state;
   late VideoPlayerController _controller;
   bool _isVideoInitialized = false;
 
@@ -52,20 +52,20 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
         }
       });
     } catch (error) {
-      Log.d('Error initializing video player: $error');
+      ZpwLog.d('Error initializing video player: $error');
     }
   }
 
   Widget _buildContent() {
     int worksType = logic.state.worksType.value;
     int apiType = logic.state.apiType.value;
-    Log.d("type----$worksType");
-    Log.d("type----${logic.state.returnUrl.value}");
+    ZpwLog.d("type----$worksType");
+    ZpwLog.d("type----${logic.state.returnUrl.value}");
 
     if (worksType == 0) {
       if (apiType == -1) {
         return Align(
-          child: QdsImage(
+          child: ZpwQdsImage(
               logic.state.returnUrl.value,
               // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
               double.infinity,
@@ -76,7 +76,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
       } else {
         return Expanded(
             child: Container(
-          child: QdsImage(
+          child: ZpwQdsImage(
               logic.state.returnUrl.value,
               // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
               double.infinity,
@@ -97,14 +97,14 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
   }
 
   @override
-  void yCloseInputMethod() {
+  void zpwYCloseInputMethod() {
     _showMoreAction.value = false;
-    super.yCloseInputMethod();
+    super.zpwYCloseInputMethod();
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
-    return GetBuilder<DetailLogic>(builder: (logic) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
+    return GetBuilder<DetailZpwLogic>(builder: (logic) {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Container(
@@ -154,7 +154,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                               SizedBox(
                                 width: 4.w,
                               ),
-                              CommText(
+                              ZpwCommText(
                                 text: "下载",
                                 textColor: Color(0xff191919),
                                 fontSize: 18.sp,
@@ -190,7 +190,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                 state.apiType.value == 6 ||
                                 state.apiType.value == 14) return;
                             _controller.pause();
-                            Log.d("pause---${state.returnUrl.value}----");
+                            ZpwLog.d("pause---${state.returnUrl.value}----");
                             logic.getFuncDetail(state.funcId.value);
                           },
                           child: Container(
@@ -213,7 +213,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                   "zccz.png".mine,
                                   width: 28.w,
                                 ),
-                                CommText(
+                                ZpwCommText(
                                   text: "再次创作",
                                   textColor: Color(0xff191919),
                                   fontSize: 18.sp,
@@ -235,7 +235,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                 top: 0,
                 left: 0,
                 right: 0,
-                child: YAppBar(
+                child: zpwYAppBar(
                     title: state.tags.value,
                     right: InkWell(
                       onTap: () {
@@ -244,7 +244,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                         //     state.apiType.value == 6 ||
                         //     state.apiType.value == 14) return;
                         // _controller.pause();
-                        // Log.d("pause---${state.returnUrl.value}----");
+                        // ZpwLog.d("pause---${state.returnUrl.value}----");
                         // logic.getFuncDetail(state.funcId.value);
                         // // Get.to(
                         // //   () => FaceMakePage(
@@ -299,7 +299,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                         logic.delete();
                                       });
                                 },
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: "删除",
                                   textColor: const Color(0xFF1A1A1A),
                                   fontSize: 14.sp,
@@ -318,7 +318,7 @@ class _DetailPageState extends BaseWidgetState<DetailPage> {
                                   _showMoreAction.value = false;
                                   Get.to(() => ReportView());
                                 },
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: "举报",
                                   textColor: const Color(0xFF1A1A1A),
                                   fontSize: 14.sp,

@@ -9,24 +9,24 @@ import 'package:get/get.dart';
 import 'package:gradient_borders/input_borders/gradient_outline_input_border.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/multi_image/multi_image.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/permission.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/multi_image/zpw_multi_image.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_permission.dart';
 
-class ReportView extends BaseStatefulWidget {
+class ReportView extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<ReportView> getState() => _CustomerServicePageState();
+  ZpwBaseWidgetState<ReportView> getState() => _CustomerServicePageState();
 }
 
-class _CustomerServicePageState extends BaseWidgetState<ReportView> {
+class _CustomerServicePageState extends ZpwBaseWidgetState<ReportView> {
   late final textController = TextEditingController();
-  final MultiImageController multiImageController = MultiImageController();
+  final ZpwMultiImageController multiImageController = ZpwMultiImageController();
 
   /// 打开图片选择
   void onAddImage() async {
-    // final res = await PermissionUtils.checkFilesAccessPermission();
+    // final res = await ZpwPermissionUtils.checkFilesAccessPermission();
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     int sdkInt = androidInfo.version.sdkInt;
@@ -37,7 +37,7 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
       PermissionStatus imagesStatus = await Permission.photos.status;
       PermissionStatus videoStatus = await Permission.videos.status;
       if (!videoStatus.isGranted || !imagesStatus.isGranted) {
-        PermissionUtils.showTopSnackbar();
+        ZpwPermissionUtils.showTopSnackbar();
         imagesStatus = await Permission.photos.request();
         // videoStatus = await Permission.videos.request();
         Get.back();
@@ -48,23 +48,23 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
       PermissionStatus imagesStatus = await Permission.photos.status;
       PermissionStatus videoStatus = await Permission.videos.status;
       if (!imagesStatus.isGranted || !videoStatus.isGranted) {
-        PermissionUtils.showTopSnackbar();
+        ZpwPermissionUtils.showTopSnackbar();
         imagesStatus = await Permission.photos.request();
         videoStatus = await Permission.videos.request();
         Get.back();
       }
     } else {
       if (!storagePermission) {
-        PermissionUtils.showTopSnackbar();
+        ZpwPermissionUtils.showTopSnackbar();
         storagePermission = await Permission.storage.request().isGranted;
         if (storagePermission) Get.back();
       }
     }
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
     if (!ps.hasAccess) {
-      final res = await PermissionUtils.checkFilesAccessPermission();
+      final res = await ZpwPermissionUtils.checkFilesAccessPermission();
       if (!res) {
-        HandleTool.showAppToastText('没有权限,请到设置中打开权限');
+        ZpwHandleTool.showAppToastText('没有权限,请到设置中打开权限');
         return;
       }
     }
@@ -79,7 +79,7 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
 
   void onSelectedImages(FilePickerResult picker) {
     for (var file in picker.files) {
-      multiImageController.add(MultiImageProps(file: file.path));
+      multiImageController.add(ZpwMultiImageProps(file: file.path));
     }
   }
 
@@ -90,12 +90,12 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
     if (multiImageController
         .getValue()
         .length > 3) {
-      HandleTool.showAppToastText('最多选择3张');
+      ZpwHandleTool.showAppToastText('最多选择3张');
       return;
     }
 
     if (textController.text.isEmpty) {
-      HandleTool.showAppToastText('请输入反馈内容');
+      ZpwHandleTool.showAppToastText('请输入反馈内容');
       return;
     }
 
@@ -103,7 +103,7 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
 
     /// 随机2-6s
     await Future.delayed(Duration(milliseconds: Random().nextInt(4000) + 2000));
-    HandleTool.showAppToastText('提交成功');
+    ZpwHandleTool.showAppToastText('提交成功');
     await Future.delayed(const Duration(seconds: 1));
     EasyLoading.dismiss();
     Get.back();
@@ -119,13 +119,13 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
   Color get backgroundColor => Colors.white;
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return Stack(
       children: [
         SizedBox.expand(
           child: Column(
             children: [
-              YAppBar(title: "", bgColor: Colors.transparent),
+              zpwYAppBar(title: "", bgColor: Colors.transparent),
               10.verticalSpace,
               Expanded(
                 child: ListView(
@@ -169,12 +169,12 @@ class _CustomerServicePageState extends BaseWidgetState<ReportView> {
                     14.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: MultiImage(
+                      child: ZpwMultiImage(
                         controller: multiImageController,
                         border: Border.all(
                             width: 0, color: const Color(0x96F2F2F2)),
                         borderRadius: BorderRadius.circular(8.r),
-                        imagePadding: EdgeInsets.zero,
+                        zpwImagePadding: EdgeInsets.zero,
                         addView: Container(
                           decoration: BoxDecoration(
                             color: const Color(0x96F2F2F2),

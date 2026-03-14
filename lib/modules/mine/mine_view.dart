@@ -3,26 +3,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/mixin/app_mixin.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/mine/about/about_view.dart';
 import 'package:zpw/modules/mine/call/call_view.dart';
 import 'package:zpw/modules/mine/setting/setting_view.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'mine_logic.dart';
 
-class MinePage extends BaseStatefulWidget {
+class MinePage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<MinePage> getState() => _MinePageState();
+  ZpwBaseWidgetState<MinePage> getState() => _MinePageState();
 }
 
-class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserver, AppMixin {
+class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObserver, ZpwAppMixin {
   final logic = Get.put(MineLogic());
   final state = Get.find<MineLogic>().state;
 
@@ -63,11 +63,11 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
     //         "default_avatar.png".mine,
     //         width: 56.w,
     //       )
-    //     : QdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w, isLocal: true);
+    //     : ZpwQdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w, isLocal: true);
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return GetBuilder<MineLogic>(builder: (logic) {
       return Container(
         color: Color(0xffF6F6F6),
@@ -91,7 +91,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                             // if(state.userInfoBean.headImg==""){
                             //   return
                             // }
-                            //   QdsImageCircle(
+                            //   ZpwQdsImageCircle(
                             //       state.userInfoBean.headImg ?? "", 56.w, 56.w,
                             //       isLocal: true),
                             // // Image.asset(
@@ -105,27 +105,27 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   TapDebouncer(onTap: () async {
-                                    wxLogin();
+                                    zpwWxLogin();
                                   }, builder: (context, onTT) {
                                     return GestureDetector(
                                       onTap: () {
                                         onTT?.call();
                                       },
                                       behavior: HitTestBehavior.opaque,
-                                      child: CommText(
+                                      child: ZpwCommText(
                                         // text: "登录/注册",
-                                        text: HandleTool.instance.isEmpty(state.userInfoBean.nickName) ? "登录/注册" : state.userInfoBean.nickName,
+                                        text: ZpwHandleTool.instance.isEmpty(state.userInfoBean.nickName) ? "登录/注册" : state.userInfoBean.nickName,
                                         fontSize: 18.sp,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     );
                                   }),
-                                  if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
+                                  if (ZpwHandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
                                     SizedBox(
                                       height: 4.w,
                                     ),
-                                  if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
-                                    CommText(
+                                  if (ZpwHandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
+                                    ZpwCommText(
                                       text: "ID：${state.userInfoBean.id}",
                                       fontSize: 13.sp,
                                       fontWeight: FontWeight.w500,
@@ -135,11 +135,11 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                               ),
                             ),
                             const Spacer(),
-                            if (HandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
+                            if (ZpwHandleTool.instance.isNotEmpty(state.userInfoBean.nickName))
                               InkWell(
                                 onTap: () {
                                   UmengCommonSdk.onEvent('Mine_click_event_setting', {'name': 'setting.png'});
-                                  gotoPushPage(SettingPage());
+                                  zpwGotoPushPage(SettingPage());
                                 },
                                 child: SizedBox(
                                   width: 60.w,
@@ -156,7 +156,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       InkWell(
                         onTap: () {
                           Get.find<VipLogic>().getVipHome();
-                          gotoPushPage(VipPage());
+                          zpwGotoPushPage(VipPage());
                         },
                         child: Stack(
                           children: [
@@ -169,8 +169,8 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                             Positioned(
                               top: 86.w,
                               left: 18.w,
-                              child: CommText(
-                                text: HandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "终身有效" : "到期时间:${state.userInfoBean.vipExpireTime}") : "",
+                              child: ZpwCommText(
+                                text: ZpwHandleTool.instance.isMember ? (state.userInfoBean.permanentFlag == 1 ? "终身有效" : "到期时间:${state.userInfoBean.vipExpireTime}") : "",
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                                 textColor: const Color(0xFF977630),
@@ -185,10 +185,10 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                                 height: 30.w,
                                 decoration: BoxDecoration(color: const Color(0xFF4C3504), borderRadius: BorderRadius.circular(16.w)),
                                 child: Center(
-                                    child: CommText(
+                                    child: ZpwCommText(
                                   text: state.userInfoBean.permanentFlag == 1
                                       ? "已开通"
-                                      : HandleTool.instance.isMember
+                                      : ZpwHandleTool.instance.isMember
                                           ? "立即续费"
                                           : "立即开通",
                                   fontSize: 14.sp,
@@ -203,7 +203,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       // InkWell(
                       //   onTap: () {
                       //     Get.find<VipLogic>().getVipHome();
-                      //     gotoPushPage(VipPage());
+                      //     zpwGotoPushPage(VipPage());
                       //   },
                       //   child: Container(
                       //     margin: EdgeInsets.only(
@@ -228,7 +228,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       //                       width: 21.w,
                       //                       height: 22.w,
                       //                     ),
-                      //                     CommText(
+                      //                     ZpwCommText(
                       //                       text: "VIP会员",
                       //                       fontSize: 22.sp,
                       //                       fontWeight: FontWeight.bold,
@@ -239,7 +239,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       //                 SizedBox(
                       //                   height: 4.w,
                       //                 ),
-                      //                 CommText(
+                      //                 ZpwCommText(
                       //                   text: "海量风格模板 | 持续更新备份",
                       //                   fontSize: 14.sp,
                       //                   textColor: Color(0xffFFDEC9),
@@ -266,8 +266,8 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                       //                 ),
                       //                 borderRadius: BorderRadius.circular(20)),
                       //             child: Center(
-                      //                 child: CommText(
-                      //               text: HandleTool.instance.isMember
+                      //                 child: ZpwCommText(
+                      //               text: ZpwHandleTool.instance.isMember
                       //                   ? "已开通"
                       //                   : "立即开通",
                       //               fontSize: 14.sp,
@@ -299,7 +299,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                     ],
                   ),
                 ),
-                // CommText(
+                // ZpwCommText(
                 //   text: "蜀ICP备2022002732号-3A",
                 //   fontSize: 14.sp,
                 //   textColor: Color(0xff818181),
@@ -314,7 +314,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
             //   child: Padding(
             //     padding: const EdgeInsets.all(8.0),
             //     child: AdBannerWidget(
-            //       posId: AdsConfig.bannerId,
+            //       posId: ZpwAdsConfig.bannerId,
             //       width: 345,
             //       interval: 5,
             //       show: true,
@@ -333,18 +333,18 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
           UmengCommonSdk.onEvent('Mine_click_event', {'name': title});
           switch (title) {
             case "我的作品":
-              // HandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
-              if ((await wxLogin() == true)) {
-                gotoPushPage(WorksPage());
+              // ZpwHandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
+              if ((await zpwWxLogin() == true)) {
+                zpwGotoPushPage(WorksPage());
               }
-              // gotoPushPage(ZnxcPage());
+              // zpwGotoPushPage(ZnxcPage());
 
               break;
             case "关于我们":
-              gotoPushPage(AboutPage());
+              zpwGotoPushPage(AboutPage());
               break;
             case "联系客服":
-              gotoPushPage(CallPage());
+              zpwGotoPushPage(CallPage());
               break;
           }
         },
@@ -361,7 +361,7 @@ class _MinePageState extends BaseWidgetState<MinePage> with WidgetsBindingObserv
                   SizedBox(
                     width: 13.w,
                   ),
-                  CommText(
+                  ZpwCommText(
                     text: title,
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,

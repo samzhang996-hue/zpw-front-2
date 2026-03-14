@@ -4,21 +4,21 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:video_player/video_player.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/common/style.dart';
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/common/zpw_style.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 
 import 'guide_logic.dart';
 
-class GuidePage extends BaseStatefulWidget {
+class GuidePage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<GuidePage> getState() => _GuidePageState();
+  ZpwBaseWidgetState<GuidePage> getState() => _GuidePageState();
 }
 
-class _GuidePageState extends BaseWidgetState<GuidePage> {
+class _GuidePageState extends ZpwBaseWidgetState<GuidePage> {
   final logic = Get.put(GuideLogic());
   final state = Get.find<GuideLogic>().state;
 
@@ -36,14 +36,14 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return GetBuilder<GuideLogic>(builder: (logic) {
       return Column(
         children: [
           SizedBox(
             height: 44.w,
           ),
-          CommText(
+          ZpwCommText(
             text: state.funcName,
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       )
           else
             Expanded(
-              child: QdsImage(state.showImgGif, double.infinity, double.infinity, fit: BoxFit.cover),
+              child: ZpwQdsImage(state.showImgGif, double.infinity, double.infinity, fit: BoxFit.cover),
             ),
           InkWell(
             child: Container(
@@ -88,7 +88,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                   ),
                   borderRadius: BorderRadius.circular(26)),
               child: Center(
-                  child: CommText(
+                  child: ZpwCommText(
                 text: "立即制作",
                 textColor: Color(0xff191919),
                 fontSize: 18.sp,
@@ -107,7 +107,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       Container(
                         margin: EdgeInsets.only(top: 19.w),
                         child: Center(
-                            child: CommText(
+                            child: ZpwCommText(
                           text: "上传正脸照片",
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
@@ -128,20 +128,20 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              child: CommText(
+                              child: ZpwCommText(
                                 text: "侧脸拍照",
                                 textColor: Color(0xffB2B2B2),
                                 fontSize: 11.sp,
                               ),
                               margin: EdgeInsets.only(left: 8.w),
                             ),
-                            CommText(
+                            ZpwCommText(
                               text: "面部遮挡",
                               textColor: Color(0xffB2B2B2),
                               fontSize: 11.sp,
                             ),
                             Container(
-                              child: CommText(
+                              child: ZpwCommText(
                                 text: "挤眉弄眼",
                                 textColor: Color(0xffB2B2B2),
                                 fontSize: 11.sp,
@@ -157,9 +157,9 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                           margin: EdgeInsets.only(top: 10.w, left: 16.w, right: 16.w),
                           width: double.infinity,
                           height: 52.w,
-                          decoration: BoxDecoration(color: ColorPlate.themeColor, borderRadius: BorderRadius.circular(26)),
+                          decoration: BoxDecoration(color: ZpwColorPlate.zpwThemeColor, borderRadius: BorderRadius.circular(26)),
                           child: Center(
-                              child: CommText(
+                              child: ZpwCommText(
                             text: "上传照片",
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
@@ -169,7 +169,7 @@ class _GuidePageState extends BaseWidgetState<GuidePage> {
                       ),
                       Container(
                           margin: EdgeInsets.only(top: 8.w, bottom: 10.w + ScreenUtil().bottomBarHeight),
-                          child: CommText(
+                          child: ZpwCommText(
                             text: "*用户图片数据在每次使用后均会被删除，不会在服务器上保存‌",
                             fontSize: 11.sp,
                             textColor: Color(0xffB2B2B2),

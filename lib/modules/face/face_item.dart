@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/qds_Image.dart';
-import 'package:zpw/model/page_photo_group_bind_bean.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/zpw_qds_image.dart';
+import 'package:zpw/model/zpw_page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
 
 class FaceItem extends StatefulWidget {
   const FaceItem({super.key, required this.id});
@@ -19,7 +19,7 @@ class FaceItem extends StatefulWidget {
 }
 
 class _FaceItemState extends State<FaceItem> {
-  late final _bean = PagePhotoGroupBindBean().obs;
+  late final _bean = ZpwPagePhotoGroupBindBean().obs;
 
   void _getData() {
     final params = {
@@ -28,10 +28,10 @@ class _FaceItemState extends State<FaceItem> {
       "pageSize": 20,
     };
 
-    Log.e("params:$params");
+    ZpwLog.e("params:$params");
 
-    HandleTool.instance.QDSGet<PagePhotoGroupBindBean>(
-      Api.pagePhotoGroupBind,
+    ZpwHandleTool.instance.QDSGet<ZpwPagePhotoGroupBindBean>(
+      ZpwApi.zpwPagePhotoGroupBind,
       isShowProgress: true,
       params: params,
       success: (isSuccess, code, message, results) {
@@ -39,7 +39,7 @@ class _FaceItemState extends State<FaceItem> {
           _bean.value = results.first;
         }
       },
-      onModel: (json) => PagePhotoGroupBindBean.fromJson(json),
+      onModel: (json) => ZpwPagePhotoGroupBindBean.fromJson(json),
     );
   }
 
@@ -112,7 +112,7 @@ class _FaceItemState extends State<FaceItem> {
                           SizedBox(height: 14.w),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8.w),
-                            child: QdsImage(
+                            child: ZpwQdsImage(
                               "${bean?.photoFuncResp?.showImgGif}",
                               144.w,
                               175.w,

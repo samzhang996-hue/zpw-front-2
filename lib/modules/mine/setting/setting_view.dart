@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/base/base_stateful_widget.dart';
-import 'package:zpw/common/ads_config.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
+import 'package:zpw/base/zpw_base_stateful_widget.dart';
+import 'package:zpw/common/zpw_ads_config.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/mine/view/custom_exit_dialog_utils.dart';
 
 import 'setting_logic.dart';
 
-class SettingPage extends BaseStatefulWidget {
+class SettingPage extends ZpwBaseStatefulWidget {
   @override
-  BaseWidgetState<SettingPage> getState() => _SettingPageState();
+  ZpwBaseWidgetState<SettingPage> getState() => _SettingPageState();
 }
 
-class _SettingPageState extends BaseWidgetState<SettingPage> {
+class _SettingPageState extends ZpwBaseWidgetState<SettingPage> {
   final logic = Get.put(SettingLogic());
   final state = Get.find<SettingLogic>().state;
 
@@ -26,7 +26,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
   }
 
   @override
-  Widget initDefaultBuild(BuildContext context) {
+  Widget zpwInitDefaultBuild(BuildContext context) {
     return GetBuilder<SettingLogic>(builder: (logic) {
       final userInfoBean = logic.mineLogic.state.userInfoBean;
       return Container(
@@ -37,7 +37,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
               children: [
                 Column(
                   children: [
-                    YAppBar(title: "设置"),
+                    zpwYAppBar(title: "设置"),
                     commItem("ID", '${userInfoBean.id}', hideArrow: true),
                     commItem("昵称", '${userInfoBean.nickName}', hideArrow: true),
                     // commItem("手机号", userInfoBean.userPhone ?? '去绑定', hideArrow: userInfoBean.userPhone?.isEmpty == true),
@@ -49,7 +49,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                     //     logic.getChannel();
                     //   },
                     //   child: Obx(() {
-                    //     return CommText(
+                    //     return ZpwCommText(
                     //       text: "V${state.version.value}    ${state.channel.value}",
                     //       textColor: Color(0xffcccccc),
                     //     );
@@ -62,7 +62,7 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: AdBannerWidget(
-                          posId: AdsConfig.bannerId,
+                          posId: ZpwAdsConfig.zpwBannerId,
                           width: 345,
                           interval: 5,
                           show: true,
@@ -151,14 +151,14 @@ class _SettingPageState extends BaseWidgetState<SettingPage> {
                 SizedBox(
                   width: 16.w,
                 ),
-                CommText(
+                ZpwCommText(
                   text: title,
                   textColor: const Color(0xff191919),
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
                 const Spacer(),
-                CommText(
+                ZpwCommText(
                   text: tag,
                   textColor: const Color(0xff7E8293),
                   fontSize: 13.sp,

@@ -2,63 +2,66 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:zpw/base/base_getx_controller.dart';
+import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/main/model/user_info_bean.dart';
 import 'package:zpw/modules/mine/mine_logic.dart';
-import 'package:zpw/network/api/network_api.dart';
-import 'package:zpw/utils/handle_tool.dart';
-import 'package:zpw/utils/log_utils.dart';
-import 'package:zpw/utils/sp_utils.dart';
+import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/utils/zpw_log_utils.dart';
+import 'package:zpw/utils/zpw_sp_utils.dart';
 
 import 'setting_state.dart';
 
-class SettingLogic extends BaseGetxController {
+class SettingLogic extends ZpwBaseGetxController {
   final SettingState state = SettingState();
-  final mineLogic = Get.find<MineLogic>();
+  final mineZpwLogic = Get.find<MineLogic>();
+
+  // 兼容旧属性名
+  MineLogic get mineLogic => mineZpwLogic;
 
   deleteUser() {
-    get(Api.deleteUser, isShowProgress: true, success: (isSuccess, code, message, results) async {
+    get(ZpwApi.zpwDeleteUser, isShowProgress: true, success: (isSuccess, code, message, results) async {
       UmengCommonSdk.onProfileSignOff();
-      HandleTool.showAppToastText("注销成功");
-      SpUtils.clear();
+      ZpwHandleTool.showAppToastText("注销成功");
+      ZpwSpUtils.clear();
       await 0.5.delay();
-      // SpUtils.setString("token", "");
+      // ZpwSpUtils.setString("token", "");
 
       exit(-1);
       // if (isSuccess == true && results.isNotEmpty) {
-      //   HandleTool.showAppToastText("注销成功");
+      //   ZpwHandleTool.showAppToastText("注销成功");
       // }
     });
   }
 
   void bindPhone() {
-    if (mineLogic.state.userInfoBean.userPhone?.isNotEmpty == true) {
+    if (mineZpwLogic.state.userInfoBean.userPhone?.isNotEmpty == true) {
       return;
     }
-    Log.e("bindPhone");
+    ZpwLog.e("bindPhone");
   }
 
   void bindWx() {
     return;
-    if (mineLogic.state.userInfoBean.userPhone?.isNotEmpty == true) {
+    if (mineZpwLogic.state.userInfoBean.userPhone?.isNotEmpty == true) {
       return;
     }
-    Log.e("bindWx");
+    ZpwLog.e("bindWx");
   }
 
   void onExit() {
-    get(Api.logout, isShowProgress: true, success: (isSuccess, code, message, results) async {
-      HandleTool.showAppToastText("退出成功");
+    get(ZpwApi.zpwLogout, isShowProgress: true, success: (isSuccess, code, message, results) async {
+      ZpwHandleTool.showAppToastText("退出成功");
       await 0.15.delay();
-      SpUtils.setString("token", "");
-      HandleTool.instance.token = "";
-      final mineLogic = Get.find<MineLogic>();
-      mineLogic.state.userInfoBean = UserInfoBean();
-      HandleTool.instance.isMember = false;
-      mineLogic.update();
+      ZpwSpUtils.setString("token", "");
+      ZpwHandleTool.instance.token = "";
+      final mineZpwLogic = Get.find<MineLogic>();
+      mineZpwLogic.state.userInfoBean = UserInfoBean();
+      ZpwHandleTool.instance.isMember = false;
+      mineZpwLogic.update();
       Get.back();
       // if (isSuccess == true && results.isNotEmpty) {
-      //   HandleTool.showAppToastText("注销成功");
+      //   ZpwHandleTool.showAppToastText("注销成功");
       // }
     });
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:zpw/common/style.dart';
-import 'package:zpw/common/view/comm_text.dart'; // 确保这个路径是正确的
+import 'package:zpw/common/zpw_style.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart'; // 确保这个路径是正确的
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 typedef ValueChangedCallback = void Function(double newValue);
@@ -33,7 +33,7 @@ class _MySliderState extends State<MySlider> {
           child: SliderTheme(
             data: SliderTheme.of(context).copyWith(
               trackHeight: 4.w, // 横线的高度
-              activeTrackColor: ColorPlate.themeColor, // 横线的颜色
+              activeTrackColor: ZpwColorPlate.themeColor, // 横线的颜色
               inactiveTrackColor: Color(0xffE5E5E5), // 横线的背景色
               // thumbShape: RoundSliderThumbShape(
               //   enabledThumbRadius: 10.w, // 滑块的大小
@@ -46,7 +46,7 @@ class _MySliderState extends State<MySlider> {
                 tickMarkRadius: 6.w, // 圆形标记的大小
               ),
               thumbColor: Color(0xff7FE7F9), // 滑块的颜色
-              activeTickMarkColor: ColorPlate.themeColor, // 选中标记的颜色
+              activeTickMarkColor: ZpwColorPlate.themeColor, // 选中标记的颜色
               inactiveTickMarkColor: Color(0xffE5E5E5), // 未选中标记的颜色
             ),
             child: Slider(
@@ -62,31 +62,31 @@ class _MySliderState extends State<MySlider> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            CommText(
+            ZpwCommText(
               text: "100%",
               fontSize: 12.sp,
               textColor: Color(0xffB2B2B2),
               fontWeight: FontWeight.w600,
             ),
-            CommText(
+            ZpwCommText(
               text: "110%",
               fontSize: 12.sp,
               textColor: Color(0xffB2B2B2),
               fontWeight: FontWeight.w600,
             ),
-            CommText(
+            ZpwCommText(
               text: "125%",
               fontSize: 12.sp,
               textColor: Color(0xffB2B2B2),
               fontWeight: FontWeight.w600,
             ),
-            CommText(
+            ZpwCommText(
               text: "150%",
               fontSize: 12.sp,
               textColor: Color(0xffB2B2B2),
               fontWeight: FontWeight.w600,
             ),
-            CommText(
+            ZpwCommText(
               text: "200%",
               fontSize: 12.sp,
               textColor: Color(0xffB2B2B2),

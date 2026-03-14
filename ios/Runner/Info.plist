@@ -40,6 +40,16 @@
           <string>wx5bdeda6fcfb891c8</string>
         </array>
        </dict>
+       <dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.zpw.photoking.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.zpw.photoking.app</string>
+			</array>
+		</dict>
     </array>
     <key>LSApplicationQueriesSchemes</key>
         <array>
@@ -47,19 +57,6 @@
             <string>weixin</string>
             <string>weixinULAPI</string>
         </array>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.photoking.app</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.photoking.app</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>

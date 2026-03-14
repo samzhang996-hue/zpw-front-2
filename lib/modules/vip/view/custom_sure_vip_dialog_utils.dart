@@ -2,10 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/common/constant.dart';
-import 'package:zpw/common/view/comm_text.dart';
-import 'package:zpw/common/view/my_web_view/my_web_view_view.dart';
-import 'package:zpw/utils/handle_tool.dart';
+import 'package:zpw/common/zpw_constant.dart';
+import 'package:zpw/common/view/zpw_comm_text.dart';
+import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
+import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class CustomSureVipDialogUtils {
   static void showCustomDialog({
@@ -58,7 +58,7 @@ class CustomSureVipDialogUtils {
                                     },
                                   )),
                               Container(
-                                child: CommText(
+                                child: ZpwCommText(
                                   text: "确认开通",
                                   textColor: Color(0xff1A1A1A),
                                   fontSize: 20,
@@ -88,10 +88,10 @@ class CustomSureVipDialogUtils {
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
                                               String htmlStr =
-                                                  HandleTool.instance.hYxy;
+                                                  ZpwHandleTool.instance.hYxy;
                                               if (htmlStr.length > 0) {
                                                 Get.to(
-                                                  MyWebViewPage(
+                                                  ZpwMyWebViewPage(
                                                     titleStr: "会员协议",
                                                     htmlUrl: htmlStr,
                                                   ),
@@ -122,7 +122,7 @@ class CustomSureVipDialogUtils {
                                       ),
                                       borderRadius: BorderRadius.circular(30)),
                                   child: Center(
-                                      child: CommText(
+                                      child: ZpwCommText(
                                     text: "继续开通",
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
