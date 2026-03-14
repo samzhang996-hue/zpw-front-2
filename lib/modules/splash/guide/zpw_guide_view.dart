@@ -11,7 +11,7 @@ import 'package:zpw/common/zpw_style.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/splash/photo_list/zpw_photo_list_view.dart';
 
-import 'guide_logic.dart';
+import 'zpw_guide_logic.dart';
 
 class GuidePage extends ZpwBaseStatefulWidget {
   @override

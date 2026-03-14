@@ -7,7 +7,7 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
 import '../../utils/zpw_sp_utils.dart';
-import 'mine_state.dart';
+import 'zpw_mine_state.dart';
 
 class MineLogic extends ZpwBaseGetxController {
   final MineState state = MineState();

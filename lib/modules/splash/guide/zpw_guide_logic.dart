@@ -5,7 +5,7 @@ import 'package:zpw/modules/splash/guide/view/zpw_custom_photo_dialog_utils.dart
 import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'guide_state.dart';
+import 'zpw_guide_state.dart';
 
 class GuideLogic extends ZpwBaseGetxController {
   final GuideState state = GuideState();

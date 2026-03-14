@@ -7,7 +7,7 @@ import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'wf_state.dart';
+import 'zpw_wf_state.dart';
 
 class WfZpwLogic extends ZpwBaseGetxController {
   final WfState state = WfState();

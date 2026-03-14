@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'wst_state.dart';
+import 'zpw_wst_state.dart';
 
 class WstLogic extends GetxController {
   final WstState state = WstState();

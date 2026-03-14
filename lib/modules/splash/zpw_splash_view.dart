@@ -13,7 +13,7 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_sp_utils.dart';
 
-import 'splash_logic.dart';
+import 'zpw_splash_logic.dart';
 
 class SplashPage extends ZpwBaseStatefulWidget {
   @override

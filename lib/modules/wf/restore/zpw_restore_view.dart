@@ -10,7 +10,7 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_my_plugin.dart';
 import 'package:zpw/utils/zpw_permission.dart';
 
-import 'restore_logic.dart';
+import 'zpw_restore_logic.dart';
 
 class RestorePage extends ZpwBaseStatefulWidget {
   @override

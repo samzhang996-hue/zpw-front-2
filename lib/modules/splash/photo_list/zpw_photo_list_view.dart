@@ -20,7 +20,7 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_permission.dart';
 import 'package:zpw/modules/vip/view/zpw_custom_face_dialog_utils.dart';
 
-import 'photo_list_logic.dart';
+import 'zpw_photo_list_logic.dart';
 
 class Photo_listPage extends ZpwBaseStatefulWidget {
   final bool isNew;

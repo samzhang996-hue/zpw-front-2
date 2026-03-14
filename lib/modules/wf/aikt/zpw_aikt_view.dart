@@ -14,7 +14,7 @@ import 'package:zpw/modules/wf/aikt/view/zpw_my_slider.dart';
 import 'package:zpw/utils/zpw_dowload.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-import 'aikt_logic.dart';
+import 'zpw_aikt_logic.dart';
 
 class AiktPage extends ZpwBaseStatefulWidget {
   @override

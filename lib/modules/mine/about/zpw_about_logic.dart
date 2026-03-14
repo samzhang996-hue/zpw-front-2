@@ -11,7 +11,7 @@ import '../../../utils/zpw_filecache.dart';
 import '../../../utils/zpw_handle_tool.dart';
 import '../../../utils/zpw_my_plugin.dart';
 import '../../../utils/zpw_sp_utils.dart';
-import 'about_state.dart';
+import 'zpw_about_state.dart';
 
 class AboutLogic extends GetxController {
   final AboutState state = AboutState();

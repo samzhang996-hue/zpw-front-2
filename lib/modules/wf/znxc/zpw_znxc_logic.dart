@@ -2,7 +2,7 @@ import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'znxc_state.dart';
+import 'zpw_znxc_state.dart';
 
 class ZnxcLogic extends ZpwBaseGetxController {
   final ZnxcState state = ZnxcState();

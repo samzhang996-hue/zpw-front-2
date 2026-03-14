@@ -11,7 +11,7 @@ import 'package:zpw/modules/mine/view/zpw_custom_del_dialog_utils.dart';
 import 'package:zpw/utils/zpw_dowload.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'detail_logic.dart';
+import 'zpw_detail_logic.dart';
 
 class DetailPage extends ZpwBaseStatefulWidget {
   @override

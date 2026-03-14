@@ -11,7 +11,7 @@ import 'package:zpw/modules/vip/zpw_vip_view.dart';
 import 'package:zpw/modules/wf/makewst/zpw_makewst_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-import 'wst_logic.dart';
+import 'zpw_wst_logic.dart';
 
 class WstPage extends ZpwBaseStatefulWidget {
   @override

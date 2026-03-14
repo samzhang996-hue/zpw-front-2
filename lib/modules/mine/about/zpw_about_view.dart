@@ -11,7 +11,7 @@ import 'package:zpw/modules/mine/zpw_mine_logic.dart';
 import 'package:zpw/modules/mine/sf/zpw_sf_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-import 'about_logic.dart';
+import 'zpw_about_logic.dart';
 
 class AboutPage extends ZpwBaseStatefulWidget {
   @override

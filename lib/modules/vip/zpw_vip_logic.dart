@@ -17,7 +17,7 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_my_plugin.dart';
 
-import 'vip_state.dart';
+import 'zpw_vip_state.dart';
 
 class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
   final VipState state = VipState();
@@ -114,10 +114,10 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
   }
 
   getVipHome() async {
-    final result = await postAsync<VipBean>(
+    final result = await postAsync<ZpwVipBean>(
       ZpwApi.zpwVipGetVipHome,
       isShowProgress: true,
-      onModel: (m) => VipBean.fromJson(m),
+      onModel: (m) => ZpwVipBean.fromJson(m),
     );
     ZpwLog.d("vip0000----${result.isSuccess}----${result.first?.vipList?.length}");
     if (result.isSuccess && result.hasData) {
@@ -185,11 +185,11 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
         "payKeyType": state.payKeyType,
       };
       ZpwLog.d("map----$dataMap");
-      final result = await postAsync<PayBean>(
+      final result = await postAsync<ZpwPayBean>(
         ZpwApi.zpwPayOrderAddOrder,
         isShowProgress: true,
         params: dataMap,
-        onModel: (m) => PayBean.fromJson(m),
+        onModel: (m) => ZpwPayBean.fromJson(m),
       );
       ZpwLog.i("------${result.first?.toJson()} ${result.isSuccess}=========");
       if (result.isSuccess && result.hasData) {

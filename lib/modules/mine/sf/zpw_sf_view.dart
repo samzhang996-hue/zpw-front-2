@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
 
-import 'sf_logic.dart';
+import 'zpw_sf_logic.dart';
 
 class SfPage extends ZpwBaseStatefulWidget {
   @override

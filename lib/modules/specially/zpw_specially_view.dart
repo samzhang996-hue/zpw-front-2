@@ -12,7 +12,7 @@ import 'package:zpw/modules/vip/zpw_vip_logic.dart';
 import 'package:zpw/modules/vip/zpw_vip_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-import 'specially_logic.dart';
+import 'zpw_specially_logic.dart';
 
 class SpeciallyPage extends StatefulWidget {
   SpeciallyPage({Key? key}) : super(key: key);

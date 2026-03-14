@@ -5,7 +5,7 @@ import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'dart:convert';
-import 'makewst_state.dart';
+import 'zpw_makewst_state.dart';
 
 class MakewstZpwLogic extends ZpwBaseGetxController {
   final MakewstState state = MakewstState();

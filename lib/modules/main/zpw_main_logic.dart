@@ -6,7 +6,7 @@ import 'package:zpw/base/zpw_base_getx_controller.dart';
 import 'package:zpw/modules/main/zpw_main_state.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-import '../vip/vip_view.dart';
+import '../vip/zpw_vip_view.dart';
 
 class MainLogic extends ZpwBaseGetxController {
   final MainState state = MainState();

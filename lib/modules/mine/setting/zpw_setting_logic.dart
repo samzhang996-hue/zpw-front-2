@@ -10,7 +10,7 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_sp_utils.dart';
 
-import 'setting_state.dart';
+import 'zpw_setting_state.dart';
 
 class SettingLogic extends ZpwBaseGetxController {
   final SettingState state = SettingState();

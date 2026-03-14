@@ -15,7 +15,7 @@ import 'package:zpw/modules/vip/zpw_vip_logic.dart';
 import 'package:zpw/modules/vip/zpw_vip_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-import 'mine_logic.dart';
+import 'zpw_mine_logic.dart';
 
 class MinePage extends ZpwBaseStatefulWidget {
   @override

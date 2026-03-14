@@ -8,15 +8,15 @@ class VipState {
   late int itemIndex;
   late int type;
   late RxBool isCheck;
-  late PayBean payBean;
-  late VipBean vipBean;
+  late ZpwPayBean payBean;
+  late ZpwVipBean vipBean;
   late int payKeyType;
   late int goodsId;
   late int isWx;
   late int isZfb;
   late RxInt statePay;
-  VipBean normalVipBean = Platform.isIOS
-      ? VipBean.fromJson({
+  ZpwVipBean normalVipBean = Platform.isIOS
+      ? ZpwVipBean.fromJson({
           "id": 149,
           "channel": "AIIOS",
           "createTime": "2025-01-18 14:40:48",
@@ -288,7 +288,7 @@ class VipState {
             }
           ]
         })
-      : VipBean.fromJson({
+      : ZpwVipBean.fromJson({
           "code": 100,
           "message": "成功",
           "data": {
@@ -565,8 +565,8 @@ class VipState {
           }
         });
   VipState() {
-    payBean = PayBean();
-    vipBean = VipBean();
+    payBean = ZpwPayBean();
+    vipBean = ZpwVipBean();
     isCheck = false.obs;
     itemIndex = 0;
     payKeyType = 0;

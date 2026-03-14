@@ -6,7 +6,7 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:dio/src/form_data.dart' as ffff;
 import 'package:dio/src/multipart_file.dart' as ffff;
-import 'aikt_state.dart';
+import 'zpw_aikt_state.dart';
 
 class AiktLogic extends ZpwBaseGetxController {
   final AiktState state = AiktState();

@@ -1,26 +1,26 @@
 import 'dart:convert';
 
 class ZpwVipBean {
-  String? zpwChannel;
-  List<ZpwPList>? zpwContentPopList;
-  String? zpwCreateTime;
-  List<ZpwPList>? zpwHomePopList;
-  int? zpwId;
-  List<ZpwPList>? zpwOtherPopList;
-  int? zpwProjectId;
-  List<ZpwPList>? zpwVipList;
-  List<ZpwPList>? zpwVipPopList;
+  String? channel;
+  List<ZpwPList>? contentPopList;
+  String? createTime;
+  List<ZpwPList>? homePopList;
+  int? id;
+  List<ZpwPList>? otherPopList;
+  int? projectId;
+  List<ZpwPList>? vipList;
+  List<ZpwPList>? vipPopList;
 
   ZpwVipBean({
-    this.zpwChannel,
-    this.zpwContentPopList,
-    this.zpwCreateTime,
-    this.zpwHomePopList,
-    this.zpwId,
-    this.zpwOtherPopList,
-    this.zpwProjectId,
-    this.zpwVipList,
-    this.zpwVipPopList,
+    this.channel,
+    this.contentPopList,
+    this.createTime,
+    this.homePopList,
+    this.id,
+    this.otherPopList,
+    this.projectId,
+    this.vipList,
+    this.vipPopList,
   });
 
   factory ZpwVipBean.fromRawJson(String str) => ZpwVipBean.fromJson(json.decode(str));
@@ -28,63 +28,63 @@ class ZpwVipBean {
   String toRawJson() => json.encode(toJson());
 
   factory ZpwVipBean.fromJson(Map<String, dynamic> json) => ZpwVipBean(
-    zpwChannel: json["channel"],
-    zpwContentPopList: json["contentPopList"] == null ? [] : List<ZpwPList>.from(json["contentPopList"]!.map((x) => ZpwPList.fromJson(x))),
-    zpwCreateTime: json["createTime"] ,
-    zpwHomePopList: json["homePopList"] == null ? [] : List<ZpwPList>.from(json["homePopList"]!.map((x) =>  ZpwPList.fromJson(x))),
-    zpwId: json["id"],
-    zpwOtherPopList: json["otherPopList"] == null ? [] : List<ZpwPList>.from(json["otherPopList"]!.map((x) => ZpwPList.fromJson(x))),
-    zpwProjectId: json["projectId"],
-    zpwVipList: json["vipList"] == null ? [] : List<ZpwPList>.from(json["vipList"]!.map((x) => ZpwPList.fromJson(x))),
-    zpwVipPopList: json["vipPopList"] == null ? [] : List<ZpwPList>.from(json["vipPopList"]!.map((x) =>  ZpwPList.fromJson(x))),
+    channel: json["channel"],
+    contentPopList: json["contentPopList"] == null ? [] : List<ZpwPList>.from(json["contentPopList"]!.map((x) => ZpwPList.fromJson(x))),
+    createTime: json["createTime"] ,
+    homePopList: json["homePopList"] == null ? [] : List<ZpwPList>.from(json["homePopList"]!.map((x) =>  ZpwPList.fromJson(x))),
+    id: json["id"],
+    otherPopList: json["otherPopList"] == null ? [] : List<ZpwPList>.from(json["otherPopList"]!.map((x) => ZpwPList.fromJson(x))),
+    projectId: json["projectId"],
+    vipList: json["vipList"] == null ? [] : List<ZpwPList>.from(json["vipList"]!.map((x) => ZpwPList.fromJson(x))),
+    vipPopList: json["vipPopList"] == null ? [] : List<ZpwPList>.from(json["vipPopList"]!.map((x) =>  ZpwPList.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "channel": zpwChannel,
-    "contentPopList": zpwContentPopList == null ? [] : List<dynamic>.from(zpwContentPopList!.map((x) => x.toJson())),
-    "createTime": zpwCreateTime,
-    "homePopList": zpwHomePopList == null ? [] : List<dynamic>.from(zpwHomePopList!.map((x) => x.toJson())),
-    "id": zpwId,
-    "otherPopList": zpwOtherPopList == null ? [] : List<dynamic>.from(zpwOtherPopList!.map((x) => x.toJson())),
-    "projectId": zpwProjectId,
-    "vipList": zpwVipList == null ? [] : List<dynamic>.from(zpwVipList!.map((x) => x.toJson())),
-    "vipPopList": zpwVipPopList == null ? [] : List<dynamic>.from(zpwVipPopList!.map((x) => x.toJson())),
+    "channel": channel,
+    "contentPopList": contentPopList == null ? [] : List<dynamic>.from(contentPopList!.map((x) => x.toJson())),
+    "createTime": createTime,
+    "homePopList": homePopList == null ? [] : List<dynamic>.from(homePopList!.map((x) => x.toJson())),
+    "id": id,
+    "otherPopList": otherPopList == null ? [] : List<dynamic>.from(otherPopList!.map((x) => x.toJson())),
+    "projectId": projectId,
+    "vipList": vipList == null ? [] : List<dynamic>.from(vipList!.map((x) => x.toJson())),
+    "vipPopList": vipPopList == null ? [] : List<dynamic>.from(vipPopList!.map((x) => x.toJson())),
   };
 }
 
 class ZpwPList {
-  dynamic zpwIsPayOne;
-  String? zpwRemark1;
-  String? zpwRemark10;
-  String? zpwRemark2;
-  String? zpwRemark3;
-  String? zpwRemark4;
-  String? zpwRemark5;
-  String? zpwRemark6;
-  String? zpwRemark7;
-  String? zpwRemark8;
-  String? zpwRemark9;
-  String? zpwShowRemark;
-  int? zpwSortId;
-  int? zpwVipPriceId;
-  ZpwVipPriceOutput? zpwVipPriceOutput;
+  dynamic isPayOne;
+  String? remark1;
+  String? remark10;
+  String? remark2;
+  String? remark3;
+  String? remark4;
+  String? remark5;
+  String? remark6;
+  String? remark7;
+  String? remark8;
+  String? remark9;
+  String? showRemark;
+  int? sortId;
+  int? vipPriceId;
+  ZpwVipPriceOutput? vipPriceOutput;
 
   ZpwPList({
-    this.zpwIsPayOne,
-    this.zpwRemark1,
-    this.zpwRemark10,
-    this.zpwRemark2,
-    this.zpwRemark3,
-    this.zpwRemark4,
-    this.zpwRemark5,
-    this.zpwRemark6,
-    this.zpwRemark7,
-    this.zpwRemark8,
-    this.zpwRemark9,
-    this.zpwShowRemark,
-    this.zpwSortId,
-    this.zpwVipPriceId,
-    this.zpwVipPriceOutput,
+    this.isPayOne,
+    this.remark1,
+    this.remark10,
+    this.remark2,
+    this.remark3,
+    this.remark4,
+    this.remark5,
+    this.remark6,
+    this.remark7,
+    this.remark8,
+    this.remark9,
+    this.showRemark,
+    this.sortId,
+    this.vipPriceId,
+    this.vipPriceOutput,
   });
 
   factory ZpwPList.fromRawJson(String str) => ZpwPList.fromJson(json.decode(str));
@@ -92,95 +92,95 @@ class ZpwPList {
   String toRawJson() => json.encode(toJson());
 
   factory ZpwPList.fromJson(Map<String, dynamic> json) => ZpwPList(
-    zpwIsPayOne: json["isPayOne"],
-    zpwRemark1: json["remark1"],
-    zpwRemark10: json["remark10"],
-    zpwRemark2: json["remark2"],
-    zpwRemark3: json["remark3"],
-    zpwRemark4: json["remark4"],
-    zpwRemark5: json["remark5"],
-    zpwRemark6: json["remark6"],
-    zpwRemark7: json["remark7"],
-    zpwRemark8: json["remark8"],
-    zpwRemark9: json["remark9"],
-    zpwShowRemark: json["showRemark"],
-    zpwSortId: json["sortId"],
-    zpwVipPriceId: json["vipPriceId"],
-    zpwVipPriceOutput: json["vipPriceOutput"] == null ? null : ZpwVipPriceOutput.fromJson(json["vipPriceOutput"]),
+    isPayOne: json["isPayOne"],
+    remark1: json["remark1"],
+    remark10: json["remark10"],
+    remark2: json["remark2"],
+    remark3: json["remark3"],
+    remark4: json["remark4"],
+    remark5: json["remark5"],
+    remark6: json["remark6"],
+    remark7: json["remark7"],
+    remark8: json["remark8"],
+    remark9: json["remark9"],
+    showRemark: json["showRemark"],
+    sortId: json["sortId"],
+    vipPriceId: json["vipPriceId"],
+    vipPriceOutput: json["vipPriceOutput"] == null ? null : ZpwVipPriceOutput.fromJson(json["vipPriceOutput"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "isPayOne": zpwIsPayOne,
-    "remark1": zpwRemark1,
-    "remark10": zpwRemark10,
-    "remark2": zpwRemark2,
-    "remark3": zpwRemark3,
-    "remark4": zpwRemark4,
-    "remark5": zpwRemark5,
-    "remark6": zpwRemark6,
-    "remark7": zpwRemark7,
-    "remark8": zpwRemark8,
-    "remark9": zpwRemark9,
-    "showRemark": zpwShowRemark,
-    "sortId": zpwSortId,
-    "vipPriceId": zpwVipPriceId,
-    "vipPriceOutput": zpwVipPriceOutput?.toJson(),
+    "isPayOne": isPayOne,
+    "remark1": remark1,
+    "remark10": remark10,
+    "remark2": remark2,
+    "remark3": remark3,
+    "remark4": remark4,
+    "remark5": remark5,
+    "remark6": remark6,
+    "remark7": remark7,
+    "remark8": remark8,
+    "remark9": remark9,
+    "showRemark": showRemark,
+    "sortId": sortId,
+    "vipPriceId": vipPriceId,
+    "vipPriceOutput": vipPriceOutput?.toJson(),
   };
 }
 
 class ZpwVipPriceOutput {
-  int? zpwAgreemenPayNum;
-  int? zpwAgreemenPayments;
-  int? zpwAgreemenPrice;
-  int? zpwAgreemenTime;
-  String? zpwAgreemenTimeType;
-  int? zpwAgreemenType;
-  int? zpwCollTime;
-  String? zpwCollTimeType;
-  int? zpwDecreaseMoney;
-  int? zpwId;
-  dynamic zpwIosProductId;
-  int? zpwIsDisposable;
-  int? zpwIsIosPay;
-  int? zpwIsWithdrawal;
-  int? zpwIsWxPay;
-  int? zpwIsZfbPay;
-  int? zpwOriginalPrice;
-  String? zpwPayName;
-  int? zpwPrice;
-  int? zpwDefaultPayKeyType;
-  int? zpwDefaultZfbPayKeyType;
-  String? zpwShowName;
-  String? zpwVipName;
-  int? zpwVipTime;
-  String? zpwVipTimeType;
+  int? agreemenPayNum;
+  int? agreemenPayments;
+  int? agreemenPrice;
+  int? agreemenTime;
+  String? agreemenTimeType;
+  int? agreemenType;
+  int? collTime;
+  String? collTimeType;
+  int? decreaseMoney;
+  int? id;
+  dynamic iosProductId;
+  int? isDisposable;
+  int? isIosPay;
+  int? isWithdrawal;
+  int? isWxPay;
+  int? isZfbPay;
+  int? originalPrice;
+  String? payName;
+  int? price;
+  int? defaultPayKeyType;
+  int? defaultZfbPayKeyType;
+  String? showName;
+  String? vipName;
+  int? vipTime;
+  String? vipTimeType;
 
   ZpwVipPriceOutput({
-    this.zpwAgreemenPayNum,
-    this.zpwAgreemenPayments,
-    this.zpwAgreemenPrice,
-    this.zpwAgreemenTime,
-    this.zpwAgreemenTimeType,
-    this.zpwAgreemenType,
-    this.zpwCollTime,
-    this.zpwCollTimeType,
-    this.zpwDecreaseMoney,
-    this.zpwId,
-    this.zpwIosProductId,
-    this.zpwIsDisposable,
-    this.zpwIsIosPay,
-    this.zpwIsWithdrawal,
-    this.zpwIsWxPay,
-    this.zpwIsZfbPay,
-    this.zpwOriginalPrice,
-    this.zpwPayName,
-    this.zpwPrice,
-    this.zpwDefaultPayKeyType,
-    this.zpwDefaultZfbPayKeyType,
-    this.zpwShowName,
-    this.zpwVipName,
-    this.zpwVipTime,
-    this.zpwVipTimeType,
+    this.agreemenPayNum,
+    this.agreemenPayments,
+    this.agreemenPrice,
+    this.agreemenTime,
+    this.agreemenTimeType,
+    this.agreemenType,
+    this.collTime,
+    this.collTimeType,
+    this.decreaseMoney,
+    this.id,
+    this.iosProductId,
+    this.isDisposable,
+    this.isIosPay,
+    this.isWithdrawal,
+    this.isWxPay,
+    this.isZfbPay,
+    this.originalPrice,
+    this.payName,
+    this.price,
+    this.defaultPayKeyType,
+    this.defaultZfbPayKeyType,
+    this.showName,
+    this.vipName,
+    this.vipTime,
+    this.vipTimeType,
   });
 
   factory ZpwVipPriceOutput.fromRawJson(String str) => ZpwVipPriceOutput.fromJson(json.decode(str));
@@ -188,58 +188,58 @@ class ZpwVipPriceOutput {
   String toRawJson() => json.encode(toJson());
 
   factory ZpwVipPriceOutput.fromJson(Map<String, dynamic> json) => ZpwVipPriceOutput(
-    zpwAgreemenPayNum: json["agreemenPayNum"],
-    zpwAgreemenPayments: json["agreemenPayments"],
-    zpwAgreemenPrice: json["agreemenPrice"],
-    zpwAgreemenTime: json["agreemenTime"],
-    zpwAgreemenTimeType: json["agreemenTimeType"],
-    zpwAgreemenType: json["agreemenType"],
-    zpwCollTime: json["collTime"],
-    zpwCollTimeType: json["collTimeType"],
-    zpwDecreaseMoney: json["decreaseMoney"],
-    zpwId: json["id"],
-    zpwIosProductId: json["iosProductId"],
-    zpwIsDisposable: json["isDisposable"],
-    zpwIsIosPay: json["isIosPay"],
-    zpwIsWithdrawal: json["isWithdrawal"],
-    zpwIsWxPay: json["isWxPay"],
-    zpwIsZfbPay: json["isZfbPay"],
-    zpwOriginalPrice: json["originalPrice"],
-    zpwPayName: json["payName"],
-    zpwPrice: json["price"],
-    zpwDefaultPayKeyType: json["defaultPayKeyType"],
-    zpwDefaultZfbPayKeyType: json["defaultZfbPayKeyType"],
-    zpwShowName: json["showName"],
-    zpwVipName: json["vipName"],
-    zpwVipTime: json["vipTime"],
-    zpwVipTimeType: json["vipTimeType"],
+    agreemenPayNum: json["agreemenPayNum"],
+    agreemenPayments: json["agreemenPayments"],
+    agreemenPrice: json["agreemenPrice"],
+    agreemenTime: json["agreemenTime"],
+    agreemenTimeType: json["agreemenTimeType"],
+    agreemenType: json["agreemenType"],
+    collTime: json["collTime"],
+    collTimeType: json["collTimeType"],
+    decreaseMoney: json["decreaseMoney"],
+    id: json["id"],
+    iosProductId: json["iosProductId"],
+    isDisposable: json["isDisposable"],
+    isIosPay: json["isIosPay"],
+    isWithdrawal: json["isWithdrawal"],
+    isWxPay: json["isWxPay"],
+    isZfbPay: json["isZfbPay"],
+    originalPrice: json["originalPrice"],
+    payName: json["payName"],
+    price: json["price"],
+    defaultPayKeyType: json["defaultPayKeyType"],
+    defaultZfbPayKeyType: json["defaultZfbPayKeyType"],
+    showName: json["showName"],
+    vipName: json["vipName"],
+    vipTime: json["vipTime"],
+    vipTimeType: json["vipTimeType"],
   );
 
   Map<String, dynamic> toJson() => {
-    "agreemenPayNum": zpwAgreemenPayNum,
-    "agreemenPayments": zpwAgreemenPayments,
-    "agreemenPrice": zpwAgreemenPrice,
-    "agreemenTime": zpwAgreemenTime,
-    "agreemenTimeType": zpwAgreemenTimeType,
-    "agreemenType": zpwAgreemenType,
-    "collTime": zpwCollTime,
-    "collTimeType": zpwCollTimeType,
-    "decreaseMoney": zpwDecreaseMoney,
-    "id": zpwId,
-    "iosProductId": zpwIosProductId,
-    "isDisposable": zpwIsDisposable,
-    "isIosPay": zpwIsIosPay,
-    "isWithdrawal": zpwIsWithdrawal,
-    "isWxPay": zpwIsWxPay,
-    "isZfbPay": zpwIsZfbPay,
-    "originalPrice": zpwOriginalPrice,
-    "payName": zpwPayName,
-    "price": zpwPrice,
-    "defaultPayKeyType": zpwDefaultPayKeyType,
-    "defaultZfbPayKeyType": zpwDefaultZfbPayKeyType,
-    "showName": zpwShowName,
-    "vipName": zpwVipName,
-    "vipTime": zpwVipTime,
-    "vipTimeType": zpwVipTimeType,
+    "agreemenPayNum": agreemenPayNum,
+    "agreemenPayments": agreemenPayments,
+    "agreemenPrice": agreemenPrice,
+    "agreemenTime": agreemenTime,
+    "agreemenTimeType": agreemenTimeType,
+    "agreemenType": agreemenType,
+    "collTime": collTime,
+    "collTimeType": collTimeType,
+    "decreaseMoney": decreaseMoney,
+    "id": id,
+    "iosProductId": iosProductId,
+    "isDisposable": isDisposable,
+    "isIosPay": isIosPay,
+    "isWithdrawal": isWithdrawal,
+    "isWxPay": isWxPay,
+    "isZfbPay": isZfbPay,
+    "originalPrice": originalPrice,
+    "payName": payName,
+    "price": price,
+    "defaultPayKeyType": defaultPayKeyType,
+    "defaultZfbPayKeyType": defaultZfbPayKeyType,
+    "showName": showName,
+    "vipName": vipName,
+    "vipTime": vipTime,
+    "vipTimeType": vipTimeType,
   };
 }

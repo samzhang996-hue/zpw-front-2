@@ -4,7 +4,7 @@ import 'package:zpw/modules/face/zpw_face_make_page.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'works_state.dart';
+import 'zpw_works_state.dart';
 
 class WorksZpwLogic extends ZpwBaseGetxController {
   final WorksState state = WorksState();

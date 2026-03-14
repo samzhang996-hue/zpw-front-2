@@ -8,7 +8,7 @@ import 'package:zpw/common/zpw_constant.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/mine/view/zpw_custom_exit_dialog_utils.dart';
 
-import 'setting_logic.dart';
+import 'zpw_setting_logic.dart';
 
 class SettingPage extends ZpwBaseStatefulWidget {
   @override

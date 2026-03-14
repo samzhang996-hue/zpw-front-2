@@ -15,7 +15,7 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 // import 'package:zpw/modules/wf/wf_page.dart';
 import '../../mixin/zpw_app_mixin.dart';
-import 'wf_logic.dart';
+import 'zpw_wf_logic.dart';
 
 class WfPage extends ZpwBaseStatefulWidget {
   @override

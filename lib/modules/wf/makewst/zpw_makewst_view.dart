@@ -15,7 +15,7 @@ import 'package:zpw/modules/mine/works/zpw_works_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'makewst_logic.dart';
+import 'zpw_makewst_logic.dart';
 
 class MakewstPage extends ZpwBaseStatefulWidget {
   @override

@@ -5,7 +5,7 @@ import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'face_state.dart';
+import 'zpw_face_state.dart';
 
 class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
   final FaceState state = FaceState();

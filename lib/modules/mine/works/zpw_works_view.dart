@@ -10,8 +10,8 @@ import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/modules/main/zpw_main_logic.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import '../detail/detail_view.dart';
-import 'works_logic.dart';
+import '../detail/zpw_detail_view.dart';
+import 'zpw_works_logic.dart';
 
 class WorksPage extends ZpwBaseStatefulWidget {
   @override

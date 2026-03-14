@@ -19,7 +19,7 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_my_plugin.dart';
 import 'package:zpw/utils/zpw_sp_utils.dart';
 
-import 'splash_state.dart';
+import 'zpw_splash_state.dart';
 
 class SplashLogic extends ZpwBaseGetxController {
   RxDouble progress = 0.0.obs;

@@ -15,7 +15,7 @@ import 'package:zpw/modules/vip/view/zpw_custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-import 'vip_logic.dart';
+import 'zpw_vip_logic.dart';
 
 class VipPage extends ZpwBaseStatefulWidget {
   @override
