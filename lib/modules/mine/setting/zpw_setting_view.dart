@@ -10,24 +10,24 @@ import 'package:zpw/modules/mine/view/zpw_custom_exit_dialog_utils.dart';
 
 import 'zpw_setting_logic.dart';
 
-class SettingPage extends ZpwBaseStatefulWidget {
+class ZpwSettingPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<SettingPage> getState() => _SettingPageState();
+  ZpwBaseWidgetState<ZpwSettingPage> getState() => _ZpwSettingPageState();
 }
 
-class _SettingPageState extends ZpwBaseWidgetState<SettingPage> {
-  final logic = Get.put(SettingLogic());
-  final state = Get.find<SettingLogic>().state;
+class _ZpwSettingPageState extends ZpwBaseWidgetState<ZpwSettingPage> {
+  final logic = Get.put(ZpwSettingLogic());
+  final state = Get.find<ZpwSettingLogic>().state;
 
   @override
   void dispose() {
-    Get.delete<SettingPage>();
+    Get.delete<ZpwSettingPage>();
     super.dispose();
   }
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<SettingLogic>(builder: (logic) {
+    return GetBuilder<ZpwSettingLogic>(builder: (logic) {
       final userInfoBean = logic.mineLogic.state.userInfoBean;
       return Container(
         color: Colors.white,
@@ -127,7 +127,7 @@ class _SettingPageState extends ZpwBaseWidgetState<SettingPage> {
           onTap: () {
             switch (title) {
               case "注销账号":
-                CustomExitDialogUtils.showCustomDialog(
+                ZpwCustomExitDialogUtils.showCustomDialog(
                     context: context,
                     onPressed: () {
                       logic.deleteUser();

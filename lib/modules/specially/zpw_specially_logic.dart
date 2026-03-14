@@ -5,9 +5,9 @@ import 'package:zpw/modules/specially/zpw_specially_state.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 
-class SpeciallyLogic extends GetxController
+class ZpwSpeciallyLogic extends GetxController
     with GetSingleTickerProviderStateMixin {
-  final SpeciallyState state = SpeciallyState();
+  final ZpwSpeciallyState state = ZpwSpeciallyState();
   TabController? tabController;
   var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
   var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];

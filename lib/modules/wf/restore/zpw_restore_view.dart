@@ -12,13 +12,13 @@ import 'package:zpw/utils/zpw_permission.dart';
 
 import 'zpw_restore_logic.dart';
 
-class RestorePage extends ZpwBaseStatefulWidget {
+class ZpwRestorePage extends ZpwBaseStatefulWidget {
   @override
   ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _RestorePageState();
 }
 
 class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
-  final logic = Get.put(RestoreLogic());
+  final logic = Get.put(ZpwRestoreLogic());
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
@@ -69,7 +69,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
                 if (ZpwHandleTool.instance.isMember) {
                   onStartPhoto();
                 } else {
-                  zpwGotoPushPage(VipPage());
+                  zpwGotoPushPage(ZpwVipPage());
                 }
               }
             },

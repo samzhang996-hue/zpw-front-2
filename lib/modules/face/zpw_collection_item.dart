@@ -13,16 +13,16 @@ import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-class CollectionItem extends StatefulWidget {
-  const CollectionItem({super.key, required this.id});
+class ZpwCollectionItem extends StatefulWidget {
+  const ZpwCollectionItem({super.key, required this.id});
 
   final int id;
 
   @override
-  State<CollectionItem> createState() => _CollectionItemState();
+  State<ZpwCollectionItem> createState() => _ZpwCollectionItemState();
 }
 
-class _CollectionItemState extends State<CollectionItem> {
+class _ZpwCollectionItemState extends State<ZpwCollectionItem> {
   // late final _bean = ZpwPagePhotoGroupBindBean().obs;
   late final _records = <ZpwRecords>[].obs;
   var _loadPage = 2;
@@ -98,7 +98,7 @@ class _CollectionItemState extends State<CollectionItem> {
         UmengCommonSdk.onEvent(
             'Muban_click_event', {'ZpwRecords': '${bean.toJson()}'});
         if (bean.photoFuncResp?.apiType == 6) {
-          Get.to(WstPage(), arguments: {
+          Get.to(ZpwWstPage(), arguments: {
             "funcValue": bean.photoFuncResp?.funcValue ?? "",
             "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
             "funcId": bean.photoFuncResp?.id ?? 0
@@ -106,7 +106,7 @@ class _CollectionItemState extends State<CollectionItem> {
           return;
         }
         Get.to(
-          () => FaceMakePage(
+          () => ZpwFaceMakePage(
             groupId: widget.id,
             title: bean.photoFuncResp?.tags ?? '',
             funcId: bean.photoFuncResp?.id ?? 0,
@@ -183,7 +183,7 @@ class _CollectionItemState extends State<CollectionItem> {
       onTap: () {
         // ZpwLog.e('bean:${bean.toJson()}');
         // if (bean.photoFuncResp?.apiType == 6) {
-        //   Get.to(WstPage(), arguments: {
+        //   Get.to(ZpwWstPage(), arguments: {
         //     "funcValue": bean.photoFuncResp?.funcValue ?? "",
         //     "showImgGif": bean.photoFuncResp?.showImgGif ?? "",
         //     "funcId": bean.photoFuncResp?.id ?? 0
@@ -192,7 +192,7 @@ class _CollectionItemState extends State<CollectionItem> {
         // }
 
         Get.to(
-          () => GatherSinglePage(
+          () => ZpwGatherSinglePage(
             id: bean.photoGroupResp?.id ?? 0,
             imgUrlAcross: bean.photoGroupResp?.imgUrlAcross ?? "",
             title: bean.photoGroupResp?.groupName ?? '',

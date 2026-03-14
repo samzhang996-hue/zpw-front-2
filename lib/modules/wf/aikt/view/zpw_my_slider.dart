@@ -5,15 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 typedef ValueChangedCallback = void Function(double newValue);
 
-class MySlider extends StatefulWidget {
+class ZpwMySlider extends StatefulWidget {
   final ValueChangedCallback onValueChanged;
-  MySlider({required this.onValueChanged});
+  ZpwMySlider({required this.onValueChanged});
 
   @override
-  _MySliderState createState() => _MySliderState();
+  _ZpwMySliderState createState() => _ZpwMySliderState();
 }
 
-class _MySliderState extends State<MySlider> {
+class _ZpwMySliderState extends State<ZpwMySlider> {
   double _value = 0.1; // 初始值
 
   void _onChanged(double value) {

@@ -18,7 +18,7 @@ class ZpwBuyEngin {
   late bool zpwIsPay = true;
 
   // final bool showTips;
-  late final _zpwVipLogic = Get.find<VipLogic>();
+  late final _zpwVipLogic = Get.find<ZpwVipLogic>();
 
   ZpwBuyEngin();
   //初始化购买组件
@@ -182,7 +182,7 @@ class ZpwBuyEngin {
       return;
     }
     ZpwLog.d("sta----0000----${purchaseDetailsList.length}");
-    // final logic = Get.put(VipLogic());
+    // final logic = Get.put(ZpwVipLogic());
     for (PurchaseDetails purchase in purchaseDetailsList) {
       var appstoreDetail = purchase as AppStorePurchaseDetails;
       // ZpwLog.d("sta----0000---id:${appstoreDetail.purchaseID}");

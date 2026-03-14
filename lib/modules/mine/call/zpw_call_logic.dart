@@ -3,6 +3,6 @@ import 'package:zpw/base/zpw_base_getx_controller.dart';
 
 import 'zpw_call_state.dart';
 
-class CallLogic extends ZpwBaseGetxController {
-  final CallState state = CallState();
+class ZpwCallLogic extends ZpwBaseGetxController {
+  final ZpwCallState state = ZpwCallState();
 }

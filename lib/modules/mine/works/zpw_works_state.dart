@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 
-class WorksState {
+class ZpwWorksState {
   late RxList<dynamic> records;
   late String showImgGif;
   late String funcName;
   late RxInt index;
-  WorksState() {
+  ZpwWorksState() {
     records = [].obs;
     showImgGif = "";
     funcName = "";

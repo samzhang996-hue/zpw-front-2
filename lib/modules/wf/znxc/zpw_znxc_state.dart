@@ -1,5 +1,5 @@
-class ZnxcState {
-  ZnxcState() {
+class ZpwZnxcState {
+  ZpwZnxcState() {
     ///Initialize variables
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class UserInfoBean {
+class ZpwUserInfoBean {
   num? age;
   String? authToken;
   num? bmi;
@@ -25,7 +25,7 @@ class UserInfoBean {
   num? weight;
   String? wxNickName;
 
-  UserInfoBean({
+  ZpwUserInfoBean({
     this.age,
     this.authToken,
     this.bmi,
@@ -51,11 +51,11 @@ class UserInfoBean {
     this.wxNickName,
   });
 
-  factory UserInfoBean.fromRawJson(String str) => UserInfoBean.fromJson(json.decode(str));
+  factory ZpwUserInfoBean.fromRawJson(String str) => ZpwUserInfoBean.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory UserInfoBean.fromJson(Map<String, dynamic> json) => UserInfoBean(
+  factory ZpwUserInfoBean.fromJson(Map<String, dynamic> json) => ZpwUserInfoBean(
         age: json["age"],
         createNum: json["createNum"],
         authToken: json["authToken"],

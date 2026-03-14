@@ -1,8 +1,8 @@
-class GuideState {
+class ZpwGuideState {
   late String showImgGif;
   late String videoUrl;
   late String funcName;
-  GuideState() {
+  ZpwGuideState() {
     showImgGif = "";
     videoUrl = "";
     funcName = "";

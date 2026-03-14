@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:zpw/common/zpw_constant.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
 
-class CustomFaceDialogUtils {
+class ZpwCustomFaceDialogUtils {
   static void showCustomDialog({
     required Function() onPressed,
   }) {

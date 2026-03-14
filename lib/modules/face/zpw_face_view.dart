@@ -14,17 +14,17 @@ import 'package:zpw/modules/vip/zpw_vip_logic.dart';
 import 'package:zpw/modules/vip/zpw_vip_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class FacePage extends StatefulWidget {
-  const FacePage({super.key});
+class ZpwFacePage extends StatefulWidget {
+  const ZpwFacePage({super.key});
 
   @override
-  State<FacePage> createState() => _FacePageState();
+  State<ZpwFacePage> createState() => _ZpwFacePageState();
 }
 
-class _FacePageState extends State<FacePage>
+class _ZpwFacePageState extends State<ZpwFacePage>
     with SingleTickerProviderStateMixin {
-  final logic = Get.put(FaceLogic());
-  final state = Get.find<FaceLogic>().state;
+  final logic = Get.put(ZpwFaceLogic());
+  final state = Get.find<ZpwFaceLogic>().state;
 
   var outHeight = 0.0.w;
   late PageController? page = PageController();
@@ -87,7 +87,7 @@ class _FacePageState extends State<FacePage>
             height: 371.w,
             fit: BoxFit.cover,
           ),
-          GetBuilder<FaceLogic>(builder: (logic) {
+          GetBuilder<ZpwFaceLogic>(builder: (logic) {
             if (logic.tabController == null) {
               return const SizedBox.shrink();
             }
@@ -110,13 +110,13 @@ class _FacePageState extends State<FacePage>
                               height: 25.w,
                               fit: BoxFit.cover,
                             ),
-                            GetBuilder<MineLogic>(builder: (mineLogic) {
+                            GetBuilder<ZpwMineLogic>(builder: (mineLogic) {
                               return Visibility(
                                 visible: !ZpwHandleTool.instance.isMember,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Get.find<VipLogic>().getVipHome();
-                                    Get.to(() => VipPage());
+                                    Get.find<ZpwVipLogic>().getVipHome();
+                                    Get.to(() => ZpwVipPage());
                                   },
                                   behavior: HitTestBehavior.opaque,
                                   child: Image.asset(
@@ -144,7 +144,7 @@ class _FacePageState extends State<FacePage>
                                 return GestureDetector(
                                   onTap: () {
                                     Get.to(
-                                      () => GatherSinglePage(
+                                      () => ZpwGatherSinglePage(
                                         id: bean.id ?? 0,
                                         imgUrlAcross: bean.imgUrlAcross ?? "",
                                         title: bean.groupName ?? "",
@@ -232,7 +232,7 @@ class _FacePageState extends State<FacePage>
                   child: PageView(
                     controller: page,
                     children: logic.listPhotoGroupBean2
-                        .map((e) => CollectionItem(id: e.id ?? 0))
+                        .map((e) => ZpwCollectionItem(id: e.id ?? 0))
                         .toList(),
                     onPageChanged: (index) {
                       logic.tabController?.animateTo(index);
@@ -248,15 +248,15 @@ class _FacePageState extends State<FacePage>
   }
 }
 
-class CustomScrollPhysics extends BouncingScrollPhysics {
+class ZpwCustomScrollPhysics extends BouncingScrollPhysics {
   final double friction;
 
-  CustomScrollPhysics({this.friction = 0.6, ScrollPhysics? parent})
+  ZpwCustomScrollPhysics({this.friction = 0.6, ScrollPhysics? parent})
       : super(parent: parent);
 
   @override
-  CustomScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return CustomScrollPhysics(
+  ZpwCustomScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return ZpwCustomScrollPhysics(
         friction: friction, parent: buildParent(ancestor));
   }
 

@@ -8,8 +8,8 @@ import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-class GameplayLogic extends ZpwBaseGetxController with GetSingleTickerProviderStateMixin {
-  final GameplayState state = GameplayState();
+class ZpwGameplayLogic extends ZpwBaseGetxController with GetSingleTickerProviderStateMixin {
+  final ZpwGameplayState state = ZpwGameplayState();
   TabController? tabController;
   var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
   var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];

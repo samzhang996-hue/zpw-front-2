@@ -13,14 +13,14 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_detail_logic.dart';
 
-class DetailPage extends ZpwBaseStatefulWidget {
+class ZpwDetailPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<DetailPage> getState() => _DetailPageState();
+  ZpwBaseWidgetState<ZpwDetailPage> getState() => _ZpwDetailPageState();
 }
 
-class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
-  final logic = Get.put(DetailZpwLogic());
-  final state = Get.find<DetailZpwLogic>().state;
+class _ZpwDetailPageState extends ZpwBaseWidgetState<ZpwDetailPage> {
+  final logic = Get.put(ZpwDetailZpwLogic());
+  final state = Get.find<ZpwDetailZpwLogic>().state;
   BetterPlayerController? _betterPlayerController;
   bool _isVideoInitialized = false;
 
@@ -35,7 +35,7 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
   @override
   void dispose() {
     _betterPlayerController?.dispose();
-    Get.delete<DetailPage>();
+    Get.delete<ZpwDetailPage>();
     super.dispose();
   }
 
@@ -130,7 +130,7 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<DetailZpwLogic>(builder: (logic) {
+    return GetBuilder<ZpwDetailZpwLogic>(builder: (logic) {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Container(
@@ -292,7 +292,7 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                               InkWell(
                                 onTap: () {
                                   _showMoreAction.value = false;
-                                  CustomDelDialogUtils.showCustomDialog(
+                                  ZpwCustomDelDialogUtils.showCustomDialog(
                                       context: context,
                                       onPressed: () {
                                         logic.delete();
@@ -315,7 +315,7 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                               InkWell(
                                 onTap: () {
                                   _showMoreAction.value = false;
-                                  Get.to(() => ReportView());
+                                  Get.to(() => ZpwReportView());
                                 },
                                 child: ZpwCommText(
                                   text: "举报",

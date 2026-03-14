@@ -19,8 +19,8 @@ import 'package:zpw/utils/zpw_my_plugin.dart';
 
 import 'zpw_vip_state.dart';
 
-class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
-  final VipState state = VipState();
+class ZpwVipLogic extends ZpwBaseGetxController with ZpwAppMixin {
+  final ZpwVipState state = ZpwVipState();
   Timer? _timer;
   int _elapsedSeconds = 0;
   bool _conditionMet = false;
@@ -227,13 +227,13 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
   }
 
   getUserInfo() async {
-    final MineLogic mineLogic = Get.find<MineLogic>();
+    final ZpwMineLogic mineLogic = Get.find<ZpwMineLogic>();
 
     mineLogic.getUserInfo();
-    final result = await postAsync<UserInfoBean>(
+    final result = await postAsync<ZpwUserInfoBean>(
       ZpwApi.zpwSsoGetUserInfo,
       isShowProgress: false,
-      onModel: (m) => UserInfoBean.fromJson(m),
+      onModel: (m) => ZpwUserInfoBean.fromJson(m),
     );
     if (result.isSuccess && result.hasData) {
       ZpwLog.d("is----${result.first}");

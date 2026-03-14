@@ -7,7 +7,7 @@ import 'package:zpw/modules/specially/zpw_specially_view.dart';
 import 'package:zpw/modules/wf/zpw_wf_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class MainState {
+class ZpwMainState {
   late RxInt index;
   late RxInt currentIndex;
   late List<Widget> pages;
@@ -16,18 +16,18 @@ class MainState {
   late RxMap<String, dynamic> configData;
   late RxBool isMember;
 
-  MainState() {
+  ZpwMainState() {
     index = 0.obs;
     currentIndex = 0.obs;
     isMember = ZpwHandleTool().isMember.obs;
 
     pages = [
       // HomePage(),
-      GameplayPage(),
-      FacePage(),
-      SpeciallyPage(),
-      WfPage(),
-      MinePage(),
+      ZpwGameplayPage(),
+      ZpwFacePage(),
+      ZpwSpeciallyPage(),
+      ZpwWfPage(),
+      ZpwMinePage(),
     ].obs;
     // 用户协议数据
     configData = <String, dynamic>{}.obs;
@@ -39,7 +39,7 @@ class MainState {
     // pages = [
     //   const HomePage(),
     //   const CleanPage(),
-    //   MinePage(),
+    //   ZpwMinePage(),
     // ];
   }
 }

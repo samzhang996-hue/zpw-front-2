@@ -37,13 +37,13 @@ class ZpwAdsUtils {
       if (event.adId == ZpwAdsConfig.splashId) {
         if (event.action == AdEventAction.onAdError ||
             event.action == AdEventAction.onAdLoaded) {
-          Get.offAll(const MainPage());
+          Get.offAll(const ZpwMainPage());
         }
       }
 
       ///banner
       if (event.adId == ZpwAdsConfig.bannerId) {
-        // final logic = Get.find<MineLogic>();
+        // final logic = Get.find<ZpwMineLogic>();
         // if (event.action == AdEventAction.onAdLoaded) {
         //   logic.onShowView(true);
         // } else if (event.action == AdEventAction.onAdClosed ||

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-class DetailState {
+class ZpwDetailState {
 
   late RxInt worksType;
   late RxInt id;
@@ -7,7 +7,7 @@ class DetailState {
   late RxInt apiType;
   late RxString returnUrl;
   late RxString tags;
-  DetailState() {
+  ZpwDetailState() {
     worksType=0.obs;
     id=0.obs;
     funcId=0.obs;

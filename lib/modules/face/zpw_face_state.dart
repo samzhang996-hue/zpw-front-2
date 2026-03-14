@@ -1,5 +1,5 @@
-class FaceState {
-  FaceState() {
+class ZpwFaceState {
+  ZpwFaceState() {
     ///Initialize variables
   }
 }

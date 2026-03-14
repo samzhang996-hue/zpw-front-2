@@ -22,19 +22,19 @@ import 'package:zpw/modules/vip/view/zpw_custom_face_dialog_utils.dart';
 
 import 'zpw_photo_list_logic.dart';
 
-class Photo_listPage extends ZpwBaseStatefulWidget {
+class ZpwPhotoListPage extends ZpwBaseStatefulWidget {
   final bool isNew;
   final bool hasAvatar;
 
-  Photo_listPage({this.isNew = true, this.hasAvatar = true});
+  ZpwPhotoListPage({this.isNew = true, this.hasAvatar = true});
 
   @override
-  ZpwBaseWidgetState<Photo_listPage> getState() => _Photo_listPageState();
+  ZpwBaseWidgetState<ZpwPhotoListPage> getState() => _ZpwPhotoListPageState();
 }
 
-class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
-  final logic = Get.put(Photo_listLogic());
-  final state = Get.find<Photo_listLogic>().state;
+class _ZpwPhotoListPageState extends ZpwBaseWidgetState<ZpwPhotoListPage> {
+  final logic = Get.put(ZpwPhotoListLogic());
+  final state = Get.find<ZpwPhotoListLogic>().state;
   late List<AssetEntity> _photos = [];
 
   int get _maxSize => 20 * 1000 * 1000;
@@ -116,23 +116,23 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
 
   Future<void> _uploadImg(String? path) async {
     if (state.type == 1) {
-      // zpwGotoPushPage(AiktPage(), arguments: {"path": path});
-      Get.off(AiktPage(), arguments: {"path": path});
+      // zpwGotoPushPage(ZpwAiktPage(), arguments: {"path": path});
+      Get.off(ZpwAiktPage(), arguments: {"path": path});
       return;
     }
     final headImageUrl = await ZpwHandleTool.instance.checkImgAndSaveAsync(path, bindDefaultImg: widget.hasAvatar);
     ZpwLog.e("widget.isNew:${widget.isNew}");
     if (headImageUrl != null && headImageUrl.isNotEmpty) {
       if (widget.isNew) {
-        Get.offAll(() => const MainPage());
+        Get.offAll(() => const ZpwMainPage());
       } else {
         if (widget.hasAvatar) {
-          Get.find<MineLogic>().getUserInfo();
+          Get.find<ZpwMineLogic>().getUserInfo();
         }
         Get.back(result: headImageUrl);
       }
     } else {
-      CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      ZpwCustomFaceDialogUtils.showCustomDialog(onPressed: () {});
     }
 
     // if (res?.isNotEmpty == true) {
@@ -151,14 +151,14 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
     //       Get.back();
     //       // ZpwHandleTool.showAppToastText("上传成功");
     //       ZpwHandleTool.instance.headImg = '${bean.url}';
-    //       // Get.offAll(() => const MainPage());
+    //       // Get.offAll(() => const ZpwMainPage());
     //       if (!ZpwHandleTool.instance.isMember) {
-    //         zpwGotoPushPage(VipPage(), arguments: {"type": 1});
+    //         zpwGotoPushPage(ZpwVipPage(), arguments: {"type": 1});
     //       } else {
-    //         Get.offAll(() => const MainPage());
+    //         Get.offAll(() => const ZpwMainPage());
     //       }
     //     } else {
-    //       CustomFaceDialogUtils.showCustomDialog(
+    //       ZpwCustomFaceDialogUtils.showCustomDialog(
     //           context: context,
     //           onPressed: () {
     //             _uploadImg();
@@ -185,8 +185,8 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
     }
     ZpwLog.e("file:${formatFileSize(fileSize)}");
     if (state.type == 1) {
-      // zpwGotoPushPage(AiktPage(), arguments: {"path": pickedFile.path});
-      Get.off(AiktPage(), arguments: {"path": pickedFile.path});
+      // zpwGotoPushPage(ZpwAiktPage(), arguments: {"path": pickedFile.path});
+      Get.off(ZpwAiktPage(), arguments: {"path": pickedFile.path});
       return;
     }
     // Get.back(result: pickedFile.path);
@@ -242,7 +242,7 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
                         leftClick: !widget.isNew
                             ? null
                             : () {
-                                Get.offAll(() => const MainPage());
+                                Get.offAll(() => const ZpwMainPage());
                               },
                         right: InkWell(
                             onTap: () {

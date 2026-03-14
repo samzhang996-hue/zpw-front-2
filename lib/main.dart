@@ -13,7 +13,7 @@ import 'package:zpw/utils/zpw_ads_utils.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main()   {
-  Get.lazyPut(() => MainState());
+  Get.lazyPut(() => ZpwMainState());
   // 绑定引擎
   WidgetsFlutterBinding.ensureInitialized();
   ZpwAdsUtils.setAdEvent();
@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
               splashColor: const Color.fromRGBO(0, 0, 0, 0),
               useMaterial3: true,
             ),
-            home: SplashPage(),
+            home: ZpwSplashPage(),
             //NotePage(),
             builder: (context, widget) {
               widget = easyLoad(context, widget);

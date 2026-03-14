@@ -14,18 +14,18 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'zpw_specially_logic.dart';
 
-class SpeciallyPage extends StatefulWidget {
-  SpeciallyPage({Key? key}) : super(key: key);
+class ZpwSpeciallyPage extends StatefulWidget {
+  ZpwSpeciallyPage({Key? key}) : super(key: key);
 
   @override
-  State<SpeciallyPage> createState() => _SpeciallyPageState();
+  State<ZpwSpeciallyPage> createState() => _ZpwSpeciallyPageState();
 }
 
-class _SpeciallyPageState extends State<SpeciallyPage>
+class _ZpwSpeciallyPageState extends State<ZpwSpeciallyPage>
     with SingleTickerProviderStateMixin {
-  final logic = Get.put(SpeciallyLogic());
+  final logic = Get.put(ZpwSpeciallyLogic());
 
-  final state = Get.find<SpeciallyLogic>().state;
+  final state = Get.find<ZpwSpeciallyLogic>().state;
 
   var outHeight = 0.0.w;
   late PageController? page = PageController();
@@ -47,7 +47,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
             height: 371.w,
             fit: BoxFit.cover,
           ),
-          GetBuilder<SpeciallyLogic>(builder: (logic) {
+          GetBuilder<ZpwSpeciallyLogic>(builder: (logic) {
             if (logic.tabController == null) {
               return const SizedBox.shrink();
             }
@@ -71,14 +71,14 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                               height: 25.w,
                               fit: BoxFit.cover,
                             ),
-                            GetBuilder<MineLogic>(
+                            GetBuilder<ZpwMineLogic>(
                               builder: (mineLogic) {
                                 return Visibility(
                                   visible: !ZpwHandleTool.instance.isMember,
                                   child: GestureDetector(
                                     onTap: () {
-                                      Get.find<VipLogic>().getVipHome();
-                                      Get.to(() => VipPage());
+                                      Get.find<ZpwVipLogic>().getVipHome();
+                                      Get.to(() => ZpwVipPage());
                                     },
                                     behavior: HitTestBehavior.opaque,
                                     child: Image.asset(
@@ -107,7 +107,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                                 return GestureDetector(
                                   onTap: () {
                                     Get.to(
-                                      () => GatherSinglePage(
+                                      () => ZpwGatherSinglePage(
                                         id: bean.id ?? 0,
                                         imgUrlAcross: bean.imgUrlAcross ?? "",
                                         title: bean.groupName ?? "",
@@ -192,11 +192,11 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                   child: PageView(
                     controller: page,
                     children: logic.listPhotoGroupBean2
-                        // .map((e) => FaceItem(id: e.id ?? 0))
+                        // .map((e) => ZpwFaceItem(id: e.id ?? 0))
                         .map((e) {
                       return e.id == -1
-                          ? const AvatarSetItem()
-                          : CollectionItem(
+                          ? const ZpwAvatarSetItem()
+                          : ZpwCollectionItem(
                               id: e.id ?? 0,
                             );
                     }).toList(),

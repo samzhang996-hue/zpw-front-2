@@ -5,15 +5,15 @@ import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class MakeResultPage extends ZpwBaseStatefulWidget {
+class ZpwMakeResultPage extends ZpwBaseStatefulWidget {
   final int index;
 
-  MakeResultPage({required this.index});
+  ZpwMakeResultPage({required this.index});
   @override
-  ZpwBaseWidgetState<MakeResultPage> getState() => _MakeResultPageState();
+  ZpwBaseWidgetState<ZpwMakeResultPage> getState() => _ZpwMakeResultPageState();
 }
 
-class _MakeResultPageState extends ZpwBaseWidgetState<MakeResultPage> {
+class _ZpwMakeResultPageState extends ZpwBaseWidgetState<ZpwMakeResultPage> {
   late final _currentZodiac = 0.obs;
 
   void _make() {

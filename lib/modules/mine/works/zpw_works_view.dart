@@ -13,15 +13,15 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import '../detail/zpw_detail_view.dart';
 import 'zpw_works_logic.dart';
 
-class WorksPage extends ZpwBaseStatefulWidget {
+class ZpwWorksPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<WorksPage> getState() => _WorksPageState();
+  ZpwBaseWidgetState<ZpwWorksPage> getState() => _ZpwWorksPageState();
 }
 
-class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
+class _ZpwWorksPageState extends ZpwBaseWidgetState<ZpwWorksPage>
     with SingleTickerProviderStateMixin {
-  final logic = Get.put(WorksZpwLogic());
-  final state = Get.find<WorksZpwLogic>().state;
+  final logic = Get.put(ZpwWorksZpwLogic());
+  final state = Get.find<ZpwWorksZpwLogic>().state;
   final List<String> _tabs = ['视频', '图片'];
   late TabController _tabController;
 
@@ -62,13 +62,13 @@ class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
   @override
   void dispose() {
     _tabController.dispose();
-    Get.delete<WorksPage>();
+    Get.delete<ZpwWorksPage>();
     super.dispose();
   }
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<WorksZpwLogic>(builder: (logic) {
+    return GetBuilder<ZpwWorksZpwLogic>(builder: (logic) {
       return Container(
         color: Colors.white,
         child: Column(
@@ -193,7 +193,7 @@ class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
             InkWell(
               onTap: () {
                 Get.back();
-                Get.find<MainLogic>().changeIndex(_tabController.index);
+                Get.find<ZpwMainLogic>().changeIndex(_tabController.index);
               },
               child: Container(
                 width: 122.w,
@@ -345,7 +345,7 @@ class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
             ),
             onTap: () async {
               if (worksStatus == 3) {
-                final res = await Get.to(() => DetailPage(), arguments: {
+                final res = await Get.to(() => ZpwDetailPage(), arguments: {
                   "worksType": worksType,
                   "returnUrl": returnUrl,
                   "tags": tags,

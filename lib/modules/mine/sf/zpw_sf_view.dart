@@ -6,13 +6,13 @@ import 'package:zpw/common/view/zpw_comm_text.dart';
 
 import 'zpw_sf_logic.dart';
 
-class SfPage extends ZpwBaseStatefulWidget {
+class ZpwSfPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _SfPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _ZpwSfPageState();
 }
 
-class _SfPageState extends ZpwBaseWidgetState {
-  final logic = Get.put(SfLogic());
+class _ZpwSfPageState extends ZpwBaseWidgetState {
+  final logic = Get.put(ZpwSfLogic());
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {

@@ -1,9 +1,9 @@
 import 'package:zpw/modules/main/model/zpw_user_info_bean.dart';
 
-class MineState {
-  late UserInfoBean userInfoBean;
+class ZpwMineState {
+  late ZpwUserInfoBean userInfoBean;
 
-  MineState() {
-    userInfoBean = UserInfoBean();
+  ZpwMineState() {
+    userInfoBean = ZpwUserInfoBean();
   }
 }

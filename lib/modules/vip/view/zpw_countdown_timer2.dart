@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 import 'package:zpw/common/view/zpw_comm_text.dart';
 
-class CountdownTimer2 extends StatefulWidget {
+class ZpwCountdownTimer2 extends StatefulWidget {
   final void Function()? onCountdownComplete; // 添加回调函数
 
-  CountdownTimer2({this.onCountdownComplete});
+  ZpwCountdownTimer2({this.onCountdownComplete});
   @override
-  _CountdownTimerState createState() => _CountdownTimerState();
+  _ZpwCountdownTimerState createState() => _ZpwCountdownTimerState();
 }
 
-class _CountdownTimerState extends State<CountdownTimer2> {
+class _ZpwCountdownTimerState extends State<ZpwCountdownTimer2> {
   Duration duration = Duration(minutes: 9, seconds: 0, milliseconds: 0);
   Timer? timer;
   int milliseconds = 0;
@@ -61,7 +61,7 @@ class _CountdownTimerState extends State<CountdownTimer2> {
             ),
             borderRadius: BorderRadius.circular(8)
           ),
-          child: CountdownDigit(
+          child: ZpwCountdownDigit(
             digit: duration.inMinutes.remainder(60).toString().padLeft(2, '0'),
             backgroundColor: Colors.transparent,
           ),
@@ -80,7 +80,7 @@ class _CountdownTimerState extends State<CountdownTimer2> {
               ),
               borderRadius: BorderRadius.circular(8)
           ),
-          child: CountdownDigit(
+          child: ZpwCountdownDigit(
             digit: duration.inSeconds.remainder(60).toString().padLeft(2, '0'),
             backgroundColor: Colors.transparent,
           ),
@@ -99,7 +99,7 @@ class _CountdownTimerState extends State<CountdownTimer2> {
               ),
               borderRadius: BorderRadius.circular(8)
           ),
-          child: CountdownDigit(
+          child: ZpwCountdownDigit(
             digit: milliseconds.toString().padLeft(2, '0'),
             backgroundColor: Colors.transparent,
           ),
@@ -109,11 +109,11 @@ class _CountdownTimerState extends State<CountdownTimer2> {
   }
 }
 
-class CountdownDigit extends StatelessWidget {
+class ZpwCountdownDigit extends StatelessWidget {
   final String digit;
   final Color backgroundColor;
 
-  CountdownDigit({required this.digit, required this.backgroundColor});
+  ZpwCountdownDigit({required this.digit, required this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +146,7 @@ void main() {
         child: Container(
             width: 31,
             height: 27,
-            child: CountdownTimer2()),
+            child: ZpwCountdownTimer2()),
       ),
     ),
   ));

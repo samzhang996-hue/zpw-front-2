@@ -7,7 +7,7 @@ import 'package:zpw/common/view/zpw_comm_text.dart';
 import 'package:zpw/common/view/my_web_view/zpw_my_web_view_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class CustomSureVipDialogUtils {
+class ZpwCustomSureVipDialogUtils {
   static void showCustomDialog({
     required BuildContext context,
     required Function() onPressed,

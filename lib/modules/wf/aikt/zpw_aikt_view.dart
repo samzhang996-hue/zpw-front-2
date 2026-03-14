@@ -16,14 +16,14 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'zpw_aikt_logic.dart';
 
-class AiktPage extends ZpwBaseStatefulWidget {
+class ZpwAiktPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _AiktPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => _ZpwAiktPageState();
 }
 
-class _AiktPageState extends ZpwBaseWidgetState with ZpwAppMixin {
-  final logic = Get.put(AiktLogic());
-  final state = Get.find<AiktLogic>().state;
+class _ZpwAiktPageState extends ZpwBaseWidgetState with ZpwAppMixin {
+  final logic = Get.put(ZpwAiktLogic());
+  final state = Get.find<ZpwAiktLogic>().state;
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
@@ -36,7 +36,7 @@ class _AiktPageState extends ZpwBaseWidgetState with ZpwAppMixin {
               right: InkWell(
                   onTap: () async {
                     if ((await zpwWxLogin() == true)) {
-                      zpwGotoPushPage(WorksPage());
+                      zpwGotoPushPage(ZpwWorksPage());
                     }
                   },
                   child: ZpwCommText(
@@ -76,7 +76,7 @@ class _AiktPageState extends ZpwBaseWidgetState with ZpwAppMixin {
           Obx(() {
             return Opacity(
               opacity: state.text.value == "保存图片" ? 0 : 1,
-              child: MySlider(
+              child: ZpwMySlider(
                 onValueChanged: (value) {
                   state.outPaintRatio.value = value;
                 },
@@ -88,7 +88,7 @@ class _AiktPageState extends ZpwBaseWidgetState with ZpwAppMixin {
               UmengCommonSdk.onEvent('Aikt_click_event', {'name': ''});
               if ((await zpwWxLogin() == true)) {
                 if (!ZpwHandleTool.instance.isMember) {
-                  zpwGotoPushPage(VipPage());
+                  zpwGotoPushPage(ZpwVipPage());
                   return;
                 }
                 if (state.text.value == "保存图片") {

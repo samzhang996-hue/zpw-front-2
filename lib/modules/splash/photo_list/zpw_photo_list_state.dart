@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-class Photo_listState {
+class ZpwPhotoListState {
   late int type;
   late RxBool isPermission;
-  Photo_listState() {
+  ZpwPhotoListState() {
     type=0;
     isPermission=false.obs;
   }

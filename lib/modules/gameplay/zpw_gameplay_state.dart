@@ -1,5 +1,5 @@
-class GameplayState {
-  GameplayState() {
+class ZpwGameplayState {
+  ZpwGameplayState() {
     ///Initialize variables
   }
 }

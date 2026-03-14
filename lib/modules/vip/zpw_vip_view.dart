@@ -17,14 +17,14 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_vip_logic.dart';
 
-class VipPage extends ZpwBaseStatefulWidget {
+class ZpwVipPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<VipPage> getState() => _VipPageState();
+  ZpwBaseWidgetState<ZpwVipPage> getState() => _ZpwVipPageState();
 }
 
-class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObserver {
-  final logic = Get.find<VipLogic>();
-  final state = Get.find<VipLogic>().state;
+class _ZpwVipPageState extends ZpwBaseWidgetState<ZpwVipPage> with WidgetsBindingObserver {
+  final logic = Get.find<ZpwVipLogic>();
+  final state = Get.find<ZpwVipLogic>().state;
   BetterPlayerController? _betterPlayerController;
 
   @override
@@ -114,7 +114,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<VipLogic>(builder: (logic) {
+    return GetBuilder<ZpwVipLogic>(builder: (logic) {
       String? rk8;
       String? rk9;
       String? rk10;
@@ -301,7 +301,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                               state.isWx = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isWxPay ?? 0;
                               state.isZfb = state.vipBean.vipList?[state.itemIndex].vipPriceOutput?.isZfbPay ?? 0;
                               if (!state.isCheck.value) {
-                                CustomSureVipDialogUtils.showCustomDialog(
+                                ZpwCustomSureVipDialogUtils.showCustomDialog(
                                     context: context,
                                     onPressed: () {
                                       if (Platform.isIOS) {
@@ -435,7 +435,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                           //     if (ZpwHandleTool.instance.isMember) {
                           //       Get.back();
                           //     } else {
-                          //       CustomExitVipDialogUtils2.showCustomDialog(
+                          //       ZpwCustomExitVipDialogUtils2.showCustomDialog(
                           //           context: context, onPressed: () {});
                           //     }
                           //   },
@@ -454,7 +454,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                             if (state.vipBean == null || state.vipBean.vipPopList?.length == 0) {
                               Get.back();
                             } else {
-                              CustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
+                              ZpwCustomExitVipDialogUtils2.showCustomDialog(context: context, onPressed: () {});
                             }
                           }
                         },

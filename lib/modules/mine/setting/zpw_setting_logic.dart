@@ -12,12 +12,12 @@ import 'package:zpw/utils/zpw_sp_utils.dart';
 
 import 'zpw_setting_state.dart';
 
-class SettingLogic extends ZpwBaseGetxController {
-  final SettingState state = SettingState();
-  final mineZpwLogic = Get.find<MineLogic>();
+class ZpwSettingLogic extends ZpwBaseGetxController {
+  final ZpwSettingState state = ZpwSettingState();
+  final mineZpwLogic = Get.find<ZpwMineLogic>();
 
   // 兼容旧属性名
-  MineLogic get mineLogic => mineZpwLogic;
+  ZpwMineLogic get mineLogic => mineZpwLogic;
 
   deleteUser() async {
     final result = await getAsync(ZpwApi.zpwDeleteUser, isShowProgress: true);
@@ -54,8 +54,8 @@ class SettingLogic extends ZpwBaseGetxController {
     await 0.15.delay();
     ZpwSpUtils.setString("token", "");
     ZpwHandleTool.instance.token = "";
-    final mineZpwLogic = Get.find<MineLogic>();
-    mineZpwLogic.state.userInfoBean = UserInfoBean();
+    final mineZpwLogic = Get.find<ZpwMineLogic>();
+    mineZpwLogic.state.userInfoBean = ZpwUserInfoBean();
     ZpwHandleTool.instance.isMember = false;
     mineZpwLogic.update();
     Get.back();

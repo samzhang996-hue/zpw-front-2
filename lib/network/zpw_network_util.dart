@@ -299,8 +299,8 @@ class ZpwDioUtils {
     if (code == 1001) {
       ZpwSpUtils.setString("token", "");
       ZpwHandleTool.instance.token = "";
-      final logic = gggg.Get.find<MineLogic>();
-      logic.state.userInfoBean = UserInfoBean();
+      final logic = gggg.Get.find<ZpwMineLogic>();
+      logic.state.userInfoBean = ZpwUserInfoBean();
       ZpwHandleTool.instance.isMember = false;
       logic.update();
     }

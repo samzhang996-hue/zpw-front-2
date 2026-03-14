@@ -17,14 +17,14 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'zpw_mine_logic.dart';
 
-class MinePage extends ZpwBaseStatefulWidget {
+class ZpwMinePage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<MinePage> getState() => _MinePageState();
+  ZpwBaseWidgetState<ZpwMinePage> getState() => _ZpwMinePageState();
 }
 
-class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObserver, ZpwAppMixin {
-  final logic = Get.put(MineLogic());
-  final state = Get.find<MineLogic>().state;
+class _ZpwMinePageState extends ZpwBaseWidgetState<ZpwMinePage> with WidgetsBindingObserver, ZpwAppMixin {
+  final logic = Get.put(ZpwMineLogic());
+  final state = Get.find<ZpwMineLogic>().state;
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<MineLogic>(builder: (logic) {
+    return GetBuilder<ZpwMineLogic>(builder: (logic) {
       return Container(
         color: Color(0xffF6F6F6),
         child: Column(
@@ -139,7 +139,7 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                               InkWell(
                                 onTap: () {
                                   UmengCommonSdk.onEvent('Mine_click_event_setting', {'name': 'setting.png'});
-                                  zpwGotoPushPage(SettingPage());
+                                  zpwGotoPushPage(ZpwSettingPage());
                                 },
                                 child: SizedBox(
                                   width: 60.w,
@@ -155,8 +155,8 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                       ),
                       InkWell(
                         onTap: () {
-                          Get.find<VipLogic>().getVipHome();
-                          zpwGotoPushPage(VipPage());
+                          Get.find<ZpwVipLogic>().getVipHome();
+                          zpwGotoPushPage(ZpwVipPage());
                         },
                         child: Stack(
                           children: [
@@ -202,8 +202,8 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                       ),
                       // InkWell(
                       //   onTap: () {
-                      //     Get.find<VipLogic>().getVipHome();
-                      //     zpwGotoPushPage(VipPage());
+                      //     Get.find<ZpwVipLogic>().getVipHome();
+                      //     zpwGotoPushPage(ZpwVipPage());
                       //   },
                       //   child: Container(
                       //     margin: EdgeInsets.only(
@@ -335,16 +335,16 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
             case "我的作品":
               // ZpwHandleTool.instance.showUpdateDialog(false, "1.1.1", "123456", "fileUrl");
               if ((await zpwWxLogin() == true)) {
-                zpwGotoPushPage(WorksPage());
+                zpwGotoPushPage(ZpwWorksPage());
               }
-              // zpwGotoPushPage(ZnxcPage());
+              // zpwGotoPushPage(ZpwZnxcPage());
 
               break;
             case "关于我们":
-              zpwGotoPushPage(AboutPage());
+              zpwGotoPushPage(ZpwAboutPage());
               break;
             case "联系客服":
-              zpwGotoPushPage(CallPage());
+              zpwGotoPushPage(ZpwCallPage());
               break;
           }
         },

@@ -15,15 +15,15 @@ import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-class MakePage extends ZpwBaseStatefulWidget {
+class ZpwMakePage extends ZpwBaseStatefulWidget {
   final Map<String, String> map;
 
-  MakePage({required this.map});
+  ZpwMakePage({required this.map});
   @override
-  ZpwBaseWidgetState<MakePage> getState() => _MakePageState();
+  ZpwBaseWidgetState<ZpwMakePage> getState() => _ZpwMakePageState();
 }
 
-class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
+class _ZpwMakePageState extends ZpwBaseWidgetState<ZpwMakePage> with ZpwAppMixin {
   late final _nicknameEditingController = TextEditingController();
   late final _tipsEditingController = TextEditingController();
 
@@ -36,12 +36,12 @@ class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
   var _value = '';
   var _canBack = true;
 
-  late final _commEnumBean = <CommEnumBean>[].obs;
+  late final _commEnumBean = <ZpwCommEnumBean>[].obs;
 
   late final _currentZodiac = 0.obs;
   void _toHistory() {
     _canBack = false;
-    zpwGotoPushPage(WorksPage());
+    zpwGotoPushPage(ZpwWorksPage());
   }
 
   void _showError() async {
@@ -154,7 +154,7 @@ class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
       _showError();
     }
 
-    // zpwGotoPushPage(MakeResultPage());
+    // zpwGotoPushPage(ZpwMakeResultPage());
   }
 
   Future<void> _getData() async {
@@ -174,7 +174,7 @@ class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
     if (widget.map["useMethod"] == "11") {
       path = ZpwApi.zpwCartoonBoyEnum;
     }
-    final result = await ZpwDioUtils.instance.getAsync<CommEnumBean>(path, onModel: (json) => CommEnumBean.fromJson(json));
+    final result = await ZpwDioUtils.instance.getAsync<ZpwCommEnumBean>(path, onModel: (json) => ZpwCommEnumBean.fromJson(json));
     if (result.isSuccess && result.hasData) {
       _commEnumBean.value = result.data;
 

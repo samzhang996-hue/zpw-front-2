@@ -21,10 +21,10 @@ import 'package:zpw/utils/zpw_sp_utils.dart';
 
 import 'zpw_splash_state.dart';
 
-class SplashLogic extends ZpwBaseGetxController {
+class ZpwSplashLogic extends ZpwBaseGetxController {
   RxDouble progress = 0.0.obs;
   Timer? _timer;
-  final SplashState state = SplashState();
+  final ZpwSplashState state = ZpwSplashState();
   int requestMax = 0;
   int requestUserInfoMax = 0;
 
@@ -93,11 +93,11 @@ class SplashLogic extends ZpwBaseGetxController {
     ////
 
     ////
-    Get.put(VipLogic());
+    Get.put(ZpwVipLogic());
 
     if (ZpwHandleTool.instance.channelAds) {
       progress.value = 1.0;
-      Get.offAll(const MainPage());
+      Get.offAll(const ZpwMainPage());
       return;
     }
     try {
@@ -106,14 +106,14 @@ class SplashLogic extends ZpwBaseGetxController {
       if (value) {
         ZpwAdsUtils.showSplashAd();
       } else {
-        Get.offAll(const MainPage());
+        Get.offAll(const ZpwMainPage());
       }
     } on TimeoutException catch (_) {
       ZpwLog.e("ZpwAdsUtils.init() timed out");
-      Get.offAll(const MainPage()); // 超时，直接进入主页
+      Get.offAll(const ZpwMainPage()); // 超时，直接进入主页
     } catch (error) {
       ZpwLog.e("ZpwAdsUtils.init() failed: $error");
-      Get.offAll(const MainPage()); // 发生异常，直接进入主页
+      Get.offAll(const ZpwMainPage()); // 发生异常，直接进入主页
     }
     return;
   }
@@ -127,7 +127,7 @@ class SplashLogic extends ZpwBaseGetxController {
       ZpwHandleTool.instance.token = data['token'] ?? "";
       ZpwSpUtils.setBool("isAgreed", true);
       ZpwLog.d("res----${data}");
-      Get.put(VipLogic());
+      Get.put(ZpwVipLogic());
       getUserInfo();
     }
   }
@@ -198,7 +198,7 @@ class SplashLogic extends ZpwBaseGetxController {
       ZpwHandleTool.instance.token = data['token'] ?? "";
       ZpwSpUtils.setBool("isAgreed", true);
       ZpwLog.d("res----${data}");
-      Get.put(VipLogic());
+      Get.put(ZpwVipLogic());
       getUserInfo();
     } else {
       /// ------->  这里单独处理已选
@@ -231,10 +231,10 @@ class SplashLogic extends ZpwBaseGetxController {
   bool isFirst = false;
 
   getUserInfo() async {
-    final result = await postAsync<UserInfoBean>(
+    final result = await postAsync<ZpwUserInfoBean>(
       ZpwApi.zpwSsoGetUserInfo,
       isShowProgress: true,
-      onModel: (m) => UserInfoBean.fromJson(m),
+      onModel: (m) => ZpwUserInfoBean.fromJson(m),
     );
     requestUserInfoMax = requestUserInfoMax + 1;
     ZpwLog.d("requestUserInfoMax----$requestUserInfoMax");
@@ -243,11 +243,11 @@ class SplashLogic extends ZpwBaseGetxController {
       ZpwLog.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: ${result.isSuccess}");
       requestUserInfoMax = 100;
       ZpwLog.d("userInfoBean----${result.first?.id}");
-      UserInfoBean userInfoBean = result.first!;
+      ZpwUserInfoBean userInfoBean = result.first!;
       ZpwHandleTool.instance.isMember = userInfoBean.vipFlag == 1;
       ZpwLog.d("userInfoBean----${ZpwHandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
       UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
-      // Get.offAll(const MainPage());
+      // Get.offAll(const ZpwMainPage());
       // return;
       if (userInfoBean.headImg!.isNotEmpty) {
         isFirst = true;
@@ -255,7 +255,7 @@ class SplashLogic extends ZpwBaseGetxController {
       ZpwHandleTool.instance.headImg = userInfoBean.headImg ?? '';
       if (!_showAd || ZpwHandleTool.instance.channelAds) {
         progress.value = 1.0;
-        Get.offAll(const MainPage());
+        Get.offAll(const ZpwMainPage());
         return;
       }
       try {
@@ -265,14 +265,14 @@ class SplashLogic extends ZpwBaseGetxController {
         if (value) {
           ZpwAdsUtils.showSplashAd();
         } else {
-          Get.offAll(const MainPage());
+          Get.offAll(const ZpwMainPage());
         }
       } on TimeoutException catch (_) {
         ZpwLog.e("ZpwAdsUtils.init() timed out");
-        Get.offAll(const MainPage()); // 超时，直接进入主页
+        Get.offAll(const ZpwMainPage()); // 超时，直接进入主页
       } catch (error) {
         ZpwLog.e("ZpwAdsUtils.init() failed: $error");
-        Get.offAll(const MainPage()); // 发生异常，直接进入主页
+        Get.offAll(const ZpwMainPage()); // 发生异常，直接进入主页
       }
     } else {
       if (result.code == -2222) {
@@ -294,9 +294,9 @@ class SplashLogic extends ZpwBaseGetxController {
       if (event.adId == ZpwAdsConfig.zpwSplashId) {
         if (event.action == AdEventAction.onAdError || event.action == AdEventAction.onAdLoaded) {
           // if (isFirst) {
-          Get.offAll(const MainPage());
+          Get.offAll(const ZpwMainPage());
           // } else {
-          //   // Get.offAll(const MainPage());
+          //   // Get.offAll(const ZpwMainPage());
           //   // return;
           //   Get.offAll(GuidePage());
           // }

@@ -10,18 +10,18 @@ import 'zpw_call_logic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CallPage extends ZpwBaseStatefulWidget {
-  final logic = Get.put(CallLogic());
-  final state = Get.find<CallLogic>().state;
+class ZpwCallPage extends ZpwBaseStatefulWidget {
+  final logic = Get.put(ZpwCallLogic());
+  final state = Get.find<ZpwCallLogic>().state;
 
   @override
-  ZpwBaseWidgetState<CallPage> getState() => _CallPageState();
+  ZpwBaseWidgetState<ZpwCallPage> getState() => _ZpwCallPageState();
 }
 
-class _CallPageState extends ZpwBaseWidgetState<CallPage> {
+class _ZpwCallPageState extends ZpwBaseWidgetState<ZpwCallPage> {
   @override
   void dispose() {
-    Get.delete<CallPage>();
+    Get.delete<ZpwCallPage>();
     super.dispose();
   }
 

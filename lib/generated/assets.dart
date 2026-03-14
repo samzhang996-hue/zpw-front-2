@@ -33,10 +33,10 @@ class Assets {
   static const String commVipUpdate = 'images/comm/zpw_vip_update.png';
   static const String commWf = 'images/comm/zpw_wf.png';
   static const String faceFaceBg = 'images/face/zpw_face_bg.png';
-  static const String faceFaceItem1 = 'images/face/zpw_face_item_1.png';
-  static const String faceFaceItem2 = 'images/face/zpw_face_item_2.png';
-  static const String faceFaceItem3 = 'images/face/zpw_face_item_3.png';
-  static const String faceFaceItem4 = 'images/face/zpw_face_item_4.png';
+  static const String faceZpwFaceItem1 = 'images/face/zpw_face_item_1.png';
+  static const String faceZpwFaceItem2 = 'images/face/zpw_face_item_2.png';
+  static const String faceZpwFaceItem3 = 'images/face/zpw_face_item_3.png';
+  static const String faceZpwFaceItem4 = 'images/face/zpw_face_item_4.png';
   static const String faceFacePhoto = 'images/face/zpw_face_photo.png';
   static const String faceFaceVip = 'images/face/zpw_face_vip.png';
   static const String faceNoMoreContentLeft = 'images/face/zpw_no_more_content_left.png';

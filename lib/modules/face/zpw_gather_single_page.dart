@@ -9,8 +9,8 @@ import 'package:zpw/modules/face/zpw_collection_item.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 
-class GatherSinglePage extends StatefulWidget {
-  const GatherSinglePage({
+class ZpwGatherSinglePage extends StatefulWidget {
+  const ZpwGatherSinglePage({
     super.key,
     required this.id,
     required this.imgUrlAcross,
@@ -25,10 +25,10 @@ class GatherSinglePage extends StatefulWidget {
   final String title;
 
   @override
-  State<GatherSinglePage> createState() => _GatherSinglePageState();
+  State<ZpwGatherSinglePage> createState() => _ZpwGatherSinglePageState();
 }
 
-class _GatherSinglePageState extends State<GatherSinglePage>
+class _ZpwGatherSinglePageState extends State<ZpwGatherSinglePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
   late ScrollController? _scrollViewController = ScrollController();
@@ -223,8 +223,8 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                           controller: _pageController,
 
                           children: listPhotoGroupBean
-                              // .map((e) => FaceItem(id: e.id ?? 0))
-                              .map((e) => CollectionItem(id: e.id ?? 0))
+                              // .map((e) => ZpwFaceItem(id: e.id ?? 0))
+                              .map((e) => ZpwCollectionItem(id: e.id ?? 0))
                               .toList(),
                           // [
                           //   Padding(
@@ -372,7 +372,7 @@ class _GatherSinglePageState extends State<GatherSinglePage>
                             // }
                           },
                         )
-                  : CollectionItem(id: widget.id)),
+                  : ZpwCollectionItem(id: widget.id)),
           Positioned(
               top: ScreenUtil().statusBarHeight,
               left: 22.w,

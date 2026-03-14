@@ -9,8 +9,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import '../../utils/zpw_sp_utils.dart';
 import 'zpw_mine_state.dart';
 
-class MineLogic extends ZpwBaseGetxController {
-  final MineState state = MineState();
+class ZpwMineLogic extends ZpwBaseGetxController {
+  final ZpwMineState state = ZpwMineState();
 
   @override
   void onInit() {
@@ -21,15 +21,15 @@ class MineLogic extends ZpwBaseGetxController {
   getUserInfo({bool isShowProgress = false}) async {
     final isEmpty = ZpwHandleTool.instance.isEmpty(await ZpwSpUtils.getString("token"));
     if (isEmpty) {
-      state.userInfoBean = UserInfoBean();
+      state.userInfoBean = ZpwUserInfoBean();
       ZpwHandleTool.instance.isMember = false;
       update();
       return;
     }
-    final logic = Get.put(GameplayLogic());
-    final result = await postAsync<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
+    final logic = Get.put(ZpwGameplayLogic());
+    final result = await postAsync<ZpwUserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
         isShowProgress: isShowProgress,
-        onModel: (m) => UserInfoBean.fromJson(m));
+        onModel: (m) => ZpwUserInfoBean.fromJson(m));
     if (result.isSuccess && result.hasData) {
       ZpwLog.d("userInfoBean----${result.first}");
       state.userInfoBean = result.first!;

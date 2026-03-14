@@ -1,5 +1,5 @@
-class CallState {
-  CallState() {
+class ZpwCallState {
+  ZpwCallState() {
     ///Initialize variables
   }
 }

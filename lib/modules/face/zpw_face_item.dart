@@ -9,16 +9,16 @@ import 'package:zpw/network/api/zpw_network_api.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
-class FaceItem extends StatefulWidget {
-  const FaceItem({super.key, required this.id});
+class ZpwFaceItem extends StatefulWidget {
+  const ZpwFaceItem({super.key, required this.id});
 
   final int id;
 
   @override
-  State<FaceItem> createState() => _FaceItemState();
+  State<ZpwFaceItem> createState() => _ZpwFaceItemState();
 }
 
-class _FaceItemState extends State<FaceItem> {
+class _ZpwFaceItemState extends State<ZpwFaceItem> {
   late final _bean = ZpwPagePhotoGroupBindBean().obs;
 
   Future<void> _getData() async {
@@ -61,7 +61,7 @@ class _FaceItemState extends State<FaceItem> {
             return GestureDetector(
               onTap: () {
                 Get.to(
-                  () => FaceMakePage(
+                  () => ZpwFaceMakePage(
                     groupId: widget.id,
                     title: bean?.photoFuncResp?.tags ?? '',
                     funcId: bean?.photoFuncResp?.id ?? 0,

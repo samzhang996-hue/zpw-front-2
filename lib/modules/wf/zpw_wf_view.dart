@@ -17,14 +17,14 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import '../../mixin/zpw_app_mixin.dart';
 import 'zpw_wf_logic.dart';
 
-class WfPage extends ZpwBaseStatefulWidget {
+class ZpwWfPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<WfPage> getState() => _WfPageState();
+  ZpwBaseWidgetState<ZpwWfPage> getState() => _ZpwWfPageState();
 }
 
-class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
-  final logic = Get.put(WfZpwLogic());
-  final state = Get.find<WfZpwLogic>().state;
+class _ZpwWfPageState extends ZpwBaseWidgetState<ZpwWfPage> with ZpwAppMixin {
+  final logic = Get.put(ZpwWfLogic());
+  final state = Get.find<ZpwWfLogic>().state;
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
@@ -38,7 +38,7 @@ class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
             height: 371.w,
             fit: BoxFit.cover,
           ),
-          GetBuilder<WfZpwLogic>(builder: (logic) {
+          GetBuilder<ZpwWfLogic>(builder: (logic) {
             return Column(
               children: [
                 Container(
@@ -61,7 +61,7 @@ class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
                         ),
                         onTap: () async {
                           if ((await zpwWxLogin() == true)) {
-                            zpwGotoPushPage(WorksPage());
+                            zpwGotoPushPage(ZpwWorksPage());
                           }
                         },
                       ),
@@ -165,16 +165,16 @@ class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
                   ZpwLog.d("async----$frontType");
                   switch (frontType) {
                     case "SJHF":
-                      zpwGotoPushPage(RestorePage());
+                      zpwGotoPushPage(ZpwRestorePage());
                       break;
                     case "AIKT":
-                      zpwGotoPushPage(Photo_listPage(isNew: false), arguments: {"type": 1});
+                      zpwGotoPushPage(ZpwPhotoListPage(isNew: false), arguments: {"type": 1});
                       break;
                     case "WST":
                     default:
                       ZpwLog.e("xx: ${data.toJson()}");
                       Get.to(
-                        () => GatherSinglePage(
+                        () => ZpwGatherSinglePage(
                           id: data.id ?? 0,
                           imgUrlAcross: imgUrlAcross,
                           title: data.groupName ?? "",
@@ -193,7 +193,7 @@ class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
                   // );
                   // if (worksStatus == 3) {
                   //   final res = await zpwGotoPushPage(
-                  //     DetailPage(),
+                  //     ZpwDetailPage(),
                   //     arguments: {"worksType": worksType, "returnUrl": returnUrl, "tags": tags, "id": id},
                   //   );
                   //   logic.photoRecord(selectedIndex);

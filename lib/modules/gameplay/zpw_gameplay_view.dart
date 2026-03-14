@@ -12,17 +12,17 @@ import 'package:zpw/modules/vip/zpw_vip_logic.dart';
 import 'package:zpw/modules/vip/zpw_vip_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class GameplayPage extends StatefulWidget {
-  const GameplayPage({Key? key}) : super(key: key);
+class ZpwGameplayPage extends StatefulWidget {
+  const ZpwGameplayPage({Key? key}) : super(key: key);
 
   @override
-  State<GameplayPage> createState() => _GameplayPageState();
+  State<ZpwGameplayPage> createState() => _ZpwGameplayPageState();
 }
 
-class _GameplayPageState extends State<GameplayPage>
+class _ZpwGameplayPageState extends State<ZpwGameplayPage>
     with SingleTickerProviderStateMixin {
-  final logic = Get.put(GameplayLogic());
-  final state = Get.find<GameplayLogic>().state;
+  final logic = Get.put(ZpwGameplayLogic());
+  final state = Get.find<ZpwGameplayLogic>().state;
 
   var outHeight = 0.0.w;
   late PageController? page = PageController();
@@ -44,7 +44,7 @@ class _GameplayPageState extends State<GameplayPage>
             height: 371.w,
             fit: BoxFit.cover,
           ),
-          GetBuilder<GameplayLogic>(builder: (logic) {
+          GetBuilder<ZpwGameplayLogic>(builder: (logic) {
             if (logic.tabController == null) {
               return const SizedBox.shrink();
             }
@@ -67,14 +67,14 @@ class _GameplayPageState extends State<GameplayPage>
                               height: 25.w,
                               fit: BoxFit.cover,
                             ),
-                            GetBuilder<MineLogic>(
+                            GetBuilder<ZpwMineLogic>(
                               builder: (mineLogic) {
                                 return Visibility(
                                   visible: !ZpwHandleTool.instance.isMember,
                                   child: GestureDetector(
                                     onTap: () {
-                                      Get.find<VipLogic>().getVipHome();
-                                      Get.to(() => VipPage());
+                                      Get.find<ZpwVipLogic>().getVipHome();
+                                      Get.to(() => ZpwVipPage());
                                     },
                                     behavior: HitTestBehavior.opaque,
                                     child: Image.asset(
@@ -103,7 +103,7 @@ class _GameplayPageState extends State<GameplayPage>
                                 return GestureDetector(
                                   onTap: () {
                                     Get.to(
-                                      () => GatherSinglePage(
+                                      () => ZpwGatherSinglePage(
                                         id: bean.id ?? 0,
                                         imgUrlAcross: bean.imgUrlAcross ?? "",
                                         title: bean.groupName ?? "",
@@ -188,8 +188,8 @@ class _GameplayPageState extends State<GameplayPage>
                   child: PageView(
                     controller: page,
                     children: logic.listPhotoGroupBean2
-                        // .map((e) => FaceItem(id: e.id ?? 0))
-                        .map((e) => CollectionItem(id: e.id ?? 0))
+                        // .map((e) => ZpwFaceItem(id: e.id ?? 0))
+                        .map((e) => ZpwCollectionItem(id: e.id ?? 0))
                         .toList(),
                     onPageChanged: (index) {
                       logic.tabController?.animateTo(index);
@@ -230,8 +230,8 @@ class _GameplayPageState extends State<GameplayPage>
                     visible: !logic.showVip.value,
                     child: GestureDetector(
                       onTap: () {
-                        Get.find<VipLogic>().getVipHome();
-                        Get.to(() => VipPage());
+                        Get.find<ZpwVipLogic>().getVipHome();
+                        Get.to(() => ZpwVipPage());
                       },
                       behavior: HitTestBehavior.opaque,
                       child: Image.asset(

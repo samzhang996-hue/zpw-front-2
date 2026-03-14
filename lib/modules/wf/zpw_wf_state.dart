@@ -1,8 +1,8 @@
 import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 
-class WfState {
+class ZpwWfState {
   late List<ZpwListPhotoGroupBean> listPhotoGroupBean;
-  WfState() {
+  ZpwWfState() {
     listPhotoGroupBean=<ZpwListPhotoGroupBean>[];
   }
 }

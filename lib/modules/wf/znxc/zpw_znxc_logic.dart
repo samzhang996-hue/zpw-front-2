@@ -4,8 +4,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_znxc_state.dart';
 
-class ZnxcLogic extends ZpwBaseGetxController {
-  final ZnxcState state = ZnxcState();
+class ZpwZnxcLogic extends ZpwBaseGetxController {
+  final ZpwZnxcState state = ZpwZnxcState();
 
 
   smartRemove(String img, String mask) async {

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class MakewstState {
+class ZpwMakewstState {
   late RxList<dynamic> records;
   late RxList<Map<String, dynamic>> hfList;
   late RxString funcValue;
@@ -12,7 +12,7 @@ class MakewstState {
   late RxInt fgIndex;
   late RxBool isAdd;
 
-  MakewstState() {
+  ZpwMakewstState() {
     records = [].obs;
     hfList = <Map<String, dynamic>>[].obs;
     funcId = 0.obs;

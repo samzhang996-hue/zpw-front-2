@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:zpw/modules/vip/model/zpw_payBean.dart';
 import 'package:zpw/modules/vip/model/zpw_vipBean.dart';
 
-class VipState {
+class ZpwVipState {
   late int itemIndex;
   late int type;
   late RxBool isCheck;
@@ -564,7 +564,7 @@ class VipState {
             ]
           }
         });
-  VipState() {
+  ZpwVipState() {
     payBean = ZpwPayBean();
     vipBean = ZpwVipBean();
     isCheck = false.obs;

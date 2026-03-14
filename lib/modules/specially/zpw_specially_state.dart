@@ -1,3 +1,3 @@
-class SpeciallyState {
-  SpeciallyState();
+class ZpwSpeciallyState {
+  ZpwSpeciallyState();
 }

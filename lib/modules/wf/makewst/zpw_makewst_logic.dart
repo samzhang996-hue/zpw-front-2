@@ -7,8 +7,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import 'dart:convert';
 import 'zpw_makewst_state.dart';
 
-class MakewstZpwLogic extends ZpwBaseGetxController {
-  final MakewstState state = MakewstState();
+class ZpwMakewstLogic extends ZpwBaseGetxController {
+  final ZpwMakewstState state = ZpwMakewstState();
 
   @override
   void onInit() {

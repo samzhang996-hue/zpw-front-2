@@ -7,8 +7,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_face_state.dart';
 
-class FaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
-  final FaceState state = FaceState();
+class ZpwFaceLogic extends GetxController with GetSingleTickerProviderStateMixin {
+  final ZpwFaceState state = ZpwFaceState();
   TabController? tabController;
   var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
   var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];

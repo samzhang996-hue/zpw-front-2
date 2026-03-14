@@ -1,12 +1,12 @@
-class CommEnum {
-  List<CommEnumBean>? data;
+class ZpwCommEnum {
+  List<ZpwCommEnumBean>? data;
 
-  CommEnum({this.data});
+  ZpwCommEnum({this.data});
 
-  CommEnum.fromJson(Map<String, dynamic> json) {
+  ZpwCommEnum.fromJson(Map<String, dynamic> json) {
     data = json["data"] == null
         ? null
-        : (json["data"] as List).map((e) => CommEnumBean.fromJson(e)).toList();
+        : (json["data"] as List).map((e) => ZpwCommEnumBean.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -18,14 +18,14 @@ class CommEnum {
   }
 }
 
-class CommEnumBean {
+class ZpwCommEnumBean {
   int? index;
   String? name;
   String? value;
 
-  CommEnumBean({this.index, this.name, this.value});
+  ZpwCommEnumBean({this.index, this.name, this.value});
 
-  CommEnumBean.fromJson(Map<String, dynamic> json) {
+  ZpwCommEnumBean.fromJson(Map<String, dynamic> json) {
     index = json["index"];
     name = json["name"];
     value = json["value"];

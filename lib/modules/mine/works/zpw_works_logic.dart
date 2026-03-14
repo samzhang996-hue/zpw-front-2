@@ -6,8 +6,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_works_state.dart';
 
-class WorksZpwLogic extends ZpwBaseGetxController {
-  final WorksState state = WorksState();
+class ZpwWorksZpwLogic extends ZpwBaseGetxController {
+  final ZpwWorksState state = ZpwWorksState();
 
   @override
   void onInit() {
@@ -50,7 +50,7 @@ class WorksZpwLogic extends ZpwBaseGetxController {
 
       ZpwLog.d("fun---$data");
       Get.to(
-        () => FaceMakePage(
+        () => ZpwFaceMakePage(
           title: funcName,
           funcId: funcId,
           imageUrl: showImgGif,

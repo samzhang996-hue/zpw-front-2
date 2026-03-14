@@ -3,8 +3,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_wst_state.dart';
 
-class WstLogic extends GetxController {
-  final WstState state = WstState();
+class ZpwWstLogic extends GetxController {
+  final ZpwWstState state = ZpwWstState();
 
   @override
   void onInit() {

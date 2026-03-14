@@ -2,11 +2,11 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
-class GradientBorderPainter extends CustomPainter {
+class ZpwGradientBorderPainter extends CustomPainter {
   final double width;
   final List<Color> colors;
 
-  GradientBorderPainter({required this.width, required this.colors});
+  ZpwGradientBorderPainter({required this.width, required this.colors});
 
   @override
   void paint(Canvas canvas, Size size) {

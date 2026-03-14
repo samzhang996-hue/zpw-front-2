@@ -13,18 +13,18 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'zpw_about_logic.dart';
 
-class AboutPage extends ZpwBaseStatefulWidget {
+class ZpwAboutPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<AboutPage> getState() => _AboutPageState();
+  ZpwBaseWidgetState<ZpwAboutPage> getState() => _ZpwAboutPageState();
 }
 
-class _AboutPageState extends ZpwBaseWidgetState<AboutPage> {
-  final logic = Get.put(AboutLogic());
-  final state = Get.find<AboutLogic>().state;
+class _ZpwAboutPageState extends ZpwBaseWidgetState<ZpwAboutPage> {
+  final logic = Get.put(ZpwAboutLogic());
+  final state = Get.find<ZpwAboutLogic>().state;
 
   @override
   void dispose() {
-    Get.delete<AboutPage>();
+    Get.delete<ZpwAboutPage>();
     super.dispose();
   }
 
@@ -45,7 +45,7 @@ class _AboutPageState extends ZpwBaseWidgetState<AboutPage> {
           Obx(() {
             return commItem("检查更新", state.version.value, showUpdate: true);
           }),
-          GetBuilder<MineLogic>(
+          GetBuilder<ZpwMineLogic>(
             builder: (mineLogic) {
               return Visibility(
                 visible: ZpwHandleTool.instance.channelLogin && ZpwHandleTool.instance.isEmpty(mineLogic.state.userInfoBean.nickName),
@@ -251,7 +251,7 @@ class _AboutPageState extends ZpwBaseWidgetState<AboutPage> {
                 );
                 break;
               case "算法公示":
-                zpwGotoPushPage(SfPage());
+                zpwGotoPushPage(ZpwSfPage());
                 break;
               case "清理缓存":
                 logic.clearCache();

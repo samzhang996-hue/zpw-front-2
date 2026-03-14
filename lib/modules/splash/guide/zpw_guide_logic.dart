@@ -7,8 +7,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_guide_state.dart';
 
-class GuideLogic extends ZpwBaseGetxController {
-  final GuideState state = GuideState();
+class ZpwGuideLogic extends ZpwBaseGetxController {
+  final ZpwGuideState state = ZpwGuideState();
   BetterPlayerController? betterPlayerController;
 
   @override
@@ -26,7 +26,7 @@ class GuideLogic extends ZpwBaseGetxController {
   @override
   void onReady() {
     super.onReady();
-    CustomPhotoDialogUtils.showCustomDialog(
+    ZpwCustomPhotoDialogUtils.showCustomDialog(
         context: navigator!.context, onPressed: () {});
   }
 

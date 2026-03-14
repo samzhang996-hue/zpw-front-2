@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 
-class AboutState {
+class ZpwAboutState {
   late RxString size;
   late RxString version;
   late RxString channel;
-  AboutState() {
+  ZpwAboutState() {
     size = "0.0M".obs;
     version = "".obs;
     channel = "".obs;

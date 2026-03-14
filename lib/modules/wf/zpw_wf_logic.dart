@@ -9,8 +9,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_wf_state.dart';
 
-class WfZpwLogic extends ZpwBaseGetxController {
-  final WfState state = WfState();
+class ZpwWfLogic extends ZpwBaseGetxController {
+  final ZpwWfState state = ZpwWfState();
 
   @override
   void onInit() {

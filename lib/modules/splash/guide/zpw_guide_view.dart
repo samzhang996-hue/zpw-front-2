@@ -13,14 +13,14 @@ import 'package:zpw/modules/splash/photo_list/zpw_photo_list_view.dart';
 
 import 'zpw_guide_logic.dart';
 
-class GuidePage extends ZpwBaseStatefulWidget {
+class ZpwGuidePage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<GuidePage> getState() => _GuidePageState();
+  ZpwBaseWidgetState<ZpwGuidePage> getState() => _ZpwGuidePageState();
 }
 
-class _GuidePageState extends ZpwBaseWidgetState<GuidePage> {
-  final logic = Get.put(GuideLogic());
-  final state = Get.find<GuideLogic>().state;
+class _ZpwGuidePageState extends ZpwBaseWidgetState<ZpwGuidePage> {
+  final logic = Get.put(ZpwGuideLogic());
+  final state = Get.find<ZpwGuideLogic>().state;
 
   Future<void> pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -32,12 +32,12 @@ class _GuidePageState extends ZpwBaseWidgetState<GuidePage> {
   void _uploadImg() async {
     UmengCommonSdk.onEvent('Guide_click_event', {'name': '上传照片'});
     logic.betterPlayerController?.pause();
-    Get.to(() => Photo_listPage());
+    Get.to(() => ZpwPhotoListPage());
   }
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<GuideLogic>(builder: (logic) {
+    return GetBuilder<ZpwGuideLogic>(builder: (logic) {
       return Column(
         children: [
           SizedBox(

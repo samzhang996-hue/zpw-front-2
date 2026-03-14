@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
 
-class CustomPhotoDialogUtils {
+class ZpwCustomPhotoDialogUtils {
   static void showCustomDialog({
     required BuildContext context,
     required Function() onPressed,

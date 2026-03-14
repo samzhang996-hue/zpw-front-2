@@ -15,7 +15,7 @@ import '../utils/zpw_sp_utils.dart';
 
 mixin ZpwAppMixin {
   Future<bool?> zpwWxLogin() async {
-    final zpwMineLogic = Get.find<MineLogic>();
+    final zpwMineLogic = Get.find<ZpwMineLogic>();
     final zpwIsEmpty = ZpwHandleTool.instance.isEmpty(await ZpwSpUtils.getString("token"));
     if (zpwIsEmpty) {
       final zpwResult = await Get.bottomSheet<String?>(const ZpwCommWxLoginBottomSheet());
@@ -32,15 +32,15 @@ mixin ZpwAppMixin {
           ZpwSpUtils.setString("token", zpwData['token'] ?? "");
           ZpwHandleTool.instance.token = zpwData['token'] ?? "";
           // 获取用户信息
-          final userResult = await ZpwDioUtils.instance.postAsync<UserInfoBean>(
+          final userResult = await ZpwDioUtils.instance.postAsync<ZpwUserInfoBean>(
             ZpwApi.zpwSsoGetUserInfo,
             isShowProgress: true,
-            onModel: (m) => UserInfoBean.fromJson(m),
+            onModel: (m) => ZpwUserInfoBean.fromJson(m),
           );
           if (userResult.isSuccess && userResult.hasData) {
             zpwMineLogic.state.userInfoBean = userResult.first!;
             ZpwHandleTool.instance.isMember = zpwMineLogic.state.userInfoBean.vipFlag == 1;
-            final zpwLogic = Get.find<GameplayLogic>();
+            final zpwLogic = Get.find<ZpwGameplayLogic>();
             zpwLogic.stateShowVip(ZpwHandleTool.instance.isMember);
             zpwMineLogic.update();
             return true;

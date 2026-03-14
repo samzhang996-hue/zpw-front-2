@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:zpw/modules/specially/zpw_make_page.dart';
 
-class AvatarSetItem extends StatefulWidget {
-  const AvatarSetItem({super.key});
+class ZpwAvatarSetItem extends StatefulWidget {
+  const ZpwAvatarSetItem({super.key});
 
   @override
-  State<AvatarSetItem> createState() => _AvatarSetItemState();
+  State<ZpwAvatarSetItem> createState() => _ZpwAvatarSetItemState();
 }
 
-class _AvatarSetItemState extends State<AvatarSetItem> {
+class _ZpwAvatarSetItemState extends State<ZpwAvatarSetItem> {
   late final _list = [
     {
       "image": "images/specially/zpw_03_0.jpg",
@@ -75,7 +75,7 @@ class _AvatarSetItemState extends State<AvatarSetItem> {
           final bean = _list[index];
           return GestureDetector(
             onTap: () {
-              Get.to(() => MakePage(map: bean));
+              Get.to(() => ZpwMakePage(map: bean));
             },
             child: Container(
               decoration: BoxDecoration(

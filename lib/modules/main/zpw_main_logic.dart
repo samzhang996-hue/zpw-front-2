@@ -8,8 +8,8 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import '../vip/zpw_vip_view.dart';
 
-class MainLogic extends ZpwBaseGetxController {
-  final MainState state = MainState();
+class ZpwMainLogic extends ZpwBaseGetxController {
+  final ZpwMainState state = ZpwMainState();
 
   changeIndex(int index) {
     UmengCommonSdk.onEvent('MainLogic_click_event', {'index': '$index'});
@@ -27,7 +27,7 @@ class MainLogic extends ZpwBaseGetxController {
     super.onReady();
     ZpwHandleTool.instance.packagesGetForcePackage();
     if (!ZpwHandleTool.instance.isMember) {
-      Get.to(() => VipPage());
+      Get.to(() => ZpwVipPage());
     }
   }
 

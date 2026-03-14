@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-class WstState {
+class ZpwWstState {
   late RxString funcValue;
   late RxString showImgGif;
   late RxInt funcId;
-  WstState() {
+  ZpwWstState() {
     funcValue="".obs;
     funcId=0.obs;
     showImgGif="".obs;

@@ -7,8 +7,8 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_detail_state.dart';
 
-class DetailZpwLogic extends ZpwBaseGetxController {
-  final DetailState state = DetailState();
+class ZpwDetailZpwLogic extends ZpwBaseGetxController {
+  final ZpwDetailState state = ZpwDetailState();
 
   @override
   void onInit() {
@@ -47,7 +47,7 @@ class DetailZpwLogic extends ZpwBaseGetxController {
 
       ZpwLog.d("fun---$data");
       Get.to(
-        () => FaceMakePage(
+        () => ZpwFaceMakePage(
           title: funcName,
           funcId: id,
           imageUrl: showImgGif,

@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
-class SettingState {
+class ZpwSettingState {
   late RxString version;
   late RxString channel;
-  SettingState() {
+  ZpwSettingState() {
     version = "".obs;
     channel = "".obs;
   }

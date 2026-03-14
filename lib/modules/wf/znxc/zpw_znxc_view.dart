@@ -11,14 +11,14 @@ import 'package:gal/gal.dart';
 import 'package:zpw/modules/wf/znxc/zpw_znxc_logic.dart';
 import 'package:zpw/utils/zpw_my_plugin.dart'; // 用于保存图片到相册
 
-class ZnxcPage extends StatefulWidget {
+class ZpwZnxcPage extends StatefulWidget {
   @override
   _ZnxcPageState createState() => _ZnxcPageState();
 }
 
-class _ZnxcPageState extends State<ZnxcPage> {
-  final logic = Get.put(ZnxcLogic());
-  final state = Get.find<ZnxcLogic>().state;
+class _ZnxcPageState extends State<ZpwZnxcPage> {
+  final logic = Get.put(ZpwZnxcLogic());
+  final state = Get.find<ZpwZnxcLogic>().state;
   File? _image; // 用户选择的图片
   ui.Image? _paintImage; // 用于绘制的图片
   List<Offset> _points = []; // 用户涂抹的点

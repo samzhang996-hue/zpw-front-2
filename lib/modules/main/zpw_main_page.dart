@@ -5,34 +5,34 @@ import 'package:zpw/common/zpw_constant.dart';
 import 'package:zpw/common/zpw_style.dart';
 import 'package:zpw/modules/main/zpw_main_logic.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class ZpwMainPage extends StatefulWidget {
+  const ZpwMainPage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<ZpwMainPage> createState() => _ZpwMainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  final logic = Get.put(MainLogic());
+class _ZpwMainPageState extends State<ZpwMainPage> {
+  final logic = Get.put(ZpwMainLogic());
 
-  final state = Get.find<MainLogic>().state;
+  final state = Get.find<ZpwMainLogic>().state;
 
   @override
   void dispose() {
-    Get.delete<MainLogic>();
+    Get.delete<ZpwMainLogic>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MainLogic>(builder: (logic) {
+    return GetBuilder<ZpwMainLogic>(builder: (logic) {
       return Scaffold(
           backgroundColor: ZpwColorPlate.zpwThemeBgColor,
           body: IndexedStack(
             index: state.currentIndex.value,
             children: state.pages,
           ),
-          bottomNavigationBar: GetBuilder<MainLogic>(
+          bottomNavigationBar: GetBuilder<ZpwMainLogic>(
             builder: (logic) {
               return BottomNavigationBar(
                 // 当前菜单下标

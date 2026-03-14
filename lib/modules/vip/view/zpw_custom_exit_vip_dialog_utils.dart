@@ -12,7 +12,7 @@ import 'package:zpw/modules/vip/view/zpw_custom_sure_vip_dialog_utils.dart';
 import 'package:zpw/modules/vip/zpw_vip_logic.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
-class CustomExitVipDialogUtils2 {
+class ZpwCustomExitVipDialogUtils2 {
   static void showCustomDialog({
     required BuildContext context,
     required Function() onPressed,
@@ -21,8 +21,8 @@ class CustomExitVipDialogUtils2 {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        final logic = Get.find<VipLogic>();
-        final state = Get.find<VipLogic>().state;
+        final logic = Get.find<ZpwVipLogic>();
+        final state = Get.find<ZpwVipLogic>().state;
         var vipPriceVos = state.vipBean.vipPopList;
         var rk1 = vipPriceVos?[0].remark1 ?? "";
         var rk2 = vipPriceVos?[0].remark2 ?? "";
@@ -61,7 +61,7 @@ class CustomExitVipDialogUtils2 {
                       onTap: () {
                         if (state.type == 1) {
                           Navigator.of(context).pop();
-                          Get.offAll(() => const MainPage());
+                          Get.offAll(() => const ZpwMainPage());
                         } else {
                           Navigator.of(context).pop();
                           Get.back();
@@ -202,7 +202,7 @@ class CustomExitVipDialogUtils2 {
                                     SizedBox(
                                       width: 7.w,
                                     ),
-                                    CountdownTimer2(
+                                    ZpwCountdownTimer2(
                                       onCountdownComplete: () {
                                         setState(() {
                                           // showCountdown = true;
@@ -302,7 +302,7 @@ class CustomExitVipDialogUtils2 {
                                       logic.addOrder();
                                     }
                                   } else {
-                                    CustomSureVipDialogUtils.showCustomDialog(
+                                    ZpwCustomSureVipDialogUtils.showCustomDialog(
                                         context: context,
                                         onPressed: () {
                                           logic.onSelected(true);

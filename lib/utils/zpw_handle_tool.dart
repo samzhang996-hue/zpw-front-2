@@ -528,7 +528,7 @@ class ZpwHandleTool {
 
     if (needUpdate) {
       if (isSetting) {
-        final g = Get.find<AboutLogic>();
+        final g = Get.find<ZpwAboutLogic>();
         g.isUpdate.value = true;
         return;
       }
@@ -678,7 +678,7 @@ class ZpwHandleTool {
           ZpwHandleTool.instance.zpwHeadImg = '${bean.url}';
           success?.call(bean.url ?? '');
         } else {
-          CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+          ZpwCustomFaceDialogUtils.showCustomDialog(onPressed: () {});
         }
       });
 
@@ -693,7 +693,7 @@ class ZpwHandleTool {
       // File xx = File(filePath);
       // ZpwLog.e("xx:${xx.existsSync()}");
       // ZpwHandleTool.instance.zpwHeadImg = filePath;
-      // // CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      // // ZpwCustomFaceDialogUtils.showCustomDialog(onPressed: () {});
       // // return;
       // final imgBase64 = await _imageToBase64(path);
 
@@ -705,7 +705,7 @@ class ZpwHandleTool {
       //     if (isSuccess == true && results.isNotEmpty) {
       //       success?.call();
       //     } else {
-      //       CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+      //       ZpwCustomFaceDialogUtils.showCustomDialog(onPressed: () {});
       //     }
       //   },
       // );

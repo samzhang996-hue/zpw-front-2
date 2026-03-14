@@ -147,7 +147,7 @@
 //             body: PageView(
 //               controller: page,
 //               children: widget.listPhotoGroupBean
-//                   .map((e) => CollectionItem(id: e.id ?? 0))
+//                   .map((e) => ZpwCollectionItem(id: e.id ?? 0))
 //                   .toList(),
 //               onPageChanged: (index) {
 //                 Log.e("indexindexindex:index$index");

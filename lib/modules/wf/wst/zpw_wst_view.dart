@@ -13,14 +13,14 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 
 import 'zpw_wst_logic.dart';
 
-class WstPage extends ZpwBaseStatefulWidget {
+class ZpwWstPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => WstPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => ZpwWstPageState();
 }
 
-class WstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
-  final logic = Get.put(WstLogic());
-  final state = Get.find<WstLogic>().state;
+class ZpwWstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
+  final logic = Get.put(ZpwWstLogic());
+  final state = Get.find<ZpwWstLogic>().state;
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
@@ -36,7 +36,7 @@ class WstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                     right: InkWell(
                         onTap: () async {
                           if ((await zpwWxLogin() == true)) {
-                            zpwGotoPushPage(WorksPage());
+                            zpwGotoPushPage(ZpwWorksPage());
                           }
                         },
                         child: Row(
@@ -100,9 +100,9 @@ class WstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                     onTap: () async {
                       if ((await zpwWxLogin() == true)) {
                         if (ZpwHandleTool.instance.isMember) {
-                          zpwGotoPushPage(MakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
+                          zpwGotoPushPage(ZpwMakewstPage(), arguments: {"funcValue": state.funcValue.value, "funcId": state.funcId.value});
                         } else {
-                          zpwGotoPushPage(VipPage());
+                          zpwGotoPushPage(ZpwVipPage());
                         }
                       }
                     },

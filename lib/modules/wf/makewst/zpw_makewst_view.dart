@@ -17,17 +17,17 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 
 import 'zpw_makewst_logic.dart';
 
-class MakewstPage extends ZpwBaseStatefulWidget {
+class ZpwMakewstPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => MakewstPageState();
+  ZpwBaseWidgetState<ZpwBaseStatefulWidget> getState() => ZpwMakewstPageState();
 }
 
-class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
+class ZpwMakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
   final ScrollController _scrollController = ScrollController();
   final _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  final logic = Get.put(MakewstZpwLogic());
-  final state = Get.find<MakewstZpwLogic>().state;
+  final logic = Get.put(ZpwMakewstLogic());
+  final state = Get.find<ZpwMakewstLogic>().state;
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
 
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
-    return GetBuilder<MakewstZpwLogic>(builder: (logic) {
+    return GetBuilder<ZpwMakewstLogic>(builder: (logic) {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Stack(
@@ -77,7 +77,7 @@ class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                         right: InkWell(
                             onTap: () async {
                               if ((await zpwWxLogin() == true)) {
-                                zpwGotoPushPage(WorksPage());
+                                zpwGotoPushPage(ZpwWorksPage());
                               }
                             },
                             child: ZpwCommText(
@@ -494,7 +494,7 @@ class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                     InkWell(
                       onTap: () async {
                         if (worksStatus == 3) {
-                          final res = await Get.to(() => DetailPage(), arguments: {"worksType": type, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
+                          final res = await Get.to(() => ZpwDetailPage(), arguments: {"worksType": type, "returnUrl": returnUrl, "tags": tags, "id": id, "funcId": funcId, "apiType": apiType});
                           logic.photoRecord(true);
                           return;
                         }

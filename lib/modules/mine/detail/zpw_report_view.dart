@@ -15,12 +15,12 @@ import 'package:zpw/common/multi_image/zpw_multi_image.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_permission.dart';
 
-class ReportView extends ZpwBaseStatefulWidget {
+class ZpwReportView extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<ReportView> getState() => _CustomerServicePageState();
+  ZpwBaseWidgetState<ZpwReportView> getState() => _ZpwCustomerServicePageState();
 }
 
-class _CustomerServicePageState extends ZpwBaseWidgetState<ReportView> {
+class _ZpwCustomerServicePageState extends ZpwBaseWidgetState<ZpwReportView> {
   late final textController = TextEditingController();
   final ZpwMultiImageController multiImageController = ZpwMultiImageController();
 

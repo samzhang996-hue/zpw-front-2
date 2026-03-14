@@ -13,8 +13,8 @@ import '../../../utils/zpw_my_plugin.dart';
 import '../../../utils/zpw_sp_utils.dart';
 import 'zpw_about_state.dart';
 
-class AboutLogic extends GetxController {
-  final AboutState state = AboutState();
+class ZpwAboutLogic extends GetxController {
+  final ZpwAboutState state = ZpwAboutState();
   late final isUpdate = false.obs;
   @override
   void onInit() {
@@ -60,7 +60,7 @@ class AboutLogic extends GetxController {
       "password": password,
     };
 
-    final MineLogic mineLogic = Get.find<MineLogic>();
+    final ZpwMineLogic mineLogic = Get.find<ZpwMineLogic>();
     final result = await ZpwDioUtils.instance.postAsync<Map<String, dynamic>>(
       ZpwApi.zpwAccountLogin,
       params: dataMap,

@@ -8,8 +8,8 @@ import 'package:dio/src/form_data.dart' as ffff;
 import 'package:dio/src/multipart_file.dart' as ffff;
 import 'zpw_aikt_state.dart';
 
-class AiktLogic extends ZpwBaseGetxController {
-  final AiktState state = AiktState();
+class ZpwAiktLogic extends ZpwBaseGetxController {
+  final ZpwAiktState state = ZpwAiktState();
 
   @override
   void onInit() {

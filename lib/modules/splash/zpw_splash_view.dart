@@ -15,21 +15,21 @@ import 'package:zpw/utils/zpw_sp_utils.dart';
 
 import 'zpw_splash_logic.dart';
 
-class SplashPage extends ZpwBaseStatefulWidget {
+class ZpwSplashPage extends ZpwBaseStatefulWidget {
   @override
-  ZpwBaseWidgetState<SplashPage> getState() => _SplashPageState();
+  ZpwBaseWidgetState<ZpwSplashPage> getState() => _ZpwSplashPageState();
 }
 
-class _SplashPageState extends ZpwBaseWidgetState<SplashPage> {
-  final logic = Get.put(SplashLogic());
-  final state = Get.find<SplashLogic>().state;
+class _ZpwSplashPageState extends ZpwBaseWidgetState<ZpwSplashPage> {
+  final logic = Get.put(ZpwSplashLogic());
+  final state = Get.find<ZpwSplashLogic>().state;
 
   // late VideoPlayerController _controller;
 
   @override
   void dispose() {
     // _controller.dispose();
-    Get.delete<SplashPage>();
+    Get.delete<ZpwSplashPage>();
     // TODO: implement dispose
     super.dispose();
     logic.stopPolling();
@@ -50,7 +50,7 @@ class _SplashPageState extends ZpwBaseWidgetState<SplashPage> {
               context: context,
               barrierDismissible: false, // 阻止用户点击弹窗外部关闭弹窗
               builder: (BuildContext context) {
-                return const UserAgreementDialog();
+                return const ZpwUserAgreementDialog();
               },
             );
 
@@ -147,12 +147,12 @@ class _SplashPageState extends ZpwBaseWidgetState<SplashPage> {
 }
 
 ///用户协议
-class UserAgreementDialog extends GetWidget {
-  const UserAgreementDialog({super.key});
+class ZpwUserAgreementDialog extends GetWidget {
+  const ZpwUserAgreementDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final logic = Get.put(SplashLogic());
+    final logic = Get.put(ZpwSplashLogic());
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0), // 设置圆角半径为10.0

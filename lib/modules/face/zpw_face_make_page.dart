@@ -27,7 +27,7 @@ import 'package:zpw/utils/zpw_log_utils.dart';
 import '../../common/bottom_sheet/zpw_whole_body_photo_bottom_sheet.dart';
 import '../../utils/zpw_sp_utils.dart';
 
-class FaceMakePage extends ZpwBaseStatefulWidget {
+class ZpwFaceMakePage extends ZpwBaseStatefulWidget {
   final String title;
   final int funcId;
   final String imageUrl;
@@ -36,7 +36,7 @@ class FaceMakePage extends ZpwBaseStatefulWidget {
 
   final int apiType;
 
-  FaceMakePage({
+  ZpwFaceMakePage({
     required this.title,
     required this.funcId,
     required this.imageUrl,
@@ -46,10 +46,10 @@ class FaceMakePage extends ZpwBaseStatefulWidget {
   });
 
   @override
-  ZpwBaseWidgetState<FaceMakePage> getState() => _FaceMakePageState();
+  ZpwBaseWidgetState<ZpwFaceMakePage> getState() => _ZpwFaceMakePageState();
 }
 
-class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMixin {
+class _ZpwFaceMakePageState extends ZpwBaseWidgetState<ZpwFaceMakePage> with ZpwAppMixin {
   // late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 0 ? true.obs : false.obs);
   late final _hasAvatar = (widget.apiType == 10 || widget.apiType == 2 || widget.apiType == 9 || widget.apiType == 3 || widget.apiType == 1 || widget.apiType == 16 || widget.apiType == 4 ? true.obs : false.obs);
   var _canBack = true;
@@ -88,7 +88,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
     if (_isNotEmptyVideoUrl) {
       _betterPlayerController?.pause();
     }
-    await Get.to(() => WorksPage());
+    await Get.to(() => ZpwWorksPage());
     if (_isNotEmptyVideoUrl) {
       _betterPlayerController?.play();
     }
@@ -189,8 +189,8 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
         _betterPlayerController?.pause();
       }
       if (!ZpwHandleTool.instance.isMember) {
-        Get.find<VipLogic>().getVipHome();
-        await Get.to(() => VipPage());
+        Get.find<ZpwVipLogic>().getVipHome();
+        await Get.to(() => ZpwVipPage());
         if (_isNotEmptyVideoUrl) {
           _betterPlayerController?.play();
         }
@@ -202,7 +202,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
         if (result == false) {
           await Get.bottomSheet<bool?>(const ZpwWholeBodyPhotoBottomSheet(), isDismissible: false);
         }
-        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+        final res = await Get.to<String>(() => ZpwPhotoListPage(isNew: false, hasAvatar: _hasAvatar.value));
         _betterPlayerController?.play();
 
         if (res == null) {
@@ -217,7 +217,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
       }
 
       if (_apiType == 5 || _apiType == 8) {
-        final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
+        final res = await Get.to<String>(() => ZpwPhotoListPage(isNew: false, hasAvatar: _hasAvatar.value));
         _betterPlayerController?.play();
 
         if (res == null) {
@@ -234,7 +234,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
       // return;
 
       // if (_myHeadImg.value.isEmpty || _showHeadImg.isFalse) {
-      //   final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+      //   final res = await Get.to<String>(() => ZpwPhotoListPage(isNew: false));
       //   if (res?.isNotEmpty == true) {
       //     _myHeadImg.value = res!;
       //     if (_myHeadImg.isNotEmpty) {
@@ -285,8 +285,8 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
         _betterPlayerController?.pause();
       }
       if (!ZpwHandleTool.instance.isMember) {
-        Get.find<VipLogic>().getVipHome();
-        await Get.to(() => VipPage());
+        Get.find<ZpwVipLogic>().getVipHome();
+        await Get.to(() => ZpwVipPage());
         if (_isNotEmptyVideoUrl) {
           _betterPlayerController?.play();
         }
@@ -295,7 +295,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
       if (_isNotEmptyVideoUrl) {
         _betterPlayerController?.pause();
       }
-      final res = await Get.to<String>(() => Photo_listPage(isNew: false));
+      final res = await Get.to<String>(() => ZpwPhotoListPage(isNew: false));
       if (_isNotEmptyVideoUrl) {
         _betterPlayerController?.play();
       }
@@ -364,14 +364,14 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
   void initState() {
     super.initState();
     // _checkImage();
-    UmengCommonSdk.onPageStart("FaceMakePage");
+    UmengCommonSdk.onPageStart("ZpwFaceMakePage");
     _getData();
     ZpwLog.e("params------:${widget.funcId},params:${widget.groupId},type:${widget.apiType}");
   }
 
   @override
   void dispose() {
-    UmengCommonSdk.onPageEnd("FaceMakePage");
+    UmengCommonSdk.onPageEnd("ZpwFaceMakePage");
     _canBack = false;
     super.dispose();
   }

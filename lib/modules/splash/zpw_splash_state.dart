@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-class SplashState {
-  SplashState() {
+class ZpwSplashState {
+  ZpwSplashState() {
     ///Initialize variables
   }
 }
