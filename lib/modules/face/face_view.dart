@@ -82,7 +82,7 @@ class _FacePageState extends State<FacePage>
       body: Stack(
         children: [
           Image.asset(
-            "face_bg.png".face,
+            "zpw_face_bg.png".face,
             width: 1.sw,
             height: 371.w,
             fit: BoxFit.cover,
@@ -105,7 +105,7 @@ class _FacePageState extends State<FacePage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Image.asset(
-                              "face_photo.png".face,
+                              "zpw_face_photo.png".face,
                               width: 50.w,
                               height: 25.w,
                               fit: BoxFit.cover,
@@ -120,7 +120,7 @@ class _FacePageState extends State<FacePage>
                                   },
                                   behavior: HitTestBehavior.opaque,
                                   child: Image.asset(
-                                    "face_vip.png".face,
+                                    "zpw_face_vip.png".face,
                                     width: 65.w,
                                     height: 26.w,
                                     fit: BoxFit.cover,

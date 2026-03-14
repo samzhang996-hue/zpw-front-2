@@ -101,7 +101,7 @@ abstract class ZpwBaseWidgetState<T extends ZpwBaseStatefulWidget> extends State
                                         ? Align(
                                             alignment: Alignment.center,
                                             child: Image.asset(
-                                                    'arrow_back.png'.comm,
+                                                    'zpw_arrow_back.png'.comm,
                                                     width: 16.w,
                                                     height: 16.w,
                                                     fit: BoxFit.cover,

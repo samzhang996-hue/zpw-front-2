@@ -165,7 +165,7 @@ class _SettingPageState extends ZpwBaseWidgetState<SettingPage> {
                 ),
                 if (!hideArrow)
                   Image.asset(
-                    "arrow.png".mine,
+                    "zpw_arrow.png".mine,
                     width: 21,
                   ),
                 SizedBox(

@@ -183,7 +183,7 @@ class _CustomerServicePageState extends ZpwBaseWidgetState<ReportView> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset('report_picture.png'.mine,
+                              Image.asset('zpw_report_picture.png'.mine,
                                   width: 30.w, height: 30.w, fit: BoxFit.cover),
                               Text(
                                 '选择照片',

@@ -1,9 +1,9 @@
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:video_player/video_player.dart';
 import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:zpw/common/zpw_constant.dart';
 import 'package:zpw/common/zpw_qds_image.dart';
@@ -31,7 +31,7 @@ class _GuidePageState extends ZpwBaseWidgetState<GuidePage> {
 
   void _uploadImg() async {
     UmengCommonSdk.onEvent('Guide_click_event', {'name': '上传照片'});
-    logic.videoPlayerController?.pause();
+    logic.betterPlayerController?.pause();
     Get.to(() => Photo_listPage());
   }
 
@@ -53,24 +53,15 @@ class _GuidePageState extends ZpwBaseWidgetState<GuidePage> {
             height: 8.w,
           ),
           if (state.videoUrl.isNotEmpty)
-            logic.videoPlayerController == null
+            logic.betterPlayerController == null
                 ? Expanded(
                     child: Container(
                       child: Center(child: CircularProgressIndicator()),
                     ),
                   )
-                : logic.videoPlayerController!.value.isInitialized
-                    ? Expanded(
-                        child: AspectRatio(
-                          aspectRatio: logic.videoPlayerController!.value.aspectRatio,
-                          child: VideoPlayer(logic.videoPlayerController!),
-                        ),
-                      )
-                    : Expanded(
-                        child: Container(
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                      )
+                : Expanded(
+                    child: BetterPlayer(controller: logic.betterPlayerController!),
+                  )
           else
             Expanded(
               child: ZpwQdsImage(state.showImgGif, double.infinity, double.infinity, fit: BoxFit.cover),
@@ -117,7 +108,7 @@ class _GuidePageState extends ZpwBaseWidgetState<GuidePage> {
                       Container(
                           margin: EdgeInsets.only(top: 17.w),
                           child: Image.asset(
-                            "face.png".comm,
+                            "zpw_face.png".comm,
                             width: 244.w,
                             height: 192.w,
                           )),

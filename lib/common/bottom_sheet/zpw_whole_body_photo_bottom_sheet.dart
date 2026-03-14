@@ -29,7 +29,7 @@ class ZpwWholeBodyPhotoBottomSheet extends StatelessWidget {
           Container(
               margin: EdgeInsets.only(top: 17.w),
               child: Image.asset(
-                "whole_body.png".comm,
+                "zpw_whole_body.png".comm,
                 width: 283.w,
                 height: 197.w,
               )),

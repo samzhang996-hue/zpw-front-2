@@ -28,7 +28,7 @@ class ZpwCommSuccess extends StatelessWidget {
               children: [
                 const Spacer(flex: 2),
                 Image.asset(
-                  "success_ing.png".make,
+                  "zpw_success_ing.png".make,
                   width: 86.w,
                   height: 86.w,
                   fit: BoxFit.cover,

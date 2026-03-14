@@ -55,12 +55,12 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
 
   Widget image() {
     return Image.asset(
-      "default_avatar.png".mine,
+      "zpw_default_avatar.png".mine,
       width: 56.w,
     );
     // return state.userInfoBean.headImg == ""
     //     ? Image.asset(
-    //         "default_avatar.png".mine,
+    //         "zpw_default_avatar.png".mine,
     //         width: 56.w,
     //       )
     //     : ZpwQdsImageCircle(state.userInfoBean.headImg ?? "", 56.w, 56.w, isLocal: true);
@@ -78,7 +78,7 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                 Container(
                   width: double.infinity,
                   height: 371.w,
-                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("mine_bg.png".mine))),
+                  decoration: BoxDecoration(image: DecorationImage(image: AssetImage("zpw_mine_bg.png".mine))),
                   child: Column(
                     children: [
                       // CommHeadCircle(),
@@ -144,7 +144,7 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                                 child: SizedBox(
                                   width: 60.w,
                                   child: Image.asset(
-                                    "setting.png".mine,
+                                    "zpw_setting.png".mine,
                                     width: 30.w,
                                     height: 30.w,
                                   ),
@@ -161,7 +161,7 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                         child: Stack(
                           children: [
                             Image.asset(
-                              "mine_vip_bg.png".mine,
+                              "zpw_mine_vip_bg.png".mine,
                               width: 358.w,
                               height: 175.w,
                               fit: BoxFit.cover,
@@ -292,9 +292,9 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                   ),
                   child: Column(
                     children: [
-                      commItem("zp.png", "我的作品"),
-                      commItem("about.png", "关于我们"),
-                      commItem("kf.png", "联系客服"),
+                      commItem("zpw_zp.png", "我的作品"),
+                      commItem("zpw_about.png", "关于我们"),
+                      commItem("zpw_kf.png", "联系客服"),
                       // commItem("sf.png", "算法公式"),
                     ],
                   ),
@@ -369,7 +369,7 @@ class _MinePageState extends ZpwBaseWidgetState<MinePage> with WidgetsBindingObs
                   ),
                   Spacer(),
                   Image.asset(
-                    "arrow.png".mine,
+                    "zpw_arrow.png".mine,
                     width: 15.w,
                   ),
                 ],

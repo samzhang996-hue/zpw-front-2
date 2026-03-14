@@ -35,7 +35,7 @@ class CustomFaceDialogUtils {
                               height: 26.w,
                             ),
                             Image.asset(
-                              "facecheck.png".comm,
+                              "zpw_facecheck.png".comm,
                               width: 126.w,
                             ),
                             SizedBox(
@@ -125,7 +125,7 @@ class CustomFaceDialogUtils {
     //                           child: Column(
     //                             children: [
     //                               SizedBox(height: 26.w,),
-    //                               Image.asset("facecheck.png".comm,width: 126.w,),
+    //                               Image.asset("zpw_facecheck.png".comm,width: 126.w,),
     //                               SizedBox(height: 16.w,),
     //                               ZpwCommText(text: "未检测到人脸",fontSize: 20.sp,textColor: Color(0xff333333),fontWeight: FontWeight.bold,),
     //                               SizedBox(height: 4.w,),

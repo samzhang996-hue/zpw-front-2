@@ -163,7 +163,7 @@ class _ZpwUpgradeState extends State<ZpwUpgrade> {
                     Column(
                       children: [
                         Image.asset(
-                          'upgrade.png'.comm,
+                          'zpw_upgrade.png'.comm,
                           fit: BoxFit.cover,
                           width: 295.w,
                           height: 154.w,

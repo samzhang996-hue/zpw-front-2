@@ -24,12 +24,16 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.photoking.app"
-    compileSdk = 34
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     defaultConfig {
@@ -37,7 +41,7 @@ android {
         applicationId = "com.photoking.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 34
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
@@ -63,7 +67,6 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
             minifyEnabled false //删除无用代码
-            zipAlignEnabled false    //代码压缩设置
             shrinkResources false //删除无用资源
 
         }

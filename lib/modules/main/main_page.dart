@@ -52,12 +52,12 @@ class _MainPageState extends State<MainPage> {
                 items: [
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'un_home.png'.tabbar,
+                      'zpw_un_home.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
                     activeIcon: Image.asset(
-                      'home.png'.tabbar,
+                      'zpw_home.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
@@ -65,12 +65,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'un_pic.png'.tabbar,
+                      'zpw_un_pic.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
                     activeIcon: Image.asset(
-                      'pic.png'.tabbar,
+                      'zpw_pic.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
@@ -78,12 +78,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'un_tx.png'.tabbar,
+                      'zpw_un_tx.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
                     activeIcon: Image.asset(
-                      'tx.png'.tabbar,
+                      'zpw_tx.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
@@ -91,12 +91,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'un_wf.png'.tabbar,
+                      'zpw_un_wf.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
                     activeIcon: Image.asset(
-                      'wf.png'.tabbar,
+                      'zpw_wf.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
@@ -104,12 +104,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
-                      'un_mine.png'.tabbar,
+                      'zpw_un_mine.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),
                     activeIcon: Image.asset(
-                      'mine.png'.tabbar,
+                      'zpw_mine.png'.tabbar,
                       width: 36,
                       height: 36,
                     ),

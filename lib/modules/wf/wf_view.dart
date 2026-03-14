@@ -33,7 +33,7 @@ class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
       body: Stack(
         children: [
           Image.asset(
-            "face_bg.png".face,
+            "zpw_face_bg.png".face,
             width: 1.sw,
             height: 371.w,
             fit: BoxFit.cover,
@@ -48,7 +48,7 @@ class _WfPageState extends ZpwBaseWidgetState<WfPage> with ZpwAppMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(
-                        "wf.png".comm,
+                        "zpw_wf.png".comm,
                         width: 50.w,
                         height: 25.w,
                       ),

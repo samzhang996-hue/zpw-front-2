@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+import 'package:gal/gal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
@@ -30,26 +30,17 @@ Future<void> zpwDownloadAndSaveMedia(
     // 使用 Dio 下载文件
     Dio dio = Dio();
     await dio.download(videoUrl, tempPath);
-    // 将视频保存到相册
-    bool? result;
-    if (zpwIsMp4) {
-      result = await GallerySaver.saveVideo(
-        tempPath,
-        albumName: 'MyAlbum', // 可选：保存到指定相册
-        toDcim: true, // 可选：保存到 DCIM 文件夹
-      );
-    } else {
-      result = await GallerySaver.saveImage(
-        tempPath,
-        albumName: 'MyAlbum', // 可选：保存到指定相册
-        toDcim: true, // 可选：保存到 DCIM 文件夹
-      );
-    }
-    if (result == true) {
+    // 将视频/图片保存到相册
+    try {
+      if (zpwIsMp4) {
+        await Gal.putVideo(tempPath, album: 'MyAlbum');
+      } else {
+        await Gal.putImage(tempPath, album: 'MyAlbum');
+      }
       ZpwHandleTool.showAppToastText("已下载到相册");
       callback(true);
-    } else {
-      ZpwHandleTool.showAppToastText("保存失败");
+    } catch (e) {
+      ZpwHandleTool.showAppToastText("保存失败: $e");
       callback(false);
     }
     EasyLoading.dismiss();

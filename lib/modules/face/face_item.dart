@@ -80,8 +80,8 @@ class _FaceItemState extends State<FaceItem> {
                   children: [
                     Image.asset(
                       index.isEven
-                          ? "face_item_2.png".face
-                          : "face_item_1.png".face,
+                          ? "zpw_face_item_2.png".face
+                          : "zpw_face_item_1.png".face,
                       width: 175.w,
                       height: 265.w,
                       fit: BoxFit.cover,

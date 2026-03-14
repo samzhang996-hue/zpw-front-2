@@ -21,7 +21,7 @@ class ZpwNoMoreContentView extends StatelessWidget {
           children: [
             const Spacer(),
             Image.asset(
-              "no_more_content_left.png".face,
+              "zpw_no_more_content_left.png".face,
               width: 13.w,
               height: 2.w,
               fit: BoxFit.cover,
@@ -37,7 +37,7 @@ class ZpwNoMoreContentView extends StatelessWidget {
             ),
             SizedBox(width: 4.w),
             Image.asset(
-              "no_more_content_right.png".face,
+              "zpw_no_more_content_right.png".face,
               width: 13.w,
               height: 2.w,
               fit: BoxFit.cover,

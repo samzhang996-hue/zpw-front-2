@@ -48,7 +48,7 @@ class CustomSureVipDialogUtils {
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Image.asset(
-                                        "close.png".vip,
+                                        "zpw_close.png".vip,
                                         width: 30.w,
                                       ),
                                     ),

@@ -35,7 +35,7 @@ class _CallPageState extends ZpwBaseWidgetState<CallPage> {
           Container(
               margin: EdgeInsets.all(16),
               child: Image.asset(
-                "kf_banner.png".mine,
+                "zpw_kf_banner.png".mine,
                 width: double.infinity,
                 height: 150.w,
                 fit: BoxFit.cover,
@@ -55,7 +55,7 @@ class _CallPageState extends ZpwBaseWidgetState<CallPage> {
                     width: 16.w,
                   ),
                   Image.asset(
-                    "online.png".mine,
+                    "zpw_online.png".mine,
                     width: 50.w,
                   ),
                   Container(
@@ -103,7 +103,7 @@ class _CallPageState extends ZpwBaseWidgetState<CallPage> {
                     width: 16.w,
                   ),
                   Image.asset(
-                    "call.png".mine,
+                    "zpw_call.png".mine,
                     width: 50.w,
                   ),
                   Container(

@@ -297,7 +297,7 @@ class _AboutPageState extends ZpwBaseWidgetState<AboutPage> {
                 hideArrow
                     ? const SizedBox(width: 21)
                     : Image.asset(
-                        "arrow.png".mine,
+                        "zpw_arrow.png".mine,
                         width: 21,
                       ),
                 SizedBox(

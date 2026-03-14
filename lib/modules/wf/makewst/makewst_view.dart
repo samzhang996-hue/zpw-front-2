@@ -123,7 +123,7 @@ class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                                         },
                                         child: Container(
                                           child: Image.asset(
-                                            state.isAdd.value ? "hide.png".comm : "add.png".comm,
+                                            state.isAdd.value ? "zpw_hide.png".comm : "zpw_add.png".comm,
                                             width: 30.w,
                                             height: 30.w,
                                           ),
@@ -172,7 +172,7 @@ class MakewstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                                       child: Container(
                                           margin: EdgeInsets.only(right: 12.w),
                                           child: Image.asset(
-                                            "push.png".comm,
+                                            "zpw_push.png".comm,
                                             width: 30.w,
                                             height: 30.w,
                                           )),

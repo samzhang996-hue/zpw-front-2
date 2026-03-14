@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:video_player/video_player.dart';
 import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:zpw/common/zpw_constant.dart';
 import 'package:zpw/common/view/zpw_comm_text.dart';
@@ -24,7 +25,7 @@ class VipPage extends ZpwBaseStatefulWidget {
 class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObserver {
   final logic = Get.find<VipLogic>();
   final state = Get.find<VipLogic>().state;
-  late VideoPlayerController _controller;
+  BetterPlayerController? _betterPlayerController;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -32,11 +33,13 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
     switch (state) {
       case AppLifecycleState.paused:
         ZpwLog.d("AppLifecycleState--paused");
+        _betterPlayerController?.pause();
         break;
       case AppLifecycleState.resumed:
         ZpwLog.d("AppLifecycleState--resumed--${logic.isAt}");
         logic.getUserInfo();
         logic.getVipHome();
+        _betterPlayerController?.play();
         break;
       case AppLifecycleState.hidden:
         ZpwLog.d("AppLifecycleState--hidden");
@@ -47,30 +50,66 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // 使用网络视频 URL 或本地视频资产
-    _controller = VideoPlayerController.asset(
-      'vip.mp4'.vip,
-    )
-      ..setLooping(true)
-      ..initialize().then((_) {
-        // 确保在视频初始化完成后设置播放状态
-        setState(() {
-          _controller.play();
-        });
-      });
+    _initVideoPlayer();
+  }
+
+  void _initVideoPlayer() async {
+    try {
+      // 加载 asset 视频为 bytes
+      final byteData = await rootBundle.load('zpw_vip.mp4'.vip);
+      final bytes = byteData.buffer.asUint8List();
+
+      final betterPlayerDataSource = BetterPlayerDataSource.memory(
+        bytes,
+        videoExtension: 'mp4',
+        notificationConfiguration: BetterPlayerNotificationConfiguration(
+          showNotification: false,
+        ),
+      );
+
+      _betterPlayerController = BetterPlayerController(
+        BetterPlayerConfiguration(
+          autoPlay: true,
+          looping: true,
+          aspectRatio: 780 / 1290,
+          fit: BoxFit.cover,
+          controlsConfiguration: BetterPlayerControlsConfiguration(
+            showControls: false,
+            enablePlayPause: false,
+            enableMute: false,
+            enableProgressBar: false,
+            enableSkips: false,
+            enableOverflowMenu: false,
+            enableFullscreen: false,
+          ),
+          errorBuilder: (context, errorMessage) {
+            ZpwLog.e("Video error: $errorMessage");
+            return Container(
+              color: Colors.black,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        ),
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
+
+      setState(() {});
+    } catch (e) {
+      ZpwLog.e("Video init error: $e");
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _betterPlayerController?.dispose();
     logic.canBack = false;
     logic.showToast = false;
-    // Get.delete<VipPage>();
     super.dispose();
-    WidgetsBinding.instance.removeObserver(this); // 移除监听器
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -105,17 +144,14 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                 alignment: Alignment.topLeft,
                 children: [
                   Container(
-                    width: double.infinity, // 或者使用父容器的宽度约束
+                    width: double.infinity,
                     height: 644.w,
                     color: Color(0xff000000),
-                    child: _controller.value.isInitialized
-                        ? AspectRatio(
-                            aspectRatio: _controller.value.aspectRatio,
-                            child: VideoPlayer(_controller),
-                          )
+                    child: _betterPlayerController != null
+                        ? BetterPlayer(controller: _betterPlayerController!)
                         : Container(
                             child: Center(child: CircularProgressIndicator()),
-                          ), // 使用屏幕高度的百分比
+                          ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -178,7 +214,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                                           child: Row(
                                             children: [
                                               Image.asset(
-                                                "zfb.png".vip,
+                                                "zpw_zfb.png".vip,
                                                 width: 26.w,
                                               ),
                                               SizedBox(
@@ -195,7 +231,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                                               ),
                                               Obx(() {
                                                 return Image.asset(
-                                                  state.statePay.value != 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  state.statePay.value != 1 ? "zpw_checked.png".vip : "zpw_un_check.png".vip,
                                                   width: 14.w,
                                                 );
                                               }),
@@ -214,7 +250,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                                           child: Row(
                                             children: [
                                               Image.asset(
-                                                "wx.png".vip,
+                                                "zpw_wx.png".vip,
                                                 width: 26.w,
                                               ),
                                               SizedBox(
@@ -231,7 +267,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                                               ),
                                               Obx(() {
                                                 return Image.asset(
-                                                  state.statePay.value == 1 ? "checked.png".vip : "un_check.png".vip,
+                                                  state.statePay.value == 1 ? "zpw_checked.png".vip : "zpw_un_check.png".vip,
                                                   width: 14.w,
                                                 );
                                               }),
@@ -311,7 +347,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                                         child: Container(
                                           width: 183.w,
                                           height: 27.w,
-                                          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("vip_btn_tip.png".vip), fit: BoxFit.cover)),
+                                          decoration: BoxDecoration(image: DecorationImage(image: AssetImage("zpw_vip_btn_tip.png".vip), fit: BoxFit.cover)),
                                           child: ZpwCommText(
                                             text: rk10,
                                             fontSize: 13.sp,
@@ -333,7 +369,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                                   child: Row(
                                     children: [
                                       Image.asset(
-                                        state.isCheck.value ? "checked.png".vip : "un_check.png".vip,
+                                        state.isCheck.value ? "zpw_checked.png".vip : "zpw_un_check.png".vip,
                                         width: 14.w,
                                       ),
                                       ZpwCommText(
@@ -390,7 +426,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                           child: Align(
                               alignment: Alignment.topLeft,
                               child: Image.asset(
-                                "back.png".comm,
+                                "zpw_back.png".comm,
                                 width: 16.w,
                               )),
                           // child: GestureDetector(
@@ -406,7 +442,7 @@ class _VipPageState extends ZpwBaseWidgetState<VipPage> with WidgetsBindingObser
                           //   child: Align(
                           //       alignment: Alignment.topLeft,
                           //       child: Image.asset(
-                          //         "back.png".comm,
+                          //         "zpw_back.png".comm,
                           //         width: 16.w,
                           //       )),
                           // ),

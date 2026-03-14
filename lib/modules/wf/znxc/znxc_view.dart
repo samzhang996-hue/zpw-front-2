@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img; // 用于图片处理
-import 'package:gallery_saver/gallery_saver.dart';
+import 'package:gal/gal.dart';
 import 'package:zpw/modules/wf/znxc/znxc_logic.dart';
 import 'package:zpw/utils/zpw_my_plugin.dart'; // 用于保存图片到相册
 
@@ -150,17 +150,12 @@ class _ZnxcPageState extends State<ZnxcPage> {
 
     if (success) {
       // 保存图片到相册
-      final result = await GallerySaver.saveImage(
-        outputFile.path,
-        albumName: 'MyAlbum',
-        toDcim: true,
-      );
-
-      if (result == true) {
+      try {
+        await Gal.putImage(outputFile.path, album: 'MyAlbum');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('图片已保存到相册')),
         );
-      } else {
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('保存失败，请重试')),
         );

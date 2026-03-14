@@ -87,7 +87,7 @@ class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
                       height: 50,
                       color: Colors.transparent,
                       alignment: Alignment.center,
-                      child: Image.asset('arrow_back.png'.comm,
+                      child: Image.asset('zpw_arrow_back.png'.comm,
                               width: 16.w,
                               height: 16.w,
                               fit: BoxFit.cover,
@@ -184,7 +184,7 @@ class _WorksPageState extends ZpwBaseWidgetState<WorksPage>
         child: Column(
           children: [
             Image.asset(
-              "emty_data.png".comm,
+              "zpw_emty_data.png".comm,
               width: 199.w,
             ),
             SizedBox(

@@ -42,7 +42,7 @@ class WstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                         child: Row(
                           children: [
                             Image.asset(
-                              "my_work_ic.png".make,
+                              "zpw_my_work_ic.png".make,
                               width: 22.w,
                               height: 22.w,
                             ),
@@ -122,7 +122,7 @@ class WstPageState extends ZpwBaseWidgetState with ZpwAppMixin {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "tk.png".comm,
+                            "zpw_tk.png".comm,
                             width: 26.w,
                             height: 26.w,
                           ),

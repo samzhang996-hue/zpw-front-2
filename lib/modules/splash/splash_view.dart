@@ -85,7 +85,7 @@ class _SplashPageState extends ZpwBaseWidgetState<SplashPage> {
         Container(
           height: double.infinity,
           width: double.infinity,
-          child: Image.asset("splash.png".comm, fit: BoxFit.fill),
+          child: Image.asset("zpw_splash.png".comm, fit: BoxFit.fill),
         ),
         Positioned(
           bottom: 20,
@@ -139,7 +139,7 @@ class _SplashPageState extends ZpwBaseWidgetState<SplashPage> {
     //               height: double.infinity,
     //               width: double.infinity,
     //               child: Image.asset(
-    //                 "splash.png".comm,
+    //                 "zpw_splash.png".comm,
     //                 fit: BoxFit.fill,
     //               ))), // 使用屏幕高度的百分比
     // );

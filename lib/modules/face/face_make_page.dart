@@ -1,9 +1,9 @@
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
-import 'package:video_player/video_player.dart';
 import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:zpw/common/bottom_sheet/zpw_face_photo_bottom_sheet.dart';
 import 'package:zpw/common/zpw_comm_error.dart';
@@ -71,7 +71,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
   late final _myHeadImg = ZpwHandleTool.instance.headImg.obs;
   var _showDialog = false;
   late final _list = <String>[].obs;
-  VideoPlayerController? _videoPlayerController;
+  BetterPlayerController? _betterPlayerController;
   late int _apiType = widget.apiType;
   var _isScroller = false;
   int get _funcID => widget.groupId == -1
@@ -86,11 +86,11 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
     _canBack = false;
     _autoPlay.value = false;
     if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.pause();
+      _betterPlayerController?.pause();
     }
     await Get.to(() => WorksPage());
     if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.play();
+      _betterPlayerController?.play();
     }
   }
 
@@ -101,7 +101,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
       barrierDismissible: false,
     );
     if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.play();
+      _betterPlayerController?.play();
     }
     Future.delayed(const Duration(seconds: 3), () {
       _showDialog = false;
@@ -115,7 +115,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
     final res = await Get.dialog(const ZpwCommError(), barrierDismissible: false);
     if (res == true) {}
     if (_isNotEmptyVideoUrl) {
-      _videoPlayerController?.play();
+      _betterPlayerController?.play();
     }
   }
 
@@ -186,13 +186,13 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
 
     if ((await zpwWxLogin() == true)) {
       if (_isNotEmptyVideoUrl) {
-        _videoPlayerController?.pause();
+        _betterPlayerController?.pause();
       }
       if (!ZpwHandleTool.instance.isMember) {
         Get.find<VipLogic>().getVipHome();
         await Get.to(() => VipPage());
         if (_isNotEmptyVideoUrl) {
-          _videoPlayerController?.play();
+          _betterPlayerController?.play();
         }
         return;
       }
@@ -203,7 +203,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
           await Get.bottomSheet<bool?>(const ZpwWholeBodyPhotoBottomSheet(), isDismissible: false);
         }
         final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
-        _videoPlayerController?.play();
+        _betterPlayerController?.play();
 
         if (res == null) {
           return;
@@ -218,7 +218,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
 
       if (_apiType == 5 || _apiType == 8) {
         final res = await Get.to<String>(() => Photo_listPage(isNew: false, hasAvatar: _hasAvatar.value));
-        _videoPlayerController?.play();
+        _betterPlayerController?.play();
 
         if (res == null) {
           return;
@@ -282,22 +282,22 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
 
     if ((await zpwWxLogin() == true)) {
       if (_isNotEmptyVideoUrl) {
-        _videoPlayerController?.pause();
+        _betterPlayerController?.pause();
       }
       if (!ZpwHandleTool.instance.isMember) {
         Get.find<VipLogic>().getVipHome();
         await Get.to(() => VipPage());
         if (_isNotEmptyVideoUrl) {
-          _videoPlayerController?.play();
+          _betterPlayerController?.play();
         }
         return;
       }
       if (_isNotEmptyVideoUrl) {
-        _videoPlayerController?.pause();
+        _betterPlayerController?.pause();
       }
       final res = await Get.to<String>(() => Photo_listPage(isNew: false));
       if (_isNotEmptyVideoUrl) {
-        _videoPlayerController?.play();
+        _betterPlayerController?.play();
       }
       ZpwLog.e("res:$res");
       if (res?.isNotEmpty == true) {
@@ -382,18 +382,16 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
   @override
   Widget zpwInitDefaultBuild(BuildContext context) {
     return Container(
-      color: const Color(0xFF191919),
+      color: Colors.black,
       child: Stack(
-        // alignment: Alignment.center,
+        fit: StackFit.expand,
         children: [
-          Container(
-            margin: widget.videoUrl.isEmpty
-                ? EdgeInsets.zero
-                : EdgeInsets.only(
+          widget.videoUrl.isEmpty
+              ? Container(
+                  margin: EdgeInsets.only(
                     top: ScreenUtil().statusBarHeight,
                   ),
-            child: widget.videoUrl.isEmpty
-                ? Obx(
+                  child: Obx(
                     () => _list.isEmpty
                         ? const SizedBox.shrink()
                         : ZpwCommImagesWidget(
@@ -405,23 +403,22 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
                               _getNewHasAvatar();
                             },
                           ),
-                  )
-                : Obx(
-                    () => _videoUrls.isEmpty
-                        ? const SizedBox.shrink()
-                        : ZpwCommVideoPlayerWidget(
-                            autoPlay: _autoPlay.value,
-                            initialPage: _initialPage.value,
-                            videoUrls: _videoUrls,
-                            groupId: widget.groupId,
-                            onPageChanged: (index, videoPlayerController) {
-                              _currentIndex.value = index;
-                              _videoPlayerController = videoPlayerController;
-                              _getNewHasAvatar();
-                            },
-                          ),
-                  ),
-          ),
+                  ))
+              : Obx(
+                  () => _videoUrls.isEmpty
+                      ? const SizedBox.shrink()
+                      : ZpwCommVideoPlayerWidget(
+                          autoPlay: _autoPlay.value,
+                          initialPage: _initialPage.value,
+                          videoUrls: _videoUrls,
+                          groupId: widget.groupId,
+                          onPageChanged: (index, videoPlayerController) {
+                            _currentIndex.value = index;
+                            _betterPlayerController = videoPlayerController;
+                            _getNewHasAvatar();
+                          },
+                        ),
+                ),
           Positioned(
             top: 0,
             left: 0,
@@ -441,7 +438,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
                       color: Colors.transparent,
                       alignment: Alignment.center,
                       child: Image.asset(
-                        'arrow_back.png'.comm,
+                        'zpw_arrow_back.png'.comm,
                         width: 16.w,
                         height: 16.w,
                         fit: BoxFit.cover,
@@ -513,208 +510,218 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
             left: 0,
             right: 0,
             bottom: 0,
-            child: SafeArea(
-              minimum: EdgeInsets.only(bottom: 20.w),
-              child: Obx(() => Container(
-                    height: _hasAvatar.value ? 162.w : 65.w,
-                    width: 1.sw,
-                    color: Colors.transparent,
-                    child: Column(
-                      children: [
-                        // const Spacer(),
+            child: Container(
+              color: Colors.transparent,
+              child: Obx(() => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                      height: _hasAvatar.value ? 162.w : 65.w,
+                      width: 1.sw,
+                      color: Colors.transparent,
+                      child: Column(
+                        children: [
+                          // const Spacer(),
 
-                        if (_hasAvatar.value)
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  Opacity(
-                                    opacity: 0,
-                                    child: Container(
+                          if (_hasAvatar.value)
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    Opacity(
+                                      opacity: 0,
+                                      child: Container(
+                                        width: 1.sw,
+                                        height: 52.w,
+                                        decoration: BoxDecoration(
+                                            color: const Color(0xFF051B38).withOpacity(0.87),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(16.w),
+                                              topRight: Radius.circular(16.w),
+                                            )),
+                                      ),
+                                    ),
+                                    Container(
                                       width: 1.sw,
                                       height: 52.w,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xFF051B38).withOpacity(0.87),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16.w),
-                                            topRight: Radius.circular(16.w),
-                                          )),
+                                      color: const Color(0xFF191919),
                                     ),
-                                  ),
-                                  Container(
+                                  ],
+                                ),
+                                Obx(
+                                  () => SizedBox(
                                     width: 1.sw,
-                                    height: 52.w,
-                                    color: const Color(0xFF191919),
-                                  ),
-                                ],
-                              ),
-                              Obx(
-                                () => SizedBox(
-                                  width: 1.sw,
-                                  height: 76.w,
-                                  child: _showHeadImg.isFalse
-                                      ? Center(
-                                          child: GestureDetector(
-                                            onTap: _uploadNewHeadImg,
-                                            behavior: HitTestBehavior.opaque,
-                                            child: Image.asset(
-                                              "no_head_img.png".make,
-                                              width: 76.w,
-                                              height: 76.w,
-                                              fit: BoxFit.cover,
+                                    height: 76.w,
+                                    child: _showHeadImg.isFalse
+                                        ? Center(
+                                            child: GestureDetector(
+                                              onTap: _uploadNewHeadImg,
+                                              behavior: HitTestBehavior.opaque,
+                                              child: Image.asset(
+                                                "zpw_no_head_img.png".make,
+                                                width: 76.w,
+                                                height: 76.w,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              if (_myHeadImg.isNotEmpty)
-                                                Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    Container(
-                                                      width: 72.w,
-                                                      height: 72.w,
-                                                      decoration: const BoxDecoration(
-                                                        color: Colors.grey,
-                                                        shape: BoxShape.circle,
-                                                        gradient: LinearGradient(
-                                                          colors: [
-                                                            Color(0xFF7EFAEF),
-                                                            Color(0xFF7FE1FB),
-                                                          ],
-                                                          begin: Alignment.centerLeft, // 渐变的起始点
-                                                          end: Alignment.centerRight, // 渐变的结束点
+                                          )
+                                        : Center(
+                                            child: Stack(
+                                              clipBehavior: Clip.none,
+                                              children: [
+                                                if (_myHeadImg.isNotEmpty)
+                                                  Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Container(
+                                                        width: 72.w,
+                                                        height: 72.w,
+                                                        decoration: const BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape: BoxShape.circle,
+                                                          gradient: LinearGradient(
+                                                            colors: [
+                                                              Color(0xFF7EFAEF),
+                                                              Color(0xFF7FE1FB),
+                                                            ],
+                                                            begin: Alignment.centerLeft, // 渐变的起始点
+                                                            end: Alignment.centerRight, // 渐变的结束点
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      ClipOval(
+                                                        child: ZpwQdsImage(_myHeadImg.value, 68.w, 68.w),
+                                                      ),
+                                                    ],
+                                                  )
+                                                else
+                                                  GestureDetector(
+                                                    onTap: _uploadNewHeadImg,
+                                                    behavior: HitTestBehavior.opaque,
+                                                    child: Image.asset(
+                                                      "zpw_no_head_img.png".make,
+                                                      width: 76.w,
+                                                      height: 76.w,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                Obx(
+                                                  () => Positioned(
+                                                    top: 0,
+                                                    right: 0,
+                                                    child: Visibility(
+                                                      visible: _showHeadImg.isTrue && ZpwHandleTool.instance.headImg.isNotEmpty,
+                                                      child: GestureDetector(
+                                                        onTap: _closeHeadImg,
+                                                        behavior: HitTestBehavior.opaque,
+                                                        child: Image.asset(
+                                                          "zpw_make_close.png".make,
+                                                          width: 18.w,
+                                                          height: 18.w,
                                                         ),
                                                       ),
                                                     ),
-                                                    ClipOval(
-                                                      child: ZpwQdsImage(_myHeadImg.value, 68.w, 68.w),
-                                                    ),
-                                                  ],
-                                                )
-                                              else
-                                                GestureDetector(
-                                                  onTap: _uploadNewHeadImg,
-                                                  behavior: HitTestBehavior.opaque,
-                                                  child: Image.asset(
-                                                    "no_head_img.png".make,
-                                                    width: 76.w,
-                                                    height: 76.w,
-                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                              Obx(
-                                                () => Positioned(
-                                                  top: 0,
-                                                  right: 0,
-                                                  child: Visibility(
-                                                    visible: _showHeadImg.isTrue && ZpwHandleTool.instance.headImg.isNotEmpty,
-                                                    child: GestureDetector(
-                                                      onTap: _closeHeadImg,
-                                                      behavior: HitTestBehavior.opaque,
-                                                      child: Image.asset(
-                                                        "make_close.png".make,
-                                                        width: 18.w,
-                                                        height: 18.w,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              // Positioned(
-                                              //   bottom: -5.w,
-                                              //   right: 0,
-                                              //   child: GestureDetector(
-                                              //     onTap: _uploadNewHeadImg,
-                                              //     behavior: HitTestBehavior.opaque,
-                                              //     child: Container(
-                                              //       width: 76.w,
-                                              //       height: 21.w,
-                                              //       decoration: BoxDecoration(
-                                              //         borderRadius:
-                                              //             BorderRadius.circular(
-                                              //                 12.w),
-                                              //         gradient:
-                                              //             const LinearGradient(
-                                              //           colors: [
-                                              //             Color(0xFFFF2EB8),
-                                              //             Color(0xFFFF2E2E)
-                                              //           ],
-                                              //           begin: Alignment
-                                              //               .centerLeft, // 渐变的起始点
-                                              //           end: Alignment
-                                              //               .centerRight, // 渐变的结束点
-                                              //         ),
-                                              //       ),
-                                              //       child: Center(
-                                              //         child: ZpwCommText(
-                                              //           text: "上传新头像",
-                                              //           textColor:
-                                              //               const Color(0xFFFFFFFF),
-                                              //           fontSize: 12.sp,
-                                              //           fontWeight: FontWeight.w500,
-                                              //         ),
-                                              //       ),
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ],
+                                                // Positioned(
+                                                //   bottom: -5.w,
+                                                //   right: 0,
+                                                //   child: GestureDetector(
+                                                //     onTap: _uploadNewHeadImg,
+                                                //     behavior: HitTestBehavior.opaque,
+                                                //     child: Container(
+                                                //       width: 76.w,
+                                                //       height: 21.w,
+                                                //       decoration: BoxDecoration(
+                                                //         borderRadius:
+                                                //             BorderRadius.circular(
+                                                //                 12.w),
+                                                //         gradient:
+                                                //             const LinearGradient(
+                                                //           colors: [
+                                                //             Color(0xFFFF2EB8),
+                                                //             Color(0xFFFF2E2E)
+                                                //           ],
+                                                //           begin: Alignment
+                                                //               .centerLeft, // 渐变的起始点
+                                                //           end: Alignment
+                                                //               .centerRight, // 渐变的结束点
+                                                //         ),
+                                                //       ),
+                                                //       child: Center(
+                                                //         child: ZpwCommText(
+                                                //           text: "上传新头像",
+                                                //           textColor:
+                                                //               const Color(0xFFFFFFFF),
+                                                //           fontSize: 12.sp,
+                                                //           fontWeight: FontWeight.w500,
+                                                //         ),
+                                                //       ),
+                                                //     ),
+                                                //   ),
+                                                // ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
 
-                        // if (_hasAvatar.value) SizedBox(height: 12.w),
-                        Expanded(
-                          child: Container(
-                            width: 1.sw,
-                            height: 100.w,
-                            color: _hasAvatar.isTrue ? const Color(0xFF191919) : Colors.transparent,
-                            child: Column(
-                              children: [
-                                const Spacer(flex: 2),
-                                GestureDetector(
-                                  onTap: _make,
-                                  behavior: HitTestBehavior.opaque,
-                                  child: Container(
-                                    width: 357.w,
-                                    height: 52.w,
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF7EFAEF),
-                                          Color(0xFF7FE1FB),
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
+                          // if (_hasAvatar.value) SizedBox(height: 12.w),
+                          Expanded(
+                            child: Container(
+                              width: 1.sw,
+                              height: 100.w,
+                              color: _hasAvatar.isTrue ? const Color(0xFF191919) : Colors.transparent,
+                              child: Column(
+                                children: [
+                                  const Spacer(flex: 2),
+                                  GestureDetector(
+                                    onTap: _make,
+                                    behavior: HitTestBehavior.opaque,
+                                    child: Container(
+                                      width: 357.w,
+                                      height: 52.w,
+                                      decoration: BoxDecoration(
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            Color(0xFF7EFAEF),
+                                            Color(0xFF7FE1FB),
+                                          ],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                        // color: const Color(0xFFFF2E7E),
+                                        borderRadius: BorderRadius.circular(26.w),
                                       ),
-                                      // color: const Color(0xFFFF2E7E),
-                                      borderRadius: BorderRadius.circular(26.w),
-                                    ),
-                                    child: Center(
-                                      child: ZpwCommText(
-                                        text: "一键制作",
-                                        textColor: const Color(0xFF191919),
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w500,
+                                      child: Center(
+                                        child: ZpwCommText(
+                                          text: "一键制作",
+                                          textColor: const Color(0xFF191919),
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const Spacer(flex: 3),
-                              ],
+                                  const Spacer(flex: 3),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        // SizedBox(height: 10.w),
-                      ],
+                          // SizedBox(height: 10.w),
+                        ],
+                      ),
                     ),
-                  )),
+                    Container(
+                      width: 1.sw,
+                      height: MediaQuery.of(context).padding.bottom,
+                      color: _hasAvatar.isTrue ? const Color(0xFF191919) : Colors.transparent,
+                    ),
+                  ],
+                )),
             ),
           )
         ],

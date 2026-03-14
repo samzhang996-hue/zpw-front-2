@@ -52,18 +52,15 @@ public class LjPhotoDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ll_dismiss:
-                if (mOnConfirmClickListener != null) {
-                    mOnConfirmClickListener.onLeftClick();
-                }
-                break;
-            case R.id.ll_sure:
-                if (mOnConfirmClickListener != null) {
-                    mOnConfirmClickListener.onRightClick();
-                }
-
-                break;
+        int id = v.getId();
+        if (id == R.id.ll_dismiss) {
+            if (mOnConfirmClickListener != null) {
+                mOnConfirmClickListener.onLeftClick();
+            }
+        } else if (id == R.id.ll_sure) {
+            if (mOnConfirmClickListener != null) {
+                mOnConfirmClickListener.onRightClick();
+            }
         }
     }
 

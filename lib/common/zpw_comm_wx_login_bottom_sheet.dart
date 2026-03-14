@@ -157,7 +157,7 @@ class _ZpwCommWxLoginBottomSheetState extends State<ZpwCommWxLoginBottomSheet> w
           Container(
             margin: EdgeInsets.only(top: 39.w),
             child: Image.asset(
-              "logo.png".comm,
+              "zpw_logo.png".comm,
               width: 60.w,
               height: 60.w,
             ),
@@ -196,7 +196,7 @@ class _ZpwCommWxLoginBottomSheetState extends State<ZpwCommWxLoginBottomSheet> w
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "wx.png".comm,
+                      "zpw_wx.png".comm,
                       width: 32.w,
                       height: 32.w,
                     ),
@@ -228,7 +228,7 @@ class _ZpwCommWxLoginBottomSheetState extends State<ZpwCommWxLoginBottomSheet> w
                             children: [
                               const SizedBox(width: 3),
                               Image.asset(
-                                _isCheck.value ? "wx_checked.png".comm : "wx_un_check.png".comm,
+                                _isCheck.value ? "zpw_wx_checked.png".comm : "zpw_wx_un_check.png".comm,
                                 width: 14.w,
                               ),
                               const SizedBox(width: 3),

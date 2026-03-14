@@ -1,7 +1,7 @@
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
 import 'package:zpw/base/zpw_base_stateful_widget.dart';
 import 'package:zpw/common/zpw_constant.dart';
 import 'package:zpw/common/zpw_qds_image.dart';
@@ -21,39 +21,70 @@ class DetailPage extends ZpwBaseStatefulWidget {
 class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
   final logic = Get.put(DetailZpwLogic());
   final state = Get.find<DetailZpwLogic>().state;
-  late VideoPlayerController _controller;
+  BetterPlayerController? _betterPlayerController;
   bool _isVideoInitialized = false;
 
   late final _showMoreAction = false.obs;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initializeVideoPlayer();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _betterPlayerController?.dispose();
     Get.delete<DetailPage>();
     super.dispose();
   }
 
   Future<void> _initializeVideoPlayer() async {
     String videoUrl = logic.state.returnUrl.value;
-    _controller = VideoPlayerController.network(videoUrl)..setLooping(true);
-    try {
-      await _controller.initialize();
-      setState(() {
-        _isVideoInitialized = true;
-        if (state.worksType.value == 1) {
-          _controller.play();
-        }
-      });
-    } catch (error) {
-      ZpwLog.d('Error initializing video player: $error');
-    }
+
+    final betterPlayerDataSource = BetterPlayerDataSource.network(
+      videoUrl,
+      notificationConfiguration: BetterPlayerNotificationConfiguration(
+        showNotification: false,
+      ),
+    );
+
+    _betterPlayerController = BetterPlayerController(
+      BetterPlayerConfiguration(
+        autoPlay: false,
+        looping: true,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          showControls: false,
+          enablePlayPause: false,
+          enableMute: false,
+          enableProgressBar: false,
+          enableSkips: false,
+          enableOverflowMenu: false,
+          enableFullscreen: false,
+        ),
+        errorBuilder: (context, errorMessage) {
+          ZpwLog.e("Video error: $errorMessage");
+          return Container(
+            color: Colors.black,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      ),
+      betterPlayerDataSource: betterPlayerDataSource,
+    );
+
+    _betterPlayerController?.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
+        setState(() {
+          _isVideoInitialized = true;
+          if (state.worksType.value == 1) {
+            _betterPlayerController?.play();
+          }
+        });
+      }
+    });
   }
 
   Widget _buildContent() {
@@ -67,7 +98,6 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
         return Align(
           child: ZpwQdsImage(
               logic.state.returnUrl.value,
-              // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
               double.infinity,
               358.w,
               fit: BoxFit.contain),
@@ -78,18 +108,14 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
             child: Container(
           child: ZpwQdsImage(
               logic.state.returnUrl.value,
-              // "https://imgeffect.obs.cn-north-1.myhuaweicloud.com:443/photo%2F%2Fcfd0918d-89fe-49fa-ac4b-8d571f55ee8e.png",
               double.infinity,
               double.infinity,
               fit: BoxFit.contain),
         ));
       }
     } else if (worksType == 1) {
-      return _isVideoInitialized
-          ? AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
-            )
+      return _isVideoInitialized && _betterPlayerController != null
+          ? Expanded(child: BetterPlayer(controller: _betterPlayerController!))
           : Center(child: CircularProgressIndicator());
     } else {
       return Center(child: CircularProgressIndicator());
@@ -114,7 +140,6 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Expanded(child: _buildContent()),
                   _buildContent(),
                 ],
               ),
@@ -144,11 +169,8 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // SizedBox(
-                              //   width: 85.w,
-                              // ),
                               Image.asset(
-                                "down.png".mine,
+                                "zpw_down.png".mine,
                                 width: 28.w,
                               ),
                               SizedBox(
@@ -160,9 +182,6 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500,
                               ),
-                              // SizedBox(
-                              //   width: 85.w,
-                              // ),
                             ],
                           ),
                         ),
@@ -189,7 +208,7 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                             if (state.apiType.value == -1 ||
                                 state.apiType.value == 6 ||
                                 state.apiType.value == 14) return;
-                            _controller.pause();
+                            _betterPlayerController?.pause();
                             ZpwLog.d("pause---${state.returnUrl.value}----");
                             logic.getFuncDetail(state.funcId.value);
                           },
@@ -206,11 +225,8 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // SizedBox(
-                                //   width: 24.w,
-                                // ),
                                 Image.asset(
-                                  "zccz.png".mine,
+                                  "zpw_zccz.png".mine,
                                   width: 28.w,
                                 ),
                                 ZpwCommText(
@@ -219,9 +235,6 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                // SizedBox(
-                                //   width: 24.w,
-                                // ),
                               ],
                             ),
                           ),
@@ -240,23 +253,9 @@ class _DetailPageState extends ZpwBaseWidgetState<DetailPage> {
                     right: InkWell(
                       onTap: () {
                         _showMoreAction.value = true;
-                        // if (state.apiType.value == -1 ||
-                        //     state.apiType.value == 6 ||
-                        //     state.apiType.value == 14) return;
-                        // _controller.pause();
-                        // ZpwLog.d("pause---${state.returnUrl.value}----");
-                        // logic.getFuncDetail(state.funcId.value);
-                        // // Get.to(
-                        // //   () => FaceMakePage(
-                        // //     title: state.tags.value,
-                        // //     funcId: state.id.value,
-                        // //     imageUrl: "",
-                        // //     videoUrl: state.returnUrl.value,
-                        // //   ),
-                        // // );
                       },
                       child: Image.asset(
-                        "jubao_more.png".mine,
+                        "zpw_jubao_more.png".mine,
                         width: 38.w,
                         height: 38.w,
                         fit: BoxFit.cover,

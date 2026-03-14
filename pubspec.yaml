@@ -71,11 +71,12 @@ dependencies:
   image_picker: ^1.1.2
   photo_manager: ^3.6.3
   video_player: ^2.2.17
+  better_player_plus: ^1.0.7
   cupertino_icons: ^1.0.6
   tabbar_gradient_indicator_plus: ^1.0.2
   screen_protector: ^1.4.2+1
   path_provider: ^2.0.15
-  gallery_saver: ^2.3.2
+  gal: ^2.3.0
   file_picker: ^9.0.2
   open_file: ^3.2.1 # 打开 APK 文件
   # install_plugin: ^2.1.0 # 安装 APK 文件

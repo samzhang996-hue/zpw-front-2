@@ -42,7 +42,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
       body: Stack(
         children: [
           Image.asset(
-            "face_bg.png".face,
+            "zpw_face_bg.png".face,
             width: 1.sw,
             height: 371.w,
             fit: BoxFit.cover,
@@ -66,7 +66,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Image.asset(
-                              "specially.png".specially,
+                              "zpw_specially.png".specially,
                               width: 50.w,
                               height: 25.w,
                               fit: BoxFit.cover,
@@ -82,7 +82,7 @@ class _SpeciallyPageState extends State<SpeciallyPage>
                                     },
                                     behavior: HitTestBehavior.opaque,
                                     child: Image.asset(
-                                      "face_vip.png".face,
+                                      "zpw_face_vip.png".face,
                                       width: 65.w,
                                       height: 26.w,
                                       fit: BoxFit.cover,

@@ -27,7 +27,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
         children: [
           zpwYAppBar(title: "数据恢复"),
           Image.asset(
-            "hf.png".comm,
+            "zpw_hf.png".comm,
             width: double.infinity,
             height: 297.w,
           ),
@@ -35,7 +35,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                "left_bg.png".comm,
+                "zpw_left_bg.png".comm,
                 width: 27.w,
                 height: 2.w,
               ),
@@ -52,7 +52,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
                 width: 2.w,
               ),
               Image.asset(
-                "right_bg.png".comm,
+                "zpw_right_bg.png".comm,
                 width: 27.w,
                 height: 2.w,
               ),
@@ -103,7 +103,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
               Column(
                 children: [
                   Image.asset(
-                    "del.png".comm,
+                    "zpw_del.png".comm,
                     width: 56.w,
                     height: 56.w,
                   ),
@@ -120,7 +120,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
               Column(
                 children: [
                   Image.asset(
-                    "clean.png".comm,
+                    "zpw_clean.png".comm,
                     width: 56.w,
                     height: 56.w,
                   ),
@@ -137,7 +137,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
               Column(
                 children: [
                   Image.asset(
-                    "data.png".comm,
+                    "zpw_data.png".comm,
                     width: 56.w,
                     height: 56.w,
                   ),
@@ -154,7 +154,7 @@ class _RestorePageState extends ZpwBaseWidgetState with ZpwAppMixin {
               Column(
                 children: [
                   Image.asset(
-                    "dir.png".comm,
+                    "zpw_dir.png".comm,
                     width: 56.w,
                     height: 56.w,
                   ),

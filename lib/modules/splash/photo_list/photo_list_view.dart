@@ -235,7 +235,7 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
                             ? null
                             : Center(
                                 child: Image.asset(
-                                  "all_photos_close.png".comm,
+                                  "zpw_all_photos_close.png".comm,
                                   width: 28.w,
                                 ),
                               ),
@@ -249,7 +249,7 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
                               pickImage();
                             },
                             child: Image.asset(
-                              "camera.png".comm,
+                              "zpw_camera.png".comm,
                               width: 28.w,
                             ))),
                     // if (Platform.isIOS)

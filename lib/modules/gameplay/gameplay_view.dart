@@ -39,7 +39,7 @@ class _GameplayPageState extends State<GameplayPage>
       body: Stack(
         children: [
           Image.asset(
-            "face_bg.png".face,
+            "zpw_face_bg.png".face,
             width: 1.sw,
             height: 371.w,
             fit: BoxFit.cover,
@@ -62,7 +62,7 @@ class _GameplayPageState extends State<GameplayPage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Image.asset(
-                              "gameplay.png".gameplay,
+                              "zpw_gameplay.png".gameplay,
                               width: 50.w,
                               height: 25.w,
                               fit: BoxFit.cover,
@@ -78,7 +78,7 @@ class _GameplayPageState extends State<GameplayPage>
                                     },
                                     behavior: HitTestBehavior.opaque,
                                     child: Image.asset(
-                                      "face_vip.png".face,
+                                      "zpw_face_vip.png".face,
                                       width: 65.w,
                                       height: 26.w,
                                       fit: BoxFit.cover,
@@ -216,7 +216,7 @@ class _GameplayPageState extends State<GameplayPage>
                         color: Colors.transparent,
                         alignment: Alignment.centerRight,
                         child: Image.asset(
-                          "gameplay_close.png".gameplay,
+                          "zpw_gameplay_close.png".gameplay,
                           width: 16.w,
                           height: 16.w,
                           fit: BoxFit.cover,
@@ -235,7 +235,7 @@ class _GameplayPageState extends State<GameplayPage>
                       },
                       behavior: HitTestBehavior.opaque,
                       child: Image.asset(
-                        "gameplay_vip.png".gameplay,
+                        "zpw_gameplay_vip.png".gameplay,
                         width: 74.w,
                         height: 76.w,
                         fit: BoxFit.cover,

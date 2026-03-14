@@ -54,7 +54,7 @@ class CustomExitVipDialogUtils2 {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Image.asset(
-                              "close.png".comm,
+                              "zpw_close.png".comm,
                               width: 24.w,
                             ),
                           )),
@@ -73,7 +73,7 @@ class CustomExitVipDialogUtils2 {
                         // Positioned(
                         //   top: *10.w,
                         //   child: Container(
-                        //   child: Image.asset("close.png".comm,width:24.w,height: 24.w, ),
+                        //   child: Image.asset("zpw_close.png".comm,width:24.w,height: 24.w, ),
                         // ),),
                         Container(
                           width: 320.w,
@@ -81,7 +81,7 @@ class CustomExitVipDialogUtils2 {
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage(
-                                    "vip_update.png".comm,
+                                    "zpw_vip_update.png".comm,
                                   ),
                                   fit: BoxFit.cover)),
                           child: Column(
@@ -221,8 +221,8 @@ class CustomExitVipDialogUtils2 {
                                       return InkWell(
                                         child: Image.asset(
                                           state.isCheck.value
-                                              ? "checked.png".vip
-                                              : "un_check.png".vip,
+                                              ? "zpw_checked.png".vip
+                                              : "zpw_un_check.png".vip,
                                           width: 15.w,
                                         ),
                                         onTap: () {

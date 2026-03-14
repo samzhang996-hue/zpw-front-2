@@ -29,7 +29,7 @@ class ZpwFacePhotoBottomSheet extends StatelessWidget {
           Container(
               margin: EdgeInsets.only(top: 17.w),
               child: Image.asset(
-                "face.png".comm,
+                "zpw_face.png".comm,
                 width: 244.w,
                 height: 192.w,
               )),
