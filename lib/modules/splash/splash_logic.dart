@@ -118,22 +118,18 @@ class SplashLogic extends ZpwBaseGetxController {
     return;
   }
 
-  void _tokenLogin() {
-    get(
-      ZpwApi.zpwAuthByToken,
-      success: (isSuccess, code, message, results) async {
-        if (isSuccess == true && results.isNotEmpty) {
-          requestMax = 100;
-          Map data = results.first as Map;
-          ZpwSpUtils.setString("token", data['token'] ?? "");
-          ZpwHandleTool.instance.token = data['token'] ?? "";
-          ZpwSpUtils.setBool("isAgreed", true);
-          ZpwLog.d("res----${data}");
-          Get.put(VipLogic());
-          getUserInfo();
-        }
-      },
-    );
+  Future<void> _tokenLogin() async {
+    final result = await getAsync(ZpwApi.zpwAuthByToken);
+    if (result.isSuccess && result.hasData) {
+      requestMax = 100;
+      Map data = result.first as Map;
+      ZpwSpUtils.setString("token", data['token'] ?? "");
+      ZpwHandleTool.instance.token = data['token'] ?? "";
+      ZpwSpUtils.setBool("isAgreed", true);
+      ZpwLog.d("res----${data}");
+      Get.put(VipLogic());
+      getUserInfo();
+    }
   }
 
   loginWithDeviceInfo() async {
@@ -192,106 +188,105 @@ class SplashLogic extends ZpwBaseGetxController {
       "userDeviceInfo": {"deviceCode": androidID, "systemDevice": Platform.isAndroid ? "android" : "ios", "oaid": oaid, "idfa": idfa, "idfv": idfv},
     };
     ZpwLog.i("requestMax====>${dataMap}");
-    Post(ZpwApi.zpwSsoLogin, isShowProgress: isShowProgress, params: dataMap, success: (isSuccess, code, message, results) async {
-      requestMax = requestMax + 1;
-      ZpwLog.i("isSuccess====>${isSuccess},requestMax:$requestMax,code:$code,message: $message");
-      if (isSuccess == true && results.isNotEmpty) {
-        requestMax = 100;
-        Map data = results.first as Map;
-        ZpwSpUtils.setString("token", data['token'] ?? "");
-        ZpwHandleTool.instance.token = data['token'] ?? "";
-        ZpwSpUtils.setBool("isAgreed", true);
-        ZpwLog.d("res----${data}");
-        Get.put(VipLogic());
-        getUserInfo();
-      } else {
-        /// ------->  这里单独处理已选
-        if (code == -1111) {
-          if (requestMax > 30) {
-            ///请求最大限制
-            ZpwHandleTool.showAppToastText("请检查网络连接或者网络授权");
-          } else {
-            Future.delayed(const Duration(seconds: 1), () {
-              _onLogin(channel, deviceId, oaid, isShowProgress: false);
-            });
-          }
-          return;
+    final result = await postAsync(ZpwApi.zpwSsoLogin, isShowProgress: isShowProgress, params: dataMap);
+    requestMax = requestMax + 1;
+    ZpwLog.i("isSuccess====>${result.isSuccess},requestMax:$requestMax,code:${result.code},message: ${result.message}");
+    if (result.isSuccess && result.hasData) {
+      requestMax = 100;
+      Map data = result.first as Map;
+      ZpwSpUtils.setString("token", data['token'] ?? "");
+      ZpwHandleTool.instance.token = data['token'] ?? "";
+      ZpwSpUtils.setBool("isAgreed", true);
+      ZpwLog.d("res----${data}");
+      Get.put(VipLogic());
+      getUserInfo();
+    } else {
+      /// ------->  这里单独处理已选
+      if (result.code == -1111) {
+        if (requestMax > 30) {
+          ///请求最大限制
+          ZpwHandleTool.showAppToastText("请检查网络连接或者网络授权");
+        } else {
+          Future.delayed(const Duration(seconds: 1), () {
+            _onLogin(channel, deviceId, oaid, isShowProgress: false);
+          });
         }
+        return;
+      }
 
-        if (code == -2222) {
-          _showAd = false;
-          if (requestUserInfoMax > 30) {
-            ///请求最大限制
-            ZpwHandleTool.showAppToastText("请退出程序，稍后重试");
-          } else {
-            Future.delayed(const Duration(seconds: 1), () {
-              _onLogin(channel, deviceId, oaid, isShowProgress: false);
-            });
-          }
+      if (result.code == -2222) {
+        _showAd = false;
+        if (requestUserInfoMax > 30) {
+          ///请求最大限制
+          ZpwHandleTool.showAppToastText("请退出程序，稍后重试");
+        } else {
+          Future.delayed(const Duration(seconds: 1), () {
+            _onLogin(channel, deviceId, oaid, isShowProgress: false);
+          });
         }
       }
-    });
+    }
   }
 
   bool isFirst = false;
 
-  getUserInfo() {
-    Post<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
-        isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
-          requestUserInfoMax = requestUserInfoMax + 1;
-          ZpwLog.d("requestUserInfoMax----$requestUserInfoMax");
-          if (isSuccess == true && results.isNotEmpty) {
-            rangerInit();
-            ZpwLog.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: $isSuccess");
-            requestUserInfoMax = 100;
-            ZpwLog.d("userInfoBean----${results.first.id}");
-            UserInfoBean userInfoBean = results.first;
-            ZpwHandleTool.instance.isMember = userInfoBean.vipFlag == 1;
-            ZpwLog.d("userInfoBean----${ZpwHandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
-            UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
-            // Get.offAll(const MainPage());
-            // return;
-            if (userInfoBean.headImg!.isNotEmpty) {
-              isFirst = true;
-            }
-            ZpwHandleTool.instance.headImg = userInfoBean.headImg ?? '';
-            if (!_showAd || ZpwHandleTool.instance.channelAds) {
-              progress.value = 1.0;
-              Get.offAll(const MainPage());
-              return;
-            }
-            try {
-              bool value = await ZpwAdsUtils.init().timeout(Duration(seconds: 5));
-              ZpwLog.d("ads2----$value");
-              progress.value = 1.0;
-              if (value) {
-                ZpwAdsUtils.showSplashAd();
-              } else {
-                Get.offAll(const MainPage());
-              }
-            } on TimeoutException catch (_) {
-              ZpwLog.e("ZpwAdsUtils.init() timed out");
-              Get.offAll(const MainPage()); // 超时，直接进入主页
-            } catch (error) {
-              ZpwLog.e("ZpwAdsUtils.init() failed: $error");
-              Get.offAll(const MainPage()); // 发生异常，直接进入主页
-            }
-          } else {
-            if (code == -2222) {
-              _showAd = false;
-              if (requestUserInfoMax > 30) {
-                ///请求最大限制
-                ZpwHandleTool.showAppToastText("请退出程序，稍后重试");
-              } else {
-                Future.delayed(const Duration(seconds: 1), () {
-                  getUserInfo();
-                });
-              }
-            }
-          }
-        },
-        onModel: (m) => UserInfoBean.fromJson(m));
+  getUserInfo() async {
+    final result = await postAsync<UserInfoBean>(
+      ZpwApi.zpwSsoGetUserInfo,
+      isShowProgress: true,
+      onModel: (m) => UserInfoBean.fromJson(m),
+    );
+    requestUserInfoMax = requestUserInfoMax + 1;
+    ZpwLog.d("requestUserInfoMax----$requestUserInfoMax");
+    if (result.isSuccess && result.hasData) {
+      rangerInit();
+      ZpwLog.d("requestUserInfoMax----$requestUserInfoMax，isSuccess: ${result.isSuccess}");
+      requestUserInfoMax = 100;
+      ZpwLog.d("userInfoBean----${result.first?.id}");
+      UserInfoBean userInfoBean = result.first!;
+      ZpwHandleTool.instance.isMember = userInfoBean.vipFlag == 1;
+      ZpwLog.d("userInfoBean----${ZpwHandleTool.instance.isMember},userInfoBean.nickName----${userInfoBean.nickName}");
+      UmengCommonSdk.onProfileSignIn("${userInfoBean.nickName}");
+      // Get.offAll(const MainPage());
+      // return;
+      if (userInfoBean.headImg!.isNotEmpty) {
+        isFirst = true;
+      }
+      ZpwHandleTool.instance.headImg = userInfoBean.headImg ?? '';
+      if (!_showAd || ZpwHandleTool.instance.channelAds) {
+        progress.value = 1.0;
+        Get.offAll(const MainPage());
+        return;
+      }
+      try {
+        bool value = await ZpwAdsUtils.init().timeout(Duration(seconds: 5));
+        ZpwLog.d("ads2----$value");
+        progress.value = 1.0;
+        if (value) {
+          ZpwAdsUtils.showSplashAd();
+        } else {
+          Get.offAll(const MainPage());
+        }
+      } on TimeoutException catch (_) {
+        ZpwLog.e("ZpwAdsUtils.init() timed out");
+        Get.offAll(const MainPage()); // 超时，直接进入主页
+      } catch (error) {
+        ZpwLog.e("ZpwAdsUtils.init() failed: $error");
+        Get.offAll(const MainPage()); // 发生异常，直接进入主页
+      }
+    } else {
+      if (result.code == -2222) {
+        _showAd = false;
+        if (requestUserInfoMax > 30) {
+          ///请求最大限制
+          ZpwHandleTool.showAppToastText("请退出程序，稍后重试");
+        } else {
+          Future.delayed(const Duration(seconds: 1), () {
+            getUserInfo();
+          });
+        }
+      }
+    }
   }
 
   test() {

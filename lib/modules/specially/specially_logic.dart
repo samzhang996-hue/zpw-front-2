@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 import 'package:zpw/modules/specially/specially_state.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
-import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/network/zpw_network_util.dart';
 
 class SpeciallyLogic extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -12,40 +12,40 @@ class SpeciallyLogic extends GetxController
   var listPhotoGroupBean = <ZpwListPhotoGroupBean>[];
   var listPhotoGroupBean2 = <ZpwListPhotoGroupBean>[];
 
-  void _getData() {
-    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
-        isShowProgress: true,
-        params: {
-          "groupType": 1,
-          "tabType": 2,
-        },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            listPhotoGroupBean = results;
-            update();
-          }
-        },
-        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
+  Future<void> _getData() async {
+    final result = await ZpwDioUtils.instance.getAsync<ZpwListPhotoGroupBean>(
+      ZpwApi.zpwListPhotoGroup,
+      isShowProgress: true,
+      params: {
+        "groupType": 1,
+        "tabType": 2,
+      },
+      onModel: (json) => ZpwListPhotoGroupBean.fromJson(json),
+    );
+    if (result.isSuccess && result.hasData) {
+      listPhotoGroupBean = result.data;
+      update();
+    }
   }
 
-  void _getData2() {
-    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
-        isShowProgress: true,
-        params: {
-          "groupType": 0,
-          "tabType": 2,
-        },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            listPhotoGroupBean2 = results;
-            listPhotoGroupBean2
-                .add(ZpwListPhotoGroupBean(zpwId: -1, zpwGroupName: "头像集"));
-            tabController =
-                TabController(length: listPhotoGroupBean2.length, vsync: this);
-            update();
-          }
-        },
-        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
+  Future<void> _getData2() async {
+    final result = await ZpwDioUtils.instance.getAsync<ZpwListPhotoGroupBean>(
+      ZpwApi.zpwListPhotoGroup,
+      isShowProgress: true,
+      params: {
+        "groupType": 0,
+        "tabType": 2,
+      },
+      onModel: (json) => ZpwListPhotoGroupBean.fromJson(json),
+    );
+    if (result.isSuccess && result.hasData) {
+      listPhotoGroupBean2 = result.data;
+      listPhotoGroupBean2
+          .add(ZpwListPhotoGroupBean(zpwId: -1, zpwGroupName: "头像集"));
+      tabController =
+          TabController(length: listPhotoGroupBean2.length, vsync: this);
+      update();
+    }
   }
 
   @override

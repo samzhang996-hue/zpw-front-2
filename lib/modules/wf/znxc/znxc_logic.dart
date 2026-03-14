@@ -8,18 +8,17 @@ class ZnxcLogic extends ZpwBaseGetxController {
   final ZnxcState state = ZnxcState();
 
 
-  smartRemove(String img,String mask) async {
-    Post(ZpwApi.zpwSmartRemove, isShowProgress: true, params: {
+  smartRemove(String img, String mask) async {
+    final result = await postAsync(ZpwApi.zpwSmartRemove, isShowProgress: true, params: {
       "imgUrls": [img],
       "mask": mask
-    }, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        Map data = results.first as Map;
-        // state.path.value=data["returnUrl"];
-        ZpwLog.d("res---${results.first}");
-        update();
-      }
     });
+    if (result.isSuccess && result.hasData) {
+      Map data = result.first as Map;
+      // state.path.value=data["returnUrl"];
+      ZpwLog.d("res---${result.first}");
+      update();
+    }
   }
 
 }

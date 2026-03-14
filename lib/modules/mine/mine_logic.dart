@@ -27,17 +27,15 @@ class MineLogic extends ZpwBaseGetxController {
       return;
     }
     final logic = Get.put(GameplayLogic());
-    Post<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
+    final result = await postAsync<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
         isShowProgress: isShowProgress,
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            ZpwLog.d("userInfoBean----${results.first}");
-            state.userInfoBean = results.first;
-            ZpwHandleTool.instance.isMember = state.userInfoBean.vipFlag == 1;
-            logic.stateShowVip(ZpwHandleTool.instance.isMember);
-            update();
-          }
-        },
         onModel: (m) => UserInfoBean.fromJson(m));
+    if (result.isSuccess && result.hasData) {
+      ZpwLog.d("userInfoBean----${result.first}");
+      state.userInfoBean = result.first!;
+      ZpwHandleTool.instance.isMember = state.userInfoBean.vipFlag == 1;
+      logic.stateShowVip(ZpwHandleTool.instance.isMember);
+      update();
+    }
   }
 }

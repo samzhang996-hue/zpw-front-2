@@ -7,7 +7,7 @@ import 'package:zpw/common/view/zpw_no_more_content_view.dart';
 import 'package:zpw/model/zpw_list_photo_group_bean.dart';
 import 'package:zpw/modules/face/collection_item.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
-import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/network/zpw_network_util.dart';
 
 class GatherSinglePage extends StatefulWidget {
   const GatherSinglePage({
@@ -40,25 +40,25 @@ class _GatherSinglePageState extends State<GatherSinglePage>
 
   late final _title = widget.title.obs;
 
-  void _getData() {
-    ZpwHandleTool.instance.QDSGet<ZpwListPhotoGroupBean>(ZpwApi.zpwEffectGroupList,
-        isShowProgress: true,
-        params: {
-          "id": widget.id,
-        },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            listPhotoGroupBean = results;
-            _tabController =
-                TabController(length: listPhotoGroupBean.length, vsync: this);
-            if (listPhotoGroupBean.isNotEmpty) {
-              _title.value = listPhotoGroupBean.first.groupName ?? '';
-            }
+  Future<void> _getData() async {
+    final result = await ZpwDioUtils.instance.getAsync<ZpwListPhotoGroupBean>(
+      ZpwApi.zpwEffectGroupList,
+      isShowProgress: true,
+      params: {
+        "id": widget.id,
+      },
+      onModel: (json) => ZpwListPhotoGroupBean.fromJson(json),
+    );
+    if (result.isSuccess && result.hasData) {
+      listPhotoGroupBean = result.data;
+      _tabController =
+          TabController(length: listPhotoGroupBean.length, vsync: this);
+      if (listPhotoGroupBean.isNotEmpty) {
+        _title.value = listPhotoGroupBean.first.groupName ?? '';
+      }
 
-            setState(() {});
-          }
-        },
-        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
+      setState(() {});
+    }
   }
 
   @override

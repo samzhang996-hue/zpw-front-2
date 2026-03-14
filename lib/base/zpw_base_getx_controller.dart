@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:zpw/network/zpw_network_util.dart';
+import 'package:zpw/network/zpw_net_result.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 
 class ZpwBaseGetxController extends GetxController {
@@ -65,5 +66,47 @@ class ZpwBaseGetxController extends GetxController {
         isShowError: isShowError,
         cancelToken: cancelToken,
         isCancleToken: isCancleToken);
+  }
+
+  /// async/await 版本的 POST 请求
+  Future<ZpwNetResult<T>> postAsync<T>(
+    String url, {
+    Map<String, dynamic>? params,
+    T Function(Map<String, dynamic>)? onModel,
+    bool isShowProgress = true,
+    bool isShowError = true,
+  }) async {
+    final result = await ZpwDioUtils.instance.postAsync<T>(
+      url,
+      params: params,
+      onModel: onModel,
+      isShowProgress: isShowProgress,
+      isShowError: isShowError,
+    );
+    if (result.code == -1004) {
+      ZpwHandleTool.deleteDataWithKey("token");
+    }
+    return result;
+  }
+
+  /// async/await 版本的 GET 请求
+  Future<ZpwNetResult<T>> getAsync<T>(
+    String url, {
+    Map<String, dynamic>? params,
+    T Function(Map<String, dynamic>)? onModel,
+    bool isShowProgress = true,
+    bool isShowError = true,
+  }) async {
+    final result = await ZpwDioUtils.instance.getAsync<T>(
+      url,
+      params: params,
+      onModel: onModel,
+      isShowProgress: isShowProgress,
+      isShowError: isShowError,
+    );
+    if (result.code == -1004) {
+      ZpwHandleTool.deleteDataWithKey("token");
+    }
+    return result;
   }
 }

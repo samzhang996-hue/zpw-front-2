@@ -28,38 +28,34 @@ class DetailZpwLogic extends ZpwBaseGetxController {
     ZpwLog.d("param---${state.returnUrl.value}---${state.worksType.value}");
   }
 
-  delete() {
-    Post("${ZpwApi.zpwDelete}/${state.id.value}", isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        ZpwHandleTool.showAppToastText("删除成功");
-        Get.back(result: "123");
-      }
-    });
+  delete() async {
+    final result = await postAsync("${ZpwApi.zpwDelete}/${state.id.value}", isShowProgress: true);
+    if (result.isSuccess && result.hasData) {
+      ZpwHandleTool.showAppToastText("删除成功");
+      Get.back(result: "123");
+    }
   }
 
-  getFuncDetail(int id) {
-    get("${ZpwApi.zpwGetFuncDetail}?id=$id", isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        Map data = results.first as Map;
-        String showImgGif = data["showImgGif"];
-        String funcName = data["tags"] ?? "";
-        String videoUrl = data["videoUrl"] ?? "";
-        int apiType = data["apiType"] ?? -1;
+  getFuncDetail(int id) async {
+    final result = await getAsync("${ZpwApi.zpwGetFuncDetail}?id=$id", isShowProgress: true);
+    if (result.isSuccess && result.hasData) {
+      Map data = result.first as Map;
+      String showImgGif = data["showImgGif"];
+      String funcName = data["tags"] ?? "";
+      String videoUrl = data["videoUrl"] ?? "";
+      int apiType = data["apiType"] ?? -1;
 
-        ZpwLog.d("fun---$data");
-        Get.to(
-          () => FaceMakePage(
-            title: funcName,
-            funcId: id,
-            imageUrl: showImgGif,
-            videoUrl: videoUrl,
-            apiType: apiType,
-          ),
-        );
-        update();
-      }
-    });
+      ZpwLog.d("fun---$data");
+      Get.to(
+        () => FaceMakePage(
+          title: funcName,
+          funcId: id,
+          imageUrl: showImgGif,
+          videoUrl: videoUrl,
+          apiType: apiType,
+        ),
+      );
+      update();
+    }
   }
 }

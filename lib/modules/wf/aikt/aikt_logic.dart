@@ -38,17 +38,16 @@ class AiktLogic extends ZpwBaseGetxController {
       return;
     }
 
-    Post(ZpwApi.zpwOutPaint, isShowProgress: true, params: {
+    final result = await postAsync(ZpwApi.zpwOutPaint, isShowProgress: true, params: {
       "imgUrls": [bean.url],
       "outPaintRatio": outPaintRatio
-    }, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        state.text.value="保存图片";
-        Map data = results.first as Map;
-        state.path.value=data["returnUrl"];
-        ZpwLog.d("res---${data["returnUrl"]}");
-        update();
-      }
     });
+    if (result.isSuccess && result.hasData) {
+      state.text.value = "保存图片";
+      Map data = result.first;
+      state.path.value = data["returnUrl"];
+      ZpwLog.d("res---${data["returnUrl"]}");
+      update();
+    }
   }
 }

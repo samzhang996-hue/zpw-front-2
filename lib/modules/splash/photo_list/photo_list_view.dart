@@ -18,6 +18,7 @@ import 'package:zpw/modules/wf/aikt/aikt_view.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_permission.dart';
+import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 
 import 'photo_list_logic.dart';
 
@@ -113,15 +114,15 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
     }
   }
 
-  void _uploadImg(String? path) async {
+  Future<void> _uploadImg(String? path) async {
     if (state.type == 1) {
       // zpwGotoPushPage(AiktPage(), arguments: {"path": path});
       Get.off(AiktPage(), arguments: {"path": path});
       return;
     }
-    ZpwHandleTool.instance.checkImgAndSave(path, success: (headImageUrl) {
-      ZpwLog.e("widget.isNew:${widget.isNew}");
-      // if (path == null) return;
+    final headImageUrl = await ZpwHandleTool.instance.checkImgAndSaveAsync(path, bindDefaultImg: widget.hasAvatar);
+    ZpwLog.e("widget.isNew:${widget.isNew}");
+    if (headImageUrl != null && headImageUrl.isNotEmpty) {
       if (widget.isNew) {
         Get.offAll(() => const MainPage());
       } else {
@@ -130,7 +131,9 @@ class _Photo_listPageState extends ZpwBaseWidgetState<Photo_listPage> {
         }
         Get.back(result: headImageUrl);
       }
-    }, bindDefaultImg: widget.hasAvatar);
+    } else {
+      CustomFaceDialogUtils.showCustomDialog(onPressed: () {});
+    }
 
     // if (res?.isNotEmpty == true) {
     //   final formData = ffff.FormData.fromMap({

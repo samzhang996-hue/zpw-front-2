@@ -19,23 +19,24 @@ class WfZpwLogic extends ZpwBaseGetxController {
     getData();
   }
 
-  void getData() {
-    get<ZpwListPhotoGroupBean>(ZpwApi.zpwListPhotoGroup,
-        isShowProgress: true,
-        params: {
-          "groupType": 2,
-        },
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            if (Platform.isIOS) {
-              state.listPhotoGroupBean = results.where((item) => item.frontType != 'SJHF').toList();
-            } else {
-              state.listPhotoGroupBean = results;
-            }
-            ZpwLog.d("list----${state.listPhotoGroupBean[1].toJson()}");
-            update();
-          }
-        },
-        onModel: (json) => ZpwListPhotoGroupBean.fromJson(json));
+  Future<void> getData() async {
+    final result = await getAsync<ZpwListPhotoGroupBean>(
+      ZpwApi.zpwListPhotoGroup,
+      isShowProgress: true,
+      params: {
+        "groupType": 2,
+      },
+      onModel: (json) => ZpwListPhotoGroupBean.fromJson(json),
+    );
+
+    if (result.isSuccess && result.hasData) {
+      if (Platform.isIOS) {
+        state.listPhotoGroupBean = result.data.where((item) => item.frontType != 'SJHF').toList();
+      } else {
+        state.listPhotoGroupBean = result.data;
+      }
+      ZpwLog.d("list----${state.listPhotoGroupBean[1].toJson()}");
+      update();
+    }
   }
 }

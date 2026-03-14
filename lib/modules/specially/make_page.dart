@@ -11,6 +11,7 @@ import 'package:zpw/mixin/zpw_app_mixin.dart';
 import 'package:zpw/modules/mine/works/works_view.dart';
 import 'package:zpw/modules/specially/model/comm_enum_bean.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
@@ -69,7 +70,7 @@ class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
     return foundKeys.isNotEmpty ? foundKeys.first : '鼠';
   }
 
-  void _make() {
+  Future<void> _make() async {
     _canBack = true;
     if (_nicknameEditingController.text.isEmpty) {
       ZpwHandleTool.showAppToastText("请输入文案");
@@ -146,18 +147,17 @@ class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
     // _showError();
     // _showSuccess();
     // return;
-    ZpwHandleTool.instance.SMWPost(ZpwApi.zpwAddTask, params: params, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        _showSuccess();
-      } else {
-        _showError();
-      }
-    });
+    final result = await ZpwDioUtils.instance.postAsync(ZpwApi.zpwAddTask, params: params);
+    if (result.isSuccess && result.hasData) {
+      _showSuccess();
+    } else {
+      _showError();
+    }
 
     // zpwGotoPushPage(MakeResultPage());
   }
 
-  void _getData() {
+  Future<void> _getData() async {
     var path = '';
     if (widget.map["useMethod"] == "03") {
       path = ZpwApi.zpwAnimalsEnum;
@@ -174,21 +174,18 @@ class _MakePageState extends ZpwBaseWidgetState<MakePage> with ZpwAppMixin {
     if (widget.map["useMethod"] == "11") {
       path = ZpwApi.zpwCartoonBoyEnum;
     }
-    ZpwHandleTool.instance.QDSGet<CommEnumBean>(path,
-        success: (isSuccess, code, message, results) {
-          if (isSuccess == true && results.isNotEmpty) {
-            _commEnumBean.value = results;
+    final result = await ZpwDioUtils.instance.getAsync<CommEnumBean>(path, onModel: (json) => CommEnumBean.fromJson(json));
+    if (result.isSuccess && result.hasData) {
+      _commEnumBean.value = result.data;
 
-            if (widget.map["useMethod"] != "03") {
-              for (var e in results) {
-                if (e.name == widget.map["name"]) {
-                  _value = e.value ?? '';
-                }
-              }
-            }
-          } else {}
-        },
-        onModel: (json) => CommEnumBean.fromJson(json));
+      if (widget.map["useMethod"] != "03") {
+        for (var e in result.data) {
+          if (e.name == widget.map["name"]) {
+            _value = e.value ?? '';
+          }
+        }
+      }
+    }
   }
 
   @override

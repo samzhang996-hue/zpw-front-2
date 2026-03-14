@@ -16,6 +16,7 @@ import 'exception/zpw_error_status.dart';
 import 'exception/zpw_exception_handle.dart';
 import 'zpw_interceptors.dart';
 import 'zpw_net_response.dart';
+import 'zpw_net_result.dart';
 
 //设置默认的Header 不配置User-Agent 开眼API 403
 Map<String, dynamic> zpwHeaders = {
@@ -302,6 +303,137 @@ class ZpwDioUtils {
       logic.state.userInfoBean = UserInfoBean();
       ZpwHandleTool.instance.isMember = false;
       logic.update();
+    }
+  }
+
+  /// async/await 版本的 POST 请求
+  Future<ZpwNetResult<T>> postAsync<T>(
+    String url, {
+    Map<String, dynamic>? params,
+    T Function(Map<String, dynamic>)? onModel,
+    bool isShowProgress = true,
+    bool isShowError = true,
+  }) async {
+    _zpwDio?.options.baseUrl = kReleaseMode ? ZpwApi.zpwApiBaseUrlRelease : ZpwApi.zpwApiBaseUrlDebug;
+    ZpwLog.d("url---$url");
+
+    if (isShowProgress) {
+      EasyLoading.show();
+    }
+
+    _zpwDio?.options.headers["Authorization"] = await ZpwHandleTool.getDataWithKey("token");
+    _zpwDio?.options.headers["systemDevice"] = ZpwHandleTool.instance.getCurrentSystem();
+    _zpwDio?.options = _zpwOptions!;
+    String token = _zpwDio?.options.headers["Authorization"] ?? "";
+    params ??= {};
+
+    ZpwLog.i("token===>$token");
+
+    try {
+      var response = await _zpwDio?.post(url, data: params);
+
+      if (response?.statusCode == 200 && response?.data.toString().isEmpty == true) {
+        EasyLoading.dismiss();
+        return ZpwNetResult<T>(isSuccess: true, code: 1, message: "empty", data: []);
+      }
+
+      if (response?.statusCode == 200) {
+        EasyLoading.dismiss();
+        List result = zpwAexDectory(response!, token);
+        var resData = jsonDecode(response.data);
+        var code = resData['code'];
+        var message = resData['message'] ?? "";
+
+        if (code == 100) {
+          if (onModel == null) {
+            return ZpwNetResult<T>(isSuccess: true, code: code, message: message, data: result as List<T>);
+          } else {
+            final values = result.map((e) => onModel(e) as T).toList();
+            return ZpwNetResult<T>(isSuccess: true, code: code, message: message, data: values);
+          }
+        } else {
+          _zpwTokenExpired(code);
+          if (isShowError) {
+            ZpwHandleTool.showAppToastText(message);
+          }
+          if (onModel == null) {
+            return ZpwNetResult<T>(isSuccess: false, code: code, message: message, data: result as List<T>);
+          } else {
+            final values = result.map((e) => onModel(e) as T).toList();
+            return ZpwNetResult<T>(isSuccess: false, code: code, message: message, data: values);
+          }
+        }
+      } else {
+        EasyLoading.dismiss();
+        if (isShowError) {
+          ZpwHandleTool.showAppToastText(response?.data?.toString() ?? "");
+        }
+        return ZpwNetResult<T>(isSuccess: false, code: response?.statusCode ?? -1, message: response?.data?.toString() ?? "", data: []);
+      }
+    } on DioException catch (e) {
+      EasyLoading.dismiss();
+      ZpwLog.i("=response==error====${e.type} $url");
+      return ZpwNetResult<T>(isSuccess: false, code: -1, message: e.message ?? "", data: []);
+    } catch (e) {
+      EasyLoading.dismiss();
+      ZpwLog.i("=response==error=====${e.toString()} $url");
+      return ZpwNetResult<T>(isSuccess: false, code: -1, message: e.toString(), data: []);
+    }
+  }
+
+  /// async/await 版本的 GET 请求
+  Future<ZpwNetResult<T>> getAsync<T>(
+    String url, {
+    Map<String, dynamic>? params,
+    T Function(Map<String, dynamic>)? onModel,
+    bool isShowProgress = true,
+    bool isShowError = true,
+  }) async {
+    _zpwDio?.options.baseUrl = kReleaseMode ? ZpwApi.zpwApiBaseUrlRelease : ZpwApi.zpwApiBaseUrlDebug;
+    ZpwLog.d("net-----------$url");
+
+    if (isShowProgress) {
+      EasyLoading.show();
+    }
+
+    _zpwDio?.options = _zpwOptions!;
+    _zpwDio?.options.headers["systemDevice"] = ZpwHandleTool.instance.getCurrentSystem();
+    String token = _zpwDio?.options.headers["Authorization"] ?? "";
+    params ??= {};
+
+    try {
+      var response = await _zpwDio?.get(url, queryParameters: params);
+      EasyLoading.dismiss();
+
+      if (response?.statusCode == 200 && response?.data.isEmpty) {
+        return ZpwNetResult<T>(isSuccess: true, code: 0, message: "empty", data: []);
+      }
+
+      if (response?.statusCode == 200) {
+        var resData = jsonDecode(response?.data);
+        List result = zpwAexDectory(response!, token);
+        var code = resData['code'];
+        var message = resData['message'] ?? "";
+
+        if (code == 100) {
+          if (onModel == null) {
+            return ZpwNetResult<T>(isSuccess: true, code: code, message: message, data: result as List<T>);
+          } else {
+            final values = result.map((e) => onModel(e) as T).toList();
+            return ZpwNetResult<T>(isSuccess: true, code: code, message: message, data: values);
+          }
+        } else {
+          _zpwTokenExpired(code);
+          return ZpwNetResult<T>(isSuccess: false, code: code, message: message, data: result as List<T>);
+        }
+      } else {
+        ZpwLog.i("==502===response==error=====${response?.data}");
+        return ZpwNetResult<T>(isSuccess: false, code: response?.statusCode ?? -1, message: response?.data?.toString() ?? "", data: []);
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      ZpwLog.i("=====response==error=====${e.toString()}");
+      return ZpwNetResult<T>(isSuccess: false, code: -1, message: e.toString(), data: []);
     }
   }
 

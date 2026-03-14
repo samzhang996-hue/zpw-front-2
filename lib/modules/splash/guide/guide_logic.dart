@@ -31,27 +31,28 @@ class GuideLogic extends ZpwBaseGetxController {
         context: navigator!.context, onPressed: () {});
   }
 
-  getFuncDetail() {
-    get("${ZpwApi.zpwGetFuncDetail}?id=1", isShowProgress: true,
-        success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        Map data = results.first as Map;
-        state.showImgGif = data["showImgGif"];
-        state.videoUrl = data["videoUrl"];
-        if (state.videoUrl.isNotEmpty) {
-          videoPlayerController =
-              VideoPlayerController.networkUrl(Uri.parse(state.videoUrl))
-                ..setLooping(true)
-                ..initialize().then((_) {
-                  // 确保在视频初始化完成后设置播放状态
-                  videoPlayerController?.play();
-                  update();
-                });
-        }
-        state.funcName = data["tags"] ?? "";
-        ZpwLog.d("fun---$data");
-        update();
+  Future<void> getFuncDetail() async {
+    final result = await getAsync<Map<String, dynamic>>(
+      "${ZpwApi.zpwGetFuncDetail}?id=1",
+      isShowProgress: true,
+    );
+    if (result.isSuccess && result.hasData) {
+      final data = result.first!;
+      state.showImgGif = data["showImgGif"];
+      state.videoUrl = data["videoUrl"];
+      if (state.videoUrl.isNotEmpty) {
+        videoPlayerController =
+            VideoPlayerController.networkUrl(Uri.parse(state.videoUrl))
+              ..setLooping(true)
+              ..initialize().then((_) {
+                // 确保在视频初始化完成后设置播放状态
+                videoPlayerController?.play();
+                update();
+              });
       }
-    });
+      state.funcName = data["tags"] ?? "";
+      ZpwLog.d("fun---$data");
+      update();
+    }
   }
 }

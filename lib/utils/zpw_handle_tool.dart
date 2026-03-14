@@ -20,6 +20,7 @@ import 'package:zpw/model/zpw_upload_bean.dart';
 import 'package:zpw/modules/mine/about/about_logic.dart';
 import 'package:zpw/modules/vip/view/custom_face_dialog_utils.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/network/zpw_net_result.dart';
 import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_my_plugin.dart';
@@ -407,7 +408,28 @@ class ZpwHandleTool {
     }, successTotalCount: totalCount, params: params, onModel: onModel, isShowProgress: isShowProgress, isShowError: isShowError, cancelToken: cancelToken, isCancleToken: isCancleToken);
   }
 
-  /// get
+  /// async/await 版本的 POST 请求
+  Future<ZpwNetResult<T>> SMWPostAsync<T>(
+    String url, {
+    Map<String, dynamic>? params,
+    T Function(Map<String, dynamic>)? onModel,
+    bool isShowProgress = true,
+    bool isShowError = true,
+  }) async {
+    final result = await ZpwDioUtils.instance.postAsync<T>(
+      url,
+      params: params,
+      onModel: onModel,
+      isShowProgress: isShowProgress,
+      isShowError: isShowError,
+    );
+    if (result.code == -1004) {
+      ZpwHandleTool.deleteDataWithKey("token");
+    }
+    return result;
+  }
+
+  /// get (回调式)
   QDSGet<T>(String url, {Function(bool isSuccess, int code, String message, List<T> results)? success, Function(int totalCount)? totalCount, Map<String, dynamic>? params, onModel, bool isShowError = true, bool isShowProgress = true, bool isCancleToken = false}) {
     ///创建取消标志
     CancelToken cancelToken = CancelToken();
@@ -422,6 +444,28 @@ class ZpwHandleTool {
     }, successTotalCount: totalCount, params: params, onModel: onModel, isShowProgress: isShowProgress, isShowError: isShowError, cancelToken: cancelToken, isCancleToken: isCancleToken);
   }
 
+  /// async/await 版本的 GET 请求
+  Future<ZpwNetResult<T>> QDSGetAsync<T>(
+    String url, {
+    Map<String, dynamic>? params,
+    T Function(Map<String, dynamic>)? onModel,
+    bool isShowProgress = true,
+    bool isShowError = true,
+  }) async {
+    final result = await ZpwDioUtils.instance.getAsync<T>(
+      url,
+      params: params,
+      onModel: onModel,
+      isShowProgress: isShowProgress,
+      isShowError: isShowError,
+    );
+    if (result.code == -1004) {
+      ZpwHandleTool.deleteDataWithKey("token");
+    }
+    return result;
+  }
+
+  /// upload (已经是 async/await 版本)
   Future<T?> QDSUpload<T>(
     String url, {
     Object? params,
@@ -667,6 +711,37 @@ class ZpwHandleTool {
       // );
 
       // return;
+    }
+  }
+
+  /// async/await 版本的 checkImgAndSave
+  Future<String?> checkImgAndSaveAsync(String? path, {bool bindDefaultImg = true}) async {
+    if (path == null || path.isEmpty) {
+      return null;
+    }
+
+    final formData = ffff.FormData.fromMap({
+      "file": await ffff.MultipartFile.fromFile(path),
+    });
+    final bean = await ZpwHandleTool.instance.QDSUpload<ZpwUploadBean>(ZpwApi.zpwUploadFile, params: formData, onModel: (v) => ZpwUploadBean.fromJson(v));
+    if (bean == null) {
+      ZpwHandleTool.showAppToastText("上传失败,请重试");
+      return null;
+    }
+
+    if (!bindDefaultImg) {
+      return bean.url ?? '';
+    }
+
+    final result = await ZpwHandleTool.instance.SMWPostAsync(
+      '${ZpwApi.zpwBindDefaultImg}?imgUrl=${bean.url}',
+      isShowProgress: true,
+    );
+    if (result.isSuccess && result.hasData) {
+      ZpwHandleTool.instance.zpwHeadImg = '${bean.url}';
+      return bean.url ?? '';
+    } else {
+      return null;
     }
   }
 }

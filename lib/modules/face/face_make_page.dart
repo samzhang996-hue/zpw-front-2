@@ -20,6 +20,7 @@ import 'package:zpw/modules/splash/photo_list/photo_list_view.dart';
 import 'package:zpw/modules/vip/vip_logic.dart';
 import 'package:zpw/modules/vip/vip_view.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
+import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
@@ -261,13 +262,12 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
         // "prompt": "",
       };
 
-      ZpwHandleTool.instance.SMWPost(ZpwApi.zpwAddPhotoRecord, params: params, success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          _showSuccess();
-        } else {
-          _showError();
-        }
-      });
+      final result = await ZpwDioUtils.instance.postAsync(ZpwApi.zpwAddPhotoRecord, params: params);
+      if (result.isSuccess && result.hasData) {
+        _showSuccess();
+      } else {
+        _showError();
+      }
       return;
     }
   }
@@ -326,7 +326,7 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
     // }
   }
 
-  void _getData() {
+  void _getData() async {
     if (widget.groupId == -1) {
       if (_isNotEmptyVideoUrl) {
         _videoUrls.add(widget.videoUrl);
@@ -342,24 +342,22 @@ class _FaceMakePageState extends ZpwBaseWidgetState<FaceMakePage> with ZpwAppMix
 
     ZpwLog.e("params:$params");
     _funcIds.clear();
-    ZpwHandleTool.instance.QDSGet<ZpwGroupOtherFuncListBean>(
+    final result = await ZpwDioUtils.instance.getAsync<ZpwGroupOtherFuncListBean>(
       "${ZpwApi.zpwGetGroupOtherFuncList}?funcId=${widget.funcId}&groupId=${widget.groupId}",
       isShowProgress: true,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          _apiTypes.value = results.map((e) => e.apiType ?? -1).toList();
-          _tags.value = results.map((e) => e.tags ?? "").toList();
-          _funcIds.addAll(results.map((e) => e.id ?? 0).toList());
-          _initialPage.value = _funcIds.indexOf(widget.funcId);
-          if (_isNotEmptyVideoUrl) {
-            _videoUrls.value = results.map((e) => '${e.videoUrl}').toList();
-          } else {
-            _list.value = results.map((e) => '${e.showImgGif}').toList();
-          }
-        }
-      },
       onModel: (json) => ZpwGroupOtherFuncListBean.fromJson(json),
     );
+    if (result.isSuccess && result.hasData) {
+      _apiTypes.value = result.data.map((e) => e.apiType ?? -1).toList();
+      _tags.value = result.data.map((e) => e.tags ?? "").toList();
+      _funcIds.addAll(result.data.map((e) => e.id ?? 0).toList());
+      _initialPage.value = _funcIds.indexOf(widget.funcId);
+      if (_isNotEmptyVideoUrl) {
+        _videoUrls.value = result.data.map((e) => '${e.videoUrl}').toList();
+      } else {
+        _list.value = result.data.map((e) => '${e.showImgGif}').toList();
+      }
+    }
   }
 
   @override

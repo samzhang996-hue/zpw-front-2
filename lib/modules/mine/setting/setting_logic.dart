@@ -19,19 +19,18 @@ class SettingLogic extends ZpwBaseGetxController {
   // 兼容旧属性名
   MineLogic get mineLogic => mineZpwLogic;
 
-  deleteUser() {
-    get(ZpwApi.zpwDeleteUser, isShowProgress: true, success: (isSuccess, code, message, results) async {
-      UmengCommonSdk.onProfileSignOff();
-      ZpwHandleTool.showAppToastText("注销成功");
-      ZpwSpUtils.clear();
-      await 0.5.delay();
-      // ZpwSpUtils.setString("token", "");
+  deleteUser() async {
+    final result = await getAsync(ZpwApi.zpwDeleteUser, isShowProgress: true);
+    UmengCommonSdk.onProfileSignOff();
+    ZpwHandleTool.showAppToastText("注销成功");
+    ZpwSpUtils.clear();
+    await 0.5.delay();
+    // ZpwSpUtils.setString("token", "");
 
-      exit(-1);
-      // if (isSuccess == true && results.isNotEmpty) {
-      //   ZpwHandleTool.showAppToastText("注销成功");
-      // }
-    });
+    exit(-1);
+    // if (result.isSuccess && result.hasData) {
+    //   ZpwHandleTool.showAppToastText("注销成功");
+    // }
   }
 
   void bindPhone() {
@@ -49,20 +48,19 @@ class SettingLogic extends ZpwBaseGetxController {
     ZpwLog.e("bindWx");
   }
 
-  void onExit() {
-    get(ZpwApi.zpwLogout, isShowProgress: true, success: (isSuccess, code, message, results) async {
-      ZpwHandleTool.showAppToastText("退出成功");
-      await 0.15.delay();
-      ZpwSpUtils.setString("token", "");
-      ZpwHandleTool.instance.token = "";
-      final mineZpwLogic = Get.find<MineLogic>();
-      mineZpwLogic.state.userInfoBean = UserInfoBean();
-      ZpwHandleTool.instance.isMember = false;
-      mineZpwLogic.update();
-      Get.back();
-      // if (isSuccess == true && results.isNotEmpty) {
-      //   ZpwHandleTool.showAppToastText("注销成功");
-      // }
-    });
+  void onExit() async {
+    final result = await getAsync(ZpwApi.zpwLogout, isShowProgress: true);
+    ZpwHandleTool.showAppToastText("退出成功");
+    await 0.15.delay();
+    ZpwSpUtils.setString("token", "");
+    ZpwHandleTool.instance.token = "";
+    final mineZpwLogic = Get.find<MineLogic>();
+    mineZpwLogic.state.userInfoBean = UserInfoBean();
+    ZpwHandleTool.instance.isMember = false;
+    mineZpwLogic.update();
+    Get.back();
+    // if (result.isSuccess && result.hasData) {
+    //   ZpwHandleTool.showAppToastText("注销成功");
+    // }
   }
 }

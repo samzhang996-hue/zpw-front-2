@@ -70,39 +70,32 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
     _timer?.cancel();
   }
 
-  restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) {
+  restoreIosPay(dynamic receiptData, String transactionId, {bool showSuccessTips = true}) async {
     ZpwLog.i("------click : $click=========");
-    Post(ZpwApi.zpwPayOrderRestoreIosPay, isShowProgress: true, params: {
+    final result = await postAsync(ZpwApi.zpwPayOrderRestoreIosPay, isShowProgress: true, params: {
       "receiptData": receiptData,
       "transactionId": transactionId,
       "isRestore": true,
       "orderId": "",
-    }, success: (isSuccess, code, message, results) {
-      // ZpwLog.i("------${results.first} ${isSuccess}=========");
-      if (isSuccess == true && results.isNotEmpty) {
-        // ZpwHandleTool.showAppToastText("恢复成功");
-
-        if (click) {
-          getUserInfo();
-        }
-      }
     });
+    if (result.isSuccess && result.hasData) {
+      if (click) {
+        getUserInfo();
+      }
+    }
   }
 
-  iosPay(dynamic receiptData, String transactionId) {
+  iosPay(dynamic receiptData, String transactionId) async {
     Map<String, dynamic> dataMap = {"transactionId": transactionId, "receiptData": receiptData, "orderId": "", "isRestore": false};
 
     ZpwLog.i("------click : $click=========");
 
-    Post(ZpwApi.zpwPayOrderIosPay, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        // ZpwHandleTool.showAppToastText("购买成功");
-        // getVipHome();
-        if (click) {
-          timerGetUserInfo();
-        }
+    final result = await postAsync(ZpwApi.zpwPayOrderIosPay, isShowProgress: true, params: dataMap);
+    if (result.isSuccess && result.hasData) {
+      if (click) {
+        timerGetUserInfo();
       }
-    });
+    }
   }
 
   selectItem(int index) {
@@ -120,26 +113,26 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
     update();
   }
 
-  getVipHome() {
-    Post<VipBean>(ZpwApi.zpwVipGetVipHome,
-        isShowProgress: true,
-        success: (isSuccess, code, message, results) {
-          ZpwLog.d("vip0000----$isSuccess----${results.first.vipList?.length}");
-          if (isSuccess == true && results.isNotEmpty) {
-            state.vipBean = results.first;
-            ZpwLog.d("vip111----$isSuccess----${results.first.toJson()}");
-            if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
-              ZpwHandleTool.showAppToastText("暂无会员套餐");
-            } else {
-              state.payKeyType = state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ?? 0;
-            }
-            update();
-          } else {
-            state.vipBean = state.normalVipBean;
-            update();
-          }
-        },
-        onModel: (m) => VipBean.fromJson(m));
+  getVipHome() async {
+    final result = await postAsync<VipBean>(
+      ZpwApi.zpwVipGetVipHome,
+      isShowProgress: true,
+      onModel: (m) => VipBean.fromJson(m),
+    );
+    ZpwLog.d("vip0000----${result.isSuccess}----${result.first?.vipList?.length}");
+    if (result.isSuccess && result.hasData) {
+      state.vipBean = result.first!;
+      ZpwLog.d("vip111----${result.isSuccess}----${result.first!.toJson()}");
+      if (state.vipBean.vipList == null || state.vipBean.vipList?.length == 0) {
+        ZpwHandleTool.showAppToastText("暂无会员套餐");
+      } else {
+        state.payKeyType = state.vipBean.vipList?[0].vipPriceOutput?.defaultPayKeyType ?? 0;
+      }
+      update();
+    } else {
+      state.vipBean = state.normalVipBean;
+      update();
+    }
   }
 
   Future<void> test(String url) async {
@@ -171,80 +164,61 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
         "goodsId": state.goodsId,
         "payKeyType": state.payKeyType,
       };
-      Post(ZpwApi.zpwPayOrderAddUserAgreementOrder, isShowProgress: true, params: dataMap, success: (isSuccess, code, message, results) {
-        ZpwLog.i("------${results.first} ");
-        if (isSuccess == true && results.isNotEmpty) {
-          var result = results[0];
-          if (Platform.isAndroid) {
-            isAt = true;
-            test(result.toString());
-          } else {
-            //ios
-          }
+      final result = await postAsync(ZpwApi.zpwPayOrderAddUserAgreementOrder, isShowProgress: true, params: dataMap);
+      ZpwLog.i("------${result.data} ");
+      if (result.isSuccess && result.hasData) {
+        var res = result.data[0];
+        if (Platform.isAndroid) {
+          isAt = true;
+          test(res.toString());
+        } else {
+          //ios
         }
-      });
+      }
     }
   }
 
   addOrder() async {
-    // String msg="alipays://platformapi/startApp?appId=60000157&orderStr=app_id%3D2021004196632496%26method%3Dalipay.trade.app.pay%26charset%3DUTF-8%26version%3D1.0%26sign_type%3DRSA2%26notify_url%3Dhttp%253A%252F%252Fpayapi.changfu0591.top%252Fpayapi%252FzftNotify%252Fnotify%26biz_content%3D%257B%2522sub_merchant%2522%253A%257B%2522merchant_id%2522%253A%25222088460567345897%2522%257D%252C%2522out_trade_no%2522%253A%252220250306171034985132110%2522%252C%2522total_amount%2522%253A%25220.11%2522%252C%2522subject%2522%253A%2522%255Cu7528%255Cu6237%255Cu53f7%253A279516079%255Cuff0c%255Cu82e5%255Cu9700%255Cu9000%255Cu6b3e%255Cu6253%255Cu5ba2%255Cu670d%255Cu7535%255Cu8bdd%253A4000732899%2522%252C%2522product_code%2522%253A%2522GENERAL_WITHHOLDING%2522%252C%2522extend_params%2522%253A%257B%2522sys_service_provider_id%2522%253A%25222088941700930254%2522%257D%252C%2522disable_pay_channels%2522%253A%2522%2522%252C%2522settle_info%2522%253A%257B%2522settle_detail_infos%2522%253A%255B%257B%2522trans_in_type%2522%253A%2522defaultSettle%2522%252C%2522amount%2522%253A%25220.11%2522%257D%255D%257D%252C%2522time_expire%2522%253A%25222025-03-06%2B17%253A15%253A34%2522%252C%2522agreement_sign_params%2522%253A%257B%2522product_code%2522%253A%2522GENERAL_WITHHOLDING%2522%252C%2522personal_product_code%2522%253A%2522CYCLE_PAY_AUTH_P%2522%252C%2522sign_scene%2522%253A%2522INDUSTRY%257CDEFAULT_SCENE%2522%252C%2522access_params%2522%253A%257B%2522channel%2522%253A%2522ALIPAYAPP%2522%257D%252C%2522period_rule_params%2522%253A%257B%2522period_type%2522%253A%2522DAY%2522%252C%2522period%2522%253A%252230%2522%252C%2522execute_time%2522%253A%25222025-03-06%2522%252C%2522single_amount%2522%253A%252210.0%2522%257D%252C%2522sub_merchant%2522%253A%257B%2522sub_merchant_id%2522%253A%25222088460567345897%2522%252C%2522sub_merchant_name%2522%253A%2522%255Cu56db%255Cu5ddd%255Cu4e59%255Cu8212%255Cu79d1%255Cu6280%255Cu6709%255Cu9650%255Cu516c%255Cu53f8%2522%252C%2522sub_merchant_service_name%2522%253A%2522%255Cu4f1a%255Cu5458%255Cu7eed%255Cu8d39%2522%257D%252C%2522external_agreement_no%2522%253A%2522202503061710340011659663%2522%252C%2522sign_notify_url%2522%253A%2522http%253A%255C%252F%255C%252Fpayapi.changfu0591.top%255C%252Fpayapi%255C%252FzftNotify%255C%252FsignNotify%2522%257D%257D%26timestamp%3D2025-03-06%2B17%253A10%253A34%26app_cert_sn%3D8085ea6a9ea55f81f9441c947936d1c2%26alipay_root_cert_sn%3D687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6%26sign%3DUMA5fUg%252BMZC4d0KLMLOvxrC5nAZ2hG0rSrM9UyfMnXlPWAEwsdn%252B8oFhgTTrU1Dv%252Fumymao8hGgsiSXFYtiAVC69SrdAntZ8H6z2RjdKjcb5sEC3fsGPTNEeJHS8Eo8aUyFVuTsQmBxlKAK9dk10qofX21UoXmla9QaNQhyufqPJKDjdCO3Anc91dspXtZ2StZQ0fVv36SU4qQIdFI8F2Z7Os4kIm7OTVCAdlMRTfFCfK2dpKyC4BhzSK6T2sgRq8L2RR3QND5eUbWbElAmuC8h5aJAo5dtoHMa%252FhvkdZk8rxe3mzZuIDi%252FdU%252Bo95b5hNfAUWC%252BSm6SYPNYp1Fnrww%253D%253D";
-    // toUrl2(msg);
-    // Tobias tobias = Tobias();
-    // tobias.pay(msg).then((value) {
-    //   if ("${value["resultStatus"]}" == "9000") {
-    //     ZpwHandleTool.instance.isMember = true;
-    //     ZpwHandleTool.showAppToastText("支付成功");
-    //     // _startPolling();
-    //   } else {
-    //     ZpwHandleTool.showAppToastText("支付失败");
-    //   }
-    // });
-
-    // String channel = await getChannelInfo(3);
-
     if ((await zpwWxLogin() == true)) {
       Map<String, dynamic> dataMap = {
-        // "channel": channel,
         "goodsId": state.goodsId,
         "payKeyType": state.payKeyType,
       };
       ZpwLog.d("map----$dataMap");
-      Post<PayBean>(ZpwApi.zpwPayOrderAddOrder,
-          isShowProgress: true,
-          params: dataMap,
-          success: (isSuccess, code, message, results) {
-            ZpwLog.i("------${results.first.toJson()} $isSuccess=========");
-            if (isSuccess == true && results.isNotEmpty) {
-              state.payBean = results.first;
-              Tobias tobias = Tobias();
-              if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
-                tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
-                  if ("${value["resultStatus"]}" == "9000") {
-                    ZpwHandleTool.instance.isMember = true;
-                    ZpwHandleTool.showAppToastText("支付成功");
-                    // _startPolling();
-                  } else {
-                    ZpwHandleTool.showAppToastText("支付失败");
-                  }
-                });
-              } else if (state.payBean.payKeyType == 3) {
-                // ZfbServerPayOrderVo? zfbServerPayOrderVo =
-                //     state.payBean.zfbServerPayOrderVo;
-                // if (zfbServerPayOrderVo != null) {
-                //   htmlFlutter(
-                //       zfbServerPayOrderVo.appId ?? "",
-                //       zfbServerPayOrderVo.jumpUrl ?? "",
-                //       zfbServerPayOrderVo.outTradeNo ?? "");
-                //   _startPolling();
-                // }
-              } else if (state.payBean.payKeyType == 5) {
-                onH5(state.payBean.zfbPayOrderVo!.trademsg.toString());
-              } else if (state.payBean.payKeyType == 6) {
-                toUrl2(state.payBean.zfbPayOrderVo!.trademsg.toString());
-              }
+      final result = await postAsync<PayBean>(
+        ZpwApi.zpwPayOrderAddOrder,
+        isShowProgress: true,
+        params: dataMap,
+        onModel: (m) => PayBean.fromJson(m),
+      );
+      ZpwLog.i("------${result.first?.toJson()} ${result.isSuccess}=========");
+      if (result.isSuccess && result.hasData) {
+        state.payBean = result.first!;
+        Tobias tobias = Tobias();
+        if (state.payBean.payKeyType == 0 || state.payBean.payKeyType == 4) {
+          tobias.pay(state.payBean.zfbPayOrderVo!.trademsg.toString()).then((value) {
+            if ("${value["resultStatus"]}" == "9000") {
+              ZpwHandleTool.instance.isMember = true;
+              ZpwHandleTool.showAppToastText("支付成功");
+            } else {
+              ZpwHandleTool.showAppToastText("支付失败");
             }
-          },
-          onModel: (m) => PayBean.fromJson(m));
+          });
+        } else if (state.payBean.payKeyType == 3) {
+          // ZfbServerPayOrderVo? zfbServerPayOrderVo = state.payBean.zfbServerPayOrderVo;
+          // if (zfbServerPayOrderVo != null) {
+          //   htmlFlutter(
+          //       zfbServerPayOrderVo.appId ?? "",
+          //       zfbServerPayOrderVo.jumpUrl ?? "",
+          //       zfbServerPayOrderVo.outTradeNo ?? "");
+          //   _startPolling();
+          // }
+        } else if (state.payBean.payKeyType == 5) {
+          onH5(state.payBean.zfbPayOrderVo!.trademsg.toString());
+        } else if (state.payBean.payKeyType == 6) {
+          toUrl2(state.payBean.zfbPayOrderVo!.trademsg.toString());
+        }
+      }
     }
   }
 
@@ -252,38 +226,38 @@ class VipLogic extends ZpwBaseGetxController with ZpwAppMixin {
     await launch(url);
   }
 
-  getUserInfo() {
+  getUserInfo() async {
     final MineLogic mineLogic = Get.find<MineLogic>();
 
     mineLogic.getUserInfo();
-    Post<UserInfoBean>(ZpwApi.zpwSsoGetUserInfo,
-        isShowProgress: false,
-        success: (isSuccess, code, message, results) async {
-          if (isSuccess == true && results.isNotEmpty) {
-            ZpwLog.d("is----${results.first}");
-            mineLogic.state.userInfoBean = results.first;
-            ZpwHandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
-            if (ZpwHandleTool.instance.isMember) {
-              _conditionMet = true;
-              if (_success == false) {
-                if (click) {
-                  if (showToast) {
-                    ZpwHandleTool.showAppToastText("您已成为会员");
-                  }
-                }
-                if (canBack) {
-                  Get.back();
-                }
-              }
-              _success = true;
-              String phones = mineLogic.state.userInfoBean.userPhone ?? "";
-              if (phones.isNotEmpty) {
-                return;
-              }
+    final result = await postAsync<UserInfoBean>(
+      ZpwApi.zpwSsoGetUserInfo,
+      isShowProgress: false,
+      onModel: (m) => UserInfoBean.fromJson(m),
+    );
+    if (result.isSuccess && result.hasData) {
+      ZpwLog.d("is----${result.first}");
+      mineLogic.state.userInfoBean = result.first!;
+      ZpwHandleTool.instance.isMember = mineLogic.state.userInfoBean.vipFlag == 1;
+      if (ZpwHandleTool.instance.isMember) {
+        _conditionMet = true;
+        if (_success == false) {
+          if (click) {
+            if (showToast) {
+              ZpwHandleTool.showAppToastText("您已成为会员");
             }
-            update();
           }
-        },
-        onModel: (m) => UserInfoBean.fromJson(m));
+          if (canBack) {
+            Get.back();
+          }
+        }
+        _success = true;
+        String phones = mineLogic.state.userInfoBean.userPhone ?? "";
+        if (phones.isNotEmpty) {
+          return;
+        }
+      }
+      update();
+    }
   }
 }

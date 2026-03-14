@@ -22,56 +22,53 @@ class WorksZpwLogic extends ZpwBaseGetxController {
   }
 
 
-  photoRecord() {
+  photoRecord() async {
     Map<String, dynamic> dataMap = {
       "pageIndex": 0,
       "pageSize": 100,
       "worksType": state.index.value,
     };
     ZpwLog.d("map-----------$dataMap");
-    get(ZpwApi.zpwPhotoRecord, isShowProgress: false, params: dataMap, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        Map data = results.first as Map;
-        state.records.value = data["records"];
-        // ZpwLog.d("get----${data["records"]}");
-        update();
-      }
-    });
+    final result = await getAsync(ZpwApi.zpwPhotoRecord, isShowProgress: false, params: dataMap);
+    if (result.isSuccess && result.hasData) {
+      Map data = result.first as Map;
+      state.records.value = data["records"];
+      // ZpwLog.d("get----${data["records"]}");
+      update();
+    }
   }
 
-  getFuncDetail(int funcId, int id) {
-    get("${ZpwApi.zpwGetFuncDetail}?id=$funcId", isShowProgress: true, success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        Map data = results.first as Map;
-        String showImgGif = data["showImgGif"];
-        String funcName = data["tags"] ?? "";
-        // int funcId = data["funcId"] ?? "";
-        String videoUrl = data["videoUrl"] ?? "";
-        int apiType = data["apiType"] ?? -1;
+  getFuncDetail(int funcId, int id) async {
+    final result = await getAsync("${ZpwApi.zpwGetFuncDetail}?id=$funcId", isShowProgress: true);
+    if (result.isSuccess && result.hasData) {
+      Map data = result.first as Map;
+      String showImgGif = data["showImgGif"];
+      String funcName = data["tags"] ?? "";
+      // int funcId = data["funcId"] ?? "";
+      String videoUrl = data["videoUrl"] ?? "";
+      int apiType = data["apiType"] ?? -1;
 
-        ZpwLog.d("fun---$data");
-        Get.to(
-          () => FaceMakePage(
-            title: funcName,
-            funcId: funcId,
-            imageUrl: showImgGif,
-            videoUrl: videoUrl,
-            apiType: apiType,
-          ),
-        );
-        delete(id);
-        update();
-      }
-    });
+      ZpwLog.d("fun---$data");
+      Get.to(
+        () => FaceMakePage(
+          title: funcName,
+          funcId: funcId,
+          imageUrl: showImgGif,
+          videoUrl: videoUrl,
+          apiType: apiType,
+        ),
+      );
+      delete(id);
+      update();
+    }
   }
 
-  delete(int id) {
-    Post("${ZpwApi.zpwDelete}/$id", isShowProgress: true, success: (isSuccess, code, message, results) async {
-      if (isSuccess == true && results.isNotEmpty) {
-        // ZpwHandleTool.showAppToastText("删除成功");
-        // Get.back(result: "123");
-        photoRecord();
-      }
-    });
+  delete(int id) async {
+    final result = await postAsync("${ZpwApi.zpwDelete}/$id", isShowProgress: true);
+    if (result.isSuccess && result.hasData) {
+      // ZpwHandleTool.showAppToastText("删除成功");
+      // Get.back(result: "123");
+      photoRecord();
+    }
   }
 }

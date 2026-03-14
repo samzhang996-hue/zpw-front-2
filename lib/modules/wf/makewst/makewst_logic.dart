@@ -58,27 +58,26 @@ class MakewstZpwLogic extends ZpwBaseGetxController {
     }
   }
 
-  photoRecord(bool rush) {
+  photoRecord(bool rush) async {
     Map<String, dynamic> dataMap = {"pageIndex": 1, "pageSize": 100, "apiType": 6, "sortType": 1};
-    get(ZpwApi.zpwPhotoRecord, isShowProgress: rush, params: dataMap, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        Map data = results.first as Map;
-        state.records.value = data["records"];
-        ZpwLog.d("get----${state.records}");
-        update();
-        bool shouldContinuePolling = state.records.value.any((record) => (record['worksStatus'] == 0 || record['worksStatus'] == 1));
-        ZpwLog.d("msg1111---$shouldContinuePolling");
-        if (!shouldContinuePolling) {
-          stopPolling();
-        } else {
-          startPolling();
-        }
-        ZpwLog.d("get----${state.records.value}");
+    final result = await getAsync(ZpwApi.zpwPhotoRecord, isShowProgress: rush, params: dataMap);
+    if (result.isSuccess && result.hasData) {
+      Map data = result.first as Map;
+      state.records.value = data["records"];
+      ZpwLog.d("get----${state.records}");
+      update();
+      bool shouldContinuePolling = state.records.value.any((record) => (record['worksStatus'] == 0 || record['worksStatus'] == 1));
+      ZpwLog.d("msg1111---$shouldContinuePolling");
+      if (!shouldContinuePolling) {
+        stopPolling();
+      } else {
+        startPolling();
       }
-    });
+      ZpwLog.d("get----${state.records.value}");
+    }
   }
 
-  addPhotoRecord() {
+  addPhotoRecord() async {
     final valueJsonMap = {
       "title": state.itemTitles[state.titleIndex.value]["title"],
       "name": state.hfList[state.fgIndex.value]["name"],
@@ -93,30 +92,27 @@ class MakewstZpwLogic extends ZpwBaseGetxController {
       "valueJson": valueJsonString
     };
 
-    Post(ZpwApi.zpwAddPhotoRecord, params: params, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        ZpwLog.d("list----${results.first}");
-        photoRecord(true);
-      }
-    });
+    final result = await postAsync(ZpwApi.zpwAddPhotoRecord, params: params);
+    if (result.isSuccess && result.hasData) {
+      ZpwLog.d("list----${result.first}");
+      photoRecord(true);
+    }
   }
 
-  defTimbreVO() {
-    get(ZpwApi.zpwDefTimbreVO, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        List<Map<String, dynamic>> dataList = results.cast<Map<String, dynamic>>();
-        state.hfList.value = dataList;
-        update();
-      }
-    });
+  defTimbreVO() async {
+    final result = await getAsync(ZpwApi.zpwDefTimbreVO);
+    if (result.isSuccess && result.hasData) {
+      List<Map<String, dynamic>> dataList = result.data.cast<Map<String, dynamic>>();
+      state.hfList.value = dataList;
+      update();
+    }
   }
 
-  remakePhotoRecord(int id) {
-    get("${ZpwApi.zpwRemakePhotoRecord}?id=$id", isShowProgress: true, success: (isSuccess, code, message, results) {
-      if (isSuccess == true && results.isNotEmpty) {
-        photoRecord(true);
-        update();
-      }
-    });
+  remakePhotoRecord(int id) async {
+    final result = await getAsync("${ZpwApi.zpwRemakePhotoRecord}?id=$id", isShowProgress: true);
+    if (result.isSuccess && result.hasData) {
+      photoRecord(true);
+      update();
+    }
   }
 }

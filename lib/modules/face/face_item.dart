@@ -6,7 +6,7 @@ import 'package:zpw/common/zpw_qds_image.dart';
 import 'package:zpw/model/zpw_page_photo_group_bind_bean.dart';
 import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
-import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
 class FaceItem extends StatefulWidget {
@@ -21,7 +21,7 @@ class FaceItem extends StatefulWidget {
 class _FaceItemState extends State<FaceItem> {
   late final _bean = ZpwPagePhotoGroupBindBean().obs;
 
-  void _getData() {
+  Future<void> _getData() async {
     final params = {
       "id": widget.id,
       "pageIndex": 1,
@@ -30,17 +30,15 @@ class _FaceItemState extends State<FaceItem> {
 
     ZpwLog.e("params:$params");
 
-    ZpwHandleTool.instance.QDSGet<ZpwPagePhotoGroupBindBean>(
+    final result = await ZpwDioUtils.instance.getAsync<ZpwPagePhotoGroupBindBean>(
       ZpwApi.zpwPagePhotoGroupBind,
-      isShowProgress: true,
       params: params,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          _bean.value = results.first;
-        }
-      },
+      isShowProgress: true,
       onModel: (json) => ZpwPagePhotoGroupBindBean.fromJson(json),
     );
+    if (result.isSuccess && result.hasData) {
+      _bean.value = result.first!;
+    }
   }
 
   @override

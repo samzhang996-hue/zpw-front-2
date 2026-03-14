@@ -10,7 +10,7 @@ import 'package:zpw/modules/face/face_make_page.dart';
 import 'package:zpw/modules/face/gather_single_page.dart';
 import 'package:zpw/modules/wf/wst/wst_view.dart';
 import 'package:zpw/network/api/zpw_network_api.dart';
-import 'package:zpw/utils/zpw_handle_tool.dart';
+import 'package:zpw/network/zpw_network_util.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
 class CollectionItem extends StatefulWidget {
@@ -31,7 +31,7 @@ class _CollectionItemState extends State<CollectionItem> {
   var _isLoading = false;
   late final _showNoMoreContent = false.obs;
 
-  void _getData() {
+  Future<void> _getData() async {
     final params = {
       "id": widget.id,
       "pageIndex": 1,
@@ -40,25 +40,23 @@ class _CollectionItemState extends State<CollectionItem> {
 
     ZpwLog.e("params:$params");
     _showNoMoreContent.value = false;
-    ZpwHandleTool.instance.QDSGet<ZpwPagePhotoGroupBindBean>(
+    final result = await ZpwDioUtils.instance.getAsync<ZpwPagePhotoGroupBindBean>(
       ZpwApi.zpwPagePhotoGroupBind,
       isShowProgress: true,
       params: params,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          _records.value = results.first.records ?? [];
-          _pages = results.first.pages ?? 0;
-          _showNoMoreContent.value = true;
-          _loadPage = 2;
-        } else {
-          _showNoMoreContent.value = true;
-        }
-      },
       onModel: (json) => ZpwPagePhotoGroupBindBean.fromJson(json),
     );
+    if (result.isSuccess && result.hasData) {
+      _records.value = result.first!.records ?? [];
+      _pages = result.first!.pages ?? 0;
+      _showNoMoreContent.value = true;
+      _loadPage = 2;
+    } else {
+      _showNoMoreContent.value = true;
+    }
   }
 
-  void _getLoadData() {
+  Future<void> _getLoadData() async {
     if (_pages < _loadPage) {
       return;
     }
@@ -76,23 +74,21 @@ class _CollectionItemState extends State<CollectionItem> {
 
     ZpwLog.e("_loadPage.params:$params");
     _showNoMoreContent.value = false;
-    ZpwHandleTool.instance.QDSGet<ZpwPagePhotoGroupBindBean>(
+    final result = await ZpwDioUtils.instance.getAsync<ZpwPagePhotoGroupBindBean>(
       ZpwApi.zpwPagePhotoGroupBind,
       isShowProgress: true,
       params: params,
-      success: (isSuccess, code, message, results) {
-        if (isSuccess == true && results.isNotEmpty) {
-          _records.addAll(results.first.records ?? []);
-          _pages = results.first.pages ?? 0;
-          _loadPage += 1;
-          _isLoading = false;
-          _showNoMoreContent.value = true;
-        } else {
-          _showNoMoreContent.value = true;
-        }
-      },
       onModel: (json) => ZpwPagePhotoGroupBindBean.fromJson(json),
     );
+    if (result.isSuccess && result.hasData) {
+      _records.addAll(result.first!.records ?? []);
+      _pages = result.first!.pages ?? 0;
+      _loadPage += 1;
+      _isLoading = false;
+      _showNoMoreContent.value = true;
+    } else {
+      _showNoMoreContent.value = true;
+    }
   }
 
   /// 模板
