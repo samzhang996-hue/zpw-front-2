@@ -9,8 +9,8 @@ import 'package:zpw/utils/zpw_handle_tool.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 import 'package:zpw/utils/zpw_sp_utils.dart';
 
-import '../modules/main/model/user_info_bean.dart';
-import '../modules/mine/mine_logic.dart';
+import '../modules/main/model/zpw_user_info_bean.dart';
+import '../modules/mine/zpw_mine_logic.dart';
 import 'api/zpw_network_api.dart';
 import 'exception/zpw_error_status.dart';
 import 'exception/zpw_exception_handle.dart';

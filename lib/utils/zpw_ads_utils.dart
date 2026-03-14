@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_pangle_ads/flutter_pangle_ads.dart';
 import 'package:get/get.dart';
 import 'package:zpw/common/zpw_ads_config.dart';
-import 'package:zpw/modules/main/main_page.dart';
+import 'package:zpw/modules/main/zpw_main_page.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
 

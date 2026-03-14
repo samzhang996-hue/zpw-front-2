@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:zpw/utils/zpw_log_utils.dart';
 
 import '../common/zpw_comm_wx_login_bottom_sheet.dart';
-import '../modules/gameplay/gameplay_logic.dart';
-import '../modules/main/model/user_info_bean.dart';
-import '../modules/mine/mine_logic.dart';
+import '../modules/gameplay/zpw_gameplay_logic.dart';
+import '../modules/main/model/zpw_user_info_bean.dart';
+import '../modules/mine/zpw_mine_logic.dart';
 import '../network/api/zpw_network_api.dart';
 import '../network/zpw_network_util.dart';
 import '../utils/zpw_handle_tool.dart';

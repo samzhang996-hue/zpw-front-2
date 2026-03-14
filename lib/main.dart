@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:zpw/modules/main/main_state.dart';
-import 'package:zpw/modules/splash/splash_view.dart';
+import 'package:zpw/modules/main/zpw_main_state.dart';
+import 'package:zpw/modules/splash/zpw_splash_view.dart';
 import 'package:zpw/utils/zpw_ads_utils.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
