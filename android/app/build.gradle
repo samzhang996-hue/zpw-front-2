@@ -54,9 +54,9 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('photoaiking.jks')
+            storeFile file('ysrdersorders.jks')
             storePassword '123456'
-            keyAlias 'photoaiking'
+            keyAlias 'ysrdersorders'
             keyPassword '123456'
         }
     }
